@@ -428,6 +428,7 @@ Play Console → Create app → **My Wallet** → Internal testing →
 
 | Belgi | Sababi | Yechim |
 |---|---|---|
+| `[core/duplicate-app] ... "[DEFAULT]" already exists` | `firebase_options.dart` va `google-services.json` har xil loyihadan | `flutterfire configure --project=<bitta loyiha>` ni qayta ishlating |
 | Android'da `ApiException: 10` | SHA fingerprint qo'shilmagan | 3.2-qadam; `google-services.json` ni qayta yuklang |
 | `./gradlew signingReport` hech narsa chiqarmadi | Android SDK o'rnatilmagan (yoki Gradle birinchi marta yuklanmoqda) | 3.2-qadam, **Variant B** — SDK'siz `keytool` bilan |
 | `flutter run` → "Unable to locate Android SDK" | SDK o'rnatilmagan | 0-bo'lim: Android SDK |
