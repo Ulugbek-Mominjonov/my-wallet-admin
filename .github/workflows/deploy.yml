@@ -34,6 +34,10 @@ jobs:
     name: Firestore qoidalari, indekslar va funksiyalar
     runs-on: ubuntu-latest
     environment: ${{ inputs.target || 'production' }}
+    # `secrets` konteksti `if` da to'g'ridan-to'g'ri ishlatilmaydi,
+    # shuning uchun avval env'ga chiqaramiz.
+    env:
+      HAS_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT != '' && 'true' || 'false' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -49,17 +53,23 @@ jobs:
         working-directory: functions
         run: npm install && npm run build
 
+      # Secret hali sozlanmagan bo'lsa deploy O'TKAZIB YUBORILADI
+      # (build va testlar baribir bajarildi). Shunday qilingani uchun
+      # loyiha sozlanmasidan oldin ham CI yashil bo'ladi.
+      - name: Kalit yo'q — deploy o'tkazib yuborildi
+        if: env.HAS_KEY != 'true'
+        run: |
+          echo "::warning::FIREBASE_SERVICE_ACCOUNT secret sozlanmagan — deploy o'tkazib yuborildi."
+          echo "Sozlash: Settings → Secrets and variables → Actions → New repository secret"
+
       - name: Kalitni tayyorlash
+        if: env.HAS_KEY == 'true'
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-        run: |
-          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
-            echo "::error::FIREBASE_SERVICE_ACCOUNT secret sozlanmagan"
-            exit 1
-          fi
-          echo "$FIREBASE_SERVICE_ACCOUNT" | base64 -d > "$RUNNER_TEMP/sa.json"
+        run: echo "$FIREBASE_SERVICE_ACCOUNT" | base64 -d > "$RUNNER_TEMP/sa.json"
 
       - name: Deploy
+        if: env.HAS_KEY == 'true'
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
           TARGET: ${{ inputs.target || 'prod' }}
