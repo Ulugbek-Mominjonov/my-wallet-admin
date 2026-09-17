@@ -44,7 +44,8 @@ RC
 source ~/.zshrc
 
 # 3. Litsenziyalarni qabul qiling — har savolga `y`
-flutter doctor --android-licenses
+#    ⚠️ `flutter doctor --android-licenses` EMAS, aynan `sdkmanager`.
+sdkmanager --licenses
 
 # 4. Paketlarni o'rnating (~1 GB)
 sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
@@ -53,8 +54,16 @@ sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
 flutter doctor
 ```
 
-> `platforms;android-36` — Flutter'ning `compileSdkVersion` i. U o'zgarsa
-> mos platformani o'rnatish kerak bo'ladi (`flutter doctor` aytadi).
+> **Nega `flutter doctor --android-licenses` emas?**
+> Flutter papkani SDK deb tanishi uchun unda `licenses/` yoki
+> `platform-tools/` bo'lishi shart (`android_sdk.dart`):
+> `validSdkDirectory = sdkDirectoryHasLicenses || sdkDirectoryHasPlatformTools`.
+> Yangi o'rnatilgan SDK'da ikkalasi ham yo'q (faqat `cmdline-tools/`),
+> shuning uchun Flutter "Unable to locate Android SDK" deydi.
+> `sdkmanager --licenses` esa `licenses/` papkasini yaratadi va shundan
+> keyin Flutter SDK'ni topadi. `deprecated` ogohlantirishi zararsiz.
+
+> `platforms;android-36` — Flutter'ning `compileSdkVersion` i.
 
 ### Kerakli vositalar
 
@@ -421,7 +430,8 @@ Play Console → Create app → **My Wallet** → Internal testing →
 |---|---|---|
 | Android'da `ApiException: 10` | SHA fingerprint qo'shilmagan | 3.2-qadam; `google-services.json` ni qayta yuklang |
 | `./gradlew signingReport` hech narsa chiqarmadi | Android SDK o'rnatilmagan (yoki Gradle birinchi marta yuklanmoqda) | 3.2-qadam, **Variant B** — SDK'siz `keytool` bilan |
-| `flutter run` → "Unable to locate Android SDK" | SDK yo'q | `flutter doctor` → Android Studio yoki cmdline-tools o'rnating |
+| `flutter run` → "Unable to locate Android SDK" | SDK o'rnatilmagan | 0-bo'lim: Android SDK |
+| `flutter doctor --android-licenses` → "Unable to locate Android SDK" | SDK'da hali `licenses/` ham, `platform-tools/` ham yo'q | `sdkmanager --licenses` ni ishlating — flutter orqali emas |
 | `The query requires an index` | Indekslar deploy qilinmagan | 2-qadam |
 | Vercel'da `FIREBASE_SERVICE_ACCOUNT berilmagan` | env qo'yilmagan yoki Preview uchun alohida qo'yilmagan | 4.4-qadam, ikkala muhitga ham |
 | Admin panelga kirsam **403** | `ADMIN_UIDS` da UID yo'q | 3.4 dagi UID ni tekshiring |
