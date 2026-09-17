@@ -124,9 +124,35 @@ Platformalardan **android** va **ios** ni tanlang. Bu buyruq o'zi:
 Bu qadamsiz Android'da **Google bilan kirish ishlamaydi**
 (`ApiException: 10` xatosi chiqadi).
 
+**Variant A — Android SDK o'rnatilgan bo'lsa:**
+
 ```bash
 cd ~/oylik-byudjet-app/app/android
-./gradlew signingReport | grep -A3 "Variant: debug"
+./gradlew signingReport
+```
+
+> ⚠️ `| grep` qo'shmang — birinchi ishga tushirishda Gradle yuklanadi
+> va grep hamma narsani yutib, "hech narsa chiqmadi"dek ko'rinadi.
+> Android SDK yo'q bo'lsa bu buyruq umuman ishlamaydi.
+
+**Variant B — Android SDK'siz (tezroq, faqat Java kerak):**
+
+Debug kaliti `~/.android/debug.keystore` da turadi. Agar hali yo'q bo'lsa,
+uni AYNAN Android standartidagi parametrlar bilan o'zingiz yarating —
+keyin Android SDK ham xuddi shu faylni ishlatadi, ya'ni SHA o'zgarmaydi:
+
+```bash
+mkdir -p ~/.android
+keytool -genkeypair -v \
+  -keystore ~/.android/debug.keystore \
+  -storepass android -keypass android \
+  -alias androiddebugkey \
+  -keyalg RSA -keysize 2048 -validity 10000 \
+  -dname "CN=Android Debug,O=Android,C=US"
+
+# SHA'larni o'qish:
+keytool -list -v -keystore ~/.android/debug.keystore \
+  -alias androiddebugkey -storepass android | grep -E "SHA1:|SHA256:"
 ```
 
 Chiqqan **SHA1** va **SHA-256** ni:
@@ -361,6 +387,8 @@ Play Console → Create app → **My Wallet** → Internal testing →
 | Belgi | Sababi | Yechim |
 |---|---|---|
 | Android'da `ApiException: 10` | SHA fingerprint qo'shilmagan | 3.2-qadam; `google-services.json` ni qayta yuklang |
+| `./gradlew signingReport` hech narsa chiqarmadi | Android SDK o'rnatilmagan (yoki Gradle birinchi marta yuklanmoqda) | 3.2-qadam, **Variant B** — SDK'siz `keytool` bilan |
+| `flutter run` → "Unable to locate Android SDK" | SDK yo'q | `flutter doctor` → Android Studio yoki cmdline-tools o'rnating |
 | `The query requires an index` | Indekslar deploy qilinmagan | 2-qadam |
 | Vercel'da `FIREBASE_SERVICE_ACCOUNT berilmagan` | env qo'yilmagan yoki Preview uchun alohida qo'yilmagan | 4.4-qadam, ikkala muhitga ham |
 | Admin panelga kirsam **403** | `ADMIN_UIDS` da UID yo'q | 3.4 dagi UID ni tekshiring |
