@@ -94,6 +94,12 @@ bo'ling. U Firestore'ga **to'liq huquq** beradi.
 
 1. Vercel → Add New Project → repo'ni ulang;
 2. **Root Directory = `admin`** (muhim!);
+
+> Vercel faqat shu papkada buyruq bajaradi, `@byudjet/calc` esa
+> `packages/calc-ts/dist` ga ishora qiladi va `dist/` repoda saqlanmaydi.
+> Shuning uchun `admin` ning `build` skripti avval `calc-ts` ni yig'adi
+> (`build:calc`). Bu qadamsiz Vercel `Module not found: @byudjet/calc`
+> beradi.
 3. Environment Variables (Production + Preview uchun alohida):
 
 | O'zgaruvchi | Turi | Qiymat |

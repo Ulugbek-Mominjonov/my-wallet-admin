@@ -4,11 +4,12 @@
   "private": true,
   "description": "Oylik byudjet — admin panel (Next.js, Vercel)",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "npm run build:calc && next dev",
+    "build:calc": "npm --prefix ../packages/calc-ts install --no-audit --no-fund && npm --prefix ../packages/calc-ts run build",
+    "build": "npm run build:calc && next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "npm run build:calc && tsc --noEmit"
   },
   "dependencies": {
     "@byudjet/calc": "file:../packages/calc-ts",
