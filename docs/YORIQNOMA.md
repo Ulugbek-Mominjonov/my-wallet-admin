@@ -23,6 +23,39 @@ Bu fayl ikkala repoda ham bir xil: `oylik-byudjet-app` va
 | Telegram (ixtiyoriy) | Eslatma va oylik hisobot | bepul |
 | Play Console (keyinroq) | Ilovani Play Store'ga chiqarish | $25 |
 
+### Android SDK (mobil ilova uchun majburiy)
+
+`flutter run`, `flutter build apk/appbundle` va `./gradlew` — hammasi
+Android SDK'siz ishlamaydi.
+
+```bash
+# 1. cmdline-tools ni oling (~175 MB) va ~/Android/Sdk ga oching
+mkdir -p ~/Android/Sdk/cmdline-tools && cd /tmp
+curl -fsSLO https://dl.google.com/android/repository/commandlinetools-linux-15859902_latest.zip
+unzip -q commandlinetools-linux-*_latest.zip -d ~/Android/Sdk/cmdline-tools/
+mv ~/Android/Sdk/cmdline-tools/cmdline-tools ~/Android/Sdk/cmdline-tools/latest
+
+# 2. Muhit o'zgaruvchilari (~/.zshrc yoki ~/.bashrc oxiriga)
+cat >> ~/.zshrc <<'RC'
+export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
+RC
+source ~/.zshrc
+
+# 3. Litsenziyalarni qabul qiling — har savolga `y`
+flutter doctor --android-licenses
+
+# 4. Paketlarni o'rnating (~1 GB)
+sdkmanager "platform-tools" "platforms;android-36" "build-tools;36.0.0"
+
+# 5. Tekshiring — Android toolchain ✓ bo'lishi kerak
+flutter doctor
+```
+
+> `platforms;android-36` — Flutter'ning `compileSdkVersion` i. U o'zgarsa
+> mos platformani o'rnatish kerak bo'ladi (`flutter doctor` aytadi).
+
 ### Kerakli vositalar
 
 ```bash
