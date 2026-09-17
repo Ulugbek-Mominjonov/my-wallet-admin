@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "oylik-byudjet-dev",
+    "dev": "oylik-byudjet-dev",
+    "prod": "oylik-byudjet-prod"
+  }
+}

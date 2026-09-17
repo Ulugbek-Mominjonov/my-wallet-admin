@@ -1,0 +1,4292 @@
+{
+  "version": 1,
+  "generatedBy": "packages/domain/tool/generate_fixtures.dart",
+  "personalCategoryKey": "o'zim uchun",
+  "deltaCases": [
+    {
+      "name": "to'langan xarajat qo'shildi",
+      "kind": "expense",
+      "before": null,
+      "after": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expense": 500000,
+            "expenseCash": 500000,
+            "planned": 500000,
+            "byCategory": {
+              "Oziq-ovqat": {
+                "planned": 500000,
+                "actual": 500000
+              }
+            }
+          }
+        },
+        "totals": {
+          "expense": 500000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "to'lanmagan xarajat qo'shildi",
+      "kind": "expense",
+      "before": null,
+      "after": {
+        "id": "e2",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 700000,
+        "actual": null,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "planned": 700000,
+            "unpaidTotal": 700000,
+            "byCategory": {
+              "Oziq-ovqat": {
+                "planned": 700000
+              }
+            }
+          }
+        },
+        "totals": {},
+        "debts": {}
+      }
+    },
+    {
+      "name": "summasi noma'lum xarajat",
+      "kind": "expense",
+      "before": null,
+      "after": {
+        "id": "e3",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": null,
+        "actual": null,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "unknownCount": 1
+          }
+        },
+        "totals": {},
+        "debts": {}
+      }
+    },
+    {
+      "name": "shaxsiy fond ajratmasi",
+      "kind": "expense",
+      "before": null,
+      "after": {
+        "id": "e4",
+        "name": "O'zim uchun (ajratma)",
+        "category": "O'zim uchun",
+        "method": "cash",
+        "planned": 1200000,
+        "actual": 1200000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expense": 1200000,
+            "expenseCash": 1200000,
+            "planned": 1200000,
+            "personalAllocated": 1200000,
+            "byCategory": {
+              "O'zim uchun": {
+                "planned": 1200000,
+                "actual": 1200000
+              }
+            }
+          }
+        },
+        "totals": {
+          "expense": 1200000,
+          "personalAllocated": 1200000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "qarzga bog'langan to'lanmagan",
+      "kind": "expense",
+      "before": null,
+      "after": {
+        "id": "e5",
+        "name": "Xarajat",
+        "category": "Qarz",
+        "method": "cash",
+        "planned": 5300000,
+        "actual": null,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": "debt_mashina",
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "planned": 5300000,
+            "unpaidTotal": 5300000,
+            "byCategory": {
+              "Qarz": {
+                "planned": 5300000
+              }
+            }
+          }
+        },
+        "totals": {},
+        "debts": {
+          "debt_mashina": {
+            "pendingFromApp": 5300000
+          }
+        }
+      }
+    },
+    {
+      "name": "qarz to'landi",
+      "kind": "expense",
+      "before": {
+        "id": "e5",
+        "name": "Xarajat",
+        "category": "Qarz",
+        "method": "cash",
+        "planned": 5300000,
+        "actual": null,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": "debt_mashina",
+        "autoPay": false
+      },
+      "after": {
+        "id": "e5",
+        "name": "Xarajat",
+        "category": "Qarz",
+        "method": "cash",
+        "planned": 5300000,
+        "actual": 5300000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": "debt_mashina",
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expense": 5300000,
+            "expenseCash": 5300000,
+            "unpaidTotal": -5300000,
+            "byCategory": {
+              "Qarz": {
+                "actual": 5300000
+              }
+            }
+          }
+        },
+        "totals": {
+          "expense": 5300000
+        },
+        "debts": {
+          "debt_mashina": {
+            "paidFromExpenses": 5300000,
+            "pendingFromApp": -5300000
+          }
+        }
+      }
+    },
+    {
+      "name": "xarajat o'chirildi",
+      "kind": "expense",
+      "before": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "after": null,
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expense": -500000,
+            "expenseCash": -500000,
+            "planned": -500000,
+            "byCategory": {
+              "Oziq-ovqat": {
+                "planned": -500000,
+                "actual": -500000
+              }
+            }
+          }
+        },
+        "totals": {
+          "expense": -500000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "summa tahrirlandi",
+      "kind": "expense",
+      "before": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "after": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 620000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expense": 120000,
+            "expenseCash": 120000,
+            "byCategory": {
+              "Oziq-ovqat": {
+                "actual": 120000
+              }
+            }
+          }
+        },
+        "totals": {
+          "expense": 120000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "oy qo'lda ko'chirildi",
+      "kind": "expense",
+      "before": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "after": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-10",
+        "monthKeySource": "manual",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expense": -500000,
+            "expenseCash": -500000,
+            "planned": -500000,
+            "byCategory": {
+              "Oziq-ovqat": {
+                "planned": -500000,
+                "actual": -500000
+              }
+            }
+          },
+          "2026-10": {
+            "expense": 500000,
+            "expenseCash": 500000,
+            "planned": 500000,
+            "byCategory": {
+              "Oziq-ovqat": {
+                "planned": 500000,
+                "actual": 500000
+              }
+            }
+          }
+        },
+        "totals": {},
+        "debts": {}
+      }
+    },
+    {
+      "name": "to'lov usuli o'zgardi",
+      "kind": "expense",
+      "before": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "after": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "card",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expenseCard": 500000,
+            "expenseCash": -500000
+          }
+        },
+        "totals": {},
+        "debts": {}
+      }
+    },
+    {
+      "name": "kategoriya o'zgardi",
+      "kind": "expense",
+      "before": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "after": {
+        "id": "e1",
+        "name": "Xarajat",
+        "category": "Transport",
+        "method": "cash",
+        "planned": 500000,
+        "actual": 500000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "byCategory": {
+              "Transport": {
+                "planned": 500000,
+                "actual": 500000
+              },
+              "Oziq-ovqat": {
+                "planned": -500000,
+                "actual": -500000
+              }
+            }
+          }
+        },
+        "totals": {},
+        "debts": {}
+      }
+    },
+    {
+      "name": "to'lov belgilandi",
+      "kind": "expense",
+      "before": {
+        "id": "e2",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 700000,
+        "actual": null,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "after": {
+        "id": "e2",
+        "name": "Xarajat",
+        "category": "Oziq-ovqat",
+        "method": "cash",
+        "planned": 700000,
+        "actual": 700000,
+        "dueDate": "2026-09-15",
+        "monthKey": "2026-09",
+        "monthKeySource": "auto",
+        "debtId": null,
+        "autoPay": false
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "expense": 700000,
+            "expenseCash": 700000,
+            "unpaidTotal": -700000,
+            "byCategory": {
+              "Oziq-ovqat": {
+                "actual": 700000
+              }
+            }
+          }
+        },
+        "totals": {
+          "expense": 700000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "oylik qo'shildi",
+      "kind": "income",
+      "before": null,
+      "after": {
+        "id": "i1",
+        "amount": 12000000,
+        "type": "Oylik",
+        "method": "card",
+        "paidAt": "2026-08-02",
+        "monthKey": "2026-08",
+        "debtId": null
+      },
+      "expected": {
+        "months": {
+          "2026-08": {
+            "income": 12000000,
+            "incomeCard": 12000000,
+            "byType": {
+              "Oylik": {
+                "card": 12000000
+              }
+            }
+          }
+        },
+        "totals": {
+          "income": 12000000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "qoida o'zgardi — daromad boshqa oyga ko'chdi",
+      "kind": "income",
+      "before": {
+        "id": "i1",
+        "amount": 12000000,
+        "type": "Oylik",
+        "method": "card",
+        "paidAt": "2026-08-02",
+        "monthKey": "2026-08",
+        "debtId": null
+      },
+      "after": {
+        "id": "i1",
+        "amount": 12000000,
+        "type": "Oylik",
+        "method": "card",
+        "paidAt": "2026-08-02",
+        "monthKey": "2026-09",
+        "debtId": null
+      },
+      "expected": {
+        "months": {
+          "2026-08": {
+            "income": -12000000,
+            "incomeCard": -12000000,
+            "byType": {
+              "Oylik": {
+                "card": -12000000
+              }
+            }
+          },
+          "2026-09": {
+            "income": 12000000,
+            "incomeCard": 12000000,
+            "byType": {
+              "Oylik": {
+                "card": 12000000
+              }
+            }
+          }
+        },
+        "totals": {},
+        "debts": {}
+      }
+    },
+    {
+      "name": "qarzga bog'langan daromad",
+      "kind": "income",
+      "before": null,
+      "after": {
+        "id": "i2",
+        "amount": 400000,
+        "type": "Oylik",
+        "method": "card",
+        "paidAt": "2026-09-02",
+        "monthKey": "2026-09",
+        "debtId": "debt_ukam"
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "income": 400000,
+            "incomeCard": 400000,
+            "byType": {
+              "Oylik": {
+                "card": 400000
+              }
+            }
+          }
+        },
+        "totals": {
+          "income": 400000
+        },
+        "debts": {
+          "debt_ukam": {
+            "paidFromIncomes": 400000
+          }
+        }
+      }
+    },
+    {
+      "name": "daromad o'chirildi",
+      "kind": "income",
+      "before": {
+        "id": "i1",
+        "amount": 12000000,
+        "type": "Oylik",
+        "method": "card",
+        "paidAt": "2026-08-02",
+        "monthKey": "2026-08",
+        "debtId": null
+      },
+      "after": null,
+      "expected": {
+        "months": {
+          "2026-08": {
+            "income": -12000000,
+            "incomeCard": -12000000,
+            "byType": {
+              "Oylik": {
+                "card": -12000000
+              }
+            }
+          }
+        },
+        "totals": {
+          "income": -12000000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "shaxsiy sarf qo'shildi",
+      "kind": "personalSpend",
+      "before": null,
+      "after": {
+        "id": "p1",
+        "amount": 250000,
+        "purpose": "Kitob",
+        "method": "cash",
+        "spentAt": "2026-09-20",
+        "monthKey": "2026-09"
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "personalSpent": 250000
+          }
+        },
+        "totals": {
+          "personalSpent": 250000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "shaxsiy sarf tahrirlandi",
+      "kind": "personalSpend",
+      "before": {
+        "id": "p1",
+        "amount": 250000,
+        "purpose": "Kitob",
+        "method": "cash",
+        "spentAt": "2026-09-20",
+        "monthKey": "2026-09"
+      },
+      "after": {
+        "id": "p1",
+        "amount": 300000,
+        "purpose": "Kitob",
+        "method": "cash",
+        "spentAt": "2026-09-20",
+        "monthKey": "2026-09"
+      },
+      "expected": {
+        "months": {
+          "2026-09": {
+            "personalSpent": 50000
+          }
+        },
+        "totals": {
+          "personalSpent": 50000
+        },
+        "debts": {}
+      }
+    },
+    {
+      "name": "shaxsiy sarf o'chirildi",
+      "kind": "personalSpend",
+      "before": {
+        "id": "p1",
+        "amount": 250000,
+        "purpose": "Kitob",
+        "method": "cash",
+        "spentAt": "2026-09-20",
+        "monthKey": "2026-09"
+      },
+      "after": null,
+      "expected": {
+        "months": {
+          "2026-09": {
+            "personalSpent": -250000
+          }
+        },
+        "totals": {
+          "personalSpent": -250000
+        },
+        "debts": {}
+      }
+    }
+  ],
+  "aggregateCases": [
+    {
+      "name": "tasodifiy-0",
+      "monthKey": "2026-05",
+      "incomes": [
+        {
+          "id": "i0-0",
+          "amount": 600000,
+          "type": "KPI",
+          "method": "cash",
+          "paidAt": "2026-05-26",
+          "monthKey": "2026-05",
+          "debtId": null
+        },
+        {
+          "id": "i0-1",
+          "amount": 2000000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-05-03",
+          "monthKey": "2026-05",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e0-0",
+          "name": "X0-0",
+          "category": "Oziq-ovqat",
+          "method": "card",
+          "planned": 700000,
+          "actual": null,
+          "dueDate": "2026-05-21",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-05",
+        "income": 2600000,
+        "incomeCard": 2000000,
+        "incomeCash": 600000,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 700000,
+        "unpaidTotal": 700000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "KPI": {
+            "card": 2000000,
+            "cash": 600000
+          }
+        },
+        "byCategory": {
+          "Oziq-ovqat": {
+            "planned": 700000,
+            "actual": 0
+          }
+        },
+        "balance": 2600000,
+        "forecast": 1900000,
+        "card": 2000000,
+        "cash": 600000,
+        "saved": 2600000
+      }
+    },
+    {
+      "name": "tasodifiy-1",
+      "monthKey": "2026-11",
+      "incomes": [
+        {
+          "id": "i1-0",
+          "amount": 1300000,
+          "type": "Oylik",
+          "method": "card",
+          "paidAt": "2026-11-06",
+          "monthKey": "2026-11",
+          "debtId": null
+        },
+        {
+          "id": "i1-1",
+          "amount": 1200000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-11-05",
+          "monthKey": "2026-11",
+          "debtId": null
+        },
+        {
+          "id": "i1-2",
+          "amount": 700000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-11-06",
+          "monthKey": "2026-11",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e1-0",
+          "name": "X1-0",
+          "category": "Kommunal",
+          "method": "card",
+          "planned": 50000,
+          "actual": 950000,
+          "dueDate": "2026-11-08",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e1-1",
+          "name": "X1-1",
+          "category": "Qarz",
+          "method": "card",
+          "planned": 950000,
+          "actual": null,
+          "dueDate": "2026-11-13",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p1-0",
+          "amount": 100000,
+          "purpose": "P1-0",
+          "method": "cash",
+          "spentAt": "2026-11-04",
+          "monthKey": "2026-11"
+        },
+        {
+          "id": "p1-1",
+          "amount": 150000,
+          "purpose": "P1-1",
+          "method": "cash",
+          "spentAt": "2026-11-07",
+          "monthKey": "2026-11"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-11",
+        "income": 3200000,
+        "incomeCard": 1300000,
+        "incomeCash": 1900000,
+        "expense": 950000,
+        "expenseCard": 950000,
+        "expenseCash": 0,
+        "planned": 1000000,
+        "unpaidTotal": 950000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 250000,
+        "byType": {
+          "Oylik": {
+            "card": 1300000,
+            "cash": 1900000
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 50000,
+            "actual": 950000
+          },
+          "Qarz": {
+            "planned": 950000,
+            "actual": 0
+          }
+        },
+        "balance": 2250000,
+        "forecast": 1300000,
+        "card": 350000,
+        "cash": 1900000,
+        "saved": 2000000
+      }
+    },
+    {
+      "name": "tasodifiy-2",
+      "monthKey": "2026-07",
+      "incomes": [
+        {
+          "id": "i2-0",
+          "amount": 3200000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-07-17",
+          "monthKey": "2026-07",
+          "debtId": null
+        },
+        {
+          "id": "i2-1",
+          "amount": 1400000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-07-05",
+          "monthKey": "2026-07",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e2-0",
+          "name": "X2-0",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 950000,
+          "actual": 500000,
+          "dueDate": "2026-07-10",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e2-1",
+          "name": "X2-1",
+          "category": "O'zim uchun",
+          "method": "cash",
+          "planned": 50000,
+          "actual": 350000,
+          "dueDate": "2026-07-05",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p2-0",
+          "amount": 350000,
+          "purpose": "P2-0",
+          "method": "card",
+          "spentAt": "2026-07-20",
+          "monthKey": "2026-07"
+        },
+        {
+          "id": "p2-1",
+          "amount": 100000,
+          "purpose": "P2-1",
+          "method": "card",
+          "spentAt": "2026-07-06",
+          "monthKey": "2026-07"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-07",
+        "income": 4600000,
+        "incomeCard": 4600000,
+        "incomeCash": 0,
+        "expense": 850000,
+        "expenseCard": 500000,
+        "expenseCash": 350000,
+        "planned": 1000000,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 850000,
+        "personalSpent": 450000,
+        "byType": {
+          "Avans": {
+            "card": 4600000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 1000000,
+            "actual": 850000
+          }
+        },
+        "balance": 3750000,
+        "forecast": 3750000,
+        "card": 4100000,
+        "cash": -350000,
+        "saved": 4150000
+      }
+    },
+    {
+      "name": "tasodifiy-3",
+      "monthKey": "2026-06",
+      "incomes": [
+        {
+          "id": "i3-0",
+          "amount": 2000000,
+          "type": "KPI",
+          "method": "cash",
+          "paidAt": "2026-06-10",
+          "monthKey": "2026-06",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e3-0",
+          "name": "X3-0",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 300000,
+          "actual": null,
+          "dueDate": "2026-06-11",
+          "monthKey": "2026-06",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e3-1",
+          "name": "X3-1",
+          "category": "Transport",
+          "method": "card",
+          "planned": 550000,
+          "actual": null,
+          "dueDate": "2026-06-18",
+          "monthKey": "2026-06",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e3-2",
+          "name": "X3-2",
+          "category": "Transport",
+          "method": "card",
+          "planned": 400000,
+          "actual": null,
+          "dueDate": "2026-06-11",
+          "monthKey": "2026-06",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e3-3",
+          "name": "X3-3",
+          "category": "Qarz",
+          "method": "card",
+          "planned": 250000,
+          "actual": 50000,
+          "dueDate": "2026-06-27",
+          "monthKey": "2026-06",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p3-0",
+          "amount": 50000,
+          "purpose": "P3-0",
+          "method": "cash",
+          "spentAt": "2026-06-06",
+          "monthKey": "2026-06"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-06",
+        "income": 2000000,
+        "incomeCard": 0,
+        "incomeCash": 2000000,
+        "expense": 50000,
+        "expenseCard": 50000,
+        "expenseCash": 0,
+        "planned": 1500000,
+        "unpaidTotal": 1250000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 50000,
+        "byType": {
+          "KPI": {
+            "card": 0,
+            "cash": 2000000
+          }
+        },
+        "byCategory": {
+          "Qarz": {
+            "planned": 550000,
+            "actual": 50000
+          },
+          "Transport": {
+            "planned": 950000,
+            "actual": 0
+          }
+        },
+        "balance": 1950000,
+        "forecast": 700000,
+        "card": -50000,
+        "cash": 2000000,
+        "saved": 1900000
+      }
+    },
+    {
+      "name": "tasodifiy-4",
+      "monthKey": "2026-08",
+      "incomes": [
+        {
+          "id": "i4-0",
+          "amount": 2300000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-08-28",
+          "monthKey": "2026-08",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e4-0",
+          "name": "X4-0",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 400000,
+          "actual": 350000,
+          "dueDate": "2026-08-20",
+          "monthKey": "2026-08",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e4-1",
+          "name": "X4-1",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 350000,
+          "actual": 600000,
+          "dueDate": "2026-08-17",
+          "monthKey": "2026-08",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p4-0",
+          "amount": 100000,
+          "purpose": "P4-0",
+          "method": "card",
+          "spentAt": "2026-08-10",
+          "monthKey": "2026-08"
+        },
+        {
+          "id": "p4-1",
+          "amount": 200000,
+          "purpose": "P4-1",
+          "method": "cash",
+          "spentAt": "2026-08-11",
+          "monthKey": "2026-08"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-08",
+        "income": 2300000,
+        "incomeCard": 0,
+        "incomeCash": 2300000,
+        "expense": 950000,
+        "expenseCard": 600000,
+        "expenseCash": 350000,
+        "planned": 750000,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 600000,
+        "personalSpent": 300000,
+        "byType": {
+          "Oylik": {
+            "card": 0,
+            "cash": 2300000
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 350000,
+            "actual": 600000
+          },
+          "Qarz": {
+            "planned": 400000,
+            "actual": 350000
+          }
+        },
+        "balance": 1350000,
+        "forecast": 1350000,
+        "card": -600000,
+        "cash": 1950000,
+        "saved": 1650000
+      }
+    },
+    {
+      "name": "tasodifiy-5",
+      "monthKey": "2026-08",
+      "incomes": [
+        {
+          "id": "i5-0",
+          "amount": 800000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-08-17",
+          "monthKey": "2026-08",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e5-0",
+          "name": "X5-0",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 250000,
+          "actual": null,
+          "dueDate": "2026-08-06",
+          "monthKey": "2026-08",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p5-0",
+          "amount": 50000,
+          "purpose": "P5-0",
+          "method": "cash",
+          "spentAt": "2026-08-07",
+          "monthKey": "2026-08"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-08",
+        "income": 800000,
+        "incomeCard": 800000,
+        "incomeCash": 0,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 250000,
+        "unpaidTotal": 250000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 50000,
+        "byType": {
+          "KPI": {
+            "card": 800000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 250000,
+            "actual": 0
+          }
+        },
+        "balance": 800000,
+        "forecast": 550000,
+        "card": 800000,
+        "cash": 0,
+        "saved": 750000
+      }
+    },
+    {
+      "name": "tasodifiy-6",
+      "monthKey": "2026-10",
+      "incomes": [
+        {
+          "id": "i6-0",
+          "amount": 400000,
+          "type": "Avans",
+          "method": "cash",
+          "paidAt": "2026-10-20",
+          "monthKey": "2026-10",
+          "debtId": null
+        },
+        {
+          "id": "i6-1",
+          "amount": 300000,
+          "type": "Avans",
+          "method": "cash",
+          "paidAt": "2026-10-21",
+          "monthKey": "2026-10",
+          "debtId": null
+        },
+        {
+          "id": "i6-2",
+          "amount": 1700000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-10-25",
+          "monthKey": "2026-10",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e6-0",
+          "name": "X6-0",
+          "category": "O'zim uchun",
+          "method": "cash",
+          "planned": 550000,
+          "actual": null,
+          "dueDate": "2026-10-21",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e6-1",
+          "name": "X6-1",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 300000,
+          "actual": null,
+          "dueDate": "2026-10-10",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e6-2",
+          "name": "X6-2",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 750000,
+          "actual": 450000,
+          "dueDate": "2026-10-26",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e6-3",
+          "name": "X6-3",
+          "category": "Transport",
+          "method": "cash",
+          "planned": 400000,
+          "actual": null,
+          "dueDate": "2026-10-15",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e6-4",
+          "name": "X6-4",
+          "category": "O'zim uchun",
+          "method": "cash",
+          "planned": 900000,
+          "actual": null,
+          "dueDate": "2026-10-16",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p6-0",
+          "amount": 400000,
+          "purpose": "P6-0",
+          "method": "cash",
+          "spentAt": "2026-10-18",
+          "monthKey": "2026-10"
+        },
+        {
+          "id": "p6-1",
+          "amount": 250000,
+          "purpose": "P6-1",
+          "method": "cash",
+          "spentAt": "2026-10-05",
+          "monthKey": "2026-10"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-10",
+        "income": 2400000,
+        "incomeCard": 1700000,
+        "incomeCash": 700000,
+        "expense": 450000,
+        "expenseCard": 450000,
+        "expenseCash": 0,
+        "planned": 2900000,
+        "unpaidTotal": 2150000,
+        "unknownCount": 0,
+        "personalAllocated": 450000,
+        "personalSpent": 650000,
+        "byType": {
+          "Avans": {
+            "card": 0,
+            "cash": 700000
+          },
+          "KPI": {
+            "card": 1700000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 300000,
+            "actual": 0
+          },
+          "O'zim uchun": {
+            "planned": 2200000,
+            "actual": 450000
+          },
+          "Transport": {
+            "planned": 400000,
+            "actual": 0
+          }
+        },
+        "balance": 1950000,
+        "forecast": -200000,
+        "card": 1250000,
+        "cash": 700000,
+        "saved": 1750000
+      }
+    },
+    {
+      "name": "tasodifiy-7",
+      "monthKey": "2026-05",
+      "incomes": [
+        {
+          "id": "i7-0",
+          "amount": 2500000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-05-13",
+          "monthKey": "2026-05",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e7-0",
+          "name": "X7-0",
+          "category": "Transport",
+          "method": "card",
+          "planned": 750000,
+          "actual": 750000,
+          "dueDate": "2026-05-04",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e7-1",
+          "name": "X7-1",
+          "category": "Transport",
+          "method": "cash",
+          "planned": 250000,
+          "actual": null,
+          "dueDate": "2026-05-22",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e7-2",
+          "name": "X7-2",
+          "category": "Oziq-ovqat",
+          "method": "card",
+          "planned": null,
+          "actual": 200000,
+          "dueDate": "2026-05-13",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e7-3",
+          "name": "X7-3",
+          "category": "Qarz",
+          "method": "card",
+          "planned": 450000,
+          "actual": null,
+          "dueDate": "2026-05-22",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e7-4",
+          "name": "X7-4",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": 550000,
+          "actual": null,
+          "dueDate": "2026-05-24",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p7-0",
+          "amount": 250000,
+          "purpose": "P7-0",
+          "method": "cash",
+          "spentAt": "2026-05-28",
+          "monthKey": "2026-05"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-05",
+        "income": 2500000,
+        "incomeCard": 2500000,
+        "incomeCash": 0,
+        "expense": 950000,
+        "expenseCard": 950000,
+        "expenseCash": 0,
+        "planned": 2000000,
+        "unpaidTotal": 1250000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 250000,
+        "byType": {
+          "KPI": {
+            "card": 2500000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Oziq-ovqat": {
+            "planned": 550000,
+            "actual": 200000
+          },
+          "Qarz": {
+            "planned": 450000,
+            "actual": 0
+          },
+          "Transport": {
+            "planned": 1000000,
+            "actual": 750000
+          }
+        },
+        "balance": 1550000,
+        "forecast": 300000,
+        "card": 1550000,
+        "cash": 0,
+        "saved": 1300000
+      }
+    },
+    {
+      "name": "tasodifiy-8",
+      "monthKey": "2026-11",
+      "incomes": [
+        {
+          "id": "i8-0",
+          "amount": 3300000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-11-09",
+          "monthKey": "2026-11",
+          "debtId": null
+        }
+      ],
+      "expenses": [],
+      "personalSpends": [
+        {
+          "id": "p8-0",
+          "amount": 200000,
+          "purpose": "P8-0",
+          "method": "card",
+          "spentAt": "2026-11-14",
+          "monthKey": "2026-11"
+        },
+        {
+          "id": "p8-1",
+          "amount": 100000,
+          "purpose": "P8-1",
+          "method": "card",
+          "spentAt": "2026-11-10",
+          "monthKey": "2026-11"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-11",
+        "income": 3300000,
+        "incomeCard": 3300000,
+        "incomeCash": 0,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 0,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 300000,
+        "byType": {
+          "KPI": {
+            "card": 3300000,
+            "cash": 0
+          }
+        },
+        "byCategory": {},
+        "balance": 3300000,
+        "forecast": 3300000,
+        "card": 3300000,
+        "cash": 0,
+        "saved": 3000000
+      }
+    },
+    {
+      "name": "tasodifiy-9",
+      "monthKey": "2026-11",
+      "incomes": [
+        {
+          "id": "i9-0",
+          "amount": 200000,
+          "type": "Qo'shimcha",
+          "method": "cash",
+          "paidAt": "2026-11-16",
+          "monthKey": "2026-11",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e9-0",
+          "name": "X9-0",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 100000,
+          "actual": 750000,
+          "dueDate": "2026-11-15",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e9-1",
+          "name": "X9-1",
+          "category": "Kommunal",
+          "method": "card",
+          "planned": 900000,
+          "actual": null,
+          "dueDate": "2026-11-14",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e9-2",
+          "name": "X9-2",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": null,
+          "actual": 250000,
+          "dueDate": "2026-11-11",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p9-0",
+          "amount": 200000,
+          "purpose": "P9-0",
+          "method": "card",
+          "spentAt": "2026-11-19",
+          "monthKey": "2026-11"
+        },
+        {
+          "id": "p9-1",
+          "amount": 400000,
+          "purpose": "P9-1",
+          "method": "cash",
+          "spentAt": "2026-11-28",
+          "monthKey": "2026-11"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-11",
+        "income": 200000,
+        "incomeCard": 0,
+        "incomeCash": 200000,
+        "expense": 1000000,
+        "expenseCard": 0,
+        "expenseCash": 1000000,
+        "planned": 1000000,
+        "unpaidTotal": 900000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 600000,
+        "byType": {
+          "Qo'shimcha": {
+            "card": 0,
+            "cash": 200000
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 1000000,
+            "actual": 750000
+          },
+          "Oziq-ovqat": {
+            "planned": 0,
+            "actual": 250000
+          }
+        },
+        "balance": -800000,
+        "forecast": -1700000,
+        "card": 0,
+        "cash": -800000,
+        "saved": -1400000
+      }
+    },
+    {
+      "name": "tasodifiy-10",
+      "monthKey": "2026-06",
+      "incomes": [
+        {
+          "id": "i10-0",
+          "amount": 2200000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-06-20",
+          "monthKey": "2026-06",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e10-0",
+          "name": "X10-0",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 550000,
+          "actual": null,
+          "dueDate": "2026-06-22",
+          "monthKey": "2026-06",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p10-0",
+          "amount": 100000,
+          "purpose": "P10-0",
+          "method": "card",
+          "spentAt": "2026-06-10",
+          "monthKey": "2026-06"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-06",
+        "income": 2200000,
+        "incomeCard": 0,
+        "incomeCash": 2200000,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 550000,
+        "unpaidTotal": 550000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 100000,
+        "byType": {
+          "Oylik": {
+            "card": 0,
+            "cash": 2200000
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 550000,
+            "actual": 0
+          }
+        },
+        "balance": 2200000,
+        "forecast": 1650000,
+        "card": 0,
+        "cash": 2200000,
+        "saved": 2100000
+      }
+    },
+    {
+      "name": "tasodifiy-11",
+      "monthKey": "2026-05",
+      "incomes": [
+        {
+          "id": "i11-0",
+          "amount": 3000000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-05-04",
+          "monthKey": "2026-05",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e11-0",
+          "name": "X11-0",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 350000,
+          "actual": 250000,
+          "dueDate": "2026-05-04",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e11-1",
+          "name": "X11-1",
+          "category": "O'zim uchun",
+          "method": "cash",
+          "planned": 950000,
+          "actual": null,
+          "dueDate": "2026-05-20",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e11-2",
+          "name": "X11-2",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 50000,
+          "actual": 200000,
+          "dueDate": "2026-05-14",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p11-0",
+          "amount": 400000,
+          "purpose": "P11-0",
+          "method": "cash",
+          "spentAt": "2026-05-23",
+          "monthKey": "2026-05"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-05",
+        "income": 3000000,
+        "incomeCard": 3000000,
+        "incomeCash": 0,
+        "expense": 450000,
+        "expenseCard": 0,
+        "expenseCash": 450000,
+        "planned": 1350000,
+        "unpaidTotal": 950000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 400000,
+        "byType": {
+          "Avans": {
+            "card": 3000000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 50000,
+            "actual": 200000
+          },
+          "O'zim uchun": {
+            "planned": 950000,
+            "actual": 0
+          },
+          "Qarz": {
+            "planned": 350000,
+            "actual": 250000
+          }
+        },
+        "balance": 2550000,
+        "forecast": 1600000,
+        "card": 3000000,
+        "cash": -450000,
+        "saved": 2150000
+      }
+    },
+    {
+      "name": "tasodifiy-12",
+      "monthKey": "2026-12",
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "e12-0",
+          "name": "X12-0",
+          "category": "Transport",
+          "method": "card",
+          "planned": 700000,
+          "actual": 550000,
+          "dueDate": "2026-12-10",
+          "monthKey": "2026-12",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p12-0",
+          "amount": 150000,
+          "purpose": "P12-0",
+          "method": "card",
+          "spentAt": "2026-12-23",
+          "monthKey": "2026-12"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-12",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 550000,
+        "expenseCard": 550000,
+        "expenseCash": 0,
+        "planned": 700000,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 150000,
+        "byType": {},
+        "byCategory": {
+          "Transport": {
+            "planned": 700000,
+            "actual": 550000
+          }
+        },
+        "balance": -550000,
+        "forecast": -550000,
+        "card": -550000,
+        "cash": 0,
+        "saved": -700000
+      }
+    },
+    {
+      "name": "tasodifiy-13",
+      "monthKey": "2026-11",
+      "incomes": [
+        {
+          "id": "i13-0",
+          "amount": 400000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-11-07",
+          "monthKey": "2026-11",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e13-0",
+          "name": "X13-0",
+          "category": "Qarz",
+          "method": "card",
+          "planned": 250000,
+          "actual": null,
+          "dueDate": "2026-11-05",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e13-1",
+          "name": "X13-1",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 1000000,
+          "actual": 250000,
+          "dueDate": "2026-11-16",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p13-0",
+          "amount": 50000,
+          "purpose": "P13-0",
+          "method": "cash",
+          "spentAt": "2026-11-25",
+          "monthKey": "2026-11"
+        },
+        {
+          "id": "p13-1",
+          "amount": 350000,
+          "purpose": "P13-1",
+          "method": "cash",
+          "spentAt": "2026-11-15",
+          "monthKey": "2026-11"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-11",
+        "income": 400000,
+        "incomeCard": 0,
+        "incomeCash": 400000,
+        "expense": 250000,
+        "expenseCard": 0,
+        "expenseCash": 250000,
+        "planned": 1250000,
+        "unpaidTotal": 250000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 400000,
+        "byType": {
+          "Oylik": {
+            "card": 0,
+            "cash": 400000
+          }
+        },
+        "byCategory": {
+          "Qarz": {
+            "planned": 1250000,
+            "actual": 250000
+          }
+        },
+        "balance": 150000,
+        "forecast": -100000,
+        "card": 0,
+        "cash": 150000,
+        "saved": -250000
+      }
+    },
+    {
+      "name": "tasodifiy-14",
+      "monthKey": "2026-11",
+      "incomes": [
+        {
+          "id": "i14-0",
+          "amount": 3300000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-11-13",
+          "monthKey": "2026-11",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e14-0",
+          "name": "X14-0",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 300000,
+          "actual": 800000,
+          "dueDate": "2026-11-15",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e14-1",
+          "name": "X14-1",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 700000,
+          "actual": 850000,
+          "dueDate": "2026-11-12",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p14-0",
+          "amount": 100000,
+          "purpose": "P14-0",
+          "method": "card",
+          "spentAt": "2026-11-23",
+          "monthKey": "2026-11"
+        },
+        {
+          "id": "p14-1",
+          "amount": 100000,
+          "purpose": "P14-1",
+          "method": "cash",
+          "spentAt": "2026-11-20",
+          "monthKey": "2026-11"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-11",
+        "income": 3300000,
+        "incomeCard": 3300000,
+        "incomeCash": 0,
+        "expense": 1650000,
+        "expenseCard": 0,
+        "expenseCash": 1650000,
+        "planned": 1000000,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 200000,
+        "byType": {
+          "KPI": {
+            "card": 3300000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 1000000,
+            "actual": 1650000
+          }
+        },
+        "balance": 1650000,
+        "forecast": 1650000,
+        "card": 3300000,
+        "cash": -1650000,
+        "saved": 1450000
+      }
+    },
+    {
+      "name": "tasodifiy-15",
+      "monthKey": "2026-05",
+      "incomes": [
+        {
+          "id": "i15-0",
+          "amount": 3600000,
+          "type": "KPI",
+          "method": "cash",
+          "paidAt": "2026-05-21",
+          "monthKey": "2026-05",
+          "debtId": null
+        },
+        {
+          "id": "i15-1",
+          "amount": 3500000,
+          "type": "KPI",
+          "method": "cash",
+          "paidAt": "2026-05-26",
+          "monthKey": "2026-05",
+          "debtId": null
+        },
+        {
+          "id": "i15-2",
+          "amount": 3900000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-05-15",
+          "monthKey": "2026-05",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e15-0",
+          "name": "X15-0",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 1000000,
+          "actual": 300000,
+          "dueDate": "2026-05-26",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-05",
+        "income": 11000000,
+        "incomeCard": 0,
+        "incomeCash": 11000000,
+        "expense": 300000,
+        "expenseCard": 300000,
+        "expenseCash": 0,
+        "planned": 1000000,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 300000,
+        "personalSpent": 0,
+        "byType": {
+          "KPI": {
+            "card": 0,
+            "cash": 7100000
+          },
+          "Oylik": {
+            "card": 0,
+            "cash": 3900000
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 1000000,
+            "actual": 300000
+          }
+        },
+        "balance": 10700000,
+        "forecast": 10700000,
+        "card": -300000,
+        "cash": 11000000,
+        "saved": 11000000
+      }
+    },
+    {
+      "name": "tasodifiy-16",
+      "monthKey": "2026-08",
+      "incomes": [
+        {
+          "id": "i16-0",
+          "amount": 2100000,
+          "type": "Oylik",
+          "method": "card",
+          "paidAt": "2026-08-26",
+          "monthKey": "2026-08",
+          "debtId": null
+        },
+        {
+          "id": "i16-1",
+          "amount": 3900000,
+          "type": "Avans",
+          "method": "cash",
+          "paidAt": "2026-08-12",
+          "monthKey": "2026-08",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e16-0",
+          "name": "X16-0",
+          "category": "Transport",
+          "method": "cash",
+          "planned": 750000,
+          "actual": null,
+          "dueDate": "2026-08-21",
+          "monthKey": "2026-08",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e16-1",
+          "name": "X16-1",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 50000,
+          "actual": 850000,
+          "dueDate": "2026-08-02",
+          "monthKey": "2026-08",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-08",
+        "income": 6000000,
+        "incomeCard": 2100000,
+        "incomeCash": 3900000,
+        "expense": 850000,
+        "expenseCard": 0,
+        "expenseCash": 850000,
+        "planned": 800000,
+        "unpaidTotal": 750000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "Avans": {
+            "card": 0,
+            "cash": 3900000
+          },
+          "Oylik": {
+            "card": 2100000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 50000,
+            "actual": 850000
+          },
+          "Transport": {
+            "planned": 750000,
+            "actual": 0
+          }
+        },
+        "balance": 5150000,
+        "forecast": 4400000,
+        "card": 2100000,
+        "cash": 3050000,
+        "saved": 5150000
+      }
+    },
+    {
+      "name": "tasodifiy-17",
+      "monthKey": "2026-03",
+      "incomes": [
+        {
+          "id": "i17-0",
+          "amount": 3900000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-03-16",
+          "monthKey": "2026-03",
+          "debtId": null
+        },
+        {
+          "id": "i17-1",
+          "amount": 1000000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-03-22",
+          "monthKey": "2026-03",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e17-0",
+          "name": "X17-0",
+          "category": "Transport",
+          "method": "cash",
+          "planned": 700000,
+          "actual": null,
+          "dueDate": "2026-03-01",
+          "monthKey": "2026-03",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e17-1",
+          "name": "X17-1",
+          "category": "O'zim uchun",
+          "method": "cash",
+          "planned": 650000,
+          "actual": null,
+          "dueDate": "2026-03-18",
+          "monthKey": "2026-03",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e17-2",
+          "name": "X17-2",
+          "category": "Oziq-ovqat",
+          "method": "card",
+          "planned": null,
+          "actual": 800000,
+          "dueDate": "2026-03-27",
+          "monthKey": "2026-03",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p17-0",
+          "amount": 350000,
+          "purpose": "P17-0",
+          "method": "cash",
+          "spentAt": "2026-03-12",
+          "monthKey": "2026-03"
+        },
+        {
+          "id": "p17-1",
+          "amount": 250000,
+          "purpose": "P17-1",
+          "method": "card",
+          "spentAt": "2026-03-12",
+          "monthKey": "2026-03"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-03",
+        "income": 4900000,
+        "incomeCard": 1000000,
+        "incomeCash": 3900000,
+        "expense": 800000,
+        "expenseCard": 800000,
+        "expenseCash": 0,
+        "planned": 1350000,
+        "unpaidTotal": 1350000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 600000,
+        "byType": {
+          "Avans": {
+            "card": 1000000,
+            "cash": 0
+          },
+          "Oylik": {
+            "card": 0,
+            "cash": 3900000
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 650000,
+            "actual": 0
+          },
+          "Oziq-ovqat": {
+            "planned": 0,
+            "actual": 800000
+          },
+          "Transport": {
+            "planned": 700000,
+            "actual": 0
+          }
+        },
+        "balance": 4100000,
+        "forecast": 2750000,
+        "card": 200000,
+        "cash": 3900000,
+        "saved": 3500000
+      }
+    },
+    {
+      "name": "tasodifiy-18",
+      "monthKey": "2026-10",
+      "incomes": [
+        {
+          "id": "i18-0",
+          "amount": 3200000,
+          "type": "Avans",
+          "method": "cash",
+          "paidAt": "2026-10-15",
+          "monthKey": "2026-10",
+          "debtId": null
+        },
+        {
+          "id": "i18-1",
+          "amount": 800000,
+          "type": "Qo'shimcha",
+          "method": "card",
+          "paidAt": "2026-10-23",
+          "monthKey": "2026-10",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e18-0",
+          "name": "X18-0",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 800000,
+          "actual": 800000,
+          "dueDate": "2026-10-13",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e18-1",
+          "name": "X18-1",
+          "category": "Kommunal",
+          "method": "card",
+          "planned": 700000,
+          "actual": null,
+          "dueDate": "2026-10-09",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-10",
+        "income": 4000000,
+        "incomeCard": 800000,
+        "incomeCash": 3200000,
+        "expense": 800000,
+        "expenseCard": 0,
+        "expenseCash": 800000,
+        "planned": 1500000,
+        "unpaidTotal": 700000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "Avans": {
+            "card": 0,
+            "cash": 3200000
+          },
+          "Qo'shimcha": {
+            "card": 800000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 700000,
+            "actual": 0
+          },
+          "Qarz": {
+            "planned": 800000,
+            "actual": 800000
+          }
+        },
+        "balance": 3200000,
+        "forecast": 2500000,
+        "card": 800000,
+        "cash": 2400000,
+        "saved": 3200000
+      }
+    },
+    {
+      "name": "tasodifiy-19",
+      "monthKey": "2026-02",
+      "incomes": [
+        {
+          "id": "i19-0",
+          "amount": 2200000,
+          "type": "Oylik",
+          "method": "card",
+          "paidAt": "2026-02-16",
+          "monthKey": "2026-02",
+          "debtId": null
+        },
+        {
+          "id": "i19-1",
+          "amount": 900000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-02-14",
+          "monthKey": "2026-02",
+          "debtId": null
+        },
+        {
+          "id": "i19-2",
+          "amount": 600000,
+          "type": "Qo'shimcha",
+          "method": "cash",
+          "paidAt": "2026-02-19",
+          "monthKey": "2026-02",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e19-0",
+          "name": "X19-0",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": 300000,
+          "actual": null,
+          "dueDate": "2026-02-10",
+          "monthKey": "2026-02",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-02",
+        "income": 3700000,
+        "incomeCard": 3100000,
+        "incomeCash": 600000,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 300000,
+        "unpaidTotal": 300000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "KPI": {
+            "card": 900000,
+            "cash": 0
+          },
+          "Oylik": {
+            "card": 2200000,
+            "cash": 0
+          },
+          "Qo'shimcha": {
+            "card": 0,
+            "cash": 600000
+          }
+        },
+        "byCategory": {
+          "Oziq-ovqat": {
+            "planned": 300000,
+            "actual": 0
+          }
+        },
+        "balance": 3700000,
+        "forecast": 3400000,
+        "card": 3100000,
+        "cash": 600000,
+        "saved": 3700000
+      }
+    },
+    {
+      "name": "tasodifiy-20",
+      "monthKey": "2026-08",
+      "incomes": [
+        {
+          "id": "i20-0",
+          "amount": 1500000,
+          "type": "KPI",
+          "method": "cash",
+          "paidAt": "2026-08-20",
+          "monthKey": "2026-08",
+          "debtId": null
+        },
+        {
+          "id": "i20-1",
+          "amount": 100000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-08-13",
+          "monthKey": "2026-08",
+          "debtId": null
+        }
+      ],
+      "expenses": [],
+      "personalSpends": [
+        {
+          "id": "p20-0",
+          "amount": 50000,
+          "purpose": "P20-0",
+          "method": "card",
+          "spentAt": "2026-08-04",
+          "monthKey": "2026-08"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-08",
+        "income": 1600000,
+        "incomeCard": 0,
+        "incomeCash": 1600000,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 0,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 50000,
+        "byType": {
+          "KPI": {
+            "card": 0,
+            "cash": 1500000
+          },
+          "Oylik": {
+            "card": 0,
+            "cash": 100000
+          }
+        },
+        "byCategory": {},
+        "balance": 1600000,
+        "forecast": 1600000,
+        "card": 0,
+        "cash": 1600000,
+        "saved": 1550000
+      }
+    },
+    {
+      "name": "tasodifiy-21",
+      "monthKey": "2026-01",
+      "incomes": [
+        {
+          "id": "i21-0",
+          "amount": 2000000,
+          "type": "Qo'shimcha",
+          "method": "card",
+          "paidAt": "2026-01-26",
+          "monthKey": "2026-01",
+          "debtId": null
+        },
+        {
+          "id": "i21-1",
+          "amount": 300000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-01-15",
+          "monthKey": "2026-01",
+          "debtId": null
+        },
+        {
+          "id": "i21-2",
+          "amount": 400000,
+          "type": "Qo'shimcha",
+          "method": "cash",
+          "paidAt": "2026-01-25",
+          "monthKey": "2026-01",
+          "debtId": null
+        }
+      ],
+      "expenses": [],
+      "personalSpends": [
+        {
+          "id": "p21-0",
+          "amount": 250000,
+          "purpose": "P21-0",
+          "method": "cash",
+          "spentAt": "2026-01-04",
+          "monthKey": "2026-01"
+        },
+        {
+          "id": "p21-1",
+          "amount": 400000,
+          "purpose": "P21-1",
+          "method": "card",
+          "spentAt": "2026-01-24",
+          "monthKey": "2026-01"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-01",
+        "income": 2700000,
+        "incomeCard": 2300000,
+        "incomeCash": 400000,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 0,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 650000,
+        "byType": {
+          "Avans": {
+            "card": 300000,
+            "cash": 0
+          },
+          "Qo'shimcha": {
+            "card": 2000000,
+            "cash": 400000
+          }
+        },
+        "byCategory": {},
+        "balance": 2700000,
+        "forecast": 2700000,
+        "card": 2300000,
+        "cash": 400000,
+        "saved": 2050000
+      }
+    },
+    {
+      "name": "tasodifiy-22",
+      "monthKey": "2026-11",
+      "incomes": [
+        {
+          "id": "i22-0",
+          "amount": 1800000,
+          "type": "Qo'shimcha",
+          "method": "card",
+          "paidAt": "2026-11-25",
+          "monthKey": "2026-11",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e22-0",
+          "name": "X22-0",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": 500000,
+          "actual": 850000,
+          "dueDate": "2026-11-13",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e22-1",
+          "name": "X22-1",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 400000,
+          "actual": null,
+          "dueDate": "2026-11-25",
+          "monthKey": "2026-11",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-11",
+        "income": 1800000,
+        "incomeCard": 1800000,
+        "incomeCash": 0,
+        "expense": 850000,
+        "expenseCard": 0,
+        "expenseCash": 850000,
+        "planned": 900000,
+        "unpaidTotal": 400000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "Qo'shimcha": {
+            "card": 1800000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 400000,
+            "actual": 0
+          },
+          "Oziq-ovqat": {
+            "planned": 500000,
+            "actual": 850000
+          }
+        },
+        "balance": 950000,
+        "forecast": 550000,
+        "card": 1800000,
+        "cash": -850000,
+        "saved": 950000
+      }
+    },
+    {
+      "name": "tasodifiy-23",
+      "monthKey": "2026-07",
+      "incomes": [
+        {
+          "id": "i23-0",
+          "amount": 1800000,
+          "type": "Qo'shimcha",
+          "method": "card",
+          "paidAt": "2026-07-23",
+          "monthKey": "2026-07",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e23-0",
+          "name": "X23-0",
+          "category": "Qarz",
+          "method": "card",
+          "planned": 900000,
+          "actual": null,
+          "dueDate": "2026-07-28",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p23-0",
+          "amount": 400000,
+          "purpose": "P23-0",
+          "method": "card",
+          "spentAt": "2026-07-21",
+          "monthKey": "2026-07"
+        },
+        {
+          "id": "p23-1",
+          "amount": 250000,
+          "purpose": "P23-1",
+          "method": "cash",
+          "spentAt": "2026-07-27",
+          "monthKey": "2026-07"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-07",
+        "income": 1800000,
+        "incomeCard": 1800000,
+        "incomeCash": 0,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 900000,
+        "unpaidTotal": 900000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 650000,
+        "byType": {
+          "Qo'shimcha": {
+            "card": 1800000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Qarz": {
+            "planned": 900000,
+            "actual": 0
+          }
+        },
+        "balance": 1800000,
+        "forecast": 900000,
+        "card": 1800000,
+        "cash": 0,
+        "saved": 1150000
+      }
+    },
+    {
+      "name": "tasodifiy-24",
+      "monthKey": "2026-12",
+      "incomes": [],
+      "expenses": [],
+      "personalSpends": [
+        {
+          "id": "p24-0",
+          "amount": 50000,
+          "purpose": "P24-0",
+          "method": "cash",
+          "spentAt": "2026-12-06",
+          "monthKey": "2026-12"
+        },
+        {
+          "id": "p24-1",
+          "amount": 100000,
+          "purpose": "P24-1",
+          "method": "cash",
+          "spentAt": "2026-12-01",
+          "monthKey": "2026-12"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-12",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 0,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 150000,
+        "byType": {},
+        "byCategory": {},
+        "balance": 0,
+        "forecast": 0,
+        "card": 0,
+        "cash": 0,
+        "saved": -150000
+      }
+    },
+    {
+      "name": "tasodifiy-25",
+      "monthKey": "2026-10",
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "e25-0",
+          "name": "X25-0",
+          "category": "Kommunal",
+          "method": "card",
+          "planned": 400000,
+          "actual": 700000,
+          "dueDate": "2026-10-25",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e25-1",
+          "name": "X25-1",
+          "category": "Kommunal",
+          "method": "card",
+          "planned": 100000,
+          "actual": null,
+          "dueDate": "2026-10-04",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e25-2",
+          "name": "X25-2",
+          "category": "Oziq-ovqat",
+          "method": "card",
+          "planned": 150000,
+          "actual": null,
+          "dueDate": "2026-10-28",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p25-0",
+          "amount": 250000,
+          "purpose": "P25-0",
+          "method": "card",
+          "spentAt": "2026-10-08",
+          "monthKey": "2026-10"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-10",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 700000,
+        "expenseCard": 700000,
+        "expenseCash": 0,
+        "planned": 650000,
+        "unpaidTotal": 250000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 250000,
+        "byType": {},
+        "byCategory": {
+          "Kommunal": {
+            "planned": 500000,
+            "actual": 700000
+          },
+          "Oziq-ovqat": {
+            "planned": 150000,
+            "actual": 0
+          }
+        },
+        "balance": -700000,
+        "forecast": -950000,
+        "card": -700000,
+        "cash": 0,
+        "saved": -950000
+      }
+    },
+    {
+      "name": "tasodifiy-26",
+      "monthKey": "2026-04",
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "e26-0",
+          "name": "X26-0",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 650000,
+          "actual": 800000,
+          "dueDate": "2026-04-13",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e26-1",
+          "name": "X26-1",
+          "category": "Kommunal",
+          "method": "card",
+          "planned": 650000,
+          "actual": null,
+          "dueDate": "2026-04-15",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e26-2",
+          "name": "X26-2",
+          "category": "Kommunal",
+          "method": "card",
+          "planned": 750000,
+          "actual": 500000,
+          "dueDate": "2026-04-24",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e26-3",
+          "name": "X26-3",
+          "category": "O'zim uchun",
+          "method": "cash",
+          "planned": 650000,
+          "actual": null,
+          "dueDate": "2026-04-11",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e26-4",
+          "name": "X26-4",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": 200000,
+          "actual": 750000,
+          "dueDate": "2026-04-07",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p26-0",
+          "amount": 250000,
+          "purpose": "P26-0",
+          "method": "card",
+          "spentAt": "2026-04-01",
+          "monthKey": "2026-04"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-04",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 2050000,
+        "expenseCard": 500000,
+        "expenseCash": 1550000,
+        "planned": 2900000,
+        "unpaidTotal": 1300000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 250000,
+        "byType": {},
+        "byCategory": {
+          "Kommunal": {
+            "planned": 2050000,
+            "actual": 1300000
+          },
+          "O'zim uchun": {
+            "planned": 650000,
+            "actual": 0
+          },
+          "Oziq-ovqat": {
+            "planned": 200000,
+            "actual": 750000
+          }
+        },
+        "balance": -2050000,
+        "forecast": -3350000,
+        "card": -500000,
+        "cash": -1550000,
+        "saved": -2300000
+      }
+    },
+    {
+      "name": "tasodifiy-27",
+      "monthKey": "2026-04",
+      "incomes": [
+        {
+          "id": "i27-0",
+          "amount": 2000000,
+          "type": "Qo'shimcha",
+          "method": "cash",
+          "paidAt": "2026-04-23",
+          "monthKey": "2026-04",
+          "debtId": null
+        },
+        {
+          "id": "i27-1",
+          "amount": 400000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-04-09",
+          "monthKey": "2026-04",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e27-0",
+          "name": "X27-0",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 200000,
+          "actual": 750000,
+          "dueDate": "2026-04-20",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e27-1",
+          "name": "X27-1",
+          "category": "Oziq-ovqat",
+          "method": "card",
+          "planned": 800000,
+          "actual": null,
+          "dueDate": "2026-04-27",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p27-0",
+          "amount": 300000,
+          "purpose": "P27-0",
+          "method": "cash",
+          "spentAt": "2026-04-08",
+          "monthKey": "2026-04"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-04",
+        "income": 2400000,
+        "incomeCard": 400000,
+        "incomeCash": 2000000,
+        "expense": 750000,
+        "expenseCard": 750000,
+        "expenseCash": 0,
+        "planned": 1000000,
+        "unpaidTotal": 800000,
+        "unknownCount": 0,
+        "personalAllocated": 750000,
+        "personalSpent": 300000,
+        "byType": {
+          "Avans": {
+            "card": 400000,
+            "cash": 0
+          },
+          "Qo'shimcha": {
+            "card": 0,
+            "cash": 2000000
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 200000,
+            "actual": 750000
+          },
+          "Oziq-ovqat": {
+            "planned": 800000,
+            "actual": 0
+          }
+        },
+        "balance": 1650000,
+        "forecast": 850000,
+        "card": -350000,
+        "cash": 2000000,
+        "saved": 2100000
+      }
+    },
+    {
+      "name": "tasodifiy-28",
+      "monthKey": "2026-02",
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "e28-0",
+          "name": "X28-0",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 100000,
+          "actual": null,
+          "dueDate": "2026-02-27",
+          "monthKey": "2026-02",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-02",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 100000,
+        "unpaidTotal": 100000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {},
+        "byCategory": {
+          "Qarz": {
+            "planned": 100000,
+            "actual": 0
+          }
+        },
+        "balance": 0,
+        "forecast": -100000,
+        "card": 0,
+        "cash": 0,
+        "saved": 0
+      }
+    },
+    {
+      "name": "tasodifiy-29",
+      "monthKey": "2026-05",
+      "incomes": [
+        {
+          "id": "i29-0",
+          "amount": 1800000,
+          "type": "Oylik",
+          "method": "card",
+          "paidAt": "2026-05-13",
+          "monthKey": "2026-05",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e29-0",
+          "name": "X29-0",
+          "category": "Oziq-ovqat",
+          "method": "card",
+          "planned": 850000,
+          "actual": 950000,
+          "dueDate": "2026-05-22",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e29-1",
+          "name": "X29-1",
+          "category": "Transport",
+          "method": "card",
+          "planned": 300000,
+          "actual": 1000000,
+          "dueDate": "2026-05-01",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-05",
+        "income": 1800000,
+        "incomeCard": 1800000,
+        "incomeCash": 0,
+        "expense": 1950000,
+        "expenseCard": 1950000,
+        "expenseCash": 0,
+        "planned": 1150000,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "Oylik": {
+            "card": 1800000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Oziq-ovqat": {
+            "planned": 850000,
+            "actual": 950000
+          },
+          "Transport": {
+            "planned": 300000,
+            "actual": 1000000
+          }
+        },
+        "balance": -150000,
+        "forecast": -150000,
+        "card": -150000,
+        "cash": 0,
+        "saved": -150000
+      }
+    },
+    {
+      "name": "tasodifiy-30",
+      "monthKey": "2026-05",
+      "incomes": [
+        {
+          "id": "i30-0",
+          "amount": 1000000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-05-25",
+          "monthKey": "2026-05",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e30-0",
+          "name": "X30-0",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": null,
+          "actual": 950000,
+          "dueDate": "2026-05-18",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e30-1",
+          "name": "X30-1",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 600000,
+          "actual": 550000,
+          "dueDate": "2026-05-10",
+          "monthKey": "2026-05",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-05",
+        "income": 1000000,
+        "incomeCard": 1000000,
+        "incomeCash": 0,
+        "expense": 1500000,
+        "expenseCard": 550000,
+        "expenseCash": 950000,
+        "planned": 600000,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 550000,
+        "personalSpent": 0,
+        "byType": {
+          "KPI": {
+            "card": 1000000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 600000,
+            "actual": 550000
+          },
+          "Oziq-ovqat": {
+            "planned": 0,
+            "actual": 950000
+          }
+        },
+        "balance": -500000,
+        "forecast": -500000,
+        "card": 450000,
+        "cash": -950000,
+        "saved": 50000
+      }
+    },
+    {
+      "name": "tasodifiy-31",
+      "monthKey": "2026-02",
+      "incomes": [
+        {
+          "id": "i31-0",
+          "amount": 300000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-02-19",
+          "monthKey": "2026-02",
+          "debtId": null
+        },
+        {
+          "id": "i31-1",
+          "amount": 500000,
+          "type": "KPI",
+          "method": "cash",
+          "paidAt": "2026-02-25",
+          "monthKey": "2026-02",
+          "debtId": null
+        }
+      ],
+      "expenses": [],
+      "personalSpends": [
+        {
+          "id": "p31-0",
+          "amount": 200000,
+          "purpose": "P31-0",
+          "method": "card",
+          "spentAt": "2026-02-26",
+          "monthKey": "2026-02"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-02",
+        "income": 800000,
+        "incomeCard": 300000,
+        "incomeCash": 500000,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 0,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 200000,
+        "byType": {
+          "KPI": {
+            "card": 300000,
+            "cash": 500000
+          }
+        },
+        "byCategory": {},
+        "balance": 800000,
+        "forecast": 800000,
+        "card": 300000,
+        "cash": 500000,
+        "saved": 600000
+      }
+    },
+    {
+      "name": "tasodifiy-32",
+      "monthKey": "2026-10",
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "e32-0",
+          "name": "X32-0",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": null,
+          "actual": null,
+          "dueDate": "2026-10-24",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e32-1",
+          "name": "X32-1",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 400000,
+          "actual": null,
+          "dueDate": "2026-10-06",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p32-0",
+          "amount": 200000,
+          "purpose": "P32-0",
+          "method": "card",
+          "spentAt": "2026-10-14",
+          "monthKey": "2026-10"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-10",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 400000,
+        "unpaidTotal": 400000,
+        "unknownCount": 1,
+        "personalAllocated": 0,
+        "personalSpent": 200000,
+        "byType": {},
+        "byCategory": {
+          "Qarz": {
+            "planned": 400000,
+            "actual": 0
+          }
+        },
+        "balance": 0,
+        "forecast": -400000,
+        "card": 0,
+        "cash": 0,
+        "saved": -200000
+      }
+    },
+    {
+      "name": "tasodifiy-33",
+      "monthKey": "2026-04",
+      "incomes": [
+        {
+          "id": "i33-0",
+          "amount": 2300000,
+          "type": "Oylik",
+          "method": "cash",
+          "paidAt": "2026-04-09",
+          "monthKey": "2026-04",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e33-0",
+          "name": "X33-0",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": 1000000,
+          "actual": null,
+          "dueDate": "2026-04-04",
+          "monthKey": "2026-04",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-04",
+        "income": 2300000,
+        "incomeCard": 0,
+        "incomeCash": 2300000,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 1000000,
+        "unpaidTotal": 1000000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "Oylik": {
+            "card": 0,
+            "cash": 2300000
+          }
+        },
+        "byCategory": {
+          "Oziq-ovqat": {
+            "planned": 1000000,
+            "actual": 0
+          }
+        },
+        "balance": 2300000,
+        "forecast": 1300000,
+        "card": 0,
+        "cash": 2300000,
+        "saved": 2300000
+      }
+    },
+    {
+      "name": "tasodifiy-34",
+      "monthKey": "2026-02",
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "e34-0",
+          "name": "X34-0",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": 900000,
+          "actual": null,
+          "dueDate": "2026-02-28",
+          "monthKey": "2026-02",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e34-1",
+          "name": "X34-1",
+          "category": "O'zim uchun",
+          "method": "cash",
+          "planned": 100000,
+          "actual": 950000,
+          "dueDate": "2026-02-27",
+          "monthKey": "2026-02",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p34-0",
+          "amount": 100000,
+          "purpose": "P34-0",
+          "method": "cash",
+          "spentAt": "2026-02-24",
+          "monthKey": "2026-02"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-02",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 950000,
+        "expenseCard": 0,
+        "expenseCash": 950000,
+        "planned": 1000000,
+        "unpaidTotal": 900000,
+        "unknownCount": 0,
+        "personalAllocated": 950000,
+        "personalSpent": 100000,
+        "byType": {},
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 100000,
+            "actual": 950000
+          },
+          "Oziq-ovqat": {
+            "planned": 900000,
+            "actual": 0
+          }
+        },
+        "balance": -950000,
+        "forecast": -1850000,
+        "card": 0,
+        "cash": -950000,
+        "saved": -100000
+      }
+    },
+    {
+      "name": "tasodifiy-35",
+      "monthKey": "2026-07",
+      "incomes": [
+        {
+          "id": "i35-0",
+          "amount": 1700000,
+          "type": "KPI",
+          "method": "cash",
+          "paidAt": "2026-07-24",
+          "monthKey": "2026-07",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e35-0",
+          "name": "X35-0",
+          "category": "Transport",
+          "method": "cash",
+          "planned": 400000,
+          "actual": null,
+          "dueDate": "2026-07-22",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e35-1",
+          "name": "X35-1",
+          "category": "Transport",
+          "method": "card",
+          "planned": 50000,
+          "actual": 200000,
+          "dueDate": "2026-07-28",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e35-2",
+          "name": "X35-2",
+          "category": "Oziq-ovqat",
+          "method": "cash",
+          "planned": 450000,
+          "actual": null,
+          "dueDate": "2026-07-08",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e35-3",
+          "name": "X35-3",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 800000,
+          "actual": null,
+          "dueDate": "2026-07-08",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [],
+      "expected": {
+        "monthKey": "2026-07",
+        "income": 1700000,
+        "incomeCard": 0,
+        "incomeCash": 1700000,
+        "expense": 200000,
+        "expenseCard": 200000,
+        "expenseCash": 0,
+        "planned": 1700000,
+        "unpaidTotal": 1650000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 0,
+        "byType": {
+          "KPI": {
+            "card": 0,
+            "cash": 1700000
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 800000,
+            "actual": 0
+          },
+          "Oziq-ovqat": {
+            "planned": 450000,
+            "actual": 0
+          },
+          "Transport": {
+            "planned": 450000,
+            "actual": 200000
+          }
+        },
+        "balance": 1500000,
+        "forecast": -150000,
+        "card": -200000,
+        "cash": 1700000,
+        "saved": 1500000
+      }
+    },
+    {
+      "name": "tasodifiy-36",
+      "monthKey": "2026-10",
+      "incomes": [],
+      "expenses": [
+        {
+          "id": "e36-0",
+          "name": "X36-0",
+          "category": "Transport",
+          "method": "cash",
+          "planned": 500000,
+          "actual": null,
+          "dueDate": "2026-10-28",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e36-1",
+          "name": "X36-1",
+          "category": "Qarz",
+          "method": "card",
+          "planned": 350000,
+          "actual": null,
+          "dueDate": "2026-10-19",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e36-2",
+          "name": "X36-2",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 450000,
+          "actual": null,
+          "dueDate": "2026-10-16",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e36-3",
+          "name": "X36-3",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 50000,
+          "actual": 600000,
+          "dueDate": "2026-10-10",
+          "monthKey": "2026-10",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p36-0",
+          "amount": 300000,
+          "purpose": "P36-0",
+          "method": "cash",
+          "spentAt": "2026-10-07",
+          "monthKey": "2026-10"
+        },
+        {
+          "id": "p36-1",
+          "amount": 50000,
+          "purpose": "P36-1",
+          "method": "card",
+          "spentAt": "2026-10-07",
+          "monthKey": "2026-10"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-10",
+        "income": 0,
+        "incomeCard": 0,
+        "incomeCash": 0,
+        "expense": 600000,
+        "expenseCard": 0,
+        "expenseCash": 600000,
+        "planned": 1350000,
+        "unpaidTotal": 1300000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 350000,
+        "byType": {},
+        "byCategory": {
+          "Kommunal": {
+            "planned": 500000,
+            "actual": 600000
+          },
+          "Qarz": {
+            "planned": 350000,
+            "actual": 0
+          },
+          "Transport": {
+            "planned": 500000,
+            "actual": 0
+          }
+        },
+        "balance": -600000,
+        "forecast": -1900000,
+        "card": 0,
+        "cash": -600000,
+        "saved": -950000
+      }
+    },
+    {
+      "name": "tasodifiy-37",
+      "monthKey": "2026-06",
+      "incomes": [
+        {
+          "id": "i37-0",
+          "amount": 600000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-06-04",
+          "monthKey": "2026-06",
+          "debtId": null
+        },
+        {
+          "id": "i37-1",
+          "amount": 1200000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-06-14",
+          "monthKey": "2026-06",
+          "debtId": null
+        },
+        {
+          "id": "i37-2",
+          "amount": 3000000,
+          "type": "Avans",
+          "method": "card",
+          "paidAt": "2026-06-23",
+          "monthKey": "2026-06",
+          "debtId": null
+        }
+      ],
+      "expenses": [],
+      "personalSpends": [
+        {
+          "id": "p37-0",
+          "amount": 150000,
+          "purpose": "P37-0",
+          "method": "cash",
+          "spentAt": "2026-06-23",
+          "monthKey": "2026-06"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-06",
+        "income": 4800000,
+        "incomeCard": 4800000,
+        "incomeCash": 0,
+        "expense": 0,
+        "expenseCard": 0,
+        "expenseCash": 0,
+        "planned": 0,
+        "unpaidTotal": 0,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 150000,
+        "byType": {
+          "Avans": {
+            "card": 4200000,
+            "cash": 0
+          },
+          "KPI": {
+            "card": 600000,
+            "cash": 0
+          }
+        },
+        "byCategory": {},
+        "balance": 4800000,
+        "forecast": 4800000,
+        "card": 4800000,
+        "cash": 0,
+        "saved": 4650000
+      }
+    },
+    {
+      "name": "tasodifiy-38",
+      "monthKey": "2026-09",
+      "incomes": [
+        {
+          "id": "i38-0",
+          "amount": 3700000,
+          "type": "Avans",
+          "method": "cash",
+          "paidAt": "2026-09-23",
+          "monthKey": "2026-09",
+          "debtId": null
+        },
+        {
+          "id": "i38-1",
+          "amount": 2800000,
+          "type": "KPI",
+          "method": "card",
+          "paidAt": "2026-09-27",
+          "monthKey": "2026-09",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e38-0",
+          "name": "X38-0",
+          "category": "Transport",
+          "method": "card",
+          "planned": 550000,
+          "actual": 100000,
+          "dueDate": "2026-09-26",
+          "monthKey": "2026-09",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e38-1",
+          "name": "X38-1",
+          "category": "O'zim uchun",
+          "method": "card",
+          "planned": 650000,
+          "actual": 550000,
+          "dueDate": "2026-09-01",
+          "monthKey": "2026-09",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e38-2",
+          "name": "X38-2",
+          "category": "Qarz",
+          "method": "cash",
+          "planned": 500000,
+          "actual": null,
+          "dueDate": "2026-09-25",
+          "monthKey": "2026-09",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p38-0",
+          "amount": 150000,
+          "purpose": "P38-0",
+          "method": "card",
+          "spentAt": "2026-09-20",
+          "monthKey": "2026-09"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-09",
+        "income": 6500000,
+        "incomeCard": 2800000,
+        "incomeCash": 3700000,
+        "expense": 650000,
+        "expenseCard": 650000,
+        "expenseCash": 0,
+        "planned": 1700000,
+        "unpaidTotal": 500000,
+        "unknownCount": 0,
+        "personalAllocated": 550000,
+        "personalSpent": 150000,
+        "byType": {
+          "Avans": {
+            "card": 0,
+            "cash": 3700000
+          },
+          "KPI": {
+            "card": 2800000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "O'zim uchun": {
+            "planned": 650000,
+            "actual": 550000
+          },
+          "Qarz": {
+            "planned": 500000,
+            "actual": 0
+          },
+          "Transport": {
+            "planned": 550000,
+            "actual": 100000
+          }
+        },
+        "balance": 5850000,
+        "forecast": 5350000,
+        "card": 2150000,
+        "cash": 3700000,
+        "saved": 6250000
+      }
+    },
+    {
+      "name": "tasodifiy-39",
+      "monthKey": "2026-07",
+      "incomes": [
+        {
+          "id": "i39-0",
+          "amount": 700000,
+          "type": "Oylik",
+          "method": "card",
+          "paidAt": "2026-07-21",
+          "monthKey": "2026-07",
+          "debtId": null
+        }
+      ],
+      "expenses": [
+        {
+          "id": "e39-0",
+          "name": "X39-0",
+          "category": "Oziq-ovqat",
+          "method": "card",
+          "planned": 850000,
+          "actual": null,
+          "dueDate": "2026-07-11",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        },
+        {
+          "id": "e39-1",
+          "name": "X39-1",
+          "category": "Kommunal",
+          "method": "cash",
+          "planned": 550000,
+          "actual": 850000,
+          "dueDate": "2026-07-02",
+          "monthKey": "2026-07",
+          "monthKeySource": "auto",
+          "debtId": null,
+          "autoPay": false
+        }
+      ],
+      "personalSpends": [
+        {
+          "id": "p39-0",
+          "amount": 100000,
+          "purpose": "P39-0",
+          "method": "card",
+          "spentAt": "2026-07-09",
+          "monthKey": "2026-07"
+        },
+        {
+          "id": "p39-1",
+          "amount": 350000,
+          "purpose": "P39-1",
+          "method": "card",
+          "spentAt": "2026-07-18",
+          "monthKey": "2026-07"
+        }
+      ],
+      "expected": {
+        "monthKey": "2026-07",
+        "income": 700000,
+        "incomeCard": 700000,
+        "incomeCash": 0,
+        "expense": 850000,
+        "expenseCard": 0,
+        "expenseCash": 850000,
+        "planned": 1400000,
+        "unpaidTotal": 850000,
+        "unknownCount": 0,
+        "personalAllocated": 0,
+        "personalSpent": 450000,
+        "byType": {
+          "Oylik": {
+            "card": 700000,
+            "cash": 0
+          }
+        },
+        "byCategory": {
+          "Kommunal": {
+            "planned": 550000,
+            "actual": 850000
+          },
+          "Oziq-ovqat": {
+            "planned": 850000,
+            "actual": 0
+          }
+        },
+        "balance": -150000,
+        "forecast": -1000000,
+        "card": 700000,
+        "cash": -850000,
+        "saved": -600000
+      }
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  calc_ts:
+    name: calc-ts — tip tekshiruvi va Dart bilan parite
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - working-directory: packages/calc-ts
+        run: npm install
+      - working-directory: packages/calc-ts
+        run: npx tsc --noEmit
+      # Bu testlar `testdata/aggregate-cases.json` ni o'qiydi — u mobil
+      # repoda yaratiladi va `make sync-fixtures` bilan ko'chiriladi.
+      - working-directory: packages/calc-ts
+        run: npm test
+      - working-directory: packages/calc-ts
+        run: npm run build
+
+  functions:
+    name: Cloud Functions — tip tekshiruvi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - working-directory: packages/calc-ts
+        run: npm install && npm run build
+      - working-directory: functions
+        run: npm install && npx tsc --noEmit
+
+  admin:
+    name: Admin panel — tip tekshiruvi va build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - working-directory: packages/calc-ts
+        run: npm install && npm run build
+      - working-directory: admin
+        run: npm install
+      - working-directory: admin
+        run: npx tsc --noEmit
+      - working-directory: admin
+        run: npm run build
+
+  rules:
+    name: Firestore qoidalari (emulyator)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - working-directory: tests/rules
+        run: npm install
+      - working-directory: tests/rules
+        run: npx firebase emulators:exec --only firestore --project demo-byudjet "npx vitest run"

@@ -1,0 +1,33 @@
+# ───────────────────────── Node ─────────────────────────
+node_modules/
+.next/
+out/
+
+# Build natijalari — ANIQ yo'l bilan. Oddiy `lib/` yoki `dist/` naqshi
+# `admin/src/lib/` kabi MANBA papkalarini ham yashirib qo'yardi.
+/functions/lib/
+/packages/calc-ts/dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# ───────────────────────── Muhit va sirlar ─────────────────────────
+# Sirlar HECH QACHON repoda saqlanmaydi (§13.3).
+.env
+.env.local
+.env.*.local
+service-account*.json
+*-service-account.json
+export.json
+
+# ───────────────────────── Firebase ─────────────────────────
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# ───────────────────────── Vercel ─────────────────────────
+.vercel
+
+.DS_Store
+.idea/
+.vscode/

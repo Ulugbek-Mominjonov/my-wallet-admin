@@ -1,0 +1,91 @@
+name: Cron
+
+# Rejali ishlar Vercel Cron o'rniga GitHub Actions'da (bepul, cron soni
+# cheklanmagan). Endpointlarning o'zi o'zgarmadi — ular baribir
+# `Authorization: Bearer $CRON_SECRET` ni tekshiradi va kalitsiz 401 beradi.
+#
+# ⚠️ Kerakli secretlar (Settings → Secrets and variables → Actions):
+#   ADMIN_URL    — masalan https://byudjet.vercel.app (oxirida / SIZ)
+#   CRON_SECRET  — Vercel env dagi qiymat bilan AYNAN bir xil
+#
+# Vaqtlar UTC'da. Asia/Tashkent = UTC+5.
+
+on:
+  schedule:
+    - cron: '10 19 * * *'     # payment-sweep  → 00:10 Toshkent
+    - cron: '0 4 * * *'       # reminder       → 09:00
+    - cron: '0 22 * * *'      # reconcile      → 03:00
+    - cron: '0 4 21 * *'      # monthly-report → 21-kuni 09:00
+    - cron: '0 20 28-31 * *'  # open-month     → oy oxiri 01:00
+  workflow_dispatch:
+    inputs:
+      endpoint:
+        description: 'Qo‘lda chaqiriladigan endpoint'
+        required: true
+        type: choice
+        options:
+          - payment-sweep
+          - reminder
+          - reconcile
+          - monthly-report
+          - open-month
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cron-${{ github.event.schedule || inputs.endpoint }}
+  cancel-in-progress: false
+
+jobs:
+  call:
+    name: Cron endpointini chaqirish
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Qaysi endpoint
+        id: pick
+        run: |
+          case "${{ github.event.schedule }}" in
+            "10 19 * * *")    endpoint=payment-sweep ;;
+            "0 4 * * *")      endpoint=reminder ;;
+            "0 22 * * *")     endpoint=reconcile ;;
+            "0 4 21 * *")     endpoint=monthly-report ;;
+            "0 20 28-31 * *") endpoint=open-month ;;
+            # `workflow_dispatch` da `schedule` bo'sh bo'ladi.
+            *)                endpoint="${{ inputs.endpoint }}" ;;
+          esac
+          if [ -z "$endpoint" ]; then
+            echo "::error::Endpoint aniqlanmadi"
+            exit 1
+          fi
+          echo "endpoint=$endpoint" >> "$GITHUB_OUTPUT"
+          echo "→ $endpoint"
+
+      - name: Chaqirish
+        env:
+          ADMIN_URL: ${{ secrets.ADMIN_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          ENDPOINT: ${{ steps.pick.outputs.endpoint }}
+        run: |
+          if [ -z "$ADMIN_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "::error::ADMIN_URL yoki CRON_SECRET secret sozlanmagan"
+            exit 1
+          fi
+
+          # Javob tanasi va HTTP kodini alohida olamiz — xato bo'lsa
+          # serverning xabari logda ko'rinsin.
+          response=$(curl -sS --max-time 300 -w '\n%{http_code}' \
+            -X GET "${ADMIN_URL%/}/api/cron/${ENDPOINT}" \
+            -H "Authorization: Bearer ${CRON_SECRET}")
+          code=$(printf '%s' "$response" | tail -n1)
+          body=$(printf '%s' "$response" | sed '$d')
+
+          echo "HTTP $code"
+          echo "$body"
+
+          if [ "$code" != "200" ]; then
+            echo "::error::${ENDPOINT} xato qaytardi (HTTP $code)"
+            exit 1
+          fi
+          echo "✅ ${ENDPOINT} bajarildi"

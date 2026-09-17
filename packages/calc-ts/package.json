@@ -1,0 +1,30 @@
+{
+  "name": "@byudjet/calc",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Dart domen qatlamining TypeScript porti — admin panel va cron uchun",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.3",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "files": [
+    "dist",
+    "src"
+  ]
+}

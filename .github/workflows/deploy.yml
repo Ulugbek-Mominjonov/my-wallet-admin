@@ -1,0 +1,73 @@
+name: Deploy
+
+# Admin panelni **Vercel o'zi** deploy qiladi (GitHub integratsiyasi:
+# har push → Preview, `main` → Production). Bu workflow Firebase
+# tomonini chiqaradi: qoidalar, indekslar va funksiyalar.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'firestore.rules'
+      - 'firestore.indexes.json'
+      - 'functions/**'
+      - 'packages/calc-ts/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Qaysi muhitga'
+        required: true
+        default: dev
+        type: choice
+        options: [dev, prod]
+
+permissions:
+  contents: read
+
+# Bir vaqtda ikkita deploy ketmasin.
+concurrency:
+  group: firebase-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Firestore qoidalari, indekslar va funksiyalar
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.target || 'production' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Deploydan OLDIN build va testlar — buzuq kod chiqib ketmasin.
+      - name: calc-ts (build + parite testlari)
+        working-directory: packages/calc-ts
+        run: npm install && npx tsc --noEmit && npm test && npm run build
+
+      - name: Functions bundle
+        working-directory: functions
+        run: npm install && npm run build
+
+      - name: Kalitni tayyorlash
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$FIREBASE_SERVICE_ACCOUNT" ]; then
+            echo "::error::FIREBASE_SERVICE_ACCOUNT secret sozlanmagan"
+            exit 1
+          fi
+          echo "$FIREBASE_SERVICE_ACCOUNT" | base64 -d > "$RUNNER_TEMP/sa.json"
+
+      - name: Deploy
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
+          TARGET: ${{ inputs.target || 'prod' }}
+        run: |
+          npx firebase-tools deploy \
+            --only functions,firestore:rules,firestore:indexes \
+            --project "$TARGET" --non-interactive
+
+      - name: Kalitni o'chirish
+        if: always()
+        run: rm -f "$RUNNER_TEMP/sa.json"

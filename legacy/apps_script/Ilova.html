@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Byudjet">
+<meta name="theme-color" content="#065F46">
+<style>
+  :root {
+    --fon: #F5F7FA;
+    --karta: #FFFFFF;
+    --matn: #111827;
+    --xira: #6B7280;
+    --juda-xira: #9CA3AF;
+    --chiziq: #E8EDF2;
+    --yashil: #059669;
+    --yashil-fon: #ECFDF5;
+    --qizil: #DC2626;
+    --qizil-fon: #FEF2F2;
+    --kok: #2563EB;
+    --kok-fon: #EFF6FF;
+    --sariq: #D97706;
+    --binafsha: #7C3AED;
+    --soya: 0 1px 2px rgba(16,24,40,.06), 0 1px 3px rgba(16,24,40,.10);
+    --soya-katta: 0 4px 12px rgba(16,24,40,.08);
+    --radius: 16px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --fon: #0B0F14; --karta: #151B23; --matn: #E9EDF2; --xira: #94A3B8; --juda-xira: #64748B;
+      --chiziq: #232C37; --yashil: #34D399; --yashil-fon: #0C2B22; --qizil: #F87171;
+      --qizil-fon: #2B1416; --kok: #60A5FA; --kok-fon: #12203A; --sariq: #FBBF24; --binafsha: #A78BFA;
+      --soya: none; --soya-katta: none;
+    }
+    .karta { border: 1px solid var(--chiziq); }
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--fon); color: var(--matn);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    font-size: 15px; line-height: 1.45;
+    padding-bottom: calc(84px + env(safe-area-inset-bottom));
+  }
+  h3 { margin: 0 0 12px; font-size: 12px; font-weight: 700; letter-spacing: .6px;
+       text-transform: uppercase; color: var(--juda-xira); }
+
+  /* ---------- Sarlavha ---------- */
+  .bosh {
+    background: linear-gradient(140deg, #064E3B 0%, #047857 55%, #059669 100%);
+    color: #fff; padding: calc(14px + env(safe-area-inset-top)) 16px 20px;
+    border-radius: 0 0 24px 24px;
+  }
+  .oy-qatori { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .oy-tugma {
+    width: 38px; height: 38px; border: 0; border-radius: 12px; font-size: 20px; line-height: 1;
+    background: rgba(255,255,255,.16); color: #fff; backdrop-filter: blur(6px);
+  }
+  .oy-tugma:active { background: rgba(255,255,255,.3); }
+  .oy-nomi { font-size: 16px; font-weight: 650; letter-spacing: .2px; }
+  .yorliq { font-size: 11px; opacity: .75; text-transform: uppercase; letter-spacing: 1px; }
+  .katta-summa { font-size: 32px; font-weight: 750; letter-spacing: -.5px; margin: 2px 0 14px; }
+  .qutilar { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .quti { background: rgba(255,255,255,.14); border-radius: 12px; padding: 9px 10px; }
+  .quti span { display: block; font-size: 10.5px; opacity: .85; letter-spacing: .3px; }
+  .quti b { font-size: 14px; font-weight: 650; }
+
+  /* ---------- Sahifalar ---------- */
+  .sahifa { padding: 16px 14px 8px; display: none; animation: kirish .18s ease-out; }
+  .sahifa.aktiv { display: block; }
+  @keyframes kirish { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .karta { background: var(--karta); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--soya); }
+  .karta.urgu { background: linear-gradient(135deg, var(--yashil-fon), var(--karta)); }
+
+  .hero-summa { font-size: 30px; font-weight: 750; letter-spacing: -.5px; }
+  .qator { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--chiziq); }
+  .qator:last-child { border-bottom: 0; }
+  .qator > span { color: var(--matn); }
+  .qator b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yashil { color: var(--yashil); } .qizil { color: var(--qizil); } .kok { color: var(--kok); }
+  .xira { color: var(--xira); font-size: 13px; }
+  .juda-xira { color: var(--juda-xira); font-size: 12px; }
+
+  .setka { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .stat { background: var(--karta); border-radius: 14px; padding: 13px 14px; box-shadow: var(--soya); }
+  .stat span { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--juda-xira); margin-bottom: 3px; }
+  .stat b { font-size: 16.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .progress { height: 10px; background: var(--chiziq); border-radius: 8px; overflow: hidden; margin-top: 10px; }
+  .progress i { display: block; height: 100%; border-radius: 8px; transition: width .45s cubic-bezier(.4,0,.2,1); }
+
+  .bar-qator { margin-bottom: 11px; }
+  .bar-qator:last-child { margin-bottom: 0; }
+  .bar-matn { display: flex; justify-content: space-between; font-size: 13.5px; margin-bottom: 5px; }
+  .bar-matn b { font-variant-numeric: tabular-nums; }
+  .bar { height: 7px; background: var(--chiziq); border-radius: 6px; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 6px; transition: width .45s cubic-bezier(.4,0,.2,1); }
+
+  /* ---------- Forma ---------- */
+  label { display: block; font-size: 12.5px; font-weight: 600; color: var(--xira); margin: 14px 0 6px; }
+  label:first-of-type { margin-top: 0; }
+  input, select, textarea {
+    width: 100%; padding: 13px 14px; font-size: 16px; font-family: inherit; color: var(--matn);
+    background: var(--fon); border: 1.5px solid var(--chiziq); border-radius: 12px; transition: border-color .15s;
+  }
+  input:focus, select:focus, textarea:focus { outline: 0; border-color: var(--yashil); }
+  textarea { min-height: 52px; resize: vertical; }
+  .summa-kirit { font-size: 22px !important; font-weight: 700; letter-spacing: -.3px; }
+  .chiplar { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 10px 15px; border-radius: 11px; border: 1.5px solid var(--chiziq);
+    background: var(--karta); color: var(--matn); font-size: 14px; font-family: inherit; font-weight: 500;
+    transition: all .15s;
+  }
+  .chip.tanlangan { background: var(--yashil); border-color: var(--yashil); color: #fff; font-weight: 650; }
+  .yordamchi { font-size: 12px; color: var(--juda-xira); margin-top: 6px; min-height: 16px; }
+  .asosiy {
+    width: 100%; height: 50px; margin-top: 20px; border: 0; border-radius: 13px;
+    background: var(--yashil); color: #fff; font-size: 16px; font-weight: 700; font-family: inherit;
+    box-shadow: var(--soya-katta); transition: transform .1s;
+  }
+  .asosiy:active { transform: scale(.985); }
+  .asosiy.qizil { background: var(--qizil); }
+  .asosiy.tinch { background: var(--karta); color: var(--matn); border: 1.5px solid var(--chiziq); box-shadow: none; }
+  .asosiy:disabled { opacity: .5; }
+
+  /* ---------- Ro'yxatlar ---------- */
+  .element { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--chiziq); }
+  .element:last-child { border-bottom: 0; }
+  .nishon {
+    width: 38px; height: 38px; flex: 0 0 38px; border-radius: 11px; display: flex;
+    align-items: center; justify-content: center; font-size: 17px; background: var(--kok-fon);
+  }
+  .element .matn { flex: 1; min-width: 0; }
+  .element .nom { font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .amal { display: flex; gap: 8px; margin-top: 10px; }
+  .amal input { flex: 1; padding: 10px 12px; font-size: 15px; }
+  .amal button {
+    padding: 0 16px; border: 0; border-radius: 11px; background: var(--yashil); color: #fff;
+    font-family: inherit; font-size: 14px; font-weight: 650; white-space: nowrap;
+  }
+  .amal button:disabled { opacity: .5; }
+  .bosh-holat { text-align: center; color: var(--juda-xira); padding: 20px 0; font-size: 13.5px; }
+
+  /* ---------- Pastki navigatsiya ---------- */
+  .nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex;
+    background: var(--karta); border-top: 1px solid var(--chiziq);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+  }
+  .nav button {
+    flex: 1 1 0; min-width: 0; padding: 8px 1px 7px; background: none; border: 0;
+    font-family: inherit; color: var(--juda-xira);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    font-size: 10px; font-weight: 600; letter-spacing: -.1px; white-space: nowrap;
+    position: relative; transition: color .15s;
+  }
+  .nav button .ikon {
+    width: 26px; height: 26px; border-radius: 9px; display: flex; align-items: center;
+    justify-content: center; font-size: 15px; font-weight: 700; line-height: 1;
+    background: var(--fon); color: var(--xira); transition: all .15s;
+  }
+  .nav button.aktiv { color: var(--yashil); }
+  .nav button.aktiv .ikon { background: var(--yashil-fon); color: var(--yashil); transform: translateY(-1px); }
+  .nav button.aktiv::before {
+    content: ''; position: absolute; top: 0; left: 24%; right: 24%; height: 2.5px;
+    border-radius: 0 0 3px 3px; background: var(--yashil);
+  }
+
+  .toast {
+    position: fixed; left: 14px; right: 14px; bottom: calc(92px + env(safe-area-inset-bottom));
+    padding: 14px 16px; border-radius: 13px; background: #111827; color: #fff; font-size: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.3); transform: translateY(160%); transition: transform .28s cubic-bezier(.4,0,.2,1); z-index: 40;
+  }
+  .toast.korin { transform: translateY(0); }
+  .toast.xato { background: var(--qizil); }
+  .yuklanmoqda { text-align: center; padding: 40px 0; color: var(--juda-xira); }
+  .aylana {
+    width: 26px; height: 26px; margin: 0 auto 10px; border: 3px solid var(--chiziq);
+    border-top-color: var(--yashil); border-radius: 50%; animation: aylan .8s linear infinite;
+  }
+  @keyframes aylan { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="bosh">
+  <div class="oy-qatori">
+    <button class="oy-tugma" id="oldingiOy" aria-label="Oldingi oy">‹</button>
+    <div style="text-align:center">
+      <div class="yorliq">Byudjet qoldig'i</div>
+      <div class="oy-nomi" id="oyNomi">—</div>
+    </div>
+    <button class="oy-tugma" id="keyingiOy" aria-label="Keyingi oy">›</button>
+  </div>
+  <div class="katta-summa" id="qoldiq">—</div>
+  <div class="qutilar">
+    <div class="quti"><span>💳 Karta</span><b id="karta">—</b></div>
+    <div class="quti"><span>💵 Naqd</span><b id="naqd">—</b></div>
+    <div class="quti"><span>🔮 Prognoz</span><b id="prognoz">—</b></div>
+  </div>
+</div>
+
+<!-- ================= XULOSA ================= -->
+<div class="sahifa aktiv" id="sahifa-xulosa">
+  <div class="yuklanmoqda" id="yuklash"><div class="aylana"></div>Yuklanmoqda…</div>
+
+  <div id="xulosaTarkib" style="display:none">
+    <div class="karta urgu">
+      <h3>📈 Shu oyda orttirgan pul</h3>
+      <div class="hero-summa" id="xOrttirgan">—</div>
+      <div class="progress"><i id="xOrttirganBar" style="width:0%;background:var(--yashil)"></i></div>
+      <div class="yordamchi" id="xOrttirganIzoh"></div>
+    </div>
+
+    <div class="setka" style="margin-bottom:12px">
+      <div class="stat"><span>Daromad</span><b class="yashil" id="sDaromad">—</b></div>
+      <div class="stat"><span>Xarajat</span><b class="qizil" id="sXarajat">—</b></div>
+      <div class="stat"><span>O'zim uchun</span><b class="kok" id="sOzim">—</b></div>
+      <div class="stat"><span>To'lanmagan</span><b id="sTolanmagan">—</b></div>
+    </div>
+
+    <div class="karta">
+      <h3>Byudjet holati</h3>
+      <div class="bar-matn"><span id="xSarfIzoh">Sarflandi</span><b id="xSarfFoiz">0%</b></div>
+      <div class="bar"><i id="xSarfBar" style="width:0%;background:var(--yashil)"></i></div>
+      <div class="qator" style="margin-top:12px"><span>Rejadagi to'lovlar</span><b id="xReja">—</b></div>
+      <div class="qator"><span>Prognoz qoldiq</span><b id="xPrognoz">—</b></div>
+    </div>
+
+    <div class="karta">
+      <h3>📉 Oy oxirigacha prognoz</h3>
+      <div class="qator"><span>Oyning o'tgan qismi</span><b id="pKun">—</b></div>
+      <div class="qator"><span>Kunlik o'rtacha sarf</span><b id="pKunlik">—</b></div>
+      <div class="qator"><span>Shu sur'atda oy oxiri sarfi</span><b id="pSarf">—</b></div>
+      <div class="qator"><span>Kutilayotgan daromad</span><b id="pDaromad">—</b></div>
+      <div class="qator"><span style="font-weight:600">Taxminiy oy oxiri qoldig'i</span><b id="pQoldiq" style="font-size:17px">—</b></div>
+      <div class="yordamchi" id="pIzoh"></div>
+    </div>
+
+    <div class="karta">
+      <h3>Daromad turlari</h3>
+      <div id="xTurlar"></div>
+    </div>
+
+    <div class="karta">
+      <h3>Xarajat — kategoriya bo'yicha</h3>
+      <div id="xKategoriyalar"></div>
+    </div>
+
+    <div class="setka" style="margin-bottom:12px">
+      <div class="stat"><span>👤 O'zim uchun fondi</span><b class="kok" id="sOzimFond">—</b></div>
+      <div class="stat"><span>🏦 Jamg'arma</span><b class="yashil" id="sJamgarma">—</b></div>
+    </div>
+
+    <div class="karta">
+      <h3>Barcha oylar</h3>
+      <div class="qator"><span>Byudjet qoldig'i (<span id="uOylar">0</span>)</span><b id="uQoldiq">—</b></div>
+      <div class="qator"><span>Oyiga o'rtacha orttirish</span><b class="yashil" id="uOrtacha">—</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DAROMAD ================= -->
+<div class="sahifa" id="sahifa-daromad">
+  <div class="karta">
+    <h3>➕ Daromad qo'shish</h3>
+    <label>Summa</label>
+    <input type="number" id="dSumma" class="summa-kirit" inputmode="numeric" placeholder="0">
+    <div class="yordamchi" id="dSummaMatn"></div>
+    <label>Tur</label>
+    <div class="chiplar" id="dTur"></div>
+    <div class="yordamchi" id="dOyIzoh"></div>
+    <label>To'lov usuli</label>
+    <div class="chiplar" id="dUsul"></div>
+    <label>Sana</label>
+    <input type="date" id="dSana">
+    <label>Haqim qaytarildimi? (ixtiyoriy)</label>
+    <select id="dQarz"></select>
+    <label>Izoh (ixtiyoriy)</label>
+    <input type="text" id="dIzoh" placeholder="masalan: sentabr avansi">
+    <button class="asosiy" id="dSaqla">Saqlash</button>
+  </div>
+</div>
+
+<!-- ================= XARAJAT ================= -->
+<div class="sahifa" id="sahifa-xarajat">
+  <div class="karta" id="tezKarta" style="display:none">
+    <h3>⚡ Tez qo'shish — bosilganda darhol yoziladi</h3>
+    <div class="chiplar" id="tezTugmalar"></div>
+  </div>
+  <div class="karta">
+    <h3>➖ Xarajat qo'shish</h3>
+    <label>To'langan summa (fakt)</label>
+    <input type="number" id="xFakt" class="summa-kirit" inputmode="numeric" placeholder="0">
+    <div class="yordamchi" id="xFaktMatn"></div>
+    <label>Joy / nomi</label>
+    <input type="text" id="xJoy" placeholder="masalan: Korzinka">
+    <label>Kategoriya</label>
+    <select id="xKategoriya"></select>
+    <label>To'lov usuli</label>
+    <div class="chiplar" id="xUsul"></div>
+    <label>Sana</label>
+    <input type="date" id="xSana">
+    <label>Reja (keyin to'lanadigan bo'lsa)</label>
+    <input type="number" id="xReja2" inputmode="numeric" placeholder="0">
+    <label>Qarz to'lovimi? (ixtiyoriy)</label>
+    <select id="xQarz"></select>
+    <label>Qaysi oyning byudjetiga?</label>
+    <div class="chiplar" id="xTegishli"></div>
+    <div class="yordamchi" id="xTegishliIzoh"></div>
+    <label>Izoh (ixtiyoriy)</label>
+    <input type="text" id="xIzoh" placeholder="">
+    <button class="asosiy qizil" id="xSaqla">Saqlash</button>
+  </div>
+</div>
+
+<!-- ================= TO'LOVLAR ================= -->
+<div class="sahifa" id="sahifa-tolovlar">
+  <div class="karta">
+    <h3>⏳ To'lanmagan rejalar</h3>
+    <div id="tolovRoyxati"></div>
+  </div>
+  <div class="karta">
+    <h3>📅 Oyni ochish</h3>
+    <div class="xira">Doimiy xarajatlar va "o'zim uchun" ajratmasi shu oy uchun reja sifatida yoziladi.</div>
+    <button class="asosiy tinch" id="oyniOchTugma">Shu oyni ochish</button>
+  </div>
+</div>
+
+<!-- ================= FONDLAR ================= -->
+<div class="sahifa" id="sahifa-fondlar">
+  <div class="karta">
+    <h3>👤 O'zim uchun — shaxsiy pul</h3>
+    <div class="hero-summa kok" id="oQoldiq">—</div>
+    <div class="qator" style="margin-top:8px"><span>Jami ajratilgan</span><b class="yashil" id="oAjratilgan">—</b></div>
+    <div class="qator"><span>Jami sarflangan</span><b class="qizil" id="oSarflangan">—</b></div>
+    <div class="juda-xira" style="margin-top:8px">Kirim avtomatik: Xarajatdagi "O'zim uchun" to'lovi bajarilganda tushadi.</div>
+  </div>
+
+  <div class="karta">
+    <h3>Shaxsiy puldan sarflash</h3>
+    <label>Summa</label>
+    <input type="number" id="oSumma" class="summa-kirit" inputmode="numeric" placeholder="0">
+    <div class="yordamchi" id="oSummaMatn"></div>
+    <label>Nima uchun</label>
+    <input type="text" id="oMaqsad" placeholder="masalan: krossovka">
+    <label>To'lov usuli</label>
+    <div class="chiplar" id="oUsul"></div>
+    <label>Sana</label>
+    <input type="date" id="oSana">
+    <button class="asosiy" id="oSaqla">Sarfni saqlash</button>
+    <div id="oRoyxat" style="margin-top:16px"></div>
+  </div>
+
+  <div class="karta">
+    <h3>🏦 Jamg'arma — avtomatik</h3>
+    <div class="hero-summa yashil" id="gQoldiq">—</div>
+    <div class="juda-xira" style="margin:6px 0 10px">
+      Har oyning qoldig'i (daromad − xarajat) o'zi to'planib boradi · <span id="gOylar">0 oy</span>
+    </div>
+    <div id="gRoyxat"></div>
+  </div>
+
+  <div class="karta">
+    <h3>💳 Qarzlar</h3>
+    <div class="qator"><span>Men qarzdorman</span><b class="qizil" id="qMen">—</b></div>
+    <div class="qator"><span>Menga qarzdorlar</span><b class="yashil" id="qMenga">—</b></div>
+    <div class="qator"><span>Oylik to'lov majburiyati</span><b id="qOylik">—</b></div>
+    <div class="qator"><span>Shu oyda qarzga to'langan</span><b class="yashil" id="qShuOy">—</b></div>
+    <div class="qator"><span style="font-weight:600">⚖️ Sof holat</span><b id="qSof" style="font-size:17px">—</b></div>
+    <div id="qRoyxat" style="margin-top:12px"></div>
+  </div>
+
+  <div class="karta">
+    <h3>🎯 Maqsadlar</h3>
+    <div id="mRoyxat"></div>
+  </div>
+</div>
+
+<nav class="nav">
+  <button data-sahifa="xulosa" class="aktiv"><span class="ikon">📊</span>Xulosa</button>
+  <button data-sahifa="daromad"><span class="ikon" style="font-size:19px">＋</span>Daromad</button>
+  <button data-sahifa="xarajat"><span class="ikon" style="font-size:19px">－</span>Xarajat</button>
+  <button data-sahifa="tolovlar"><span class="ikon">⏳</span>To'lov</button>
+  <button data-sahifa="fondlar"><span class="ikon">🏦</span>Holat</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var OYLAR = ['Yanvar', 'Fevral', 'Mart', 'Aprel', 'May', 'Iyun',
+             'Iyul', 'Avgust', 'Sentabr', 'Oktabr', 'Noyabr', 'Dekabr'];
+var RANGLAR = ['#059669', '#2563EB', '#D97706', '#7C3AED', '#DC2626', '#0891B2', '#DB2777', '#65A30D'];
+var holat = { oy: null, tanlov: {} };
+
+function $(id) { return document.getElementById(id); }
+function son(v) { return (Number(v) || 0).toLocaleString('ru-RU'); }
+function pul(v) { return son(v) + " so'm"; }
+function qisqa(v) {
+  var n = Number(v) || 0;
+  if (Math.abs(n) >= 1e6) return (n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1) + ' mln';
+  if (Math.abs(n) >= 1e3) return Math.round(n / 1e3) + ' ming';
+  return son(n);
+}
+function oyNomi(oy) {
+  var q = String(oy || '').split('-');
+  return q.length === 2 ? OYLAR[Number(q[1]) - 1] + ' ' + q[0] : oy;
+}
+
+function toast(matn, xato) {
+  var t = $('toast');
+  t.textContent = matn;
+  t.className = 'toast korin' + (xato ? ' xato' : '');
+  clearTimeout(toast.taymer);
+  toast.taymer = setTimeout(function () { t.className = 'toast'; }, 3400);
+}
+
+function bandQil(band) {
+  ['dSaqla', 'xSaqla', 'oSaqla', 'oyniOchTugma'].forEach(function (id) {
+    if ($(id)) $(id).disabled = band;
+  });
+}
+
+function chiplarYasa(idis, royxat, boshlangich) {
+  var quti = $(idis);
+  quti.innerHTML = '';
+  holat.tanlov[idis] = boshlangich || royxat[0] || '';
+  royxat.forEach(function (qiymat) {
+    var tugma = document.createElement('button');
+    tugma.type = 'button';
+    tugma.className = 'chip' + (qiymat === holat.tanlov[idis] ? ' tanlangan' : '');
+    tugma.textContent = qiymat;
+    tugma.onclick = function () {
+      holat.tanlov[idis] = qiymat;
+      Array.prototype.forEach.call(quti.children, function (b) { b.className = 'chip'; });
+      tugma.className = 'chip tanlangan';
+      if (idis === 'dTur') daromadOyiniKorsat();
+      if (idis === 'xTegishli') xarajatOyiniKorsat();
+    };
+    quti.appendChild(tugma);
+  });
+}
+
+/** Daromad qaysi oyga yozilishini ko'rsatadi (1–3 da olingan oylik — oldingi oyniki). */
+/** Xarajat qaysi oy byudjetiga yoziladi: sanadan yoki oldingi oyga. */
+function xarajatTegishliOyi() {
+  var sana = $('xSana').value;
+  if (!sana) return '';
+  var oy = sana.slice(0, 7);
+  return holat.tanlov.xTegishli === 'Oldingi oy' ? oyniSurish(oy, -1) : oy;
+}
+
+function xarajatOyiniKorsat() {
+  var oy = xarajatTegishliOyi();
+  $('xTegishliIzoh').textContent = oy ? '→ ' + oyNomi(oy) + ' byudjetiga yoziladi' : '';
+}
+
+function daromadOyiniKorsat() {
+  var sana = $('dSana').value;
+  var tur = holat.tanlov.dTur;
+  if (!sana || !tur) { $('dOyIzoh').textContent = ''; return; }
+  var oy = sana.slice(0, 7);
+  var siljish = (holat.qoidalar || {})[tur.toLowerCase()] || 0;
+  var tegishli = siljish ? oyniSurish(oy, siljish) : oy;
+  $('dOyIzoh').textContent = '→ ' + oyNomi(tegishli) + ' oyining daromadi sifatida yoziladi' +
+    (siljish ? ' (oldingi oy)' : '');
+}
+
+function oyniSurish(oy, qadam) {
+  var q = String(oy).split('-');
+  var sana = new Date(Number(q[0]), Number(q[1]) - 1 + qadam, 1);
+  var m = sana.getMonth() + 1;
+  return sana.getFullYear() + '-' + (m < 10 ? '0' : '') + m;
+}
+
+/* ---------- Chizish ---------- */
+function xulosaniChiz(x) {
+  holat.oy = x.oy;
+  $('yuklash').style.display = 'none';
+  $('xulosaTarkib').style.display = 'block';
+
+  $('oyNomi').textContent = oyNomi(x.oy);
+  $('qoldiq').textContent = pul(x.qoldiq);
+  $('karta').textContent = qisqa(x.karta);
+  $('naqd').textContent = qisqa(x.naqd);
+  $('prognoz').textContent = qisqa(x.prognoz);
+
+  var orttirgan = x.orttirgan || 0;
+  $('xOrttirgan').textContent = pul(orttirgan);
+  $('xOrttirgan').className = 'hero-summa ' + (orttirgan < 0 ? 'qizil' : 'yashil');
+  var oFoiz = Math.max(0, Math.min(100, Math.round((x.orttirganFoiz || 0) * 100)));
+  $('xOrttirganBar').style.width = oFoiz + '%';
+  $('xOrttirganIzoh').textContent = x.daromad > 0
+    ? 'Daromadning ' + oFoiz + '% i · ajratma qo\'shilgan, shaxsiy sarf ayirilgan'
+    : 'Bu oy uchun daromad kiritilmagan';
+
+  $('sDaromad').textContent = qisqa(x.daromad);
+  $('sXarajat').textContent = qisqa(x.xarajat);
+  $('sOzim').textContent = qisqa(x.ozim);
+  $('sTolanmagan').textContent = qisqa(x.tolanmaganJami) + (x.nomalumTolovlar ? ' +' + x.nomalumTolovlar + '?' : '');
+
+  var sarfFoiz = x.daromad > 0 ? Math.min(100, Math.round(x.xarajat / x.daromad * 100)) : 0;
+  $('xSarfFoiz').textContent = sarfFoiz + '%';
+  $('xSarfBar').style.width = sarfFoiz + '%';
+  $('xSarfBar').style.background = sarfFoiz > 90 ? 'var(--qizil)' : (sarfFoiz > 70 ? 'var(--sariq)' : 'var(--yashil)');
+  $('xSarfIzoh').textContent = 'Daromaddan sarflandi';
+  $('xReja').textContent = pul(x.reja);
+  $('xPrognoz').textContent = pul(x.prognoz);
+  $('xPrognoz').className = x.prognoz < 0 ? 'qizil' : '';
+
+  var pr = x.prognoz2 || { kunOtgan: 0, kunJami: 0, kunlik: 0, oyOxiriSarf: 0, oyOxiriQoldiq: 0, joriymi: false };
+  $('pKun').textContent = pr.kunOtgan + ' / ' + pr.kunJami + ' kun' + (pr.joriymi ? '' : ' (tugagan)');
+  $('pKunlik').textContent = pul(pr.kunlik);
+  $('pSarf').textContent = pul(pr.oyOxiriSarf);
+  $('pDaromad').textContent = pul(pr.kutilayotganDaromad);
+  $('pDaromad').className = pr.daromadKutilmoqda ? 'kok' : '';
+  $('pQoldiq').textContent = pul(pr.oyOxiriQoldiq);
+  $('pQoldiq').className = pr.oyOxiriQoldiq < 0 ? 'qizil' : 'yashil';
+  var prIzoh = $('pIzoh');
+  prIzoh.textContent = pr.daromadKutilmoqda
+    ? "Hozircha kelgani " + son(x.daromad) + " — qolgan daromad o'rtachaga qarab kutilmoqda"
+    : (pr.joriymi ? 'Barcha daromad kelib bo\'lgan deb hisoblanmoqda' : 'Oy tugagan');
+
+  barlarniChiz('xTurlar', x.turlar, "Bu oyda daromad yozuvi yo'q");
+  kategoriyalarniChiz(x.kategoriyalar, x.limitlar || {});
+
+  var q = x.qarz || { menQarzdor: 0, mengaQarzdor: 0, oylikJami: 0, sof: 0, royxat: [] };
+  $('qMen').textContent = pul(q.menQarzdor);
+  $('qMenga').textContent = pul(q.mengaQarzdor);
+  $('qOylik').textContent = pul(q.oylikJami);
+  $('qShuOy').textContent = pul(x.qarzTolovi || 0);
+  $('qSof').textContent = pul(q.sof);
+  $('qSof').className = q.sof < 0 ? 'qizil' : 'yashil';
+  royxatniChiz('qRoyxat', q.royxat.map(function (d) {
+    return { ikon: d.turi === 'Menga qarzdor' ? '🤝' : '💳', nom: d.nomi,
+             izoh: d.qolgan > 0 ? (d.qolganOy ? d.qolganOy + ' oy qoldi · oyiga ' + son(d.oylik) : 'qolgan') : '✅ yopildi',
+             summa: d.turi === 'Menga qarzdor' ? d.qolgan : -d.qolgan };
+  }), "Qarz yo'q ✅");
+
+  maqsadlarniChiz(x.maqsadlar || []);
+
+  var o = x.ozimFond || { ajratilgan: 0, sarflangan: 0, qoldiq: 0, sarflar: [] };
+  var j = x.jamgarma || { qoldiq: 0, oylarSoni: 0, oylar: [] };
+  var u = x.umumiy || { qoldiq: 0, oylarSoni: 0, ortacha: 0 };
+
+  $('sOzimFond').textContent = qisqa(o.qoldiq);
+  $('sJamgarma').textContent = qisqa(j.qoldiq);
+  $('uQoldiq').textContent = pul(u.qoldiq);
+  $('uOrtacha').textContent = pul(u.ortacha || 0);
+  $('uOylar').textContent = (u.oylarSoni || 0) + ' oy';
+
+  $('oQoldiq').textContent = pul(o.qoldiq);
+  $('oAjratilgan').textContent = pul(o.ajratilgan);
+  $('oSarflangan').textContent = pul(o.sarflangan);
+  $('gQoldiq').textContent = pul(j.qoldiq);
+  $('gOylar').textContent = (j.oylarSoni || 0) + ' oy';
+
+  royxatniChiz('oRoyxat', o.sarflar.map(function (s) {
+    return { ikon: '🛍', nom: s.maqsad, izoh: s.sana + ' · ' + s.usul, summa: -s.summa };
+  }), "Hali sarf yo'q");
+
+  royxatniChiz('gRoyxat', j.oylar.slice().reverse().map(function (q) {
+    return { ikon: q.qoldiq < 0 ? '📉' : '📈', nom: oyNomi(q.oy),
+             izoh: "To'plangan: " + pul(q.toplangan), summa: q.qoldiq };
+  }), "Hali yozuv yo'q");
+
+  tolovlarniChiz(x.tolanmagan || []);
+}
+
+function barlarniChiz(idis, royxat, boshMatn) {
+  var quti = $(idis);
+  quti.innerHTML = '';
+  if (!royxat || !royxat.length) {
+    quti.innerHTML = '<div class="bosh-holat">' + boshMatn + '</div>';
+    return;
+  }
+  var eng = royxat.reduce(function (m, e) { return Math.max(m, e.summa); }, 0) || 1;
+  royxat.slice(0, 8).forEach(function (e, i) {
+    var qator = document.createElement('div');
+    qator.className = 'bar-qator';
+    var matn = document.createElement('div');
+    matn.className = 'bar-matn';
+    var nom = document.createElement('span');
+    nom.textContent = e.nom;
+    var summa = document.createElement('b');
+    summa.textContent = son(e.summa);
+    matn.appendChild(nom);
+    matn.appendChild(summa);
+    var bar = document.createElement('div');
+    bar.className = 'bar';
+    var ich = document.createElement('i');
+    ich.style.width = Math.max(3, Math.round(e.summa / eng * 100)) + '%';
+    ich.style.background = RANGLAR[i % RANGLAR.length];
+    bar.appendChild(ich);
+    qator.appendChild(matn);
+    qator.appendChild(bar);
+    quti.appendChild(qator);
+  });
+}
+
+function kategoriyalarniChiz(royxat, limitlar) {
+  var quti = $('xKategoriyalar');
+  quti.innerHTML = '';
+  if (!royxat || !royxat.length) {
+    quti.innerHTML = '<div class="bosh-holat">Bu oyda xarajat yozuvi yo\'q</div>';
+    return;
+  }
+  var eng = royxat.reduce(function (m, e) { return Math.max(m, e.summa); }, 0) || 1;
+  royxat.slice(0, 10).forEach(function (e, i) {
+    var limit = limitlar[e.nom] || 0;
+    var ulush = limit ? e.summa / limit : e.summa / eng;
+    var rang = limit
+      ? (ulush > 1 ? 'var(--qizil)' : (ulush > 0.8 ? 'var(--sariq)' : 'var(--yashil)'))
+      : RANGLAR[i % RANGLAR.length];
+
+    var qator = document.createElement('div');
+    qator.className = 'bar-qator';
+    var matn = document.createElement('div');
+    matn.className = 'bar-matn';
+    var nom = document.createElement('span');
+    nom.textContent = e.nom + (limit ? ' · limit ' + qisqa(limit) : '');
+    var summa = document.createElement('b');
+    summa.textContent = son(e.summa) + (limit ? ' (' + Math.round(ulush * 100) + '%)' : '');
+    if (limit && ulush > 1) summa.className = 'qizil';
+    matn.appendChild(nom);
+    matn.appendChild(summa);
+    var bar = document.createElement('div');
+    bar.className = 'bar';
+    var ich = document.createElement('i');
+    ich.style.width = Math.max(3, Math.min(100, Math.round(ulush * 100))) + '%';
+    ich.style.background = rang;
+    bar.appendChild(ich);
+    qator.appendChild(matn);
+    qator.appendChild(bar);
+    quti.appendChild(qator);
+  });
+}
+
+function maqsadlarniChiz(royxat) {
+  var quti = $('mRoyxat');
+  quti.innerHTML = '';
+  if (!royxat.length) {
+    quti.innerHTML = '<div class="bosh-holat">Maqsad qo\'shilmagan</div>';
+    return;
+  }
+  royxat.forEach(function (m) {
+    var foiz = Math.round((m.foiz || 0) * 100);
+    var qator = document.createElement('div');
+    qator.className = 'bar-qator';
+    var matn = document.createElement('div');
+    matn.className = 'bar-matn';
+    var nom = document.createElement('span');
+    nom.textContent = '🎯 ' + m.nomi;
+    var summa = document.createElement('b');
+    summa.textContent = qisqa(m.yigilgan) + ' / ' + qisqa(m.kerak) + ' · ' + foiz + '%';
+    matn.appendChild(nom);
+    matn.appendChild(summa);
+    var bar = document.createElement('div');
+    bar.className = 'bar';
+    var ich = document.createElement('i');
+    ich.style.width = Math.max(2, foiz) + '%';
+    ich.style.background = foiz >= 100 ? 'var(--yashil)' : 'var(--binafsha)';
+    bar.appendChild(ich);
+    var izoh = document.createElement('div');
+    izoh.className = 'juda-xira';
+    izoh.style.marginTop = '4px';
+    izoh.textContent = m.qolgan > 0
+      ? 'Qolgan: ' + son(m.qolgan) + (m.oylar ? ' · ~' + m.oylar + ' oy' : '')
+      : '✅ Yig\'ildi';
+    qator.appendChild(matn);
+    qator.appendChild(bar);
+    qator.appendChild(izoh);
+    quti.appendChild(qator);
+  });
+}
+
+function royxatniChiz(idis, qatorlar, boshMatn) {
+  var quti = $(idis);
+  quti.innerHTML = '';
+  if (!qatorlar.length) {
+    quti.innerHTML = '<div class="bosh-holat">' + boshMatn + '</div>';
+    return;
+  }
+  qatorlar.slice(0, 15).forEach(function (q) {
+    var element = document.createElement('div');
+    element.className = 'element';
+    var nishon = document.createElement('div');
+    nishon.className = 'nishon';
+    nishon.textContent = q.ikon;
+    var matn = document.createElement('div');
+    matn.className = 'matn';
+    var nom = document.createElement('div');
+    nom.className = 'nom';
+    nom.textContent = q.nom;
+    var izoh = document.createElement('div');
+    izoh.className = 'juda-xira';
+    izoh.textContent = q.izoh;
+    matn.appendChild(nom);
+    matn.appendChild(izoh);
+    var summa = document.createElement('b');
+    summa.className = q.summa < 0 ? 'qizil' : 'yashil';
+    summa.textContent = (q.summa < 0 ? '− ' : '+ ') + son(Math.abs(q.summa));
+    element.appendChild(nishon);
+    element.appendChild(matn);
+    element.appendChild(summa);
+    quti.appendChild(element);
+  });
+}
+
+function tolovlarniChiz(royxat) {
+  var quti = $('tolovRoyxati');
+  quti.innerHTML = '';
+  if (!royxat.length) {
+    quti.innerHTML = '<div class="bosh-holat">Barchasi to\'langan ✅</div>';
+    return;
+  }
+  royxat.forEach(function (t) {
+    var karta = document.createElement('div');
+    karta.style.cssText = 'padding:12px 0;border-bottom:1px solid var(--chiziq)';
+
+    var ust = document.createElement('div');
+    ust.className = 'element';
+    ust.style.cssText = 'padding:0;border:0';
+    var nishon = document.createElement('div');
+    nishon.className = 'nishon';
+    nishon.style.background = t.kechikkan ? 'var(--qizil-fon)' : (t.nomalum ? 'var(--kok-fon)' : 'var(--kok-fon)');
+    nishon.textContent = t.kechikkan ? '⚠️' : (t.nomalum ? '❓' : '📌');
+    var matn = document.createElement('div');
+    matn.className = 'matn';
+    var nom = document.createElement('div');
+    nom.className = 'nom';
+    nom.textContent = t.joy;
+    var izoh = document.createElement('div');
+    izoh.className = 'juda-xira';
+    izoh.textContent = t.sana + ' · ' + t.kategoriya + ' · ' +
+      (t.nomalum ? "summa o'zgaruvchi" : son(t.reja)) + (t.kechikkan ? " · muddati o'tdi" : '');
+    if (t.kechikkan) izoh.style.color = 'var(--qizil)';
+    matn.appendChild(nom);
+    matn.appendChild(izoh);
+    ust.appendChild(nishon);
+    ust.appendChild(matn);
+
+    var amal = document.createElement('div');
+    amal.className = 'amal';
+    var summa = document.createElement('input');
+    summa.type = 'number';
+    summa.inputMode = 'numeric';
+    summa.placeholder = "to'langan summa";
+    summa.value = t.reja > 0 ? t.reja : '';
+    var tugma = document.createElement('button');
+    tugma.textContent = "To'landi";
+    tugma.onclick = function () {
+      tugma.disabled = true;
+      google.script.run
+        .withSuccessHandler(javobniQabulQil)
+        .withFailureHandler(function (e) { tugma.disabled = false; xatoniKorsat(e); })
+        .tolovniBelgila({ qator: t.qator, joy: t.joy, oy: holat.oy, summa: summa.value });
+    };
+    amal.appendChild(summa);
+    amal.appendChild(tugma);
+
+    karta.appendChild(ust);
+    karta.appendChild(amal);
+    quti.appendChild(karta);
+  });
+}
+
+function javobniQabulQil(javob) {
+  bandQil(false);
+  xulosaniChiz(javob.xulosa);
+  toast(javob.xabar);
+}
+
+function xatoniKorsat(e) {
+  bandQil(false);
+  $('yuklash').style.display = 'none';
+  toast(e && e.message ? e.message : 'Xatolik yuz berdi', true);
+}
+
+function oyniYukla(oy) {
+  google.script.run.withSuccessHandler(xulosaniChiz).withFailureHandler(xatoniKorsat).oyXulosasiniOl(oy);
+}
+
+/* ---------- Navigatsiya ---------- */
+Array.prototype.forEach.call(document.querySelectorAll('.nav button'), function (tugma) {
+  tugma.onclick = function () {
+    Array.prototype.forEach.call(document.querySelectorAll('.nav button'), function (b) {
+      b.classList.remove('aktiv');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.sahifa'), function (s) { s.className = 'sahifa'; });
+    tugma.classList.add('aktiv');
+    $('sahifa-' + tugma.dataset.sahifa).className = 'sahifa aktiv';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+});
+
+$('oldingiOy').onclick = function () { oyniYukla(oyniSurish(holat.oy, -1)); };
+$('keyingiOy').onclick = function () { oyniYukla(oyniSurish(holat.oy, 1)); };
+
+[['dSumma', 'dSummaMatn'], ['xFakt', 'xFaktMatn'], ['oSumma', 'oSummaMatn']].forEach(function (juft) {
+  $(juft[0]).oninput = function () { $(juft[1]).textContent = this.value ? pul(this.value) : ''; };
+});
+
+$('dSaqla').onclick = function () {
+  bandQil(true);
+  google.script.run.withSuccessHandler(function (javob) {
+    javobniQabulQil(javob);
+    $('dSumma').value = ''; $('dIzoh').value = ''; $('dQarz').value = ''; $('dSummaMatn').textContent = '';
+  }).withFailureHandler(xatoniKorsat).daromadQosh({
+    sana: $('dSana').value, tur: holat.tanlov.dTur, usul: holat.tanlov.dUsul,
+    summa: $('dSumma').value, izoh: $('dIzoh').value, qarz: $('dQarz').value
+  });
+};
+
+$('xSaqla').onclick = function () {
+  bandQil(true);
+  google.script.run.withSuccessHandler(function (javob) {
+    javobniQabulQil(javob);
+    $('xJoy').value = ''; $('xFakt').value = ''; $('xReja2').value = ''; $('xIzoh').value = '';
+    $('xQarz').value = ''; $('xFaktMatn').textContent = '';
+  }).withFailureHandler(xatoniKorsat).xarajatQosh({
+    sana: $('xSana').value, joy: $('xJoy').value, kategoriya: $('xKategoriya').value,
+    usul: holat.tanlov.xUsul, reja: $('xReja2').value, fakt: $('xFakt').value,
+    izoh: $('xIzoh').value, qarz: $('xQarz').value, tegishli: xarajatTegishliOyi()
+  });
+};
+
+$('oSaqla').onclick = function () {
+  bandQil(true);
+  google.script.run.withSuccessHandler(function (javob) {
+    javobniQabulQil(javob);
+    $('oSumma').value = ''; $('oMaqsad').value = ''; $('oSummaMatn').textContent = '';
+  }).withFailureHandler(xatoniKorsat).ozimSarfQosh({
+    sana: $('oSana').value, summa: $('oSumma').value,
+    maqsad: $('oMaqsad').value, usul: holat.tanlov.oUsul, izoh: ''
+  });
+};
+
+$('oyniOchTugma').onclick = function () {
+  bandQil(true);
+  google.script.run.withSuccessHandler(javobniQabulQil).withFailureHandler(xatoniKorsat).oyniOch(holat.oy);
+};
+
+/* ---------- Boshlash ---------- */
+function tezTugmalarniChiz(royxat) {
+  if (!royxat || !royxat.length) return;
+  $('tezKarta').style.display = 'block';
+  var quti = $('tezTugmalar');
+  quti.innerHTML = '';
+  royxat.forEach(function (t) {
+    var tugma = document.createElement('button');
+    tugma.type = 'button';
+    tugma.className = 'chip';
+    tugma.innerHTML = t.nomi + ' <b>' + qisqa(t.summa) + '</b>';
+    tugma.onclick = function () {
+      tugma.disabled = true;
+      google.script.run.withSuccessHandler(function (javob) {
+        tugma.disabled = false;
+        javobniQabulQil(javob);
+      }).withFailureHandler(function (e) { tugma.disabled = false; xatoniKorsat(e); })
+        .xarajatQosh({
+          sana: $('xSana').value, joy: t.nomi, kategoriya: t.kategoriya,
+          usul: t.usul, reja: '', fakt: t.summa, izoh: 'tez qo\'shish'
+        });
+    };
+    quti.appendChild(tugma);
+  });
+}
+
+google.script.run.withSuccessHandler(function (m) {
+  holat.qoidalar = m.daromadQoidalari || {};
+  tezTugmalarniChiz(m.tezTugmalar);
+  chiplarYasa('dTur', m.turlar);
+  chiplarYasa('dUsul', m.usullar);
+  chiplarYasa('xUsul', m.usullar);
+  chiplarYasa('oUsul', m.usullar);
+  chiplarYasa('xTegishli', ['Sana bo\'yicha', 'Oldingi oy']);
+  var qarzlar = m.qarzNomlari || [];
+  var variant = function (royxat) {
+    return '<option value="">— yo\'q —</option>' + royxat.map(function (q) {
+      return '<option>' + q.nomi.replace(/</g, '&lt;') + '</option>';
+    }).join('');
+  };
+  $('xQarz').innerHTML = variant(qarzlar.filter(function (q) { return !q.mengami; }));
+  $('dQarz').innerHTML = variant(qarzlar.filter(function (q) { return q.mengami; }));
+  $('xKategoriya').innerHTML = m.kategoriyalar
+    .map(function (k) { return '<option>' + k.replace(/</g, '&lt;') + '</option>'; }).join('');
+  ['dSana', 'xSana', 'oSana'].forEach(function (id) { $(id).value = m.bugun; });
+  $('dSana').onchange = daromadOyiniKorsat;
+  $('xSana').onchange = xarajatOyiniKorsat;
+  daromadOyiniKorsat();
+  xarajatOyiniKorsat();
+  xulosaniChiz(m.xulosa);
+}).withFailureHandler(xatoniKorsat).ilovaMalumotlari(null);
+</script>
+</body>
+</html>
