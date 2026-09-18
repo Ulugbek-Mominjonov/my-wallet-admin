@@ -1466,6 +1466,14 @@ export type Database = {
       }
       health: { Args: never; Returns: Json }
       leave_household: { Args: { p_household: string }; Returns: undefined }
+      open_month: {
+        Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
+      open_month_preview: {
+        Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
       remove_member: {
         Args: { p_household: string; p_user: string }
         Returns: undefined
