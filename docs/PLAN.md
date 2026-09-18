@@ -217,7 +217,7 @@ E21–E26 (admin) M2 bilan.
   Checkbox, Avatar; o'zimizniki: `MoneyText` (+ `formatMoney`, BR-001),
   `EmptyState`, `PageHeader`, `StatCard`. DataTable → E22-T01, MonthPicker →
   E24-T02 (birinchi ishlatilgan joyda — keraksiz abstraksiya yo'q).
-- [ ] **E02-T03** Marshrutlash: TanStack Router (fayl asosida, tipli
+- [x] **E02-T03** Marshrutlash: TanStack Router (fayl asosida, tipli
   search-param'lar), `_auth` va `_app` layoutlari, 404/xato sahifalari,
   lazy-loading (route-level code splitting).
 - [ ] **E02-T04** Ma'lumot qatlami: `shared/api/supabase.ts` (bitta klient,
@@ -823,3 +823,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E04-T01 | Flutter (Android), `uz.mywallet.app`, pub workspace + `wallet_domain`, very_good_analysis 11 (Dart 3.13 `new(...)` konstruktor sintaksisi), debug APK build ✅ |
 | 2026-09-18 | E02-T01 | Vite 8 + React 19 + TS 6 (strict, noUncheckedIndexedAccess), ESLint 10 (strictTypeChecked, jsx-a11y, react-hooks, FSD `boundaries` — tekshirildi), Prettier, `make web-lint` |
 | 2026-09-18 | E02-T02 | Tailwind v4 + shadcn (Base UI), brend/semantik tokenlar, 20+ komponent, MoneyText/EmptyState/PageHeader/StatCard; build ✅ |
+| 2026-09-18 | E02-T03 | TanStack Router (fayl asosida, autoCodeSplitting, `tsr generate` tsc'dan oldin), `_auth`/`_app` layoutlari, 404 va xato sahifalari; preview deep-link ✅ |

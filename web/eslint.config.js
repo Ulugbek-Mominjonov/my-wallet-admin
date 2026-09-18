@@ -90,6 +90,12 @@ export default defineConfig([
     },
   },
   {
+    // Route fayllari `Route` obyektini komponent bilan birga eksport qiladi —
+    // TanStack Router autoCodeSplitting HMR'ni o'zi boshqaradi.
+    files: ['src/routes/**/*.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
+  {
     files: ['*.config.{js,ts}', 'eslint.config.js'],
     languageOptions: { globals: globals.node },
   },
