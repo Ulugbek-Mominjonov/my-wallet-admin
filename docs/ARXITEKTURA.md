@@ -427,13 +427,13 @@ oxirgi natijani ko'rsatadi. Cron → Edge Function chaqiruvi uchun sir
 | 3 | Hisobot = bitta RPC → bitta JSON (ekran uchun N ta so'rov emas) | `report_*` |
 | 4 | Oylik agregat — covering index bilan index-only scan | 3.4 |
 | 5 | Ro'yxatlar — **keyset** sahifalash (`occurred_on, id`), `OFFSET` yo'q | admin, mobil |
-| 6 | Qarz/maqsad/hisob qoldiqlari — bitta `GROUP BY` so'rov, N+1 yo'q | `report_debts`, `account_balances` |
+| 6 | Qarz/maqsad/hisob qoldiqlari — har yozuv o'z indeksi bilan (`account_id`, `debt_id`); butun byudjet/jadval yig'ilmaydi | `account_balances`, `debt_balances` |
 | 7 | Rejali ishlar set-based (`INSERT ... SELECT`, `ON CONFLICT DO NOTHING`), plpgsql sikllari yo'q | cron |
 | 8 | Faqat kerakli ustunlar: PostgREST'da `select=` aniq ro'yxat, `*` yo'q | admin |
 | 9 | Admin: TanStack Query keshi (`staleTime`: spravochnik 5 daqiqa, hisobot 60 s), yozuvdan keyin faqat tegishli kalitlar invalidatsiya | admin |
 | 10 | Ommaviy amallar — bitta RPC/tranzaksiya (40 ta to'lov = 1 chaqiruv) | `bulk_pay_planned` |
 | 11 | Realtime ishlatilmaydi (pull-sinxron yetarli) — ochiq ulanishlar yo'q | — |
-| 12 | Har yangi so'rov uchun `EXPLAIN ANALYZE` testi (Seq Scan yo'qligi) — CI | E09 |
+| 12 | Hisobotlar ishlashi CI'da: 10 yillik yuk + shovqin byudjetlar, `auto_explain` bilan ichki so'rovlarda Seq Scan yo'qligi va vaqt maqsadlari (`make perf`, `docs/PERF.md`) | E09 |
 
 ---
 

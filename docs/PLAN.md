@@ -456,39 +456,36 @@ E21–E26 (admin) M2 bilan.
 > BR-121, BR-130..131, BR-170..172, ADR-03. **DoD:** har hisobot bitta RPC;
 > golden fixture'lar bilan kontrakt testlari yashil; `EXPLAIN` testlari.
 
-- [ ] **E09-T01** `private.month_facts(household, from, to)` — yagona
-  agregatsiya yadrosi: tegishli oy × {daromad, daromad karta/naqd, xarajat,
-  xarajat karta/naqd, ajratma, fond sarfi} + tur × usul matritsasi +
-  kategoriya × {reja, fakt}. Qoidalar: BR-022 (karta/naqd), BR-061/062 (fond).
-- [ ] **E09-T02** `report_month(household, month)` → bitta JSON: yig'indilar
+- [x] **E09-T01** Yagona agregatsiya yadrosi: `private.budget_lines` (har amal
+  → daromad / xarajat / ajratma ± / fond sarfi, karta/naqd — BR-022, BR-061/062)
+  va `private.month_facts(household, from, to)` (oylar × yig'indilar + rejalar,
+  `has_records`), `private.month_derived` (BR-091), `private.limit_status`.
+- [x] **E09-T02** `report_month(household, month)` → bitta JSON: yig'indilar
   (BR-090), hosila (BR-091), prognoz (BR-093, kutilayotgan daromad rejalari
-  bilan), kuniga sarflash (BR-094), kategoriyalar + limit holati (BR-130),
-  to'lanmaganlar ro'yxati (BR-076), fond (shu oy + jami), jamg'arma
-  (oldingi / shu oy / to'plangan — BR-102), qarz jami (BR-114), maqsadlar,
-  oyning yopiqligi. "Bugun" — byudjet vaqt zonasida.
-- [ ] **E09-T03** `report_year(household, year)` (oylar × daromad, xarajat,
-  ajratma, qoldiq, fond sarfi, orttirgan, % + JAMI qatori, 🔒 belgisi),
-  `report_savings(household)` (BR-100..101, ⏳ joriy oy), `report_personal_fund
-  (household, from, to)`, `report_debts`, `report_goals`,
-  `report_category_trend(household, from, to, category?)` (BR-095).
-- [ ] **E09-T04** `health_check(household)` → `{problems[], warnings[],
-  info[]}` — BR-171 ro'yxati; o'xshash nom taklifi `pg_trgm similarity`
-  bilan (BR-117).
-- [ ] **E09-T05** Golden fixture'lar `contracts/fixtures/*.json` — har holat:
-  `today`, sozlamalar, spravochniklar, amallar, rejalar → kutilgan natijalar
-  (`month`, `year`, `savings`, `debts`, `goals`, `planned_status`,
-  `income_month`). Majburiy holatlar: BR-091 misoli (5 750 000 → orttirgan
-  3 300 000), README'dagi jamg'arma jadvali (1 400 000 → 4 150 000), BR-040
-  jadvali, qisman to'lov, noma'lum summa (`+ 2 ta ?`), avto to'lov, qarz
-  (3 holat), maqsad (muddatga ulguradi/ulgurmaydi), prognoz (joriy/o'tgan oy,
-  kutilayotgan daromad bor/yo'q), limit 79/80/100/101%, BR-092 invarianti.
-- [ ] **E09-T06** Kontrakt testlari `supabase/tests/contract/` (Deno):
-  fixture → lokal bazaga yozish → RPC → kutilgan natija bilan aynan
-  solishtirish. CI `db` job'iga ulanadi.
-- [ ] **E09-T07** Ishlash: 10 yillik sintetik ma'lumot generatori
-  (`scripts/gen-load.sql`: 1 byudjet × 25 000 amal) + `EXPLAIN (ANALYZE,
-  BUFFERS)` testlari: `report_month` < 50 ms, `report_year` < 150 ms,
-  Seq Scan yo'q. Natija `docs/PERF.md` ga.
+  bilan), kuniga sarflash (BR-094), kategoriyalar + limit holati (BR-130,
+  BR-132), to'lanmaganlar (BR-076, holat bilan), fond (shu oy + qoldiq),
+  jamg'arma (BR-102), qarz jami (BR-114), maqsadlar, oyning yopiqligi.
+- [x] **E09-T03** `report_year`, `report_savings` (BR-100..101, ⏳ joriy oy,
+  BR-092 xulosasi), `report_personal_fund`, `report_debts`, `report_goals`
+  (oylik ajratma yo'q bo'lsa — o'rtacha orttirish), `report_category_trend`
+  (BR-095).
+- [x] **E09-T04** `health_check(household)` → `{problems[], warnings[],
+  info{}}` — BR-171 ning hozir ma'lumoti bor qismi (oy ochilmagan, bog'lanmagan
+  qarz + `pg_trgm` o'xshash nom, qarz rejasi kechikkan, manfiy naqd, 30+ kun,
+  yopilgandan keyin tahrir, eskirgan kurs); bildirishnoma/ish/sinxron — E10, E11.
+- [x] **E09-T05** Golden fixture'lar `contracts/fixtures/*.json` (+ README —
+  format): eski tizimning 40 ta tasodifiy holati (o'girilgan), BR-091 misoli,
+  jamg'arma jadvali (1 400 000 → 4 150 000), BR-040 jadvali, qisman to'lov,
+  noma'lum summa, qarz (4 holat), maqsad (ulguradi/ulgurmaydi), prognoz
+  (joriy/o'tgan, rejali/rejasiz), limit 79/80/100/101%, BR-092 invarianti.
+  "Bugun" — `app.today` (faqat SQL sessiya). Avto to'lov holati — E11 bilan.
+- [x] **E09-T06** Kontrakt testlari (`scripts/contract/run.mjs`, Node +
+  `postgres`): fixture → haqiqiy yozuv yo'li bilan bazaga → RPC → qism
+  solishtirish; har holat ROLLBACK. `make contract-test`, CI `db` job'ida.
+- [x] **E09-T07** Ishlash: `scripts/gen-load.sql` (1 byudjet × 25 000 amal +
+  9 shovqin byudjet) + `scripts/perf-check.sh` (`auto_explain` — ichki
+  so'rovlarda Seq Scan yo'q; vaqt: `report_month` 45 ms, `report_year` 6 ms).
+  Topilgan 3 muammo tuzatildi — `docs/PERF.md`. `make perf`, CI'da.
 - [x] **E09-T08** `contracts/README.md` (nima, qanday versiyalanadi, mobil
   qanday oladi) + `scripts/contracts-publish.sh` (`BIZNES-QOIDALAR.md` ni
   `contracts/` ga nusxalash, `schema-version` ↔ `private.api_schema_version()`
@@ -867,6 +864,11 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | RPC xavfsizligi: `security invoker` + RLS (to'lash, qayta joylash, birlashtirish); `definer` faqat klient yozolmaydigan maydonlar uchun (oy ochish, yopish, onboarding) | RLS ikkinchi himoya qatlami bo'lib qoladi; definer'da rol aniq tekshiriladi | E08, ARX 5 |
 | 2026-09-18 | Onboarding nomlar bo'yicha (ID emas), bir marta (`onboarded_at`) | mobil sozlash oynasi sinxrondan oldin ishlaydi; qayta yuborish xavfsiz | E08-T06 |
 | 2026-09-18 | Oy siljishi farqli daromad turlarini birlashtirish taqiq | aks holda amallar jimgina boshqa oyga ko'chardi; BR-043 preview'i orqali tekislanadi | E08-T05, BR-036 |
+| 2026-09-18 | Hisobotlar bitta tasnif (`budget_lines`) ustida | karta/naqd, fond va ajratma qoidalari bitta joyda — hisobotlar orasida nomuvofiqlik yo'q | E09-T01 |
+| 2026-09-18 | Kontrakt testlari — Node + `postgres` (Deno emas) | Node allaqachon asboblar zanjirida; yangi runtime qo'shilmaydi | E09-T06 |
+| 2026-09-18 | "Bugun" — `app.today` sessiya sozlamasi (bo'lmasa haqiqiy sana) | golden fixture'lar aniq sana bilan; PostgREST klienti uni o'rnata olmaydi | E09-T05 |
+| 2026-09-18 | Qoldiq view'lari — har hisob/qarz uchun indeksli qidiruv | UNION ALL + GROUP BY view'lari join bilan chaqirilganda butun jadvalni yig'ardi (perf tekshiruvi topdi) | E09-T07, docs/PERF.md |
+| 2026-09-18 | Perf tekshiruvi shovqin byudjetlar bilan | bitta byudjetda Seq Scan to'g'ri tanlov — tekshiruv ma'nosiz bo'lardi | E09-T07 |
 
 ## 7. Jarayon jurnali
 
@@ -893,3 +895,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E06-T01..T09 | 9 jadval (3 tizim + 6 byudjet spravochnigi), kompozit FK, validate triggerlari (tizim yozuvlari, ishlatilayotganni o'chirish, subkategoriya darajasi, fond manbai), ustun grant'lari, standart to'plam (18 kategoriya, 3 hisob, fond qoidasi) uz/ru/en; 90 yangi pgTAP + 4 invariant (jami 152); EXPLAIN: himoya so'rovlari household indeksidan. **E06 yakunlandi** |
 | 2026-09-18 | E07-T01..T11 | 8 jadval + 3 view + bucket: qarz/maqsad/oy, rejalar (holat funksiyasi), amallar (tegishli oy, asosiy valyuta, o'tkazma, fond qoidalari), statement triggerlar (to'lov, fond ajratmasi 1 499 600 × 10% → 150 000), oy qulfi, cheklar + zaxira/tiklash (storage siyosatlari va fayllar, lokalda sinaldi); 95 pgTAP (jami 247); 20k amalda EXPLAIN. **E07 yakunlandi** |
 | 2026-09-18 | E08-T01..T07 | 11 RPC: oy ochish (preview, idempotent, fond rejasi), to'lash/o'tkazib yuborish/ommaviy (bitta statement), qayta joylash (preview → apply, BR-040 yagona funksiyada), oyni yopish + tekshiruv, kategoriyalarni birlashtirish, onboarding (nomlar bo'yicha, bir marta); 56 pgTAP (jami 303); contracts/api.md. **E08 yakunlandi** |
+| 2026-09-18 | E09-T01..T07 | 8 hisobot RPC (bitta tasnif yadrosi), health_check; 51 golden fixture (40 tasi eski tizimdan — birinchi urinishda aynan mos) + Node kontrakt runner; perf: 25k amal + shovqin, auto_explain — 3 muammo topildi va tuzatildi (health_check 219 → 23 ms); 18 pgTAP (jami 321). **E09 yakunlandi** |

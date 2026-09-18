@@ -229,3 +229,43 @@ Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi
 - Shu nomli doimiy reja bo'lsa — o'tkaziladi (ustiga yozilmaydi).
 - Eslatma sozlamalari — E11 (`notification_prefs`) bilan qo'shiladi.
 
+## Hisobotlar (E09) — a'zolar (`security invoker`)
+
+Barcha summalar — asosiy valyutada (`amount_base`), tiyinda; nisbatlar — 4
+xonagacha. "Bugun" — byudjet vaqt zonasida. Hisob-kitob golden fixture'lar
+bilan qat'iy tekshiriladi (`contracts/fixtures`), mobil ilova ham shu qoidalar
+bo'yicha lokal hisoblaydi:
+
+| Qator | Qaysi amallar | Karta/naqd (BR-022) |
+|---|---|---|
+| daromad | `income` | hisob `cash` → naqd, qolgan turlar → karta |
+| xarajat | fond bo'lmagan hisobdan `expense` + ajratmalar | manba hisob turi |
+| ajratma | fondga o'tkazma (+), fonddan byudjet hisobiga (−); kategoriyasi "O'zim uchun" | fonddan qaytishda — manzil turi |
+| fond sarfi | fond hisobidan `expense` — byudjetga kirmaydi | — |
+
+`planned` — xarajat va ajratma rejalari summasi (noma'lum = 0; o'tkazib
+yuborilgan va daromad rejalari kirmaydi); `unpaid` — to'lanmagan rejalarning
+qoldig'i (`planned − paid`), `unknown_count` — summasi noma'lum to'lanmaganlar.
+
+| RPC | Javob (asosiy maydonlar) |
+|---|---|
+| `report_month(p_household, p_month)` | `{month, closed, is_current, totals{income, income_card, income_cash, expense, expense_card, expense_cash, planned, unpaid, unknown_count, allocated, fund_spent}, derived{balance, forecast, saved, saved_ratio, spent_ratio, plan_ratio, card, cash}, projection{days_in_month, days_elapsed, daily_spend, month_end_spend, income_received, income_expected, income_pending, month_end_balance, per_day_available}, by_type[{category_id, name, card, cash}], by_category[{category_id, name, parent_id, planned, actual, actual_total, limit, limit_ratio, limit_status}], unpaid[{id, kind, name, category_id, planned_amount, paid_amount, due_date, auto_pay, status}], fund{allocated, spent, balance}, savings{before, this_month, total}, debts{i_owe, owed_to_me, monthly_obligation, net, paid_this_month}, goals[{goal_id, name, saved, remaining, progress}]}` |
+| `report_year(p_household, p_year)` | `{year, months[12 × {month, income, expense, allocated, fund_spent, closed, has_records, balance, forecast, saved, saved_ratio, …}], totals{…}}` |
+| `report_savings(p_household)` | `{months[{month, income, expense, balance, accumulated, is_current}], summary{months_count, total_income, total_expense, total_balance, total_saved, avg_monthly_saved, avg_monthly_expense}}` |
+| `report_personal_fund(p_household, p_from, p_to)` | `{balance, total_allocated, total_spent, months[{month, allocated, spent}], spends[{id, occurred_on, amount, category_id, payee, note}]}` |
+| `report_debts(p_household)` | `{debts[{debt_id, name, direction, currency, total, paid_before, monthly_payment, due_date, archived, paid_in_app, pending_amount, pending_count, remaining, progress, months_left, end_month, status}], totals{i_owe, owed_to_me, monthly_obligation, net, paid_this_month}}` |
+| `report_goals(p_household)` | `{avg_monthly_saved, goals[{goal_id, name, currency, target, saved, remaining, progress, monthly, monthly_source (goal/average), months_left, end_month, deadline, on_track, account_id, achieved_at}]}` |
+| `report_category_trend(p_household, p_from, p_to, p_category?)` | `{series[{month, category_id, actual}], compare[{category_id, actual, prev, avg3, vs_prev, vs_avg3}]}` (BR-095) |
+| `health_check(p_household)` | `{problems[{code, …}], warnings[{code, …}], info{transactions, planned_items, first_month, opened_months, closed_months, income_rules}}` |
+
+Formulalar: BR-090..095 (`BIZNES-QOIDALAR.md` 10-bo'lim). `limit_status`:
+`ok` < 80%, `near` 80–100%, `over` > 100% (ota-kategoriya — subkategoriyalar
+bilan, `actual_total`). `per_day_available` — faqat joriy oy.
+
+`health_check` kodlari: muammolar — `month_not_opened` (`count`),
+`debt_unlinked` (`suggestions[{transaction_id, occurred_on, amount, payee}]` —
+nomi o'xshash amallar), `debt_plans_overdue`; ogohlantirishlar —
+`no_active_rules`, `negative_cash` (`account_id, balance`), `long_overdue`
+(`count, days`), `edited_after_close`, `fx_rate_stale` (`currency,
+last_rate_date`). Bildirishnoma, rejali ish va sinxron tekshiruvlari — E10/E11.
+
