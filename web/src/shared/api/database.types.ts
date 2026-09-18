@@ -1453,6 +1453,10 @@ export type Database = {
     Functions: {
       accept_invite: { Args: { p_code: string }; Returns: string }
       app_bootstrap: { Args: never; Returns: Json }
+      bulk_pay_planned: {
+        Args: { p_account?: string; p_date?: string; p_items: string[] }
+        Returns: Json
+      }
       create_household: { Args: { p_name: string }; Returns: string }
       create_invite: {
         Args: {
@@ -1474,6 +1478,16 @@ export type Database = {
         Args: { p_household: string; p_month: unknown }
         Returns: Json
       }
+      pay_planned: {
+        Args: {
+          p_account?: string
+          p_amount?: number
+          p_date?: string
+          p_item: string
+          p_settle?: boolean
+        }
+        Returns: Json
+      }
       remove_member: {
         Args: { p_household: string; p_user: string }
         Returns: undefined
@@ -1485,6 +1499,10 @@ export type Database = {
           p_user: string
         }
         Returns: undefined
+      }
+      skip_planned: {
+        Args: { p_item: string; p_skipped?: boolean }
+        Returns: Json
       }
       transfer_ownership: {
         Args: { p_household: string; p_new_owner: string }
