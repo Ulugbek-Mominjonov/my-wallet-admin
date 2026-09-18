@@ -232,8 +232,10 @@ E21–E26 (admin) M2 bilan.
   kutubxonalar alohida chunk'larda. Byudjet almashtirgich → E21-T02, profil
   menyusi → E21-T04, oy tanlagich → E24-T02; menyu bo'limlari sahifalari
   tayyor bo'lganda qo'shiladi (o'lik havola yo'q).
-- [ ] **E02-T07** Test infratuzilmasi: Vitest + Testing Library + MSW,
-  Playwright (chromium) + `e2e/smoke.spec.ts`, `make web-check`.
+- [x] **E02-T07** Test infratuzilmasi: Vitest + Testing Library (jsdom,
+  `renderWithProviders`), Playwright (desktop + mobil) `e2e/smoke.spec.ts`
+  (bosh sahifa, deep-link, 404, til, tema, ⌘K), `make web-test` / `make e2e`.
+  MSW → E21-T01 (birinchi API chaqiruvi bilan).
 - [ ] **E02-T08** `wrangler.jsonc` (Workers Static Assets,
   `not_found_handling: "single-page-application"`), xavfsizlik sarlavhalari
   (`_headers`: CSP — faqat o'z domen + Supabase URL, `X-Frame-Options: DENY`,
@@ -525,6 +527,7 @@ E21–E26 (admin) M2 bilan.
 
 - [ ] **E21-T01** Kirish sahifasi: Google OAuth (PKCE redirect), email OTP
   (6 xonali kod), xatolar tarjimasi, "Qayerdan kirdim" — sessiya holati.
+  MSW (Supabase Auth/REST mock'lari) komponent testlari uchun shu yerda ulanadi.
 - [ ] **E21-T02** Byudjet konteksti: `app_bootstrap` → joriy byudjet
   (URL'da `?h=` emas, `/h/$householdId/...` marshrut prefiksi), almashtirgich,
   oxirgi tanlangan byudjet eslab qolinadi.
@@ -829,3 +832,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T04 | Supabase klienti (PKCE, tipli), env zod bilan tekshiriladi, QueryClient (staleTime 30 s, retry siyosati, global xato → toast), query-key fabrikasi, router konteksti, `make web-env` |
 | 2026-09-18 | E02-T05 | i18next (uz/ru/en, tipli kalitlar, til `localStorage` da), `formatMoney` (BR-001) va oy yordamchilari (BR-002, BR-040) + 10 Vitest testi; mavjud matnlar tarjimaga ko'chirildi |
 | 2026-09-18 | E02-T06 | app-shell: Sidebar (Base UI), topbar, ⌘K, tema (next-themes + index.html skripti), til menyusi; vendor chunk'lar (eng kattasi 228 KB) |
+| 2026-09-18 | E02-T07 | 18 unit/komponent testi (Vitest + RTL), Playwright e2e 11/11 (3 marta barqaror); topilgan UX kamchiligi: ⌘K da til nomlari lotincha topilmasdi → kalit so'zlar |

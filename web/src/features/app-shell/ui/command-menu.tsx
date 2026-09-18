@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { NAV_SECTIONS } from '@/features/app-shell/navigation'
-import { LOCALE_NAMES, THEME_ICON, THEMES } from '@/features/app-shell/preferences'
+import { LOCALE_KEYWORDS, LOCALE_NAMES, THEME_ICON, THEMES } from '@/features/app-shell/preferences'
 import { APP_LOCALES } from '@/shared/config/locale'
 import { setLocale } from '@/shared/i18n'
 import { Button } from '@/shared/ui/button'
@@ -107,6 +107,7 @@ export function CommandMenu() {
               {APP_LOCALES.map((value) => (
                 <CommandItem
                   key={value}
+                  keywords={LOCALE_KEYWORDS[value]}
                   onSelect={() => {
                     run(() => {
                       setLocale(value)

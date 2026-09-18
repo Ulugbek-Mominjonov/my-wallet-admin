@@ -12,3 +12,10 @@ export const LOCALE_NAMES: Record<AppLocale, string> = {
   ru: 'Русский',
   en: 'English',
 }
+
+/** ⌘K qidiruvi uchun: til nomini lotin/kirill harflarida ham topish. */
+export const LOCALE_KEYWORDS: Record<AppLocale, string[]> = {
+  uz: ['uz', "o'zbek", 'uzbek', 'узбек'],
+  ru: ['ru', 'rus', 'ruscha', 'russian'],
+  en: ['en', 'eng', 'ingliz', 'english', 'английский'],
+}
