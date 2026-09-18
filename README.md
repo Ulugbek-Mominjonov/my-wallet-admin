@@ -1,0 +1,24 @@
+# 💰 My Wallet — platforma (backend + admin panel)
+
+Oilaviy va shaxsiy byudjet tizimi. Bu repo:
+
+- **`supabase/`** — ma'lumotlar bazasi (Postgres), xavfsizlik (RLS), biznes
+  qoidalar (triggerlar, SQL funksiyalar), rejali ishlar (pg_cron), Edge
+  Functions (push, Telegram, valyuta kurslari);
+- **`web/`** — admin panel: spravochniklar, hisobotlar, vositalar (React SPA);
+- **`contracts/`** — mobil ilova bilan shartnoma (API, golden fixture'lar).
+
+Mobil ilova — alohida repo: `my-wallet-mobil`.
+
+## Hujjatlar
+
+| Hujjat | Nima |
+|---|---|
+| [`docs/PLAN.md`](docs/PLAN.md) | yo'l xaritasi, epiklar va vazifalar (checkbox bilan), ish tartibi |
+| [`docs/BIZNES-QOIDALAR.md`](docs/BIZNES-QOIDALAR.md) | biznes qoidalar spetsifikatsiyasi (BR-xxx) |
+| [`docs/ARXITEKTURA.md`](docs/ARXITEKTURA.md) | arxitektura, ADR'lar, ma'lumotlar modeli, API, sinxron |
+| [`docs/DEPLOY.md`](docs/DEPLOY.md) | bepul deploy uchun akkaunt va kalitlarni tayyorlash |
+
+## Holat
+
+Loyiha rejalashtirish bosqichida — kod `docs/PLAN.md` dagi E01 dan boshlanadi.
