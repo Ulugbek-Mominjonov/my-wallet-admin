@@ -16,7 +16,7 @@
 
 | # | Xizmat | Nima uchun | Tarif | Taxminiy vaqt |
 |---|---|---|---|---|
-| 1 | GitHub | kod, CI/CD, zaxira, keep-alive | Free (private repo: 2000 min/oy) | 10 daq |
+| 1 | GitHub | kod, CI/CD, zaxira, keep-alive | Free (public repo: minutlar cheksiz) | 10 daq |
 | 2 | Supabase | Postgres, auth, API, cron, Edge Functions | Free (2 loyiha) | 20 daq |
 | 3 | Google Cloud (OAuth) | "Google bilan kirish" | bepul | 20 daq |
 | 4 | Gmail (SMTP) | email orqali kirish kodi | bepul (≈500 xat/kun) | 10 daq |
@@ -36,8 +36,12 @@ yozmang.
 
 ## 1. GitHub
 
-1. Repolar (reja Q1 javobiga ko'ra): `my-wallet-admin`, `my-wallet-mobil` —
-   **Private**.
+1. Repolar: `my-wallet-admin`, `my-wallet-mobil` — hozir **public**.
+   Shunday qolgani ma'qul: GitHub Free'da Environments, reviewer talabi va
+   branch himoyasi faqat public repolarda bepul, Actions minutlari cheksiz.
+   Kodda sir yo'q; loglar va artefaktlar ochiq bo'lgani uchun zaxira
+   shifrlanadi (8-qadam). Private qilinsa — bu imkoniyatlar uchun GitHub Pro
+   kerak bo'ladi.
 2. Har repoda **Settings → Branches → Add rule** (`main`):
    ✅ Require a pull request · ✅ Require status checks (`ci`) ·
    ✅ Require linear history.

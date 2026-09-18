@@ -150,15 +150,21 @@ Har qaror: **nima**, **nega**, **nimadan voz kechildi**, **narxi**.
 ### ADR-12 · Zaxira nusxa — o'zimiz
 
 - Har kecha GitHub Actions: `pg_dump` (pooler orqali) → gzip → `age` bilan
-  shifrlash → artefakt (90 kun). Haftada bir marta tiklash mashqi (staging'ga).
+  shifrlash → artefakt (90 kun). Haftada bir marta tiklash mashqi.
+- Repo public bo'lgani uchun artefaktni istalgan odam yuklab olishi mumkin —
+  shuning uchun shifrlash **majburiy**, yopiq kalit faqat egasida.
 
 ### ADR-13 · Keep-alive
 
 - GitHub Actions har 2 kunda staging va prod'ning `health` RPC'sini chaqiradi
   (haqiqiy API so'rovi — pauzaga qarshi) va javob vaqtini tekshiradi;
-  xato bo'lsa Telegram'ga ogohlantirish. Repolar **private** bo'lgani uchun
-  GitHub'ning "60 kun faolsizlikda cron o'chiriladi" qoidasi ta'sir qilmaydi
-  (u faqat public repolarga tegishli); public qilinsa — keepalive action.
+  xato bo'lsa Telegram'ga ogohlantirish.
+- Repolar **public** (2026-09-18 da tekshirildi): GitHub 60 kun commit
+  bo'lmasa rejali workflow'larni o'chiradi → `keepalive` qadami workflow'ni
+  API orqali qayta faollashtiradi (commit qilmasdan, `actions: write`).
+- Public repo afzalligi: Actions minutlari cheksiz, Environments va branch
+  himoyasi bepul. Xavfi: workflow loglari va artefaktlar hammaga ko'rinadi →
+  loglarga ma'lumot chiqarilmaydi, zaxira faqat shifrlangan (ADR-12).
 
 ### ADR-14 · Ikki repo va ular orasidagi shartnoma
 

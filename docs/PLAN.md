@@ -71,12 +71,13 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | A6 | Eski ma'lumot manbai — Google Sheets eksport JSON v1 | BR-181 |
 | A7 | MVP'da faqat UZS (sxema ko'p valyutaga tayyor) | E29 |
 | A8 | Domen — bepul `*.workers.dev`; o'z domeni ixtiyoriy | bepul |
+| A9 | GitHub repolar **public** (tekshirildi): Environments, branch himoyasi bepul; loglar/artefaktlar ochiq → zaxira shifrlangan | ADR-12, ADR-13 |
 
 **Savollar va javoblar** (2026-09-18):
 
 | # | Savol | Javob | Ta'siri |
 |---|---|---|---|
-| Q1 | Yangi kod qaysi GitHub repolarga? | ✅ mavjud `my-wallet-admin` va `my-wallet-mobil`; eski kod `legacy-v1` branchida (+ `v1-final` teg) | E00-T07 |
+| Q1 | Yangi kod qaysi GitHub repolarga? | ✅ mavjud `my-wallet-admin` va `my-wallet-mobil`; eski kod `legacy-v1` branchida (+ `legacy-v1-final` teg) | E00-T07 |
 | Q2 | Commit/push tartibi? | ✅ har vazifa oxirida lokal commit, har epik oxirida push | 1-bo'lim |
 | Q3 | Eski ma'lumot manbai? | ✅ faqat Google Sheets (Firestore v1 da real ma'lumot yo'q) | E27 (Firestore skripti kerak emas) |
 | Q4 | iOS kerakmi? | ✅ hozircha yo'q — faqat Android (`flutter create --platforms=android`) | E04, E20 |
@@ -156,9 +157,12 @@ E21–E26 (admin) M2 bilan.
 - [x] **E00-T06** `.github/`: `pull_request_template.md`, issue shablonlari
   (bug, feature), `CODEOWNERS`, `dependabot.yml` (npm, pub, github-actions —
   haftalik, guruhlangan).
-- [ ] 🔑 **E00-T07** GitHub remote (Q1 javobiga ko'ra): repolarni ulash,
-  himoyalangan `main` (PR + CI yashil talab), Environments: `staging`,
-  `production` (prod — qo'lda tasdiq). `DEPLOY.md` 1-qadam.
+- [x] **E00-T07** GitHub remote (Q1): eski kod `legacy-v1` branchi va
+  `legacy-v1-final` tegida saqlanadi, yangi `main` mavjud repolarga
+  `--force-with-lease` bilan yuklanadi.
+- [ ] 🔑 **E00-T08** GitHub sozlamalari (foydalanuvchi, veb-interfeys —
+  `DEPLOY.md` 1-bo'lim): `main` himoyasi (PR + CI yashil), Environments
+  `staging` va `production` (prod — reviewer tasdig'i).
 
 ### E01 · Supabase backend skeleti `[admin]`
 
@@ -258,12 +262,13 @@ E21–E26 (admin) M2 bilan.
     va qatorlar sonini tekshiradi.
 - [ ] **E03-T05** `keepalive.yml` (har 2 kunda): staging va prod `health`
   RPC (publishable kalit bilan), javob > 3 s yoki xato → ops Telegram
-  ogohlantirishi. ADR-13.
+  ogohlantirishi; rejali workflow'larni 60 kunlik o'chirilishdan saqlash
+  (API orqali qayta faollashtirish, commit'siz). ADR-13.
 - [ ] **E03-T06** Reliz: `release-please` (CHANGELOG, semver teg) —
   teg production deploy'ni ishga tushiradi.
-- [ ] **E03-T07** Branch himoyasi va `CODEOWNERS` hujjatlashtirildi
-  (`DEPLOY.md` 1-bo'lim), Actions minut sarfi hisobi (`docs/CI.md`: har job
-  necha daqiqa, oylik 2000 dan qancha).
+- [ ] **E03-T07** CI tezligi hisobi `docs/CI.md`: har job necha daqiqa,
+  keshlar samarasi, sekin qadamlar (public repo — minutlar cheksiz, lekin
+  PR kutish vaqti muhim: maqsad — `ci` < 8 daqiqa).
 
 > **E04** (mobil skelet + CI) — `my-wallet-mobil/docs/PLAN.md`.
 
@@ -805,3 +810,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E00-T04 | ikkala repoda .editorconfig, .gitattributes, .gitignore, LICENSE, Makefile, README |
 | 2026-09-18 | E00-T05 | CONTRIBUTING.md (ikkala repo): til, Conventional Commits + vazifa ID, migratsiya va test qoidalari |
 | 2026-09-18 | E00-T06 | PR shabloni, issue shablonlari (bug/taklif), CODEOWNERS, dependabot (github-actions) |
+| 2026-09-18 | E00-T07 | eski kod `legacy-v1` + `legacy-v1-final` tegida; yangi `main` ikkala repoga yuklandi; repolar public ekani aniqlandi (ADR-13, A9) |
