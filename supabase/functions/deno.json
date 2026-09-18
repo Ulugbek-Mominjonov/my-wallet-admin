@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "strict": true
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^1",
+    "@std/testing/snapshot": "jsr:@std/testing@^1/snapshot"
+  },
+  "lint": {
+    "rules": {
+      "tags": [
+        "recommended"
+      ]
+    }
+  },
+  "fmt": {
+    "lineWidth": 120,
+    "semiColons": false,
+    "singleQuote": true
+  },
+  "test": {
+    "include": [
+      "_tests/"
+    ]
+  }
+}

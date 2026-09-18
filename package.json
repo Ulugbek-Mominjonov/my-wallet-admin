@@ -11,5 +11,12 @@
     "postgres": "3.4.9",
     "squawk-cli": "^2.65.0",
     "supabase": "2.117.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "deno",
+      "version": "2.9.6",
+      "onFail": "download"
+    }
   }
 }

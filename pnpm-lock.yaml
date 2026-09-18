@@ -166,6 +166,9 @@ importers:
 
   .:
     devDependencies:
+      deno:
+        specifier: runtime:2.9.6
+        version: runtime:2.9.6
       postgres:
         specifier: 3.4.9
         version: 3.4.9
@@ -2373,6 +2376,69 @@ packages:
   define-properties@1.2.1:
     resolution: {integrity: sha512-8QmQKqEASLd5nx0U1B1okLElbUuuttJ/AnYmRXbbbGDWh6uS208EjD4Xqq/I9wK7u0v6O08XhTWnt5XtEbR6Dg==}
     engines: {node: '>= 0.4'}
+
+  deno@runtime:2.9.6:
+    resolution:
+      type: variations
+      variants:
+        - resolution:
+            archive: zip
+            bin: deno
+            integrity: sha256-ITovME8E08nLUiBmmvrROPYKWqsf6Aliq96481gHpHI=
+            type: binary
+            url: https://github.com/denoland/deno/releases/download/v2.9.6/deno-aarch64-apple-darwin.zip
+          targets:
+            - cpu: arm64
+              os: darwin
+        - resolution:
+            archive: zip
+            bin: deno.exe
+            integrity: sha256-rLAUr+IpmEd2TiMrSZPhYuOUbN7sNmA+PxoLVIzR6lU=
+            type: binary
+            url: https://github.com/denoland/deno/releases/download/v2.9.6/deno-aarch64-pc-windows-msvc.zip
+          targets:
+            - cpu: arm64
+              os: win32
+        - resolution:
+            archive: zip
+            bin: deno
+            integrity: sha256-mkavxsOSx80v9xoxVYk1VFtGQI0Oh/eoaQjHEnIcBG4=
+            type: binary
+            url: https://github.com/denoland/deno/releases/download/v2.9.6/deno-aarch64-unknown-linux-gnu.zip
+          targets:
+            - cpu: arm64
+              os: linux
+        - resolution:
+            archive: zip
+            bin: deno
+            integrity: sha256-fUUkuCvMVX/gIKGltWlW7UK5kq5bKAJuitXRcylTP18=
+            type: binary
+            url: https://github.com/denoland/deno/releases/download/v2.9.6/deno-x86_64-apple-darwin.zip
+          targets:
+            - cpu: x64
+              os: darwin
+        - resolution:
+            archive: zip
+            bin: deno.exe
+            integrity: sha256-FeUwCwujw2ladiHZAWCnRuyecQIozuY5r6nVgPbjzRE=
+            type: binary
+            url: https://github.com/denoland/deno/releases/download/v2.9.6/deno-x86_64-pc-windows-msvc.zip
+          targets:
+            - cpu: x64
+              os: win32
+            - cpu: arm64
+              os: win32
+        - resolution:
+            archive: zip
+            bin: deno
+            integrity: sha256-OU8H9Nor6+bObx584PoWQpspsIw14/rD/iWXJnbf9LI=
+            type: binary
+            url: https://github.com/denoland/deno/releases/download/v2.9.6/deno-x86_64-unknown-linux-gnu.zip
+          targets:
+            - cpu: x64
+              os: linux
+    version: 2.9.6
+    hasBin: true
 
   depd@2.0.0:
     resolution: {integrity: sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==}
@@ -6472,6 +6538,8 @@ snapshots:
       define-data-property: 1.1.4
       has-property-descriptors: 1.0.2
       object-keys: 1.1.1
+
+  deno@runtime:2.9.6: {}
 
   depd@2.0.0: {}
 

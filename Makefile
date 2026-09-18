@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev e2e contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
+.PHONY: help check lint test fmt dev e2e contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check fn-lint fn-test fn-snapshots
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -10,9 +10,9 @@ help: ## Buyruqlar ro'yxati
 
 check: lint test ## Barcha tekshiruvlar (PR'dan oldin majburiy)
 
-lint: db-lint web-lint contracts-check ## Lint, format, tiplar va shartnoma
+lint: db-lint fn-lint web-lint contracts-check ## Lint, format, tiplar va shartnoma
 
-test: db-test contract-test sync-test web-test ## Barcha testlar
+test: db-test contract-test sync-test fn-test web-test ## Barcha testlar
 
 fmt: ## Kodni formatlash (web)
 	pnpm --filter @my-wallet/web format
@@ -59,6 +59,21 @@ sync-test: ## Sinxron kursori parallel yozuvda qator o'tkazib yubormaydi (lokal 
 
 perf: ## Hisobotlar ishlashi: 10 yillik yukda vaqt va Seq Scan tekshiruvi (lokal Supabase)
 	scripts/perf-check.sh
+
+# ─── Edge Functions (Deno) ─────────────────────────────────────────────────
+DENO := pnpm exec deno
+FN_CONFIG := --config supabase/functions/deno.json
+
+fn-lint: ## Edge Functions: format, lint, tiplar
+	$(DENO) fmt --check $(FN_CONFIG) supabase/functions
+	$(DENO) lint $(FN_CONFIG) supabase/functions
+	$(DENO) check $(FN_CONFIG) supabase/functions/*/index.ts supabase/functions/_tests/*.ts
+
+fn-test: ## Edge Functions: unit va snapshot testlari
+	$(DENO) test $(FN_CONFIG) --allow-env --allow-read supabase/functions/_tests/
+
+fn-snapshots: ## Edge Functions: xabar snapshot'larini yangilash (matn o'zgarganda)
+	$(DENO) test $(FN_CONFIG) --allow-env --allow-read --allow-write supabase/functions/_tests/ -- --update
 
 # ─── Ma'lumotlar bazasi (lokal Supabase, Docker) ───────────────────────────
 SUPABASE := pnpm exec supabase

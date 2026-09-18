@@ -1,0 +1,292 @@
+export const snapshot = {};
+
+snapshot[`daily_reminder — uz 1`] = `
+{
+  push: {
+    body: "⚠️ Muddati o'tgan:
+• Internet — 150 000 so'm (03.10)
+📌 Bugun:
+• Elektr — summa o'zgaruvchi (05.10)
+🗓 Yaqin kunlarda:
+• Kredit <Hamkor> — 2 500 000 so'm (07.10)
+💰 Joriy oy qoldig'i: 3 450 000 so'm",
+    title: "💳 To'lovlar eslatmasi",
+  },
+  telegram: "<b>💳 To'lovlar eslatmasi</b>
+⚠️ Muddati o'tgan:
+• Internet — 150 000 so'm (03.10)
+📌 Bugun:
+• Elektr — summa o'zgaruvchi (05.10)
+🗓 Yaqin kunlarda:
+• Kredit &lt;Hamkor&gt; — 2 500 000 so'm (07.10)
+
+💰 Joriy oy qoldig'i: 3 450 000 so'm",
+}
+`;
+
+snapshot[`daily_reminder — ru 1`] = `
+{
+  push: {
+    body: "⚠️ Просрочено:
+• Internet — 150 000 сум (03.10)
+📌 Сегодня:
+• Elektr — сумма меняется (05.10)
+🗓 В ближайшие дни:
+• Kredit <Hamkor> — 2 500 000 сум (07.10)
+💰 Остаток за месяц: 3 450 000 сум",
+    title: "💳 Напоминание о платежах",
+  },
+  telegram: "<b>💳 Напоминание о платежах</b>
+⚠️ Просрочено:
+• Internet — 150 000 сум (03.10)
+📌 Сегодня:
+• Elektr — сумма меняется (05.10)
+🗓 В ближайшие дни:
+• Kredit &lt;Hamkor&gt; — 2 500 000 сум (07.10)
+
+💰 Остаток за месяц: 3 450 000 сум",
+}
+`;
+
+snapshot[`daily_reminder — en 1`] = `
+{
+  push: {
+    body: "⚠️ Overdue:
+• Internet — 150 000 UZS (03.10)
+📌 Today:
+• Elektr — amount varies (05.10)
+🗓 Coming up:
+• Kredit <Hamkor> — 2 500 000 UZS (07.10)
+💰 This month's balance: 3 450 000 UZS",
+    title: "💳 Payment reminder",
+  },
+  telegram: "<b>💳 Payment reminder</b>
+⚠️ Overdue:
+• Internet — 150 000 UZS (03.10)
+📌 Today:
+• Elektr — amount varies (05.10)
+🗓 Coming up:
+• Kredit &lt;Hamkor&gt; — 2 500 000 UZS (07.10)
+
+💰 This month's balance: 3 450 000 UZS",
+}
+`;
+
+snapshot[`monthly_report — uz 1`] = `
+{
+  push: {
+    body: "Daromad: 12 000 000 so'm
+Xarajat: 9 150 000 so'm
+Qoldiq: 2 850 000 so'm
+Orttirgan: 3 250 000 so'm (27%)
+👤 Shaxsiy fond qoldig'i: 820 000 so'm
+🏦 Jamg'arma: 14 300 000 so'm
+💳 Qolgan qarz: 18 000 000 so'm
+Eng ko'p sarflanganlar:
+1. Oziq-ovqat — 3 100 000 so'm
+2. Transport — 950 000 so'm
+🔴 Limitdan oshganlar:
+• Kafe — 1 200 000 so'm / 800 000 so'm
+⚠️ Diqqat: daromad odatdagidan ancha kam — barcha yozuvlar kiritilganini tekshiring",
+    title: "📊 Sentabr 2026 hisoboti",
+  },
+  telegram: "<b>📊 Sentabr 2026 hisoboti</b>
+Daromad: 12 000 000 so'm
+Xarajat: 9 150 000 so'm
+Qoldiq: 2 850 000 so'm
+Orttirgan: 3 250 000 so'm (27%)
+👤 Shaxsiy fond qoldig'i: 820 000 so'm
+🏦 Jamg'arma: 14 300 000 so'm
+💳 Qolgan qarz: 18 000 000 so'm
+
+Eng ko'p sarflanganlar:
+1. Oziq-ovqat — 3 100 000 so'm
+2. Transport — 950 000 so'm
+
+🔴 Limitdan oshganlar:
+• Kafe — 1 200 000 so'm / 800 000 so'm
+
+⚠️ Diqqat: daromad odatdagidan ancha kam — barcha yozuvlar kiritilganini tekshiring",
+}
+`;
+
+snapshot[`monthly_report — ru 1`] = `
+{
+  push: {
+    body: "Доход: 12 000 000 сум
+Расход: 9 150 000 сум
+Остаток: 2 850 000 сум
+Накоплено: 3 250 000 сум (27%)
+👤 Личный фонд: 820 000 сум
+🏦 Сбережения: 14 300 000 сум
+💳 Остаток долгов: 18 000 000 сум
+Больше всего потрачено:
+1. Oziq-ovqat — 3 100 000 сум
+2. Transport — 950 000 сум
+🔴 Превышен лимит:
+• Kafe — 1 200 000 сум / 800 000 сум
+⚠️ Внимание: доход заметно ниже обычного — проверьте, всё ли внесено",
+    title: "📊 Отчёт: Сентябрь 2026",
+  },
+  telegram: "<b>📊 Отчёт: Сентябрь 2026</b>
+Доход: 12 000 000 сум
+Расход: 9 150 000 сум
+Остаток: 2 850 000 сум
+Накоплено: 3 250 000 сум (27%)
+👤 Личный фонд: 820 000 сум
+🏦 Сбережения: 14 300 000 сум
+💳 Остаток долгов: 18 000 000 сум
+
+Больше всего потрачено:
+1. Oziq-ovqat — 3 100 000 сум
+2. Transport — 950 000 сум
+
+🔴 Превышен лимит:
+• Kafe — 1 200 000 сум / 800 000 сум
+
+⚠️ Внимание: доход заметно ниже обычного — проверьте, всё ли внесено",
+}
+`;
+
+snapshot[`monthly_report — en 1`] = `
+{
+  push: {
+    body: "Income: 12 000 000 UZS
+Expenses: 9 150 000 UZS
+Balance: 2 850 000 UZS
+Saved: 3 250 000 UZS (27%)
+👤 Personal fund: 820 000 UZS
+🏦 Savings: 14 300 000 UZS
+💳 Debt left: 18 000 000 UZS
+Top spending:
+1. Oziq-ovqat — 3 100 000 UZS
+2. Transport — 950 000 UZS
+🔴 Over limit:
+• Kafe — 1 200 000 UZS / 800 000 UZS
+⚠️ Heads up: income is well below usual — check that everything is recorded",
+    title: "📊 September 2026 report",
+  },
+  telegram: "<b>📊 September 2026 report</b>
+Income: 12 000 000 UZS
+Expenses: 9 150 000 UZS
+Balance: 2 850 000 UZS
+Saved: 3 250 000 UZS (27%)
+👤 Personal fund: 820 000 UZS
+🏦 Savings: 14 300 000 UZS
+💳 Debt left: 18 000 000 UZS
+
+Top spending:
+1. Oziq-ovqat — 3 100 000 UZS
+2. Transport — 950 000 UZS
+
+🔴 Over limit:
+• Kafe — 1 200 000 UZS / 800 000 UZS
+
+⚠️ Heads up: income is well below usual — check that everything is recorded",
+}
+`;
+
+snapshot[`limit_alert — uz 1`] = `
+{
+  push: {
+    body: "🟡 Kafe: limitning 80% qismi ishlatildi
+656 000 so'm / 800 000 so'm",
+    title: "🎯 Limit",
+  },
+  telegram: "<b>🎯 Limit</b>
+🟡 Kafe: limitning 80% qismi ishlatildi
+656 000 so'm / 800 000 so'm",
+}
+`;
+
+snapshot[`limit_alert — ru 1`] = `
+{
+  push: {
+    body: "🟡 Kafe: использовано 80% лимита
+656 000 сум / 800 000 сум",
+    title: "🎯 Лимит",
+  },
+  telegram: "<b>🎯 Лимит</b>
+🟡 Kafe: использовано 80% лимита
+656 000 сум / 800 000 сум",
+}
+`;
+
+snapshot[`limit_alert — en 1`] = `
+{
+  push: {
+    body: "🟡 Kafe: 80% of the limit used
+656 000 UZS / 800 000 UZS",
+    title: "🎯 Limit",
+  },
+  telegram: "<b>🎯 Limit</b>
+🟡 Kafe: 80% of the limit used
+656 000 UZS / 800 000 UZS",
+}
+`;
+
+snapshot[`income_missing — uz 1`] = `
+{
+  push: {
+    body: "Oylik hali kiritilmadi (kutilgan sana: 05.10)",
+    title: "💼 Daromad kutilmoqda",
+  },
+  telegram: "<b>💼 Daromad kutilmoqda</b>
+Oylik hali kiritilmadi (kutilgan sana: 05.10)",
+}
+`;
+
+snapshot[`income_missing — ru 1`] = `
+{
+  push: {
+    body: "Oylik ещё не внесён (ожидался 05.10)",
+    title: "💼 Ожидается доход",
+  },
+  telegram: "<b>💼 Ожидается доход</b>
+Oylik ещё не внесён (ожидался 05.10)",
+}
+`;
+
+snapshot[`income_missing — en 1`] = `
+{
+  push: {
+    body: "Oylik has not been recorded yet (expected 05.10)",
+    title: "💼 Income expected",
+  },
+  telegram: "<b>💼 Income expected</b>
+Oylik has not been recorded yet (expected 05.10)",
+}
+`;
+
+snapshot[`test — uz 1`] = `
+{
+  push: {
+    body: "Test xabar — bildirishnomalar ishlayapti.",
+    title: "✅ My Wallet",
+  },
+  telegram: "<b>✅ My Wallet</b>
+Test xabar — bildirishnomalar ishlayapti.",
+}
+`;
+
+snapshot[`test — ru 1`] = `
+{
+  push: {
+    body: "Тестовое сообщение — уведомления работают.",
+    title: "✅ My Wallet",
+  },
+  telegram: "<b>✅ My Wallet</b>
+Тестовое сообщение — уведомления работают.",
+}
+`;
+
+snapshot[`test — en 1`] = `
+{
+  push: {
+    body: "Test message — notifications are working.",
+    title: "✅ My Wallet",
+  },
+  telegram: "<b>✅ My Wallet</b>
+Test message — notifications are working.",
+}
+`;
