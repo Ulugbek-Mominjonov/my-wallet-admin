@@ -11,7 +11,9 @@ grant usage on schema tests to anon, authenticated;
 
 -- Test foydalanuvchisi: auth.users ga yozadi, id qaytaradi.
 -- auth triggerlari (E05: profil + shaxsiy byudjet) ham ishlaydi.
-create or replace function tests.create_user(p_email text)
+-- p_meta — ro'yxatdan o'tishdagi user_metadata (masalan `{"locale": "ru"}`).
+drop function if exists tests.create_user(text);
+create or replace function tests.create_user(p_email text, p_meta jsonb default '{}')
 returns uuid
 language plpgsql
 security definer
@@ -26,7 +28,7 @@ begin
   )
   values (
     '00000000-0000-0000-0000-000000000000', v_id, 'authenticated', 'authenticated',
-    p_email, '', now(), '{"provider":"email","providers":["email"]}', '{}', now(), now()
+    p_email, '', now(), '{"provider":"email","providers":["email"]}', p_meta, now(), now()
   );
   return v_id;
 end;
