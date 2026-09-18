@@ -1,5 +1,4 @@
 # Bog'liqliklar haftalik, guruhlab yangilanadi (PR soni kam bo'lsin).
-# npm (web) yozuvi E02 da web/package.json paydo bo'lganda qo'shiladi.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -18,3 +17,15 @@ updates:
     groups:
       tooling:
         patterns: ["*"]
+  - package-ecosystem: npm
+    directory: /web
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      react:
+        patterns: ["react", "react-dom", "@types/react*"]
+      tanstack:
+        patterns: ["@tanstack/*"]
+      dev-tools:
+        dependency-type: development

@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
+.PHONY: help check lint test fmt dev web-lint web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -10,15 +10,24 @@ help: ## Buyruqlar ro'yxati
 
 check: lint test ## Barcha tekshiruvlar (PR'dan oldin majburiy)
 
-lint: db-lint ## Lint, format va tip tekshiruvi (web — E02)
+lint: db-lint web-lint ## Lint, format va tip tekshiruvi
 
 test: db-test ## Barcha testlar (web — E02)
 
-fmt: ## Kodni formatlash
-	@echo "fmt: formatlovchilar E01/E02 da qo'shiladi"
+fmt: ## Kodni formatlash (web)
+	pnpm --filter @my-wallet/web format
 
 dev: db-start ## Lokal muhit (Supabase + admin panel)
-	@echo "dev: admin panel E02 da qo'shiladi (pnpm dev)"
+	pnpm --filter @my-wallet/web dev
+
+# ─── Admin panel (web) ─────────────────────────────────────────────────────
+web-lint: ## Web: format, ESLint va tip tekshiruvi
+	pnpm --filter @my-wallet/web format:check
+	pnpm --filter @my-wallet/web lint
+	pnpm --filter @my-wallet/web typecheck
+
+web-build: ## Web: production build
+	pnpm --filter @my-wallet/web build
 
 # ─── Ma'lumotlar bazasi (lokal Supabase, Docker) ───────────────────────────
 SUPABASE := pnpm exec supabase

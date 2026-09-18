@@ -204,7 +204,7 @@ E21–E26 (admin) M2 bilan.
 > i18n, test. **Qoidalar:** ADR-10, ADR-15. **DoD:** `pnpm build` + unit +
 > e2e smoke yashil; light/dark; 3 til.
 
-- [ ] **E02-T01** `web/`: Vite + React 19 + TypeScript (strict,
+- [x] **E02-T01** `web/`: Vite + React 19 + TypeScript (strict,
   `noUncheckedIndexedAccess`), pnpm, ESLint (flat config: typescript-eslint,
   react-hooks, jsx-a11y, `boundaries` — FSD import qoidasi), Prettier,
   path aliaslar (`@/app`, `@/features`, `@/entities`, `@/shared`). Dependabot'ga
@@ -806,6 +806,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Shaxsiy fond — maxsus hisob, ajratma — o'tkazma | eski arifmetika + pul joylashuvi | ADR-05 |
 | 2026-09-18 | Q1–Q4 javoblari: mavjud repolar, commit/push tartibi, faqat Sheets importi, faqat Android | foydalanuvchi qarori | 3-bo'lim |
 | 2026-09-18 | Remote auth sozlamalari dashboard'da qo'lda; `config push` ishlatilmaydi | lokal manzillar prod'ga tushmasin | E01-T01, DEPLOY 2.4 |
+| 2026-09-18 | Web: TypeScript 6.0 (7.0 emas), ESLint (oxlint emas) | typescript-eslint TS < 6.1 ni qo'llaydi; FSD chegaralari (`boundaries`) va type-aware qoidalar kerak | E02-T01 |
 
 ## 7. Jarayon jurnali
 
@@ -818,3 +819,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E00-T07 | eski kod `legacy-v1` + `legacy-v1-final` tegida; yangi `main` ikkala repoga yuklandi; repolar public ekani aniqlandi (ADR-13, A9) |
 | 2026-09-18 | E01-T01..T07 | lokal Supabase (Docker, PG 17), foundation + audit migratsiyalari, pgTAP harness (21 test), squawk + db lint, TS tiplar; topilgan xavfsizlik bo'shlig'i: PUBLIC EXECUTE global standarti yopildi |
 | 2026-09-18 | E04-T01 | Flutter (Android), `uz.mywallet.app`, pub workspace + `wallet_domain`, very_good_analysis 11 (Dart 3.13 `new(...)` konstruktor sintaksisi), debug APK build ✅ |
+| 2026-09-18 | E02-T01 | Vite 8 + React 19 + TS 6 (strict, noUncheckedIndexedAccess), ESLint 10 (strictTypeChecked, jsx-a11y, react-hooks, FSD `boundaries` — tekshirildi), Prettier, `make web-lint` |

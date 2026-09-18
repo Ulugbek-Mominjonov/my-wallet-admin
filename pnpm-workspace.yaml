@@ -1,1 +1,7 @@
-packages: []
+packages:
+  - web
+
+# Faqat shu paketlarga o'rnatish skriptlarini ishga tushirishga ruxsat
+# (pnpm standart holatda bloklaydi — ta'minot zanjiri xavfsizligi).
+allowBuilds:
+  unrs-resolver: true
