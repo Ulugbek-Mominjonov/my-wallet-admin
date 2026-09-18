@@ -151,7 +151,9 @@ Eski tizimda faqat `karta / naqd` **usuli** bor edi. Endi ular haqiqiy hisoblar.
   tez tugma yoki subkategoriyasi bor) o'chirilmaydi — arxivlanadi yoki
   boshqasi bilan **birlashtiriladi** (barcha amallar ko'chiriladi, bitta
   tranzaksiyada). Kategoriya turi (daromad/xarajat) yaratilgandan keyin
-  o'zgarmaydi.
+  o'zgarmaydi. Birlashtirishda turlar bir xil, daromad turlarida oy siljishi
+  ham bir xil bo'lishi kerak (aks holda amallar jimgina boshqa oyga
+  ko'chardi — avval BR-043 bilan tekislanadi).
 - **BR-037 [YANGI]** Ikon va rang (UI uchun), tartib (drag & drop).
 
 ---
@@ -240,7 +242,8 @@ Pul **qachon kelgani** bilan **qaysi oyning puli** ekani har doim bir xil emas:
   `[YANGI]` Summa qolgandan kam bo'lsa: "Qisman to'lov — qolganini keyin
   to'laysizmi?" → `partial`; yoki "Yopish" → `paid`.
 - **BR-074 [ASL]** Ommaviy "To'landi" (admin): tanlangan rejalar **bitta
-  tranzaksiyada**; faqat summasi aniq (> 0) rejalar.
+  tranzaksiyada**; faqat summasi aniq (> 0) rejalar. To'lanmaganlari sababi
+  bilan qaytadi (summa noma'lum, hisob yo'q, boshqa valyutadagi hisob va h.k.).
 - **BR-075 [ASL]** **Avto to'lov:** `avto && reja > 0 && to'lanmagan &&
   to'lov_kuni ≤ bugun` → server ilovani ochmasangiz ham har kuni (00:10)
   qolgan summaga teng to'lov yozadi (`source = auto_pay`). Internet, telefon,
@@ -478,7 +481,8 @@ hisobidan tashqari hisoblardagi daromad/xarajatlar + fondga ajratmalar.
 
 ## 16. 🔒 Oyni yopish
 
-- **BR-150 [ASL]** Tugagan oyni yopish / qayta ochish (owner/admin).
+- **BR-150 [ASL]** Tugagan oyni yopish / qayta ochish (owner/admin). Joriy va
+  kelgusi oylar yopilmaydi.
 - **BR-151 [ASL]** Yopilgan oy 🔒 belgisi bilan ko'rsatiladi (yillik ko'rinish,
   hisobot, dashboard).
 - **BR-152 [ASL]** Yopilgan oy amalini tahrirlash — ogohlantirish (BR-055).

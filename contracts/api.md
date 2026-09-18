@@ -54,6 +54,13 @@ Keep-alive va smoke testlar.
 | `fx_rate_missing` | amal sanasi uchun kurs yo'q — `fx_rate` kiriting (BR-191, BR-192) |
 | `month_closed` | qattiq qulf: yopilgan oyga yozish/tahrirlash/o'chirish mumkin emas (BR-055) |
 | `tag_deleted` | o'chirilgan teg qo'yilmaydi |
+| `planned_not_found` / `planned_already_paid` | reja topilmadi; allaqachon to'langan (BR-073) |
+| `amount_required` / `invalid_amount` | summa kiritilishi shart (summasiz reja yoki boshqa valyutadagi hisob); summa ≤ 0 |
+| `account_required` / `account_not_found` | hisob tanlanmagan; nom/ID bo'yicha hisob topilmadi (`details` — nom) |
+| `category_not_found` | kategoriya topilmadi (`details` — nom) |
+| `preview_outdated` | preview'dan keyin ma'lumot o'zgargan — preview'ni qayta oling (BR-043) |
+| `month_not_finished` | tugamagan oyni yopib bo'lmaydi (BR-150) |
+| `month_shift_mismatch` | oy siljishi farqli daromad turlari birlashtirilmaydi (BR-036, BR-043) |
 
 Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masalan
 `accounts_name_key`), `23514` — qiymat cheklovi (masalan bo'sh nom, summa ≤ 0),
@@ -64,7 +71,7 @@ Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masa
 
 | RPC | Kirish | Javob | Kim |
 |---|---|---|---|
-| `app_bootstrap()` | — | `{schema_version, is_platform_admin, profile{user_id, display_name, locale, last_household_id}, households[{id, name, role, base_currency, timezone}], currencies[{code, name{uz,ru,en}, symbol, exponent}], app_config{min_android_version, maintenance, …}}` | har kim |
+| `app_bootstrap()` | — | `{schema_version, is_platform_admin, profile{user_id, display_name, locale, last_household_id}, households[{id, name, role, base_currency, timezone, onboarded}], currencies[{code, name{uz,ru,en}, symbol, exponent}], app_config{min_android_version, maintenance, …}}` | har kim |
 | `create_household(p_name)` | nom | `uuid` | har kim (owner bo'ladi) |
 | `create_invite(p_household, p_role='member')` | byudjet, rol (`owner` emas) | `[{code, expires_at}]` | owner/admin |
 | `accept_invite(p_code)` | 8 belgili kod (registr farqsiz) | byudjet `uuid` | har kim |
@@ -176,4 +183,49 @@ tartibni takrorlaydi (`private.planned_status`).
   yuklash/o'chirish — amal yozuvchilar.
 - Yuklangandan keyin `attachments` qatori yoziladi; amal o'chirilsa (soft)
   biriktirmalar ham o'chiriladi, undo'da qaytadi; fayllarni server tozalaydi (E11).
+
+## Biznes RPC'lar (E08) — authenticated
+
+Oy — `YYYY-MM-01`; sana — `YYYY-MM-DD` (standart — byudjet vaqt zonasidagi bugun).
+Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi.
+
+| RPC | Javob | Kim |
+|---|---|---|
+| `open_month_preview(p_household, p_month)` | `{month, closed, new, existing, items[{kind, name, planned_amount, due_date, recurring_rule_id, system_code, exists}]}` | a'zolar |
+| `open_month(p_household, p_month)` | `{month, created, skipped, items[{id, kind, name, planned_amount, due_date}]}` — idempotent (BR-081, BR-082) | owner/admin/member |
+| `pay_planned(p_item, p_amount?, p_account?, p_date?, p_settle=false)` | `{transaction_id, paid_amount, remaining, status}` — summa standart = qolgan (asosiy valyutadagi hisobda); ajratma → fondga o'tkazma (BR-073, BR-061) | owner/admin/member |
+| `skip_planned(p_item, p_skipped=true)` | `{id, status}` (BR-071) | owner/admin/member |
+| `bulk_pay_planned(p_items[], p_date?, p_account?)` | `{paid: [id], skipped: [{id, reason}]}`; `reason`: `not_found`, `forbidden`, `skipped`, `already_paid`, `amount_unknown`, `account_required`, `account_not_found`, `currency_mismatch` (BR-074) | owner/admin/member |
+| `recalc_income_months_preview(p_household)` | `{count, moves[{from_month, to_month, count, amount_base}]}` (BR-043) | owner/admin |
+| `recalc_income_months_apply(p_household, p_expected_count)` | `{moved}` — son preview bilan mos bo'lmasa `preview_outdated` | owner/admin |
+| `month_close_check(p_household, p_month)` | `{month, unpaid_count, unpaid_amount, unknown_count}` (BR-153) | a'zolar |
+| `set_month_closed(p_household, p_month, p_closed)` | `{month, closed}` — yopish faqat tugagan oy uchun (BR-150) | owner/admin |
+| `merge_categories(p_from, p_to)` | `{children, transactions, plans, recurring_rules, quick_actions}` — manba o'chiriladi, maqsad limiti ustun (BR-036) | owner/admin |
+| `onboarding_apply(p_household, p_payload)` | `{applied: true, accounts, income_types, recurring_rules}` yoki qayta chaqirilsa `{applied: false}` | owner/admin |
+
+`onboarding_apply` payload (mobil sozlash oynasi, E14):
+
+```json
+{
+  "accounts": [
+    {"name": "Naqd", "type": "cash", "opening_balance": 150000000},
+    {"name": "Humo", "type": "card", "opening_balance": 200000000},
+    {"name": "Shaxsiy fond", "type": "personal_fund", "opening_balance": 30000000}
+  ],
+  "income_types": [
+    {"name": "Oylik", "month_shift": -1, "expected_day": 2, "expected_amount": 800000000, "account": "Humo"}
+  ],
+  "recurring": [
+    {"kind": "expense", "name": "Ijara", "category": "Ijara", "account": "Naqd", "amount": 300000000, "day_of_month": 5, "auto_pay": false}
+  ],
+  "fund": {"mode": "percent", "percent": 10, "fixed_amount": 0, "day": 5, "source_account": "Naqd"}
+}
+```
+
+- Hisob nomi mavjud bo'lsa — joriy qoldiq (`opening_balance`, bugungi sana); fond
+  hisobi turi bo'yicha topiladi; yo'q bo'lsa yangi hisob (asosiy valyutada).
+- Daromad turi mavjud bo'lsa — `month_shift` yangilanadi, yo'q bo'lsa yaratiladi;
+  `expected_day` berilsa — kutilayotgan daromad doimiy rejasi (BR-077).
+- Shu nomli doimiy reja bo'lsa — o'tkaziladi (ustiga yozilmaydi).
+- Eslatma sozlamalari — E11 (`notification_prefs`) bilan qo'shiladi.
 

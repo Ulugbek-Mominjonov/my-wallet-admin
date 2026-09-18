@@ -96,7 +96,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ✅ |
 | | E06 | Spravochniklar sxemasi | admin | E05 | ✅ |
 | | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ✅ |
-| | E08 | Biznes RPC'lar | admin | E07 | ⬜ |
+| | E08 | Biznes RPC'lar | admin | E07 | ✅ |
 | | E09 | Hisobotlar + golden fixtures + `contracts/` | admin | E08 | ⬜ |
 | | E10 | Sinxron API | admin | E07 | ⬜ |
 | | E11 | Rejali ishlar va bildirishnomalar | admin | E08 | ⬜ |
@@ -418,28 +418,37 @@ E21–E26 (admin) M2 bilan.
 > **Qoidalar:** BR-043, BR-073, BR-074, BR-081..085, BR-036, BR-153.
 > **DoD:** har RPC idempotent yoki tranzaksion; pgTAP + `contracts/api.md`.
 
-- [ ] **E08-T01** `open_month_preview(household, month)` va
+- [x] **E08-T01** `open_month_preview(household, month)` va
   `open_month(household, month)`: aktiv shablonlar (tartib bo'yicha, amal
-  davri ichida) + fond ajratmasi; `INSERT ... SELECT ... ON CONFLICT DO
+  davri ichida) + fond ajratmasi (nomi — tizim kategoriyasiniki, summa —
+  BR-060, 0% bo'lsa yaratilmaydi); `INSERT ... SELECT ... ON CONFLICT DO
   NOTHING`; natija `{created, skipped, items}`; `months.opened_at`.
   pgTAP: ikki marta chaqirish = takror yo'q; 31-kun fevralda 28/29.
-- [ ] **E08-T02** `pay_planned(item, amount, account, date, settle)`:
-  BR-073 (summa standart = qolgan; noma'lum summaga majburiy; to'langanga
-  xato; kam bo'lsa `partial` yoki `settle`). `skip_planned(item, bool)`.
-- [ ] **E08-T03** `bulk_pay_planned(items[])` — bitta tranzaksiya, faqat
-  summasi aniq rejalar, natija `{paid, skipped:[{id, reason}]}`. BR-074.
-- [ ] **E08-T04** `recalc_income_months_preview(household)` (qaysi yozuv
-  qayerdan qayerga) va `..._apply(household, expected_count)` (preview'dan
-  keyin o'zgargan bo'lsa rad etadi). BR-043.
-- [ ] **E08-T05** `set_month_closed(household, month, closed)` +
-  `month_close_check` (to'lanmagan/noma'lum soni — BR-153). `merge_categories
-  (from, to)` — amallar, rejalar, shablonlar, limitlar ko'chiriladi. BR-036.
-- [ ] **E08-T06** `onboarding_apply(payload jsonb)` — hisoblar (boshlang'ich
-  qoldiq), daromad turlari va oy qoidalari, doimiy rejalar, fond qoidasi,
-  eslatma sozlamasi — bitta tranzaksiyada, qayta chaqirilsa ustiga yozmaydi.
-- [ ] **E08-T07** `contracts/api.md`: har RPC imzosi, payload namunasi, xato
-  kodlari (`P0001` + `code` matn: `planned_already_paid`, `amount_required`,
-  `month_closed`, `conflict` …); `contracts/schema-version` = 1.
+- [x] **E08-T02** `pay_planned(item, amount, account, date, settle)`:
+  BR-073 (summa standart = qolgan; noma'lum summaga yoki boshqa valyutadagi
+  hisobga majburiy; to'langanga xato; kam bo'lsa `partial` yoki `settle`;
+  ajratma → fondga o'tkazma). `skip_planned(item, bool)`.
+- [x] **E08-T03** `bulk_pay_planned(items[], date, account)` — bitta
+  statement (rejalar bir marta qayta hisoblanadi), faqat summasi aniq
+  rejalar, natija `{paid, skipped:[{id, reason}]}`. BR-074.
+- [x] **E08-T04** `recalc_income_months_preview(household)` (oy juftliklari
+  bo'yicha: qayerdan qayerga, nechta) va `..._apply(household,
+  expected_count)` (preview'dan keyin o'zgargan bo'lsa rad etadi). BR-043.
+  BR-040 formulasi `private.income_budget_month` da — trigger ham shuni ishlatadi.
+- [x] **E08-T05** `set_month_closed(household, month, closed)` (faqat tugagan
+  oy) + `month_close_check` (to'lanmagan/noma'lum soni — BR-153).
+  `merge_categories(from, to)` — subkategoriyalar, amallar, rejalar,
+  shablonlar, tez tugmalar, limit ko'chiriladi; turlar va oy siljishi bir
+  xil bo'lishi shart. BR-036.
+- [x] **E08-T06** `onboarding_apply(household, payload)` — hisoblar (joriy
+  qoldiq), daromad turlari va oy qoidalari (+ kutilayotgan daromad rejasi),
+  doimiy rejalar, fond qoidasi — bitta tranzaksiyada, nomlar bo'yicha, bir
+  marta (`households.onboarded_at`, `app_bootstrap` da `onboarded`).
+  Eslatma sozlamasi — E11 (`notification_prefs` jadvali bilan).
+- [x] **E08-T07** `contracts/api.md`: har RPC imzosi, javobi, onboarding
+  payload namunasi, xato kodlari (`planned_already_paid`, `amount_required`,
+  `preview_outdated`, `month_not_finished` …); `schema-version` = 1
+  (qo'shimcha o'zgarishlar). Sinxron `conflict` — E10.
 
 ### E09 · Hisobotlar + golden fixtures + `contracts/` `[admin]`
 
@@ -855,6 +864,9 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Fondga daromad yozilmaydi; fonddan byudjetga o'tkazma — manfiy ajratma | BR-063 tengligi va BR-092 invarianti saqlanadi | BR-061, BR-063 |
 | 2026-09-18 | `amount_base` uchun kurs hozirdanoq (qo'lda `fx_rate` yoki CBU jadvali), yo'q bo'lsa xato | noto'g'ri summa jimgina yozilmaydi; E29 faqat kurslarni to'ldiradi | E07-T04, BR-191 |
 | 2026-09-18 | Zaxirada storage siyosatlari alohida SQL, `storage.objects` — fayllarni API orqali qayta yuklash bilan | `db dump` storage sxemasini olmaydi; dump'dagi obyekt qatori qayta yuklashni bloklardi | E07-T10, ADR-12 |
+| 2026-09-18 | RPC xavfsizligi: `security invoker` + RLS (to'lash, qayta joylash, birlashtirish); `definer` faqat klient yozolmaydigan maydonlar uchun (oy ochish, yopish, onboarding) | RLS ikkinchi himoya qatlami bo'lib qoladi; definer'da rol aniq tekshiriladi | E08, ARX 5 |
+| 2026-09-18 | Onboarding nomlar bo'yicha (ID emas), bir marta (`onboarded_at`) | mobil sozlash oynasi sinxrondan oldin ishlaydi; qayta yuborish xavfsiz | E08-T06 |
+| 2026-09-18 | Oy siljishi farqli daromad turlarini birlashtirish taqiq | aks holda amallar jimgina boshqa oyga ko'chardi; BR-043 preview'i orqali tekislanadi | E08-T05, BR-036 |
 
 ## 7. Jarayon jurnali
 
@@ -880,3 +892,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E05-T01..T07 | tenancy: 6 jadval + RLS (initPlan pattern), signup triggeri (profil + shaxsiy byudjet), 8 RPC (takliflar, egalik, rollar, bootstrap), oxirgi owner himoyasi; 33 pgTAP testi birinchi urinishda yashil; contracts/api.md kengaytirildi. **E05 yakunlandi** |
 | 2026-09-18 | E06-T01..T09 | 9 jadval (3 tizim + 6 byudjet spravochnigi), kompozit FK, validate triggerlari (tizim yozuvlari, ishlatilayotganni o'chirish, subkategoriya darajasi, fond manbai), ustun grant'lari, standart to'plam (18 kategoriya, 3 hisob, fond qoidasi) uz/ru/en; 90 yangi pgTAP + 4 invariant (jami 152); EXPLAIN: himoya so'rovlari household indeksidan. **E06 yakunlandi** |
 | 2026-09-18 | E07-T01..T11 | 8 jadval + 3 view + bucket: qarz/maqsad/oy, rejalar (holat funksiyasi), amallar (tegishli oy, asosiy valyuta, o'tkazma, fond qoidalari), statement triggerlar (to'lov, fond ajratmasi 1 499 600 × 10% → 150 000), oy qulfi, cheklar + zaxira/tiklash (storage siyosatlari va fayllar, lokalda sinaldi); 95 pgTAP (jami 247); 20k amalda EXPLAIN. **E07 yakunlandi** |
+| 2026-09-18 | E08-T01..T07 | 11 RPC: oy ochish (preview, idempotent, fond rejasi), to'lash/o'tkazib yuborish/ommaviy (bitta statement), qayta joylash (preview → apply, BR-040 yagona funksiyada), oyni yopish + tekshiruv, kategoriyalarni birlashtirish, onboarding (nomlar bo'yicha, bir marta); 56 pgTAP (jami 303); contracts/api.md. **E08 yakunlandi** |

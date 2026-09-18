@@ -326,7 +326,11 @@ kursori, 6-bo'lim).
 ## 5. API (RPC) — shartnoma
 
 Barcha RPC `public` sxemada, `security invoker` (RLS amal qiladi), agar
-boshqacha yozilmagan bo'lsa. To'liq payloadlar: `contracts/api.md`.
+boshqacha yozilmagan bo'lsa. `security definer` — faqat klient yozolmaydigan
+maydonlarga yozadiganlar (`open_month` — tizim rejasi va `months`,
+`set_month_closed`, `onboarding_apply`, a'zolik RPC'lari); ular rolni
+`private.require_household_role` bilan aniq tekshiradi. To'liq payloadlar:
+`contracts/api.md`.
 
 | Funksiya | Kim chaqiradi | Vazifa | Qoida |
 |---|---|---|---|
@@ -334,13 +338,13 @@ boshqacha yozilmagan bo'lsa. To'liq payloadlar: `contracts/api.md`.
 | `app_bootstrap()` | mobil, admin | profil, byudjetlar, rollar, `app_config` (min versiya), valyutalar | BR-214 |
 | `sync_pull(household, cursor, limit)` | mobil | o'zgargan qatorlar (tombstone bilan) | 6-bo'lim |
 | `sync_push(household, device, mutations[])` | mobil | paket yozuv, idempotent, versiya tekshiruvi | BR-006 |
-| `onboarding_apply(payload)` | mobil | hisoblar, daromad turlari va qoidalari, doimiy rejalar, fond qoidasi — bitta tranzaksiyada | E08-T06, E14 |
+| `onboarding_apply(household, payload)` | mobil | hisoblar, daromad turlari va qoidalari, doimiy rejalar, fond qoidasi — bitta tranzaksiyada, bir marta | E08-T06, E14 |
 | `open_month_preview(household, month)` / `open_month(...)` | mobil, admin, cron | BR-081..084 | |
 | `pay_planned(item, amount, account, date, settle)` | admin (mobil sync_push orqali) | BR-073 | |
-| `bulk_pay_planned(items[])` | admin | BR-074 | |
+| `bulk_pay_planned(items[], date, account)` | admin | BR-074 | |
 | `skip_planned(item, skipped)` | mobil, admin | BR-071 | |
 | `recalc_income_months_preview/apply(household)` | admin | BR-043 | |
-| `set_month_closed(household, month, closed)` | mobil, admin | BR-150 | |
+| `set_month_closed(household, month, closed)` / `month_close_check(household, month)` | mobil, admin | BR-150, BR-153 | |
 | `merge_categories(from, to)` | admin | BR-036 | |
 | `report_month(household, month)` | admin, cron | BR-090..095 (hammasi bitta JSON) | |
 | `report_year(household, year)` | admin | Yillik ko'rinish | BR-092 |
