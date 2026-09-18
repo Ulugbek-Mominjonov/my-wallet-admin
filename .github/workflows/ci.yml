@@ -49,6 +49,8 @@ jobs:
         run: make db-test
       - name: Generatsiya qilingan TS tiplari eskirmaganmi
         run: make db-types-check
+      - name: Mobil bilan shartnoma (contracts/) eskirmaganmi
+        run: make contracts-check
 
   e2e:
     name: e2e — Playwright

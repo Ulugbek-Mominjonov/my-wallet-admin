@@ -462,9 +462,11 @@ E21–E26 (admin) M2 bilan.
   (`scripts/gen-load.sql`: 1 byudjet × 25 000 amal) + `EXPLAIN (ANALYZE,
   BUFFERS)` testlari: `report_month` < 50 ms, `report_year` < 150 ms,
   Seq Scan yo'q. Natija `docs/PERF.md` ga.
-- [ ] **E09-T08** `contracts/README.md` (nima, qanday versiyalanadi, mobil
+- [x] **E09-T08** `contracts/README.md` (nima, qanday versiyalanadi, mobil
   qanday oladi) + `scripts/contracts-publish.sh` (`BIZNES-QOIDALAR.md` ni
-  `contracts/` ga nusxalash, `schema-version` tekshiruvi).
+  `contracts/` ga nusxalash, `schema-version` ↔ `private.api_schema_version()`
+  tekshiruvi), `make contracts-check` CI'da. *(E04-T08 uchun oldinroq
+  bajarildi; fixtures — E09-T05.)*
 
 ### E10 · Sinxron API `[admin]`
 
@@ -844,3 +846,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T07 | 18 unit/komponent testi (Vitest + RTL), Playwright e2e 11/11 (3 marta barqaror); topilgan UX kamchiligi: ⌘K da til nomlari lotincha topilmasdi → kalit so'zlar |
 | 2026-09-18 | E02-T08 | wrangler (Static Assets, SPA), CSP hash plagini, xavfsizlik sarlavhalari; e2e `wrangler dev` ustida ✅. **E02 yakunlandi** |
 | 2026-09-18 | E03-T01..T07 | CI GitHub'da yashil (~2 daq); deploy/preview/release/backup/keep-alive workflow'lari (DEPLOY_ENABLED bilan yoqiladi); `health()` RPC; zaxira → tiklash → solishtirish lokalda tasdiqlandi (ijobiy va salbiy holat); action'lar SHA bilan pin |
+| 2026-09-18 | E09-T08 | contracts/ (README, api.md, schema-version, BIZNES-QOIDALAR nusxasi) + publish/check skripti — mobil E04-T08 uchun oldinroq |
