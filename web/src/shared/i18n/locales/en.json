@@ -26,5 +26,25 @@
     "description": "Key figures for the current month",
     "emptyTitle": "No data yet",
     "emptyText": "Figures will appear here once transactions are added."
+  },
+  "nav": {
+    "overview": "Overview",
+    "dashboard": "Dashboard"
+  },
+  "shell": {
+    "toggleSidebar": "Toggle menu",
+    "language": "Language",
+    "theme": {
+      "label": "Theme",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "command": {
+      "open": "Search…",
+      "title": "Commands",
+      "placeholder": "Type a page or command…",
+      "empty": "Nothing found"
+    }
   }
 }

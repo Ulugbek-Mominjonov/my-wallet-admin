@@ -1,4 +1,5 @@
 import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
+import { ThemeProvider } from 'next-themes'
 import type { ReactNode } from 'react'
 
 import { Toaster } from '@/shared/ui/sonner'
@@ -9,14 +10,21 @@ interface AppProvidersProps {
   children: ReactNode
 }
 
-/** Global providerlar. Tema va til E02-T05/T06 da qo'shiladi. */
+/** Global providerlar: tema (`mw.theme`, index.html'dagi skript bilan mos), kesh, tooltip, toast. */
 export function AppProviders({ queryClient, children }: AppProvidersProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        {children}
-        <Toaster richColors closeButton />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      storageKey="mw.theme"
+      disableTransitionOnChange
+    >
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          {children}
+          <Toaster richColors closeButton />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   )
 }

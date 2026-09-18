@@ -6,6 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
     <title>My Wallet — boshqaruv paneli</title>
+    <script>
+      // Tema birinchi chizishdan OLDIN qo'llanadi (oq "chaqnash" bo'lmasin).
+      // Kalit next-themes bilan bir xil: mw.theme = light | dark | system.
+      try {
+        var theme = localStorage.getItem('mw.theme') || 'system'
+        var dark =
+          theme === 'dark' ||
+          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', dark)
+      } catch (error) {
+        // localStorage yopiq (private rejim) — standart och tema qoladi.
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

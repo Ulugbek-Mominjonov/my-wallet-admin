@@ -1,14 +1,16 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 
-/** Ichki sahifalar layouti. Sidebar va topbar E02-T06 da, kirish talabi E21 da. */
+import { AppShell } from '@/features/app-shell'
+
+/** Ichki sahifalar layouti. Kirish talabi (auth guard) E21 da qo'shiladi. */
 export const Route = createFileRoute('/_app')({
   component: AppLayout,
 })
 
 function AppLayout() {
   return (
-    <main className="mx-auto w-full max-w-7xl space-y-6 p-4 md:p-6">
+    <AppShell>
       <Outlet />
-    </main>
+    </AppShell>
   )
 }

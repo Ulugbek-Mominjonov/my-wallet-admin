@@ -26,5 +26,25 @@
     "description": "Joriy oy bo'yicha asosiy ko'rsatkichlar",
     "emptyTitle": "Hozircha ma'lumot yo'q",
     "emptyText": "Ko'rsatkichlar amallar kiritilgandan keyin shu yerda paydo bo'ladi."
+  },
+  "nav": {
+    "overview": "Umumiy",
+    "dashboard": "Xulosa"
+  },
+  "shell": {
+    "toggleSidebar": "Menyuni yig'ish/ochish",
+    "language": "Til",
+    "theme": {
+      "label": "Mavzu",
+      "light": "Yorug'",
+      "dark": "Qorong'i",
+      "system": "Tizim bo'yicha"
+    },
+    "command": {
+      "open": "Qidirish…",
+      "title": "Buyruqlar",
+      "placeholder": "Sahifa yoki buyruq nomini yozing…",
+      "empty": "Hech narsa topilmadi"
+    }
   }
 }

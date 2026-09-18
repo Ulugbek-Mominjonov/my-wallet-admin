@@ -226,10 +226,12 @@ E21–E26 (admin) M2 bilan.
 - [x] **E02-T05** i18n: i18next + `uz` (asosiy), `ru`, `en` JSON; pul/sana
   formatlash (`Intl`, `1 234 567 so'm`, `Sentabr 2026`) — `shared/lib/format`
   + unit testlar.
-- [ ] **E02-T06** Layout: yig'iladigan sidebar (bo'limlar: Dashboard,
-  Hisobotlar, Amallar, Rejalar, Spravochniklar, Vositalar, Platforma),
-  topbar (byudjet almashtirgich, oy tanlagich, tema, til, profil),
-  ⌘K buyruqlar palitrasi (cmdk), mobil kenglikda drawer.
+- [x] **E02-T06** Layout (`features/app-shell`): yig'iladigan sidebar
+  (mobilda drawer), topbar (⌘K palitra, til, tema), navigatsiya yagona
+  manbadan (sidebar + ⌘K), tema birinchi chizishdan oldin qo'llanadi,
+  kutubxonalar alohida chunk'larda. Byudjet almashtirgich → E21-T02, profil
+  menyusi → E21-T04, oy tanlagich → E24-T02; menyu bo'limlari sahifalari
+  tayyor bo'lganda qo'shiladi (o'lik havola yo'q).
 - [ ] **E02-T07** Test infratuzilmasi: Vitest + Testing Library + MSW,
   Playwright (chromium) + `e2e/smoke.spec.ts`, `make web-check`.
 - [ ] **E02-T08** `wrangler.jsonc` (Workers Static Assets,
@@ -826,3 +828,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T03 | TanStack Router (fayl asosida, autoCodeSplitting, `tsr generate` tsc'dan oldin), `_auth`/`_app` layoutlari, 404 va xato sahifalari; preview deep-link ✅ |
 | 2026-09-18 | E02-T04 | Supabase klienti (PKCE, tipli), env zod bilan tekshiriladi, QueryClient (staleTime 30 s, retry siyosati, global xato → toast), query-key fabrikasi, router konteksti, `make web-env` |
 | 2026-09-18 | E02-T05 | i18next (uz/ru/en, tipli kalitlar, til `localStorage` da), `formatMoney` (BR-001) va oy yordamchilari (BR-002, BR-040) + 10 Vitest testi; mavjud matnlar tarjimaga ko'chirildi |
+| 2026-09-18 | E02-T06 | app-shell: Sidebar (Base UI), topbar, ⌘K, tema (next-themes + index.html skripti), til menyusi; vendor chunk'lar (eng kattasi 228 KB) |
