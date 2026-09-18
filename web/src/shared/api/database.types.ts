@@ -1472,6 +1472,7 @@ export type Database = {
         }[]
       }
       health: { Args: never; Returns: Json }
+      health_check: { Args: { p_household: string }; Returns: Json }
       leave_household: { Args: { p_household: string }; Returns: undefined }
       merge_categories: {
         Args: { p_from: string; p_to: string }
