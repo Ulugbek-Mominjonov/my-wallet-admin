@@ -670,6 +670,7 @@ export type Database = {
           created_by: string | null
           id: string
           name: string
+          onboarded_at: string | null
           personal_fund_day: number
           personal_fund_fixed_amount: number
           personal_fund_mode: Database["public"]["Enums"]["personal_fund_mode"]
@@ -687,6 +688,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           name: string
+          onboarded_at?: string | null
           personal_fund_day?: number
           personal_fund_fixed_amount?: number
           personal_fund_mode?: Database["public"]["Enums"]["personal_fund_mode"]
@@ -704,6 +706,7 @@ export type Database = {
           created_by?: string | null
           id?: string
           name?: string
+          onboarded_at?: string | null
           personal_fund_day?: number
           personal_fund_fixed_amount?: number
           personal_fund_mode?: Database["public"]["Enums"]["personal_fund_mode"]
@@ -1476,6 +1479,10 @@ export type Database = {
       }
       month_close_check: {
         Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
+      onboarding_apply: {
+        Args: { p_household: string; p_payload: Json }
         Returns: Json
       }
       open_month: {
