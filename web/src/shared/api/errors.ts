@@ -1,3 +1,5 @@
+import { i18n } from '@/shared/i18n'
+
 /** Foydalanuvchiga ko'rsatiladigan xato: aniq kod va tushunarli matn. */
 export class AppError extends Error {
   readonly code: string
@@ -25,20 +27,18 @@ const isPostgrestLike = (value: unknown): value is PostgrestLikeError =>
 export function toAppError(error: unknown): AppError {
   if (error instanceof AppError) return error
   if (error instanceof TypeError) {
-    return new AppError('network', "Server bilan aloqa yo'q. Internetni tekshiring.", {
-      cause: error,
-    })
+    return new AppError('network', i18n.t('errors.network'), { cause: error })
   }
   if (isPostgrestLike(error)) {
     if (error.status === 401 || error.code === 'PGRST301') {
-      return new AppError('unauthorized', 'Sessiya tugagan. Qayta kiring.', { cause: error })
+      return new AppError('unauthorized', i18n.t('errors.unauthorized'), { cause: error })
     }
     if (error.status === 403 || error.code === '42501') {
-      return new AppError('forbidden', "Bu amal uchun huquqingiz yo'q.", { cause: error })
+      return new AppError('forbidden', i18n.t('errors.forbidden'), { cause: error })
     }
     return new AppError(error.code ?? 'unknown', error.message, { cause: error })
   }
-  return new AppError('unknown', "Kutilmagan xato. Qayta urinib ko'ring.", { cause: error })
+  return new AppError('unknown', i18n.t('errors.unknown'), { cause: error })
 }
 
 /** Qayta urinish ma'noga ega emas: huquq/sessiya/validatsiya xatolari. */

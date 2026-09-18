@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "My Wallet",
+    "adminTitle": "Admin panel"
+  },
+  "common": {
+    "retry": "Try again",
+    "toHome": "Go home",
+    "comingSoon": "Coming soon"
+  },
+  "errors": {
+    "notFoundTitle": "Page not found",
+    "notFoundText": "The link may be outdated or mistyped.",
+    "unexpectedTitle": "Something went wrong",
+    "network": "No connection to the server. Check your internet.",
+    "unauthorized": "Your session has expired. Please sign in again.",
+    "forbidden": "You don't have permission for this action.",
+    "unknown": "Unexpected error. Please try again."
+  },
+  "auth": {
+    "loginTitle": "Sign in to the admin panel",
+    "methodsSoon": "Sign-in methods (Google, email code) are coming soon."
+  },
+  "dashboard": {
+    "title": "Overview",
+    "description": "Key figures for the current month",
+    "emptyTitle": "No data yet",
+    "emptyText": "Figures will appear here once transactions are added."
+  }
+}

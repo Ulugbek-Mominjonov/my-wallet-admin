@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev web-env web-lint web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
+.PHONY: help check lint test fmt dev web-env web-lint web-test web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -12,7 +12,7 @@ check: lint test ## Barcha tekshiruvlar (PR'dan oldin majburiy)
 
 lint: db-lint web-lint ## Lint, format va tip tekshiruvi
 
-test: db-test ## Barcha testlar (web — E02)
+test: db-test web-test ## Barcha testlar
 
 fmt: ## Kodni formatlash (web)
 	pnpm --filter @my-wallet/web format
@@ -32,6 +32,9 @@ web-lint: ## Web: format, ESLint va tip tekshiruvi
 	pnpm --filter @my-wallet/web format:check
 	pnpm --filter @my-wallet/web lint
 	pnpm --filter @my-wallet/web typecheck
+
+web-test: ## Web: unit testlar (Vitest)
+	pnpm --filter @my-wallet/web test
 
 web-build: ## Web: production build
 	pnpm --filter @my-wallet/web build

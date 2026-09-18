@@ -223,7 +223,7 @@ E21–E26 (admin) M2 bilan.
 - [x] **E02-T04** Ma'lumot qatlami: `shared/api/supabase.ts` (bitta klient,
   PKCE), TanStack Query (standart `staleTime`, retry siyosati, global xato
   → toast), query-key fabrikasi (`qk.transactions.list(householdId, filters)`).
-- [ ] **E02-T05** i18n: i18next + `uz` (asosiy), `ru`, `en` JSON; pul/sana
+- [x] **E02-T05** i18n: i18next + `uz` (asosiy), `ru`, `en` JSON; pul/sana
   formatlash (`Intl`, `1 234 567 so'm`, `Sentabr 2026`) — `shared/lib/format`
   + unit testlar.
 - [ ] **E02-T06** Layout: yig'iladigan sidebar (bo'limlar: Dashboard,
@@ -825,3 +825,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T02 | Tailwind v4 + shadcn (Base UI), brend/semantik tokenlar, 20+ komponent, MoneyText/EmptyState/PageHeader/StatCard; build ✅ |
 | 2026-09-18 | E02-T03 | TanStack Router (fayl asosida, autoCodeSplitting, `tsr generate` tsc'dan oldin), `_auth`/`_app` layoutlari, 404 va xato sahifalari; preview deep-link ✅ |
 | 2026-09-18 | E02-T04 | Supabase klienti (PKCE, tipli), env zod bilan tekshiriladi, QueryClient (staleTime 30 s, retry siyosati, global xato → toast), query-key fabrikasi, router konteksti, `make web-env` |
+| 2026-09-18 | E02-T05 | i18next (uz/ru/en, tipli kalitlar, til `localStorage` da), `formatMoney` (BR-001) va oy yordamchilari (BR-002, BR-040) + 10 Vitest testi; mavjud matnlar tarjimaga ko'chirildi |

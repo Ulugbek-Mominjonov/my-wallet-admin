@@ -1,4 +1,5 @@
 import type { AppLocale } from '@/shared/config/locale'
+import { useAppLocale } from '@/shared/i18n'
 import { formatMoney } from '@/shared/lib/money'
 import { cn } from '@/shared/lib/utils'
 
@@ -32,9 +33,10 @@ export function MoneyText({
   signed,
   className,
 }: MoneyTextProps) {
+  const appLocale = useAppLocale()
   return (
     <span className={cn('whitespace-nowrap tabular-nums', toneClass(tone, amount), className)}>
-      {formatMoney(amount, { currency, locale, signed })}
+      {formatMoney(amount, { currency, locale: locale ?? appLocale, signed })}
     </span>
   )
 }

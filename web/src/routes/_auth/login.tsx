@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 
@@ -7,15 +8,14 @@ export const Route = createFileRoute('/_auth/login')({
 })
 
 function LoginPage() {
+  const { t } = useTranslation()
   return (
     <Card>
       <CardHeader>
-        <CardTitle>My Wallet</CardTitle>
-        <CardDescription>Boshqaruv paneliga kirish</CardDescription>
+        <CardTitle>{t('app.name')}</CardTitle>
+        <CardDescription>{t('auth.loginTitle')}</CardDescription>
       </CardHeader>
-      <CardContent className="text-sm text-muted-foreground">
-        Kirish usullari (Google, email kod) tez orada qo&apos;shiladi.
-      </CardContent>
+      <CardContent className="text-sm text-muted-foreground">{t('auth.methodsSoon')}</CardContent>
     </Card>
   )
 }

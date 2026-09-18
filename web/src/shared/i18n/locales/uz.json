@@ -1,0 +1,30 @@
+{
+  "app": {
+    "name": "My Wallet",
+    "adminTitle": "Boshqaruv paneli"
+  },
+  "common": {
+    "retry": "Qayta urinish",
+    "toHome": "Bosh sahifaga",
+    "comingSoon": "Tez orada"
+  },
+  "errors": {
+    "notFoundTitle": "Sahifa topilmadi",
+    "notFoundText": "Havola eskirgan yoki noto'g'ri yozilgan bo'lishi mumkin.",
+    "unexpectedTitle": "Nimadir xato ketdi",
+    "network": "Server bilan aloqa yo'q. Internetni tekshiring.",
+    "unauthorized": "Sessiya tugagan. Qayta kiring.",
+    "forbidden": "Bu amal uchun huquqingiz yo'q.",
+    "unknown": "Kutilmagan xato. Qayta urinib ko'ring."
+  },
+  "auth": {
+    "loginTitle": "Boshqaruv paneliga kirish",
+    "methodsSoon": "Kirish usullari (Google, email kod) tez orada qo'shiladi."
+  },
+  "dashboard": {
+    "title": "Xulosa",
+    "description": "Joriy oy bo'yicha asosiy ko'rsatkichlar",
+    "emptyTitle": "Hozircha ma'lumot yo'q",
+    "emptyText": "Ko'rsatkichlar amallar kiritilgandan keyin shu yerda paydo bo'ladi."
+  }
+}
