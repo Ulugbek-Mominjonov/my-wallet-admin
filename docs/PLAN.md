@@ -90,7 +90,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 |---|---|---|---|---|---|
 | **M0 Poydevor** | E00 | Hujjatlar, repolar, konvensiyalar | admin + mobile | — | 🟨 (T08 🔑) |
 | | E01 | Supabase backend skeleti | admin | E00 | ✅ |
-| | E02 | Admin web skeleti | admin | E00 | ⬜ |
+| | E02 | Admin web skeleti | admin | E00 | ✅ |
 | | E03 | Platforma CI/CD, zaxira, keep-alive | admin | E01, E02 | ⬜ |
 | | E04 | Mobil skelet + CI | mobile | E00 | 🟨 |
 | **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ⬜ |
@@ -236,11 +236,12 @@ E21–E26 (admin) M2 bilan.
   `renderWithProviders`), Playwright (desktop + mobil) `e2e/smoke.spec.ts`
   (bosh sahifa, deep-link, 404, til, tema, ⌘K), `make web-test` / `make e2e`.
   MSW → E21-T01 (birinchi API chaqiruvi bilan).
-- [ ] **E02-T08** `wrangler.jsonc` (Workers Static Assets,
-  `not_found_handling: "single-page-application"`), xavfsizlik sarlavhalari
-  (`_headers`: CSP — faqat o'z domen + Supabase URL, `X-Frame-Options: DENY`,
-  `Referrer-Policy`), env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`,
-  `VITE_APP_ENV`.
+- [x] **E02-T08** `wrangler.jsonc` (Workers Static Assets, SPA rejimi,
+  `staging` env), xavfsizlik sarlavhalari `build/headers.template` → build
+  paytida `dist/_headers` (CSP: inline tema skripti hash'i avtomatik; HSTS,
+  X-Frame-Options, nosniff, Referrer/Permissions-Policy, `/assets/*` immutable
+  kesh), env: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`,
+  `VITE_APP_ENV`. Tekshirildi: `wrangler dev` ustida e2e 6/6 (CSP bilan).
 
 ### E03 · Platforma CI/CD, zaxira, keep-alive `[admin]`
 
@@ -814,6 +815,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Remote auth sozlamalari dashboard'da qo'lda; `config push` ishlatilmaydi | lokal manzillar prod'ga tushmasin | E01-T01, DEPLOY 2.4 |
 | 2026-09-18 | Web: TypeScript 6.0 (7.0 emas), ESLint (oxlint emas) | typescript-eslint TS < 6.1 ni qo'llaydi; FSD chegaralari (`boundaries`) va type-aware qoidalar kerak | E02-T01 |
 | 2026-09-18 | shadcn/ui — Base UI asosida; shadcn fayllari vendored (lint qisman yumshatilgan) | Base UI faol rivojlanmoqda; shadcn fayllarini qo'lda o'zgartirish yangilanishni buzadi | E02-T02 |
+| 2026-09-18 | pnpm ta'minot zanjiri siyosati (minimumReleaseAge) chetlab o'tilmaydi: wrangler 4.133.0 (1 kundan eski) | yangi chiqqan paketlar xavfi | E02-T08 |
 
 ## 7. Jarayon jurnali
 
@@ -833,3 +835,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T05 | i18next (uz/ru/en, tipli kalitlar, til `localStorage` da), `formatMoney` (BR-001) va oy yordamchilari (BR-002, BR-040) + 10 Vitest testi; mavjud matnlar tarjimaga ko'chirildi |
 | 2026-09-18 | E02-T06 | app-shell: Sidebar (Base UI), topbar, ⌘K, tema (next-themes + index.html skripti), til menyusi; vendor chunk'lar (eng kattasi 228 KB) |
 | 2026-09-18 | E02-T07 | 18 unit/komponent testi (Vitest + RTL), Playwright e2e 11/11 (3 marta barqaror); topilgan UX kamchiligi: ⌘K da til nomlari lotincha topilmasdi → kalit so'zlar |
+| 2026-09-18 | E02-T08 | wrangler (Static Assets, SPA), CSP hash plagini, xavfsizlik sarlavhalari; e2e `wrangler dev` ustida ✅. **E02 yakunlandi** |

@@ -5,6 +5,8 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+import { cspHeadersPlugin } from './build/csp-headers-plugin.ts'
+
 export default defineConfig({
   plugins: [
     // Router plugin react()'dan OLDIN turishi shart (fayl-marshrutlar generatsiyasi).
@@ -16,6 +18,7 @@ export default defineConfig({
     }),
     react(),
     tailwindcss(),
+    cspHeadersPlugin(fileURLToPath(new URL('./build/headers.template', import.meta.url))),
   ],
   resolve: {
     alias: {

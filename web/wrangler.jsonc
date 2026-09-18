@@ -1,0 +1,17 @@
+// Cloudflare Workers Static Assets — admin panel (ADR-10). Faqat statik
+// fayllar: Worker skripti yo'q, so'rovlar bepul va cheksiz.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "my-wallet-admin",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    // Istalgan marshrut (/reports/month) index.html'ni oladi — SPA.
+    "not_found_handling": "single-page-application"
+  },
+  "env": {
+    "staging": {
+      "name": "my-wallet-admin-staging"
+    }
+  }
+}

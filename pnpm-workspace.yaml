@@ -5,3 +5,13 @@ packages:
 # (pnpm standart holatda bloklaydi — ta'minot zanjiri xavfsizligi).
 allowBuilds:
   unrs-resolver: true
+  # wrangler: Cloudflare lokal runtime (workerd) va bundler (esbuild) binarlari
+  esbuild: true
+  workerd: true
+
+peerDependencyRules:
+  allowedVersions:
+    # jsx-a11y 6.10 ESLint 10 ni peer sifatida hali e'lon qilmagan, lekin
+    # flat config bilan to'liq ishlaydi (make web-lint yashil). Plagin
+    # yangilanganda bu qoida olib tashlanadi.
+    eslint-plugin-jsx-a11y>eslint: '10'
