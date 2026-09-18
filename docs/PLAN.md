@@ -88,11 +88,11 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 
 | Bosqich | Epik | Nomi | Repo | Bog'liqlik | Holat |
 |---|---|---|---|---|---|
-| **M0 Poydevor** | E00 | Hujjatlar, repolar, konvensiyalar | admin + mobile | — | ⬜ |
-| | E01 | Supabase backend skeleti | admin | E00 | ⬜ |
+| **M0 Poydevor** | E00 | Hujjatlar, repolar, konvensiyalar | admin + mobile | — | 🟨 (T08 🔑) |
+| | E01 | Supabase backend skeleti | admin | E00 | ✅ |
 | | E02 | Admin web skeleti | admin | E00 | ⬜ |
 | | E03 | Platforma CI/CD, zaxira, keep-alive | admin | E01, E02 | ⬜ |
-| | E04 | Mobil skelet + CI | mobile | E00 | ⬜ |
+| | E04 | Mobil skelet + CI | mobile | E00 | 🟨 |
 | **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ⬜ |
 | | E06 | Spravochniklar sxemasi | admin | E05 | ⬜ |
 | | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ⬜ |
@@ -170,28 +170,32 @@ E21–E26 (admin) M2 bilan.
 > generatsiyasi konveyeri tayyor. **Qoidalar:** ADR-01, ADR-02, ADR-07.
 > **DoD:** `make db-reset && make db-test` yashil; tiplar generatsiya qilinadi.
 
-- [ ] **E01-T01** `supabase init`; `config.toml`: loyiha nomi, `auth.site_url`,
+- [x] **E01-T01** `supabase init`; `config.toml`: loyiha nomi, `auth.site_url`,
   redirect URL'lar (lokal admin, `mywallet://auth-callback`), JWT muddati,
   email OTP, Google provider (`env()` bilan), `db.major_version`.
   `package.json` ga `supabase` CLI (dev dependency, pinned). Dependabot'ga `npm` (`/`)
   yozuvi.
-- [ ] **E01-T02** Birinchi migratsiya — asoslar: kengaytmalar (`pg_trgm`,
-  `pg_cron`, `pg_net`, `pgtap` — faqat test), sxemalar (`private`, `jobs`),
-  `uuid_v7()` funksiyasi, umumiy enum tiplar, `set_updated_at` va
-  `set_row_version` triggerlari (advisory lock bilan — ARX 6), global
-  `sync_seq` sequence.
-  - Qabul: pgTAP: `uuid_v7()` monoton; `row_version` har UPDATE'da o'sadi.
-- [ ] **E01-T03** Audit infratuzilmasi: `audit_log` jadvali + umumiy
+- [x] **E01-T02** Birinchi migratsiya — asoslar: kengaytmalar (`pg_trgm`,
+  `pg_cron`, `pg_net`), sxemalar (`private`, `jobs`), xavfsiz standart huquqlar
+  (public'dagi yangi funksiya/jadvalga anon/authenticated avtomatik huquq
+  olmaydi), `private.uuid_v7()`, `private.touch_synced_row()` (advisory lock +
+  `row_version` + `updated_at` — ARX 6), `private.touch_updated_at()`,
+  global `private.sync_seq`. Enum tiplar — o'z jadvallari bilan (E05+).
+  - Qabul: pgTAP: `uuid_v7()` versiya/variant va vaqt tartibi; `row_version`
+    har UPDATE'da o'sadi; anon yangi RPC'ni chaqira olmaydi.
+- [x] **E01-T03** Audit infratuzilmasi: `audit_log` jadvali + umumiy
   `private.audit()` trigger funksiyasi (eski/yangi jsonb, faqat o'zgargan
   maydonlar), indeks `(household_id, at desc)`. BR-008.
-- [ ] **E01-T04** Test harness: `supabase/tests/database/000_setup.test.sql`,
-  yordamchilar (`tests.create_user`, `tests.authenticate_as`, `tests.as_anon`),
+- [x] **E01-T04** Test harness: `supabase/tests/database/000_helpers.test.sql`
+  (`tests.create_user`, `tests.authenticate_as`, `tests.authenticate_as_anon`,
+  `tests.clear_authentication`), `900_security_invariants.test.sql` (RLS
+  hamma jadvalda, security definer'da `search_path`, anon faqat `health`),
   `make db-test` → `supabase test db`.
-- [ ] **E01-T05** Tip generatsiyasi: `make db-types` →
+- [x] **E01-T05** Tip generatsiyasi: `make db-types` →
   `web/src/shared/api/database.types.ts`; CI'da farq bo'lsa qulaydi.
-- [ ] **E01-T06** `seed.sql` skeleti (tizim spravochniklari keyingi epiklarda
+- [x] **E01-T06** `seed.sql` skeleti (tizim spravochniklari keyingi epiklarda
   to'ldiriladi) + `make db-reset`.
-- [ ] **E01-T07** Migratsiya xavfsizligi: `squawk` bilan lint (`make db-lint`),
+- [x] **E01-T07** Migratsiya xavfsizligi: `squawk` bilan lint (`make db-lint`),
   qoidalar `docs/CONTRIBUTING.md` da.
 
 ### E02 · Admin web skeleti `[admin]`
@@ -248,7 +252,7 @@ E21–E26 (admin) M2 bilan.
   ishga tushishlarni bekor qilish, `paths` filtrlari (minutlarni tejash).
 - [ ] 🔑 **E03-T02** `deploy.yml`: `main` push → **staging**:
   `supabase link` → `db push` → `functions deploy` → `secrets set` →
-  `config push` (auth) → web build (staging env) → `wrangler deploy --env
+  web build (staging env) → `wrangler deploy --env
   staging` → smoke (health RPC + Playwright smoke). `v*` teg yoki qo'lda →
   **production** (Environment tasdig'i bilan) — xuddi shu qadamlar.
   Sirlar: `DEPLOY.md` 4-bo'lim.
@@ -801,6 +805,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Reja va fakt alohida | qisman to'lov, to'langan sana | ADR-06 |
 | 2026-09-18 | Shaxsiy fond — maxsus hisob, ajratma — o'tkazma | eski arifmetika + pul joylashuvi | ADR-05 |
 | 2026-09-18 | Q1–Q4 javoblari: mavjud repolar, commit/push tartibi, faqat Sheets importi, faqat Android | foydalanuvchi qarori | 3-bo'lim |
+| 2026-09-18 | Remote auth sozlamalari dashboard'da qo'lda; `config push` ishlatilmaydi | lokal manzillar prod'ga tushmasin | E01-T01, DEPLOY 2.4 |
 
 ## 7. Jarayon jurnali
 
@@ -811,3 +816,5 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E00-T05 | CONTRIBUTING.md (ikkala repo): til, Conventional Commits + vazifa ID, migratsiya va test qoidalari |
 | 2026-09-18 | E00-T06 | PR shabloni, issue shablonlari (bug/taklif), CODEOWNERS, dependabot (github-actions) |
 | 2026-09-18 | E00-T07 | eski kod `legacy-v1` + `legacy-v1-final` tegida; yangi `main` ikkala repoga yuklandi; repolar public ekani aniqlandi (ADR-13, A9) |
+| 2026-09-18 | E01-T01..T07 | lokal Supabase (Docker, PG 17), foundation + audit migratsiyalari, pgTAP harness (21 test), squawk + db lint, TS tiplar; topilgan xavfsizlik bo'shlig'i: PUBLIC EXECUTE global standarti yopildi |
+| 2026-09-18 | E04-T01 | Flutter (Android), `uz.mywallet.app`, pub workspace + `wallet_domain`, very_good_analysis 11 (Dart 3.13 `new(...)` konstruktor sintaksisi), debug APK build ✅ |
