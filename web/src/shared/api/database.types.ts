@@ -312,6 +312,7 @@ export type Database = {
       currencies: {
         Row: {
           active: boolean
+          allocation_rounding: number
           code: string
           exponent: number
           name_i18n: Json
@@ -320,6 +321,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          allocation_rounding?: number
           code: string
           exponent?: number
           name_i18n: Json
@@ -328,6 +330,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          allocation_rounding?: number
           code?: string
           exponent?: number
           name_i18n?: Json
