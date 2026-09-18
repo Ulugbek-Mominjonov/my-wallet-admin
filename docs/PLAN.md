@@ -153,7 +153,7 @@ E21–E26 (admin) M2 bilan.
   vazifa ID, PR shabloni (qaysi BR, qanday tekshirildi, skrinshot),
   kod uslubi (til: kod — ingliz, hujjat/UI — o'zbek), migratsiya qoidalari
   (faqat oldinga, bitta migratsiya = bitta mavzu).
-- [ ] **E00-T06** `.github/`: `pull_request_template.md`, issue shablonlari
+- [x] **E00-T06** `.github/`: `pull_request_template.md`, issue shablonlari
   (bug, feature), `CODEOWNERS`, `dependabot.yml` (npm, pub, github-actions —
   haftalik, guruhlangan).
 - [ ] 🔑 **E00-T07** GitHub remote (Q1 javobiga ko'ra): repolarni ulash,
@@ -169,7 +169,8 @@ E21–E26 (admin) M2 bilan.
 - [ ] **E01-T01** `supabase init`; `config.toml`: loyiha nomi, `auth.site_url`,
   redirect URL'lar (lokal admin, `mywallet://auth-callback`), JWT muddati,
   email OTP, Google provider (`env()` bilan), `db.major_version`.
-  `package.json` ga `supabase` CLI (dev dependency, pinned).
+  `package.json` ga `supabase` CLI (dev dependency, pinned). Dependabot'ga `npm` (`/`)
+  yozuvi.
 - [ ] **E01-T02** Birinchi migratsiya — asoslar: kengaytmalar (`pg_trgm`,
   `pg_cron`, `pg_net`, `pgtap` — faqat test), sxemalar (`private`, `jobs`),
   `uuid_v7()` funksiyasi, umumiy enum tiplar, `set_updated_at` va
@@ -198,7 +199,8 @@ E21–E26 (admin) M2 bilan.
 - [ ] **E02-T01** `web/`: Vite + React 19 + TypeScript (strict,
   `noUncheckedIndexedAccess`), pnpm, ESLint (flat config: typescript-eslint,
   react-hooks, jsx-a11y, `boundaries` — FSD import qoidasi), Prettier,
-  path aliaslar (`@/app`, `@/features`, `@/entities`, `@/shared`).
+  path aliaslar (`@/app`, `@/features`, `@/entities`, `@/shared`). Dependabot'ga
+  `npm` (`/web`) yozuvi (guruhlangan: react, tanstack, dev-tools).
 - [ ] **E02-T02** Dizayn tizimi: Tailwind v4 + shadcn/ui; tokenlar
   (`--background`, `--primary`, `--income`, `--expense`, `--warning`,
   `--danger`, radius, soya) light/dark; shriftlar (Inter, `tabular-nums`
@@ -802,3 +804,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E00-T01..T03 | eski loyihalar o'rganildi; BIZNES-QOIDALAR, ARXITEKTURA, PLAN, DEPLOY yozildi |
 | 2026-09-18 | E00-T04 | ikkala repoda .editorconfig, .gitattributes, .gitignore, LICENSE, Makefile, README |
 | 2026-09-18 | E00-T05 | CONTRIBUTING.md (ikkala repo): til, Conventional Commits + vazifa ID, migratsiya va test qoidalari |
+| 2026-09-18 | E00-T06 | PR shabloni, issue shablonlari (bug/taklif), CODEOWNERS, dependabot (github-actions) |

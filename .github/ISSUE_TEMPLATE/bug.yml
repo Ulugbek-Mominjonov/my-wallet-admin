@@ -1,0 +1,34 @@
+name: 🐞 Xato
+description: Ilova yoki panelda noto'g'ri ishlash
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Nima bo'ldi?
+      description: Qisqa va aniq. Qaysi ekran/sahifa?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Qanday takrorlanadi?
+      placeholder: "1. ...\n2. ...\n3. ..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Nima kutilgan edi?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Versiya va muhit
+      placeholder: "masalan: mobil 1.2.0 (staging), Android 14"
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log / skrinshot
+      description: Sir, token va shaxsiy summalarni yashiring.

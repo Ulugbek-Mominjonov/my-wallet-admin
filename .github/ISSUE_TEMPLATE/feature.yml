@@ -1,0 +1,21 @@
+name: 💡 Taklif
+description: Yangi imkoniyat yoki yaxshilash
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Qanday muammoni hal qiladi?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Taklif
+    validations:
+      required: true
+  - type: textarea
+    id: rules
+    attributes:
+      label: Qaysi biznes qoidalarga ta'sir qiladi?
+      description: BR-xxx (BIZNES-QOIDALAR.md). Yangi qoida bo'lsa — matnini yozing.
