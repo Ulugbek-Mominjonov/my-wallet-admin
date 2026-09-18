@@ -1515,8 +1515,28 @@ export type Database = {
         Args: { p_household: string; p_user: string }
         Returns: undefined
       }
+      report_category_trend: {
+        Args: {
+          p_category?: string
+          p_from: unknown
+          p_household: string
+          p_to: unknown
+        }
+        Returns: Json
+      }
+      report_debts: { Args: { p_household: string }; Returns: Json }
+      report_goals: { Args: { p_household: string }; Returns: Json }
       report_month: {
         Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
+      report_personal_fund: {
+        Args: { p_from: unknown; p_household: string; p_to: unknown }
+        Returns: Json
+      }
+      report_savings: { Args: { p_household: string }; Returns: Json }
+      report_year: {
+        Args: { p_household: string; p_year: number }
         Returns: Json
       }
       set_member_role: {
