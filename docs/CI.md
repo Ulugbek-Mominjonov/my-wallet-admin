@@ -11,7 +11,7 @@
 | `deploy.yml` → `deploy-env.yml` | `main` push → **staging**; qo'lda → istalgan muhit | `supabase db push` → Edge Functions → admin build → Cloudflare deploy → smoke (`health` RPC + Playwright) | `DEPLOY_ENABLED=true` |
 | `release.yml` | `main` push | release-please reliz PR'i; merge → teg + **production** deploy (reviewer tasdig'i) | `DEPLOY_ENABLED=true` |
 | `preview.yml` | har PR (fork'dan emas) | admin build (staging backend) → `wrangler versions upload --preview-alias pr-N` → PR izohi | `DEPLOY_ENABLED=true` |
-| `backup.yml` | har kecha 02:00 Toshkent | prod dump → toza Supabase'ga tiklab solishtirish → `age` shifrlash → artefakt (90 kun) | `BACKUP_AGE_RECIPIENT` bor bo'lsa |
+| `backup.yml` | har kecha 02:00 Toshkent | prod dump + storage siyosatlari + chek rasmlari (soni tekshiriladi) → toza Supabase'ga tiklab solishtirish → `age` shifrlash → artefakt (90 kun) | `BACKUP_AGE_RECIPIENT` bor bo'lsa |
 | `keepalive.yml` | har 2 kunda | staging/prod `health` (≤ 3 s), rejali workflow'larni 60 kunlik o'chirilishdan saqlash | `DEPLOY_ENABLED=true` |
 
 Umumiy qismlar: `.github/actions/setup` (pnpm + Node + install, kesh bilan),

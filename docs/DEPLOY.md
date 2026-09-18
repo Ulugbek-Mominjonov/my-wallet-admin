@@ -234,12 +234,16 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
    GitHub buzilsa ham zaxirani o'qib bo'lmaydi.
 4. Tiklash (favqulodda):
    ```bash
-   gh run download <run-id> -n db-backup        # yoki Actions → artefakt
-   age -d -i mywallet-backup.key backup.sql.gz.age | gunzip > backup.sql
-   ./scripts/restore.sh backup.sql <staging-yoki-lokal-db-url>
+   gh run download <run-id> -n db-backup-<run-id>      # yoki Actions → artefakt
+   mkdir backup && age -d -i mywallet-backup.key my-wallet-*.tar.gz.age | tar -xzf - -C backup
+   # DB + chek rasmlari (storage) — rasmlar uchun loyiha ref va token:
+   SUPABASE_PROJECT_REF=<ref> SUPABASE_ACCESS_TOKEN=<token> \
+     ./scripts/restore.sh backup <staging-yoki-lokal-db-url>
    ```
-   Tiklash mashqi har hafta avtomatik (`restore-drill` — staging emas,
-   CI ichidagi vaqtinchalik Postgres'ga).
+   Zaxira tarkibi: `roles.sql`, `schema.sql`, `data.sql` va `storage/`
+   (chek rasmlari; fayllar soni bazadagi yozuvlar bilan solishtiriladi).
+   Tiklash tekshiruvi har kecha zaxira bilan birga avtomatik
+   (`restore.sh --verify` — CI ichidagi vaqtinchalik Supabase'ga).
 
 ---
 

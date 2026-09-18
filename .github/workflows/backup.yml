@@ -23,13 +23,16 @@ jobs:
     timeout-minutes: 30
     env:
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL_PRODUCTION }}
+      # Chek rasmlari (storage) uchun: Storage API kaliti shu token orqali olinadi.
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF_PRODUCTION }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
       - name: age va psql
         run: sudo apt-get update -qq && sudo apt-get install -y -qq age postgresql-client
 
-      - name: Dump (rollar, sxema, ma'lumot)
+      - name: Dump (rollar, sxema, ma'lumot, chek rasmlari)
         run: scripts/backup-dump.sh backup
 
       - name: Tekshiruv — toza Supabase'ga tiklash
