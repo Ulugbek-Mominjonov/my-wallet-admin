@@ -336,6 +336,78 @@ export type Database = {
         }
         Relationships: []
       }
+      debts: {
+        Row: {
+          archived_at: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          deleted_at: string | null
+          direction: Database["public"]["Enums"]["debt_direction"]
+          due_date: string | null
+          household_id: string
+          id: string
+          monthly_payment: number | null
+          name: string
+          note: string | null
+          paid_before: number
+          row_version: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency: string
+          deleted_at?: string | null
+          direction: Database["public"]["Enums"]["debt_direction"]
+          due_date?: string | null
+          household_id: string
+          id?: string
+          monthly_payment?: number | null
+          name: string
+          note?: string | null
+          paid_before?: number
+          row_version?: number
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          deleted_at?: string | null
+          direction?: Database["public"]["Enums"]["debt_direction"]
+          due_date?: string | null
+          household_id?: string
+          id?: string
+          monthly_payment?: number | null
+          name?: string
+          note?: string | null
+          paid_before?: number
+          row_version?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debts_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "debts_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exchange_rates: {
         Row: {
           created_at: string
@@ -365,6 +437,85 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "currencies"
             referencedColumns: ["code"]
+          },
+        ]
+      }
+      goals: {
+        Row: {
+          account_id: string | null
+          achieved_at: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          deadline: string | null
+          deleted_at: string | null
+          household_id: string
+          id: string
+          monthly_contribution: number | null
+          name: string
+          row_version: number
+          saved_manual: number
+          sort_order: number
+          target: number
+          updated_at: string
+        }
+        Insert: {
+          account_id?: string | null
+          achieved_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency: string
+          deadline?: string | null
+          deleted_at?: string | null
+          household_id: string
+          id?: string
+          monthly_contribution?: number | null
+          name: string
+          row_version?: number
+          saved_manual?: number
+          sort_order?: number
+          target: number
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string | null
+          achieved_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          deadline?: string | null
+          deleted_at?: string | null
+          household_id?: string
+          id?: string
+          monthly_contribution?: number | null
+          name?: string
+          row_version?: number
+          saved_manual?: number
+          sort_order?: number
+          target?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goals_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "goals_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "goals_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -510,6 +661,47 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["household_id", "id"]
+          },
+        ]
+      }
+      months: {
+        Row: {
+          closed_at: string | null
+          closed_by: string | null
+          created_at: string
+          household_id: string
+          month: string
+          opened_at: string | null
+          row_version: number
+          updated_at: string
+        }
+        Insert: {
+          closed_at?: string | null
+          closed_by?: string | null
+          created_at?: string
+          household_id: string
+          month: string
+          opened_at?: string | null
+          row_version?: number
+          updated_at?: string
+        }
+        Update: {
+          closed_at?: string | null
+          closed_by?: string | null
+          created_at?: string
+          household_id?: string
+          month?: string
+          opened_at?: string | null
+          row_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "months_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -699,6 +891,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "recurring_rules_debt_fkey"
+            columns: ["household_id", "debt_id"]
+            isOneToOne: false
+            referencedRelation: "debts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
             foreignKeyName: "recurring_rules_household_id_account_id_fkey"
             columns: ["household_id", "account_id"]
             isOneToOne: false
@@ -813,6 +1012,7 @@ export type Database = {
         | "other"
       category_kind: "income" | "expense"
       category_system_code: "personal_allocation"
+      debt_direction: "i_owe" | "owed_to_me"
       member_role: "owner" | "admin" | "member" | "viewer"
       personal_fund_mode: "percent" | "fixed"
       plan_kind: "expense" | "income" | "allocation"
@@ -954,6 +1154,7 @@ export const Constants = {
       ],
       category_kind: ["income", "expense"],
       category_system_code: ["personal_allocation"],
+      debt_direction: ["i_owe", "owed_to_me"],
       member_role: ["owner", "admin", "member", "viewer"],
       personal_fund_mode: ["percent", "fixed"],
       plan_kind: ["expense", "income", "allocation"],
