@@ -92,7 +92,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E01 | Supabase backend skeleti | admin | E00 | ✅ |
 | | E02 | Admin web skeleti | admin | E00 | ✅ |
 | | E03 | Platforma CI/CD, zaxira, keep-alive | admin | E01, E02 | 🟨 (T08 🔑) |
-| | E04 | Mobil skelet + CI | mobile | E00 | 🟨 |
+| | E04 | Mobil skelet + CI | mobile | E00 | ✅ |
 | **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ⬜ |
 | | E06 | Spravochniklar sxemasi | admin | E05 | ⬜ |
 | | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ⬜ |
