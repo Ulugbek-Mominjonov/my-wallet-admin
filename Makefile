@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev e2e contracts contracts-check contract-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
+.PHONY: help check lint test fmt dev e2e contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -12,7 +12,7 @@ check: lint test ## Barcha tekshiruvlar (PR'dan oldin majburiy)
 
 lint: db-lint web-lint contracts-check ## Lint, format, tiplar va shartnoma
 
-test: db-test contract-test web-test ## Barcha testlar
+test: db-test contract-test sync-test web-test ## Barcha testlar
 
 fmt: ## Kodni formatlash (web)
 	pnpm --filter @my-wallet/web format
@@ -53,6 +53,9 @@ contracts-check: ## contracts/ eskirmagan va schema-version mos (CI)
 
 contract-test: ## Golden fixture'lar: RPC natijasi kutilgan qiymat bilan (lokal Supabase)
 	node scripts/contract/run.mjs
+
+sync-test: ## Sinxron kursori parallel yozuvda qator o'tkazib yubormaydi (lokal Supabase)
+	node scripts/contract/sync-concurrency.mjs
 
 perf: ## Hisobotlar ishlashi: 10 yillik yukda vaqt va Seq Scan tekshiruvi (lokal Supabase)
 	scripts/perf-check.sh
