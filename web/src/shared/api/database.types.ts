@@ -1470,6 +1470,14 @@ export type Database = {
       }
       health: { Args: never; Returns: Json }
       leave_household: { Args: { p_household: string }; Returns: undefined }
+      merge_categories: {
+        Args: { p_from: string; p_to: string }
+        Returns: Json
+      }
+      month_close_check: {
+        Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
       open_month: {
         Args: { p_household: string; p_month: unknown }
         Returns: Json
@@ -1488,6 +1496,14 @@ export type Database = {
         }
         Returns: Json
       }
+      recalc_income_months_apply: {
+        Args: { p_expected_count: number; p_household: string }
+        Returns: Json
+      }
+      recalc_income_months_preview: {
+        Args: { p_household: string }
+        Returns: Json
+      }
       remove_member: {
         Args: { p_household: string; p_user: string }
         Returns: undefined
@@ -1499,6 +1515,10 @@ export type Database = {
           p_user: string
         }
         Returns: undefined
+      }
+      set_month_closed: {
+        Args: { p_closed: boolean; p_household: string; p_month: unknown }
+        Returns: Json
       }
       skip_planned: {
         Args: { p_item: string; p_skipped?: boolean }
