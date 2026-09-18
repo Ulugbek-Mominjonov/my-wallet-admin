@@ -82,8 +82,9 @@ yozmang.
    - Site URL: admin panel manzili (5-qadamdan keyin to'ldiriladi).
    - Redirect URLs: `https://<admin-domen>/**`, `mywallet://auth-callback`
      (prod), `mywallet-stg://auth-callback` (staging).
-   > Bu sozlamalar `supabase/config.toml` da ham bor va deploy paytida
-   > `supabase config push` bilan qo'llanadi — qo'lda faqat birinchi marta.
+   > Remote auth sozlamalari faqat shu yerda (dashboard) qo'lda qilinadi —
+   > `supabase/config.toml` faqat lokal muhit uchun (lokal manzillar prod'ga
+   > tushib qolmasligi uchun `config push` ishlatilmaydi).
 5. **Database → Extensions:** `pg_cron`, `pg_net` yoqilganini tekshiring
    (migratsiya ham yoqadi).
 

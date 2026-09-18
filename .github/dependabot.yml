@@ -1,5 +1,5 @@
 # Bog'liqliklar haftalik, guruhlab yangilanadi (PR soni kam bo'lsin).
-# npm (web, supabase CLI) yozuvlari E01/E02 da package.json paydo bo'lganda qo'shiladi.
+# npm (web) yozuvi E02 da web/package.json paydo bo'lganda qo'shiladi.
 version: 2
 updates:
   - package-ecosystem: github-actions
@@ -9,4 +9,12 @@ updates:
       day: monday
     groups:
       actions:
+        patterns: ["*"]
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      tooling:
         patterns: ["*"]

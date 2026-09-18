@@ -1,0 +1,13 @@
+{
+  "name": "my-wallet-admin",
+  "private": true,
+  "description": "My Wallet — platforma: Supabase backend va admin panel",
+  "packageManager": "pnpm@12.4.2",
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "squawk-cli": "^2.65.0",
+    "supabase": "2.117.0"
+  }
+}

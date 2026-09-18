@@ -1,0 +1,2 @@
+-- Lokal/dev seed. Tizim spravochniklari migratsiyalarda; bu yerda faqat
+-- lokal ishlab chiqish uchun demo ma'lumot (E01-T06, E06-T08).

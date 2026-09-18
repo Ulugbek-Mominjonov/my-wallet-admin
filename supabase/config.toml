@@ -1,0 +1,131 @@
+# My Wallet — LOKAL Supabase konfiguratsiyasi (`make db-start`).
+#
+# Bu fayl faqat lokal muhit va CI uchun. Remote (staging/prod) auth
+# sozlamalari (Site URL, redirect, Google, SMTP) dashboard'da bir marta
+# qo'lda sozlanadi — docs/DEPLOY.md 2–4-qadamlar. `supabase config push`
+# ATAYLAB ishlatilmaydi: lokal 127.0.0.1 manzillari prod'ga tushib qolmasin.
+#
+# To'liq ma'lumotnoma: https://supabase.com/docs/guides/local-development/cli/config
+
+project_id = "my-wallet"
+
+[api]
+enabled = true
+port = 54321
+# Faqat public sxema ochiq. `private`, `jobs`, `tests` — API'da ko'rinmaydi.
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+# Tasodifiy katta javobdan himoya (ro'yxatlar baribir keyset bilan sahifalanadi).
+max_rows = 1000
+
+[db]
+port = 54322
+shadow_port = 54320
+health_timeout = "2m"
+# Supabase cloud'dagi yangi loyihalar bilan bir xil bo'lishi shart.
+major_version = 17
+
+[db.pooler]
+enabled = false
+
+[db.migrations]
+enabled = true
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+# Realtime ishlatilmaydi — sinxron pull orqali (ADR-09), ochiq ulanishlar yo'q.
+[realtime]
+enabled = false
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+
+# Lokal pochta qutisi (email OTP kodlari shu yerda ko'rinadi): http://127.0.0.1:54324
+[local_smtp]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+# Chek rasmlari qurilmada ≤ 1 MB ga siqiladi (BR-201); zaxira bilan 5 MiB.
+file_size_limit = "5MiB"
+
+[storage.s3_protocol]
+enabled = false
+
+[storage.analytics]
+enabled = false
+
+[storage.vector]
+enabled = false
+
+[auth]
+enabled = true
+# Admin panel (Vite) lokal manzili.
+site_url = "http://127.0.0.1:5173"
+additional_redirect_urls = [
+  "http://127.0.0.1:5173/**",
+  "http://localhost:5173/**",
+  "mywallet-dev://auth-callback",
+]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+enable_anonymous_sign_ins = false
+enable_manual_linking = false
+minimum_password_length = 8
+
+[auth.rate_limit]
+# Remote'da custom SMTP bilan soatiga 30 (DEPLOY.md 4-qadam).
+email_sent = 30
+token_refresh = 150
+sign_in_sign_ups = 30
+token_verifications = 30
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+secure_password_change = false
+max_frequency = "30s"
+otp_length = 6
+# Kirish kodi 10 daqiqa amal qiladi.
+otp_expiry = 600
+
+[auth.sms]
+enable_signup = false
+
+# Platforma adminlari uchun 2FA (BR-213) — TOTP bepul.
+[auth.mfa]
+max_enrolled_factors = 10
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[auth.mfa.phone]
+enroll_enabled = false
+verify_enabled = false
+
+# Google lokal muhitda o'chiq (haqiqiy OAuth client kerak bo'ladi);
+# lokal testlar email OTP bilan. Remote'da dashboard'da yoqiladi (DEPLOY.md 3).
+[auth.external.google]
+enabled = false
+client_id = ""
+secret = ""
+skip_nonce_check = false
+
+[edge_runtime]
+enabled = true
+policy = "per_worker"
+inspector_port = 8083
+deno_version = 2
+
+# Og'ir log konteynerlari lokal ishga kerak emas.
+[analytics]
+enabled = false

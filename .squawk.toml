@@ -1,0 +1,16 @@
+# squawk — migratsiya xavfsizligi linteri (`make db-lint`).
+# Istisnolar sababi bilan:
+excluded_rules = [
+  # Supabase CLI har migratsiya faylini bitta tranzaksiyada, bir marta
+  # qo'llaydi — qisman qolib ketish yo'q, IF NOT EXISTS shart emas.
+  "prefer-robust-stmts",
+  # Jadvallar kichik (shaxsiy/oilaviy byudjet). Katta jadvalni o'zgartiradigan
+  # migratsiyada `set lock_timeout` qo'lda qo'yiladi (CONTRIBUTING 3-bo'lim).
+  "require-statement-timeout",
+  # Migratsiya tranzaksiyada ishlaydi — CONCURRENTLY u yerda mumkin emas;
+  # kichik jadvallarda oddiy indeks millisekundlarda quriladi.
+  "require-concurrent-index-creation",
+  # Xuddi shu sabab: kichik jadvallarda lock qisqa. Katta/qizg'in jadvalni
+  # o'zgartirishda `set lock_timeout` qo'lda qo'yiladi.
+  "require-lock-timeout",
+]
