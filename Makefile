@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev web-lint web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
+.PHONY: help check lint test fmt dev web-env web-lint web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -17,10 +17,17 @@ test: db-test ## Barcha testlar (web — E02)
 fmt: ## Kodni formatlash (web)
 	pnpm --filter @my-wallet/web format
 
-dev: db-start ## Lokal muhit (Supabase + admin panel)
+dev: db-start web-env ## Lokal muhit (Supabase + admin panel)
 	pnpm --filter @my-wallet/web dev
 
 # ─── Admin panel (web) ─────────────────────────────────────────────────────
+web-env: ## web/.env.local ni lokal Supabase qiymatlaridan yaratish
+	@$(SUPABASE) status -o env | awk -F= ' \
+		$$1 == "API_URL" { gsub(/"/, "", $$2); print "VITE_SUPABASE_URL=" $$2 } \
+		$$1 == "PUBLISHABLE_KEY" { gsub(/"/, "", $$2); print "VITE_SUPABASE_PUBLISHABLE_KEY=" $$2 }' > web/.env.local
+	@echo "VITE_APP_ENV=local" >> web/.env.local
+	@echo "web/.env.local yaratildi"
+
 web-lint: ## Web: format, ESLint va tip tekshiruvi
 	pnpm --filter @my-wallet/web format:check
 	pnpm --filter @my-wallet/web lint

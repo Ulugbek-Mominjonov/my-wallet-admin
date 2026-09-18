@@ -220,7 +220,7 @@ E21–E26 (admin) M2 bilan.
 - [x] **E02-T03** Marshrutlash: TanStack Router (fayl asosida, tipli
   search-param'lar), `_auth` va `_app` layoutlari, 404/xato sahifalari,
   lazy-loading (route-level code splitting).
-- [ ] **E02-T04** Ma'lumot qatlami: `shared/api/supabase.ts` (bitta klient,
+- [x] **E02-T04** Ma'lumot qatlami: `shared/api/supabase.ts` (bitta klient,
   PKCE), TanStack Query (standart `staleTime`, retry siyosati, global xato
   → toast), query-key fabrikasi (`qk.transactions.list(householdId, filters)`).
 - [ ] **E02-T05** i18n: i18next + `uz` (asosiy), `ru`, `en` JSON; pul/sana
@@ -824,3 +824,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T01 | Vite 8 + React 19 + TS 6 (strict, noUncheckedIndexedAccess), ESLint 10 (strictTypeChecked, jsx-a11y, react-hooks, FSD `boundaries` — tekshirildi), Prettier, `make web-lint` |
 | 2026-09-18 | E02-T02 | Tailwind v4 + shadcn (Base UI), brend/semantik tokenlar, 20+ komponent, MoneyText/EmptyState/PageHeader/StatCard; build ✅ |
 | 2026-09-18 | E02-T03 | TanStack Router (fayl asosida, autoCodeSplitting, `tsr generate` tsc'dan oldin), `_auth`/`_app` layoutlari, 404 va xato sahifalari; preview deep-link ✅ |
+| 2026-09-18 | E02-T04 | Supabase klienti (PKCE, tipli), env zod bilan tekshiriladi, QueryClient (staleTime 30 s, retry siyosati, global xato → toast), query-key fabrikasi, router konteksti, `make web-env` |
