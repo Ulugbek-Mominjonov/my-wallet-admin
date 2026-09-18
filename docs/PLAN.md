@@ -28,9 +28,10 @@
 3. Eng kichik to'g'ri o'zgarish; talab qilinmagan refactor aralashtirilmaydi.
 4. Tekshir: `make check` (repo ildizida) — lint + tip + testlar.
 5. `- [ ]` → `- [x]`, 7-bo'limdagi **Jarayon jurnali**ga bir qator:
-   sana · vazifa · qisqa natija · commit.
-6. Commit xabari: `E05-T02: households va a'zolar jadvallari` — har vazifa
-   oxirida lokal commit; epik tugaganda `git push` (Q2).
+   sana · vazifa · qisqa natija (commit'ni `git log --grep <ID>` topadi).
+6. Commit xabari: `feat(E05-T02): households va a'zolar jadvallari`
+   (Conventional Commits, scope = vazifa ID — `docs/CONTRIBUTING.md`); har vazifa
+   oxirida lokal commit, epik tugaganda `git push` (Q2).
 7. Qoida yoki arxitektura o'zgarishi kerak bo'lsa — avval hujjat
    (`BIZNES-QOIDALAR.md` / `ARXITEKTURA.md`), keyin kod; qaror 6-bo'limga.
 
@@ -147,7 +148,7 @@ E21–E26 (admin) M2 bilan.
   `LICENSE` (private — "All rights reserved"), `Makefile` (`check`, `dev`,
   `test`, `fmt`).
   - Qabul: `make check` ikkala repoda ishlaydi (hozircha bo'sh maqsadlar).
-- [ ] **E00-T05** Konvensiyalar → `docs/CONTRIBUTING.md` (ikkala repo):
+- [x] **E00-T05** Konvensiyalar → `docs/CONTRIBUTING.md` (ikkala repo):
   branch nomlari (`feat/E05-T02-households`), Conventional Commits +
   vazifa ID, PR shabloni (qaysi BR, qanday tekshirildi, skrinshot),
   kod uslubi (til: kod — ingliz, hujjat/UI — o'zbek), migratsiya qoidalari
@@ -796,7 +797,8 @@ E21–E26 (admin) M2 bilan.
 
 ## 7. Jarayon jurnali
 
-| Sana | Vazifa | Natija | Commit |
-|---|---|---|---|
-| 2026-09-18 | E00-T01..T03 | eski loyihalar o'rganildi; BIZNES-QOIDALAR, ARXITEKTURA, PLAN, DEPLOY yozildi | — |
-| 2026-09-18 | E00-T04 | ikkala repoda .editorconfig, .gitattributes, .gitignore, LICENSE, Makefile, README | E00-T04 |
+| Sana | Vazifa | Natija |
+|---|---|---|
+| 2026-09-18 | E00-T01..T03 | eski loyihalar o'rganildi; BIZNES-QOIDALAR, ARXITEKTURA, PLAN, DEPLOY yozildi |
+| 2026-09-18 | E00-T04 | ikkala repoda .editorconfig, .gitattributes, .gitignore, LICENSE, Makefile, README |
+| 2026-09-18 | E00-T05 | CONTRIBUTING.md (ikkala repo): til, Conventional Commits + vazifa ID, migratsiya va test qoidalari |
