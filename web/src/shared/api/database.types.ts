@@ -1515,6 +1515,10 @@ export type Database = {
         Args: { p_household: string; p_user: string }
         Returns: undefined
       }
+      report_month: {
+        Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
       set_member_role: {
         Args: {
           p_household: string
