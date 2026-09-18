@@ -220,6 +220,14 @@ Barcha biznes jadvallarida umumiy ustunlar: `id uuid` (v7),
 `deleted_at` (soft delete — sinxron uchun), `row_version bigint` (sinxron
 kursori, 6-bo'lim).
 
+- Byudjet ichidagi havolalar — **kompozit FK** `(household_id, x_id) →
+  (household_id, id)`: boshqa byudjet yozuviga havola tuzilishi jihatidan
+  imkonsiz, FK tekshiruvi `household_id` bilan boshlanadigan indeksni ishlatadi.
+- Takrorlanadigan qoidalar — domenlar: `entity_name` (1–60, trim, BR-003),
+  `icon_key`, `hex_color`, `month_start` (oyning 1-kuni).
+- Klientda `DELETE` huquqi yo'q — o'chirish `deleted_at` bilan (tombstone
+  sinxronga yetadi); yozuv huquqi ustunlar bo'yicha (`grant insert/update (…)`).
+
 | Jadval | Asosiy ustunlar | Cheklovlar / izoh |
 |---|---|---|
 | `profiles` | `user_id` PK→auth.users, `display_name`, `locale`, `last_household_id` | |
@@ -262,7 +270,7 @@ kursori, 6-bo'lim).
 | `month_lock_guard` (BEFORE) | `transactions`, `planned_items` | `strict_month_lock` bo'lsa yopilgan oyga yozuvni rad etadi | BR-055 |
 | `audit` (AFTER) | biznes jadvallar | `audit_log` ga eski/yangi | BR-008 |
 | `on_auth_user_created` | `auth.users` | profil + shaxsiy byudjet + standart spravochniklar | BR-010 |
-| `protect_system` (BEFORE DELETE) | `categories`, `accounts` | tizim kategoriyasi / personal_fund o'chirilmaydi | BR-033 |
+| `<jadval>_validate` (BEFORE, `_touch` dan keyin) | spravochniklar, `households` | tizim yozuvlari himoyasi (personal_fund, tizim kategoriyasi); ishlatilayotgan hisob/kategoriya o'chirilmaydi; havola o'chirilmagan va turi mos; subkategoriya bir daraja; fond manbai to'g'ri. Lock'dan keyin ishlagani uchun parallel yozuvlar ketma-ket tekshiriladi (triggerlar nom bo'yicha alifbo tartibida) | BR-020, BR-024, BR-033, BR-034, BR-036, BR-060 |
 
 ### 3.4. Indekslar (DB yuklamasi uchun)
 
@@ -276,7 +284,7 @@ kursori, 6-bo'lim).
 | `transactions USING gin (payee gin_trgm_ops)` | qidiruv, o'xshash nom (BR-117, BR-202) |
 | `planned_items (household_id, budget_month)` | oy rejalari |
 | `planned_items (household_id, due_date) WHERE settled_at IS NULL AND skipped_at IS NULL AND deleted_at IS NULL` | to'lanmaganlar, eslatma, avto to'lov |
-| `<har sinxron jadval> (household_id, row_version)` | `sync_pull` |
+| `<har sinxron jadval> (household_id, row_version)` | `sync_pull`; spravochniklarda byudjet bo'yicha har qanday filtr ham (qator soni o'nlab — `sort_order` indeksi kerak emas) |
 | `household_members (user_id)` | RLS a'zolik |
 | `notification_outbox (status, created_at) WHERE status = 'pending'` | dispatch |
 
@@ -299,6 +307,8 @@ kursori, 6-bo'lim).
   ```
 - Spravochniklarga yozish (`accounts`, `categories`, `recurring_rules`,
   `category_limits`, `quick_actions`) — faqat `owner`/`admin` (BR-011).
+  `tags` — yaratish amal yozuvchilarga ham (`owner`/`admin`/`member`),
+  tahrir — `owner`/`admin` (BR-200).
 - Tizim jadvallari: o'qish — `authenticated`; yozish — platforma admini.
 - `audit_log`, `job_runs`, `notification_outbox`, `sync_mutations` — klient
   to'g'ridan-to'g'ri yoza olmaydi (faqat `security definer` funksiyalar).

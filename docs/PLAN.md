@@ -94,7 +94,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E03 | Platforma CI/CD, zaxira, keep-alive | admin | E01, E02 | 🟨 (T08 🔑) |
 | | E04 | Mobil skelet + CI | mobile | E00 | ✅ |
 | **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ✅ |
-| | E06 | Spravochniklar sxemasi | admin | E05 | ⬜ |
+| | E06 | Spravochniklar sxemasi | admin | E05 | ✅ |
 | | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ⬜ |
 | | E08 | Biznes RPC'lar | admin | E07 | ⬜ |
 | | E09 | Hisobotlar + golden fixtures + `contracts/` | admin | E08 | ⬜ |
@@ -322,33 +322,41 @@ E21–E26 (admin) M2 bilan.
 > BR-190. **DoD:** barcha spravochnik jadvallari RLS, indeks, cheklov va
 > testlar bilan; yangi byudjet standart to'plamni oladi.
 
-- [ ] **E06-T01** Tizim spravochniklari: `currencies` (UZS, USD, EUR, RUB —
+- [x] **E06-T01** Tizim spravochniklari: `currencies` (UZS, USD, EUR, RUB —
   `exponent`, `symbol`, `name_i18n`), `category_templates` (BR-031/032, 3
   tilda, ikon/rang, `month_shift`, `system_code`), `exchange_rates`
   (bo'sh; E29). O'qish — hamma, yozish — platforma admini.
-- [ ] **E06-T02** `accounts`: turlar enum, valyuta FK, boshlang'ich qoldiq,
+  Qo'shimcha: `households.base_currency` → `currencies` FK, `app_bootstrap`
+  valyutalarni qaytaradi (ARX 5).
+- [x] **E06-T02** `accounts`: turlar enum, valyuta FK, boshlang'ich qoldiq,
   arxiv; unique(household, lower(name)) `WHERE deleted_at IS NULL`; bitta
-  `personal_fund` (partial unique); valyutani amaldan keyin o'zgartirish
-  taqiq (BR-026, trigger).
-- [ ] **E06-T03** `categories`: kind, `parent_id` (1 daraja — trigger),
-  `month_shift` (faqat income, −1..1), `system_code`, arxiv; tizim
-  kategoriyasini o'chirish taqiq (BR-033); unique(household, kind,
+  `personal_fund` (partial unique); fond hisobi va fond manbai himoyasi.
+  BR-026 (valyuta amaldan keyin o'zgarmaydi) — `transactions` jadvali bilan
+  birga, E07-T03 ga ko'chirildi.
+- [x] **E06-T03** `categories`: kind (o'zgarmaydi), `parent_id` (1 daraja —
+  trigger), `month_shift` (faqat income, −1..1), `system_code`, arxiv; tizim
+  kategoriyasini o'chirish/arxivlash taqiq (BR-033); unique(household, kind,
   lower(name)).
-- [ ] **E06-T04** `recurring_rules`: kind (`expense`/`income`/`allocation`),
-  summa NULL ruxsat (o'zgaruvchi), `day_of_month` 1–31, amal davri,
+- [x] **E06-T04** `recurring_rules`: kind (`expense`/`income`/`allocation`),
+  summa NULL ruxsat (o'zgaruvchan), `day_of_month` 1–31, amal davri,
   `debt_id` (FK E07 da qo'shiladi), tartib.
-- [ ] **E06-T05** `category_limits` (unique household+category, summa > 0),
+- [x] **E06-T05** `category_limits` (unique household+category, summa > 0),
   `quick_actions` (summa > 0, tartib), `tags` (unique lower(name)).
-- [ ] **E06-T06** RLS: o'qish — a'zolar; yozish — `owner/admin` (BR-011).
-  Hamma jadvalga `set_row_version`, `set_updated_at`, `audit` triggerlari.
-- [ ] **E06-T07** Indekslar: `(household_id, row_version)` har jadvalda,
-  `(household_id, sort_order)` ro'yxatlar uchun.
-- [ ] **E06-T08** Yangi byudjetga standart to'plam: `private.seed_household
-  (household, locale)` — shablondan kategoriyalar (lokal tilda), hisoblar
+- [x] **E06-T06** RLS: o'qish — a'zolar; yozish — `owner/admin` (BR-011;
+  teg yaratish — `member` ham, BR-200). Hamma jadvalga `touch_synced_row`,
+  `<jadval>_validate`, `audit` triggerlari; ustun darajasidagi grant'lar,
+  klientda `DELETE` yo'q (soft delete).
+- [x] **E06-T07** Indekslar: `(household_id, row_version)` har jadvalda;
+  `sort_order` indeksi qo'shilmadi (6-bo'lim, qaror).
+- [x] **E06-T08** Yangi byudjetga standart to'plam: `private.seed_household
+  (household, locale, user)` — shablondan kategoriyalar (lokal tilda), hisoblar
   (Naqd, Karta, 👤 Shaxsiy fond), fond qoidasi (10%, naqd, 5-kun).
-  `on_auth_user_created` shu funksiyani chaqiradi.
-- [ ] **E06-T09** pgTAP: har cheklov (BR ID bilan), tizim kategoriyasi
-  himoyasi, rol huquqlari, standart to'plam to'liqligi.
+  `create_household_for` (signup va `create_household`) chaqiradi; audit
+  jurnaliga tushmaydi; mavjud byudjetlar migratsiyada to'ldiriladi.
+- [x] **E06-T09** pgTAP: har cheklov (BR ID bilan), tizim kategoriyasi
+  himoyasi, rol huquqlari, standart to'plam to'liqligi (90 test) + umumiy
+  invariantlar: sinxron jadvalda touch/audit triggeri va sync indeksi, soft
+  delete jadvalida `DELETE` yo'q.
 
 ### E07 · Amallar, rejalar, fond, qarz, maqsad `[admin]`
 
@@ -364,8 +372,11 @@ E21–E26 (admin) M2 bilan.
   `private.planned_status(item, today)` funksiyasi (BR-071; saqlanmaydi).
 - [ ] **E07-T03** `transactions`: ustunlar, kind CHECK'lari (income/expense —
   kategoriya majburiy; transfer — `to_account_id` majburiy, kategoriya yo'q,
-  manba ≠ manzil), summa > 0, hisob va kategoriya bir byudjetdan (trigger),
-  indekslar (ARX 3.4).
+  manba ≠ manzil), summa > 0, hisob va kategoriya bir byudjetdan (kompozit
+  FK + `private.assert_category/assert_account`), indekslar (ARX 3.4).
+  BR-026: hisob valyutasi birinchi amaldan keyin o'zgarmaydi
+  (`validate_account`). `private.category_in_use` / `account_in_use` ga
+  amallar va rejalar qo'shiladi (BR-024, BR-036).
 - [ ] **E07-T04** `tx_derive` BEFORE trigger: `budget_month` (BR-040..046:
   income + `month_shift`, xarajat → sana oyi, reja bog'langan → reja oyi,
   `manual` ga tegilmaydi), `currency` (hisobdan), `amount_base` (MVP: =
@@ -826,6 +837,11 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Web: TypeScript 6.0 (7.0 emas), ESLint (oxlint emas) | typescript-eslint TS < 6.1 ni qo'llaydi; FSD chegaralari (`boundaries`) va type-aware qoidalar kerak | E02-T01 |
 | 2026-09-18 | shadcn/ui — Base UI asosida; shadcn fayllari vendored (lint qisman yumshatilgan) | Base UI faol rivojlanmoqda; shadcn fayllarini qo'lda o'zgartirish yangilanishni buzadi | E02-T02 |
 | 2026-09-18 | pnpm ta'minot zanjiri siyosati (minimumReleaseAge) chetlab o'tilmaydi: wrangler 4.133.0 (1 kundan eski) | yangi chiqqan paketlar xavfi | E02-T08 |
+| 2026-09-18 | Byudjet ichidagi havolalar — kompozit FK `(household_id, x_id)` | boshqa byudjetga havola imkonsiz; FK tekshiruvi va o'chirish household indeksidan foydalanadi (katta jadvalda to'liq skan yo'q) | E06, ARX 3.2 |
+| 2026-09-18 | Biznes tekshiruvlari `<jadval>_validate` triggerida, `_touch` (advisory lock) dan keyin | parallel yozuvlar bir byudjetda ketma-ket tekshiriladi — masalan o'chirilayotgan kategoriyaga bir vaqtda havola paydo bo'lmaydi | E06, ARX 3.3 |
+| 2026-09-18 | Spravochniklarda `sort_order` indeksi yo'q | byudjetda o'nlab qator; `(household_id, row_version)` filtrga yetadi, saralash xotirada arzon — ortiqcha indeks faqat yozuvni sekinlatadi | E06-T07 |
+| 2026-09-18 | Teg yaratish — `member` ham (tahrir — owner/admin) | teg amal bilan birga qo'yiladi; aks holda member teg qo'ya olmasdi | BR-200, E06-T06 |
+| 2026-09-18 | Klientda `DELETE` yo'q, faqat soft delete; ustun darajasidagi grant'lar | tombstone sinxronga yetadi; tizim maydonlari (created_by, row_version, system_code, household_id) klientdan o'zgarmaydi | E06-T06 |
 
 ## 7. Jarayon jurnali
 
@@ -849,3 +865,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E03-T01..T07 | CI GitHub'da yashil (~2 daq); deploy/preview/release/backup/keep-alive workflow'lari (DEPLOY_ENABLED bilan yoqiladi); `health()` RPC; zaxira → tiklash → solishtirish lokalda tasdiqlandi (ijobiy va salbiy holat); action'lar SHA bilan pin |
 | 2026-09-18 | E09-T08 | contracts/ (README, api.md, schema-version, BIZNES-QOIDALAR nusxasi) + publish/check skripti — mobil E04-T08 uchun oldinroq |
 | 2026-09-18 | E05-T01..T07 | tenancy: 6 jadval + RLS (initPlan pattern), signup triggeri (profil + shaxsiy byudjet), 8 RPC (takliflar, egalik, rollar, bootstrap), oxirgi owner himoyasi; 33 pgTAP testi birinchi urinishda yashil; contracts/api.md kengaytirildi. **E05 yakunlandi** |
+| 2026-09-18 | E06-T01..T09 | 9 jadval (3 tizim + 6 byudjet spravochnigi), kompozit FK, validate triggerlari (tizim yozuvlari, ishlatilayotganni o'chirish, subkategoriya darajasi, fond manbai), ustun grant'lari, standart to'plam (18 kategoriya, 3 hisob, fond qoidasi) uz/ru/en; 90 yangi pgTAP + 4 invariant (jami 152); EXPLAIN: himoya so'rovlari household indeksidan. **E06 yakunlandi** |

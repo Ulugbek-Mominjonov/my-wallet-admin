@@ -107,7 +107,8 @@ Eski tizimda faqat `karta / naqd` **usuli** bor edi. Endi ular haqiqiy hisoblar.
 
 - **BR-020** Hisob turlari: `cash` (naqd), `card` (karta), `bank` (bank
   hisobi), `ewallet` (Click/Payme va h.k.), `deposit` (omonat), `personal_fund`
-  (👤 shaxsiy fond — byudjetda bitta, tizim hisobi), `other`.
+  (👤 shaxsiy fond — byudjetda bitta, tizim hisobi: turi o'zgarmaydi,
+  o'chirilmaydi, arxivlanmaydi; nomi o'zgarishi mumkin), `other`.
 - **BR-021** Hisob qoldig'i =
   `boshlang'ich qoldiq + Σ daromad − Σ xarajat + Σ kiruvchi o'tkazma − Σ chiquvchi o'tkazma`
   (hisob valyutasida).
@@ -118,7 +119,10 @@ Eski tizimda faqat `karta / naqd` **usuli** bor edi. Endi ular haqiqiy hisoblar.
   (masalan kartadan naqd yechish). **Yagona istisno** — `personal_fund`
   hisobiga o'tkazma (BR-061).
 - **BR-024** Tranzaksiyasi bor hisob o'chirilmaydi — **arxivlanadi**
-  (tanlash ro'yxatlarida ko'rinmaydi, hisobotlarda qoladi).
+  (tanlash ro'yxatlarida ko'rinmaydi, hisobotlarda qoladi). Reja, doimiy
+  reja, tez tugma yoki 👤 fond manbai sifatida ishlatilayotgan hisob ham
+  o'chirilmaydi; fond manbai arxivlanmaydi ham — avval fond sozlamasida
+  boshqa hisob tanlanadi.
 - **BR-025** Naqd hisob qoldig'i manfiy bo'lsa — ogohlantirish (tekshiruvda
   va hisob kartasida).
 - **BR-026** Hisob valyutasi birinchi amaldan keyin o'zgartirilmaydi.
@@ -135,16 +139,19 @@ Eski tizimda faqat `karta / naqd` **usuli** bor edi. Endi ular haqiqiy hisoblar.
   Internet/Aloqa, Oziq-ovqat, Transport, Kredit/Qarz, Sog'liq, Ta'lim, Kiyim,
   Ko'ngilochar, Sovg'a, Uy-ro'zg'or, **O'zim uchun**, Boshqa.
 - **BR-033 [ASL]** **"O'zim uchun"** — tizim kategoriyasi
-  (`system_code = personal_allocation`). O'chirilmaydi, nomi o'zgartirilishi
-  mumkin. Shaxsiy fond ajratmalari shu kategoriyada ko'rinadi.
+  (`system_code = personal_allocation`). O'chirilmaydi va arxivlanmaydi,
+  nomi (ikon, rang) o'zgartirilishi mumkin. Shaxsiy fond ajratmalari shu
+  kategoriyada ko'rinadi.
 - **BR-034 [YANGI]** Bir darajali **subkategoriya** (masalan Transport →
   Taksi, Yoqilg'i). Hisobotlar ota-kategoriyaga yig'ib ko'rsata oladi.
 - **BR-035 [ASL*]** Eski tizimda kategoriya erkin matn edi (xato yozilsa
   alohida kategoriya bo'lib qolardi). Endi faqat spravochnikdan tanlanadi;
   amal qo'shayotganda **joyida yangi kategoriya** yaratish mumkin.
-- **BR-036 [YANGI]** Ishlatilgan kategoriya o'chirilmaydi — arxivlanadi yoki
+- **BR-036 [YANGI]** Ishlatilgan kategoriya (amal, reja, doimiy reja, limit,
+  tez tugma yoki subkategoriyasi bor) o'chirilmaydi — arxivlanadi yoki
   boshqasi bilan **birlashtiriladi** (barcha amallar ko'chiriladi, bitta
-  tranzaksiyada).
+  tranzaksiyada). Kategoriya turi (daromad/xarajat) yaratilgandan keyin
+  o'zgarmaydi.
 - **BR-037 [YANGI]** Ikon va rang (UI uchun), tartib (drag & drop).
 
 ---
@@ -556,7 +563,9 @@ hisobidan tashqari hisoblardagi daromad/xarajatlar + fondga ajratmalar.
 ## 21. Teglar, cheklar, qidiruv `[YANGI]`
 
 - **BR-200** Teg — erkin belgi (masalan `#samarqand-safari`); amalga bir
-  nechta teg; teg bo'yicha hisobot.
+  nechta teg; teg bo'yicha hisobot. Teg amal bilan birga yaratiladi, shuning
+  uchun uni amal yoza oladigan har a'zo yaratadi; nomini o'zgartirish va
+  o'chirish — `owner`/`admin`.
 - **BR-201** Chek rasmi: qurilmada ≤ 1 MB gacha siqiladi, byudjetning shaxsiy
   papkasida saqlanadi; amal o'chirilsa rasm ham o'chadi.
 - **BR-202** Qidiruv: nomi/izoh bo'yicha (xatoga chidamli), summa oralig'i,
