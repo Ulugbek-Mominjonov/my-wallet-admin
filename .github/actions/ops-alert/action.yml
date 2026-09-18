@@ -1,0 +1,32 @@
+name: Ops ogohlantirishi
+description: Rejali ish xato bersa egasiga Telegram (ops bot) orqali xabar
+
+inputs:
+  message:
+    description: Xabar matni (havola avtomatik qo'shiladi)
+    required: true
+  bot-token:
+    description: OPS_TELEGRAM_BOT_TOKEN
+    required: true
+  chat-id:
+    description: OPS_TELEGRAM_CHAT_ID
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        MESSAGE: ${{ inputs.message }}
+        TOKEN: ${{ inputs.bot-token }}
+        CHAT_ID: ${{ inputs.chat-id }}
+        RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+      run: |
+        if [ -z "$TOKEN" ] || [ -z "$CHAT_ID" ]; then
+          echo "::warning::Ops Telegram sozlanmagan (DEPLOY.md 7.1) — ogohlantirish yuborilmadi"
+          exit 0
+        fi
+        curl -fsS --max-time 10 "https://api.telegram.org/bot${TOKEN}/sendMessage" \
+          --data-urlencode "chat_id=${CHAT_ID}" \
+          --data-urlencode "text=${MESSAGE}
+        ${RUN_URL}" > /dev/null

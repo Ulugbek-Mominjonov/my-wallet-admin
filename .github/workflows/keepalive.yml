@@ -1,0 +1,61 @@
+# ADR-13: bepul Supabase loyihasi 7 kun so'rovsiz pauza qilinadi — har 2 kunda
+# haqiqiy API so'rovi. Shuningdek public repoda rejali workflow'lar 60 kun
+# faolsizlikda o'chiriladi — `enable` API har ishga tushishda taymerni yangilaydi.
+name: Keep-alive
+
+on:
+  schedule:
+    - cron: '17 6 */2 * *' # har 2 kunda, 11:17 Toshkent
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  ping:
+    name: health — ${{ matrix.env }}
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [STAGING, PRODUCTION]
+    steps:
+      - name: health RPC (javob ≤ 3 s)
+        env:
+          URL: ${{ vars[format('SUPABASE_URL_{0}', matrix.env)] }}
+          KEY: ${{ vars[format('SUPABASE_PUBLISHABLE_KEY_{0}', matrix.env)] }}
+        run: |
+          started=$(date +%s%3N)
+          curl -fsS --max-time 10 -X POST "$URL/rest/v1/rpc/health" \
+            -H "apikey: $KEY" -H 'content-type: application/json' -d '{}'
+          elapsed=$(( $(date +%s%3N) - started ))
+          echo
+          echo "javob vaqti: ${elapsed} ms"
+          if [ "$elapsed" -gt 3000 ]; then
+            echo "::error::Sekin javob: ${elapsed} ms"
+            exit 1
+          fi
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: failure()
+      - uses: ./.github/actions/ops-alert
+        if: failure()
+        with:
+          message: '⚠️ My Wallet keep-alive: ${{ matrix.env }} backend javob bermadi yoki sekin.'
+          bot-token: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          chat-id: ${{ vars.OPS_TELEGRAM_CHAT_ID }}
+
+  keep-schedules-enabled:
+    name: rejali workflow'larni faol saqlash
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for workflow in keepalive.yml backup.yml; do
+            gh workflow enable "$workflow"
+          done

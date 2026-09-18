@@ -1,0 +1,26 @@
+# main → staging (avtomatik); qo'lda — istalgan muhit.
+# Production odatda release.yml (teg) orqali chiqadi.
+# DEPLOY_ENABLED=true bo'lmaguncha (akkauntlar sozlanmaguncha) ishlamaydi.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Qaysi muhitga
+        type: choice
+        options: [staging, production]
+        default: staging
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: vars.DEPLOY_ENABLED == 'true'
+    uses: ./.github/workflows/deploy-env.yml
+    with:
+      environment: ${{ inputs.environment || 'staging' }}
+    secrets: inherit

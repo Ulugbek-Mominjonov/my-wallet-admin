@@ -12,6 +12,8 @@
   "env": {
     "staging": {
       "name": "my-wallet-admin-staging",
+      // PR preview havolalari (preview.yml): pr-<N>-my-wallet-admin-staging...workers.dev
+      "preview_urls": true,
     },
   },
 }

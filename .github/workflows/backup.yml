@@ -1,0 +1,62 @@
+# ADR-12: Supabase bepul rejasida zaxira yo'q — har kecha o'zimiz olamiz.
+# Dump → toza Supabase'ga tiklab tekshirish → age bilan shifrlash → artefakt.
+# Repo public: artefakt hammaga ko'rinadi, shuning uchun faqat shifrlangan
+# holda yuklanadi; yopiq kalit faqat egasida (DEPLOY.md 8).
+name: Backup
+
+on:
+  schedule:
+    - cron: '0 21 * * *' # har kecha 02:00 Toshkent
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    if: vars.BACKUP_AGE_RECIPIENT != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL_PRODUCTION }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup
+      - name: age va psql
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq age postgresql-client
+
+      - name: Dump (rollar, sxema, ma'lumot)
+        run: scripts/backup-dump.sh backup
+
+      - name: Tekshiruv — toza Supabase'ga tiklash
+        run: scripts/restore.sh backup --verify
+
+      - name: Shifrlash
+        env:
+          RECIPIENT: ${{ vars.BACKUP_AGE_RECIPIENT }}
+        run: |
+          name="my-wallet-$(date -u +%Y%m%d-%H%M).tar.gz.age"
+          tar -C backup -czf - . | age --encrypt --recipient "$RECIPIENT" > "$name"
+          echo "BACKUP_FILE=$name" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: db-backup-${{ github.run_id }}
+          path: ${{ env.BACKUP_FILE }}
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: Shifrlanmagan fayllarni o'chirish
+        if: always()
+        run: rm -rf backup
+
+      - uses: ./.github/actions/ops-alert
+        if: failure()
+        with:
+          message: '🔴 My Wallet: kechki zaxira muvaffaqiyatsiz — prod ma''lumoti zaxirasiz qoldi.'
+          bot-token: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          chat-id: ${{ vars.OPS_TELEGRAM_CHAT_ID }}
