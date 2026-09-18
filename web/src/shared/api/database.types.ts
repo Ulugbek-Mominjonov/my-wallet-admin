@@ -676,6 +676,7 @@ export type Database = {
           personal_fund_mode: Database["public"]["Enums"]["personal_fund_mode"]
           personal_fund_percent: number
           personal_fund_source_account_id: string | null
+          purged_version: number
           row_version: number
           strict_month_lock: boolean
           timezone: string
@@ -694,6 +695,7 @@ export type Database = {
           personal_fund_mode?: Database["public"]["Enums"]["personal_fund_mode"]
           personal_fund_percent?: number
           personal_fund_source_account_id?: string | null
+          purged_version?: number
           row_version?: number
           strict_month_lock?: boolean
           timezone?: string
@@ -712,6 +714,7 @@ export type Database = {
           personal_fund_mode?: Database["public"]["Enums"]["personal_fund_mode"]
           personal_fund_percent?: number
           personal_fund_source_account_id?: string | null
+          purged_version?: number
           row_version?: number
           strict_month_lock?: boolean
           timezone?: string
@@ -1146,6 +1149,50 @@ export type Database = {
           },
         ]
       }
+      sync_mutations: {
+        Row: {
+          applied_at: string
+          device_id: string
+          household_id: string
+          mutation_id: string
+          record_id: string
+          result: Json
+          status: string
+          table_name: string
+          user_id: string | null
+        }
+        Insert: {
+          applied_at?: string
+          device_id: string
+          household_id: string
+          mutation_id: string
+          record_id: string
+          result: Json
+          status: string
+          table_name: string
+          user_id?: string | null
+        }
+        Update: {
+          applied_at?: string
+          device_id?: string
+          household_id?: string
+          mutation_id?: string
+          record_id?: string
+          result?: Json
+          status?: string
+          table_name?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_mutations_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tags: {
         Row: {
           color: string | null
@@ -1564,6 +1611,14 @@ export type Database = {
       }
       skip_planned: {
         Args: { p_item: string; p_skipped?: boolean }
+        Returns: Json
+      }
+      sync_pull: {
+        Args: { p_cursor: number; p_household: string; p_limit?: number }
+        Returns: Json
+      }
+      sync_push: {
+        Args: { p_device: string; p_household: string; p_mutations: Json }
         Returns: Json
       }
       transfer_ownership: {
