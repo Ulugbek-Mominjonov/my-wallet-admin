@@ -705,6 +705,120 @@ export type Database = {
           },
         ]
       }
+      planned_items: {
+        Row: {
+          account_id: string | null
+          auto_pay: boolean
+          budget_month: string
+          category_id: string | null
+          closed_at: string | null
+          created_at: string
+          created_by: string | null
+          debt_id: string | null
+          deleted_at: string | null
+          due_date: string
+          household_id: string
+          id: string
+          kind: Database["public"]["Enums"]["plan_kind"]
+          name: string
+          note: string | null
+          paid_amount: number
+          planned_amount: number | null
+          recurring_rule_id: string | null
+          row_version: number
+          settled_at: string | null
+          skipped_at: string | null
+          system_code: Database["public"]["Enums"]["plan_system_code"] | null
+          updated_at: string
+        }
+        Insert: {
+          account_id?: string | null
+          auto_pay?: boolean
+          budget_month: string
+          category_id?: string | null
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          debt_id?: string | null
+          deleted_at?: string | null
+          due_date: string
+          household_id: string
+          id?: string
+          kind: Database["public"]["Enums"]["plan_kind"]
+          name: string
+          note?: string | null
+          paid_amount?: number
+          planned_amount?: number | null
+          recurring_rule_id?: string | null
+          row_version?: number
+          settled_at?: string | null
+          skipped_at?: string | null
+          system_code?: Database["public"]["Enums"]["plan_system_code"] | null
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string | null
+          auto_pay?: boolean
+          budget_month?: string
+          category_id?: string | null
+          closed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          debt_id?: string | null
+          deleted_at?: string | null
+          due_date?: string
+          household_id?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["plan_kind"]
+          name?: string
+          note?: string | null
+          paid_amount?: number
+          planned_amount?: number | null
+          recurring_rule_id?: string | null
+          row_version?: number
+          settled_at?: string | null
+          skipped_at?: string | null
+          system_code?: Database["public"]["Enums"]["plan_system_code"] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planned_items_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "planned_items_household_id_category_id_fkey"
+            columns: ["household_id", "category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "planned_items_household_id_debt_id_fkey"
+            columns: ["household_id", "debt_id"]
+            isOneToOne: false
+            referencedRelation: "debts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "planned_items_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planned_items_household_id_recurring_rule_id_fkey"
+            columns: ["household_id", "recurring_rule_id"]
+            isOneToOne: false
+            referencedRelation: "recurring_rules"
+            referencedColumns: ["household_id", "id"]
+          },
+        ]
+      }
       platform_admins: {
         Row: {
           created_at: string
@@ -964,6 +1078,185 @@ export type Database = {
           },
         ]
       }
+      transaction_tags: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          household_id: string
+          id: string
+          row_version: number
+          tag_id: string
+          transaction_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id: string
+          id?: string
+          row_version?: number
+          tag_id: string
+          transaction_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id?: string
+          id?: string
+          row_version?: number
+          tag_id?: string
+          transaction_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transaction_tags_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transaction_tags_household_id_tag_id_fkey"
+            columns: ["household_id", "tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "transaction_tags_household_id_transaction_id_fkey"
+            columns: ["household_id", "transaction_id"]
+            isOneToOne: false
+            referencedRelation: "transactions"
+            referencedColumns: ["household_id", "id"]
+          },
+        ]
+      }
+      transactions: {
+        Row: {
+          account_id: string
+          amount: number
+          amount_base: number
+          budget_month: string
+          budget_month_source: Database["public"]["Enums"]["budget_month_source"]
+          category_id: string | null
+          created_at: string
+          created_by: string | null
+          debt_id: string | null
+          deleted_at: string | null
+          fx_rate: number | null
+          household_id: string
+          id: string
+          kind: Database["public"]["Enums"]["transaction_kind"]
+          note: string | null
+          occurred_on: string
+          payee: string | null
+          planned_item_id: string | null
+          row_version: number
+          source: Database["public"]["Enums"]["transaction_source"]
+          to_account_id: string | null
+          to_amount: number | null
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          amount_base?: number
+          budget_month: string
+          budget_month_source?: Database["public"]["Enums"]["budget_month_source"]
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          debt_id?: string | null
+          deleted_at?: string | null
+          fx_rate?: number | null
+          household_id: string
+          id?: string
+          kind: Database["public"]["Enums"]["transaction_kind"]
+          note?: string | null
+          occurred_on: string
+          payee?: string | null
+          planned_item_id?: string | null
+          row_version?: number
+          source?: Database["public"]["Enums"]["transaction_source"]
+          to_account_id?: string | null
+          to_amount?: number | null
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          amount_base?: number
+          budget_month?: string
+          budget_month_source?: Database["public"]["Enums"]["budget_month_source"]
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          debt_id?: string | null
+          deleted_at?: string | null
+          fx_rate?: number | null
+          household_id?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["transaction_kind"]
+          note?: string | null
+          occurred_on?: string
+          payee?: string | null
+          planned_item_id?: string | null
+          row_version?: number
+          source?: Database["public"]["Enums"]["transaction_source"]
+          to_account_id?: string | null
+          to_amount?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_category_id_fkey"
+            columns: ["household_id", "category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_debt_id_fkey"
+            columns: ["household_id", "debt_id"]
+            isOneToOne: false
+            referencedRelation: "debts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_planned_item_id_fkey"
+            columns: ["household_id", "planned_item_id"]
+            isOneToOne: false
+            referencedRelation: "planned_items"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_to_account_id_fkey"
+            columns: ["household_id", "to_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["household_id", "id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -1010,12 +1303,21 @@ export type Database = {
         | "deposit"
         | "personal_fund"
         | "other"
+      budget_month_source: "auto" | "manual"
       category_kind: "income" | "expense"
       category_system_code: "personal_allocation"
       debt_direction: "i_owe" | "owed_to_me"
       member_role: "owner" | "admin" | "member" | "viewer"
       personal_fund_mode: "percent" | "fixed"
       plan_kind: "expense" | "income" | "allocation"
+      plan_system_code: "personal_allocation"
+      transaction_kind: "income" | "expense" | "transfer"
+      transaction_source:
+        | "manual"
+        | "quick_action"
+        | "auto_pay"
+        | "import"
+        | "telegram"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1152,12 +1454,22 @@ export const Constants = {
         "personal_fund",
         "other",
       ],
+      budget_month_source: ["auto", "manual"],
       category_kind: ["income", "expense"],
       category_system_code: ["personal_allocation"],
       debt_direction: ["i_owe", "owed_to_me"],
       member_role: ["owner", "admin", "member", "viewer"],
       personal_fund_mode: ["percent", "fixed"],
       plan_kind: ["expense", "income", "allocation"],
+      plan_system_code: ["personal_allocation"],
+      transaction_kind: ["income", "expense", "transfer"],
+      transaction_source: [
+        "manual",
+        "quick_action",
+        "auto_pay",
+        "import",
+        "telegram",
+      ],
     },
   },
 } as const
