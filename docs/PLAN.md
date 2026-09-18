@@ -95,7 +95,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E04 | Mobil skelet + CI | mobile | E00 | ✅ |
 | **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ✅ |
 | | E06 | Spravochniklar sxemasi | admin | E05 | ✅ |
-| | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ⬜ |
+| | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ✅ |
 | | E08 | Biznes RPC'lar | admin | E07 | ⬜ |
 | | E09 | Hisobotlar + golden fixtures + `contracts/` | admin | E08 | ⬜ |
 | | E10 | Sinxron API | admin | E07 | ⬜ |
@@ -364,48 +364,54 @@ E21–E26 (admin) M2 bilan.
 > BR-110..118, BR-120..123, BR-150..153, BR-201. **DoD:** har qoida pgTAP
 > bilan; qaysi yo'l bilan yozilmasin (PostgREST, RPC, cron) natija bir xil.
 
-- [ ] **E07-T01** `debts`, `goals`, `months` jadvallari (+ `recurring_rules.
-  debt_id` FK), RLS (yozish — `owner/admin/member`), triggerlar, indekslar.
-- [ ] **E07-T02** `planned_items`: ustunlar (ARX 3.2), unique
-  `(recurring_rule_id, budget_month)` va `(household_id, budget_month,
-  system_code)`, qisman indeks (to'lanmaganlar), `status` —
+- [x] **E07-T01** `debts`, `goals`, `months` jadvallari (+ `recurring_rules.
+  debt_id` FK), RLS (yozish — `owner/admin/member`; `months` — faqat RPC),
+  triggerlar, indekslar.
+- [x] **E07-T02** `planned_items`: ustunlar (ARX 3.2; + `closed_at` — qo'lda
+  yopish), unique `(recurring_rule_id, budget_month)` va `(household_id,
+  budget_month, system_code)`, qisman indeks (to'lanmaganlar), `status` —
   `private.planned_status(item, today)` funksiyasi (BR-071; saqlanmaydi).
-- [ ] **E07-T03** `transactions`: ustunlar, kind CHECK'lari (income/expense —
+- [x] **E07-T03** `transactions`: ustunlar, kind CHECK'lari (income/expense —
   kategoriya majburiy; transfer — `to_account_id` majburiy, kategoriya yo'q,
   manba ≠ manzil), summa > 0, hisob va kategoriya bir byudjetdan (kompozit
   FK + `private.assert_category/assert_account`), indekslar (ARX 3.4).
   BR-026: hisob valyutasi birinchi amaldan keyin o'zgarmaydi
   (`validate_account`). `private.category_in_use` / `account_in_use` ga
-  amallar va rejalar qo'shiladi (BR-024, BR-036).
-- [ ] **E07-T04** `tx_derive` BEFORE trigger: `budget_month` (BR-040..046:
-  income + `month_shift`, xarajat → sana oyi, reja bog'langan → reja oyi,
-  `manual` ga tegilmaydi), `currency` (hisobdan), `amount_base` (MVP: =
-  `amount`; E29 da kurs). pgTAP: 4-jadvaldagi misollar (02.10 Oylik → 2026-09 …).
-- [ ] **E07-T05** `tx_after` AFTER trigger: bog'langan reja(lar)ning
-  `paid_amount` qayta hisobi (INSERT/UPDATE/DELETE, reja almashsa ikkalasi);
-  `paid_amount ≥ planned` (reja summasi bo'sh bo'lsa — birinchi to'lov) →
-  `settled_at`; to'lov o'chirilsa qaytariladi (BR-071, BR-073).
-- [ ] **E07-T06** 👤 Fond: `personal_fund` hisobiga o'tkazma = ajratma
-  (BR-061); ajratma rejasi (`system_code = personal_allocation`) —
-  `percent` rejimida oy daromadi o'zgarsa `planned_amount` qayta hisoblanadi:
-  `round(daromad × foiz / 100 / 1000) × 1000` (BR-060). pgTAP: 1 499 600 × 10%
-  → 150 000 (bir marta yaxlitlash).
-- [ ] **E07-T07** Oy qulfi: `month_lock_guard` — `strict_month_lock`
-  bo'lsa yopilgan oyga yozuv rad etiladi, aks holda o'tadi (ogohlantirish —
-  klientda). BR-055, BR-150..152.
-- [ ] **E07-T08** Qarz ko'rinishi: `debt_balances` view (security invoker) —
-  bitta `GROUP BY debt_id`: ilovadan, kutilmoqda (bog'langan to'lanmagan
-  rejalar), qolgan, qolgan oy, tugash oyi, holat (BR-112..116).
+  amallar va rejalar qo'shildi (BR-024, BR-036). `transaction_tags`.
+  `currency` ustuni saqlanmaydi — hisobniki (qaror).
+- [x] **E07-T04** Hosilalar `transactions_validate` BEFORE triggerida:
+  `budget_month` (BR-040..046: income + `month_shift`, xarajat → sana oyi,
+  reja bog'langan → reja oyi, `manual` ga tegilmaydi; kirishlar o'zgarmasa
+  qayta hisoblanmaydi — BR-043), `amount_base` (bir valyutada = `amount`;
+  aks holda `fx_rate` yoki CBU kursi — E29 dan oldinroq, oddiy), `to_amount`.
+  pgTAP: 4-jadvaldagi misollar (02.10 Oylik → 2026-09 …).
+- [x] **E07-T05** `transactions_after_*` statement triggerlari (transition
+  tables): bog'langan reja(lar)ning `paid_amount` qayta hisobi (reja
+  almashsa ikkalasi); `settled_at` planned_items triggerida chiqariladi
+  (to'liq, summasiz rejaga to'lov, `closed_at`); to'lov o'chirilsa qaytadi
+  (BR-071, BR-073).
+- [x] **E07-T06** 👤 Fond: ajratma rejasi faqat fondga o'tkazma bilan
+  to'lanadi (BR-061); `percent` rejimida oy daromadi o'zgarsa
+  `planned_amount` = `round(daromad × foiz / 100 / birlik) × birlik`
+  (`currencies.allocation_rounding`: so'm — 1000); sozlama o'zgarsa joriy
+  va keyingi oylar (BR-060). pgTAP: 1 499 600 × 10% → 150 000.
+- [x] **E07-T07** Oy qulfi: `private.assert_month_writable` — `strict_month_lock`
+  bo'lsa yopilgan oyga yozuv/tahrir/o'chirish rad etiladi, aks holda o'tadi
+  (ogohlantirish — klientda). BR-055, BR-150..152.
+- [x] **E07-T08** Qarz ko'rinishi: `debt_balances` view (security invoker) —
+  ilovadan, kutilmoqda, qolgan, qolgan oy, tugash oyi, holat (BR-112..116).
   Maqsad ko'rinishi: `goal_progress` view (qo'lda yoki hisob qoldig'i,
   BR-121..122).
-- [ ] **E07-T09** Hisob qoldiqlari: `account_balances` view (BR-021) — bitta
+- [x] **E07-T09** Hisob qoldiqlari: `account_balances` view (BR-021) — bitta
   so'rov, `UNION ALL` (chiquvchi/kiruvchi) + `GROUP BY`.
-- [ ] **E07-T10** Storage: `receipts` bucket (private), RLS (yo'l =
-  `{household_id}/...`), amal o'chirilganda fayl o'chirish navbati. BR-201.
-  Zaxiraga storage fayllari ham qo'shiladi (`scripts/backup-dump.sh` —
-  DB dump faqat metama'lumotni oladi).
-- [ ] **E07-T11** pgTAP to'plami: BR-040..046, 052, 060..063, 071..073, 110..116,
-  121..122, 150..152 — har biriga kamida bitta ijobiy va bitta salbiy holat.
+- [x] **E07-T10** Storage: `receipts` bucket (private), RLS (yo'l =
+  `{household_id}/...`), `attachments`; amal o'chirilganda cheklar o'chirish
+  navbatiga (undo'da qaytadi; faylni E11 tozalaydi). BR-201. Zaxiraga
+  storage siyosatlari va fayllari qo'shildi (soni tekshiriladi), tiklash
+  ularni qaytaradi — lokalda sinaldi.
+- [x] **E07-T11** pgTAP to'plami: BR-040..046, 052, 060..063, 071..073, 110..116,
+  121..122, 150..152 — 95 test (jami 247); EXPLAIN: 20k amalda oy
+  so'rovlari `transactions_month_idx` dan.
 
 ### E08 · Biznes RPC'lar `[admin]`
 
@@ -842,6 +848,13 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Spravochniklarda `sort_order` indeksi yo'q | byudjetda o'nlab qator; `(household_id, row_version)` filtrga yetadi, saralash xotirada arzon — ortiqcha indeks faqat yozuvni sekinlatadi | E06-T07 |
 | 2026-09-18 | Teg yaratish — `member` ham (tahrir — owner/admin) | teg amal bilan birga qo'yiladi; aks holda member teg qo'ya olmasdi | BR-200, E06-T06 |
 | 2026-09-18 | Klientda `DELETE` yo'q, faqat soft delete; ustun darajasidagi grant'lar | tombstone sinxronga yetadi; tizim maydonlari (created_by, row_version, system_code, household_id) klientdan o'zgarmaydi | E06-T06 |
+| 2026-09-18 | `transactions.currency` saqlanmaydi — hisobniki | BR-026 hisob valyutasini amaldan keyin muzlatadi; takror ustun nomuvofiqlik manbai bo'lardi | E07-T03 |
+| 2026-09-18 | Reja summalari va `paid_amount` — asosiy valyutada (`amount_base` yig'indisi) | byudjet bir valyutada yuritiladi; boshqa valyutadagi hisobdan to'lash ham to'g'ri yig'iladi | E07-T02, T05 |
+| 2026-09-18 | `paid_amount` + `settled_at` saqlanadi (ADR-03 istisnosi), `overdue`/`pending` — o'qishda | to'lanmaganlar qisman indeksi va ro'yxatlar tez; holat bugungi sanaga bog'liq qismi saqlanmaydi | E07-T02, ADR-06 |
+| 2026-09-18 | Amallardan keyingi qayta hisob — statement trigger + transition tables | ommaviy yozuvda (bulk, avto to'lov, import) har reja/oy bir marta — qatorma-qator takror yo'q | E07-T05 |
+| 2026-09-18 | Fondga daromad yozilmaydi; fonddan byudjetga o'tkazma — manfiy ajratma | BR-063 tengligi va BR-092 invarianti saqlanadi | BR-061, BR-063 |
+| 2026-09-18 | `amount_base` uchun kurs hozirdanoq (qo'lda `fx_rate` yoki CBU jadvali), yo'q bo'lsa xato | noto'g'ri summa jimgina yozilmaydi; E29 faqat kurslarni to'ldiradi | E07-T04, BR-191 |
+| 2026-09-18 | Zaxirada storage siyosatlari alohida SQL, `storage.objects` — fayllarni API orqali qayta yuklash bilan | `db dump` storage sxemasini olmaydi; dump'dagi obyekt qatori qayta yuklashni bloklardi | E07-T10, ADR-12 |
 
 ## 7. Jarayon jurnali
 
@@ -866,3 +879,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E09-T08 | contracts/ (README, api.md, schema-version, BIZNES-QOIDALAR nusxasi) + publish/check skripti — mobil E04-T08 uchun oldinroq |
 | 2026-09-18 | E05-T01..T07 | tenancy: 6 jadval + RLS (initPlan pattern), signup triggeri (profil + shaxsiy byudjet), 8 RPC (takliflar, egalik, rollar, bootstrap), oxirgi owner himoyasi; 33 pgTAP testi birinchi urinishda yashil; contracts/api.md kengaytirildi. **E05 yakunlandi** |
 | 2026-09-18 | E06-T01..T09 | 9 jadval (3 tizim + 6 byudjet spravochnigi), kompozit FK, validate triggerlari (tizim yozuvlari, ishlatilayotganni o'chirish, subkategoriya darajasi, fond manbai), ustun grant'lari, standart to'plam (18 kategoriya, 3 hisob, fond qoidasi) uz/ru/en; 90 yangi pgTAP + 4 invariant (jami 152); EXPLAIN: himoya so'rovlari household indeksidan. **E06 yakunlandi** |
+| 2026-09-18 | E07-T01..T11 | 8 jadval + 3 view + bucket: qarz/maqsad/oy, rejalar (holat funksiyasi), amallar (tegishli oy, asosiy valyuta, o'tkazma, fond qoidalari), statement triggerlar (to'lov, fond ajratmasi 1 499 600 × 10% → 150 000), oy qulfi, cheklar + zaxira/tiklash (storage siyosatlari va fayllar, lokalda sinaldi); 95 pgTAP (jami 247); 20k amalda EXPLAIN. **E07 yakunlandi** |

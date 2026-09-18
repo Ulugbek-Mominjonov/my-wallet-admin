@@ -219,6 +219,8 @@ Pul **qachon kelgani** bilan **qaysi oyning puli** ekani har doim bir xil emas:
 - **BR-070 [ASL]** Reja: nomi, kategoriya, hisob (taxminiy), rejadagi summa
   (**bo'sh bo'lishi mumkin** = "summasi har oy o'zgaradi"), to'lov kuni,
   tegishli oy, avto to'lov belgisi, ixtiyoriy qarz bog'lanishi, izoh.
+  Reja summasi byudjetning asosiy valyutasida; 👤 fond hisobi rejada
+  qatnashmaydi. To'lovi bor reja o'chirilmaydi — o'tkazib yuboriladi.
 - **BR-071 [ASL]** Holat (ko'rsatishda **bugungi sanadan** hisoblanadi, BR-002):
 
   | Holat | Qachon |
@@ -287,12 +289,18 @@ Pul **qachon kelgani** bilan **qaysi oyning puli** ekani har doim bir xil emas:
 - **BR-061 [ASL*]** Ajratma = tanlangan hisobdan **👤 shaxsiy fond hisobiga
   o'tkazma**. Byudjet uchun u **"O'zim uchun" kategoriyasidagi xarajat**
   hisoblanadi (oy qoldig'ini kamaytiradi) — eski tizim bilan aynan bir xil
-  arifmetika, lekin endi pul qayerda ekani ham ko'rinadi.
+  arifmetika, lekin endi pul qayerda ekani ham ko'rinadi. Ajratma rejasi
+  faqat byudjet hisobidan fondga o'tkazma bilan to'lanadi. `[YANGI]` Fonddan
+  byudjet hisobiga o'tkazma — ajratmaning qaytishi (manfiy ajratma): oy
+  xarajatini kamaytiradi, shuning uchun BR-092 invarianti saqlanadi.
 - **BR-062 [ASL]** Shaxsiy fonddan sarf = `personal_fund` hisobidan xarajat.
   U **oylik byudjet qoldig'iga ta'sir qilmaydi** — faqat fond qoldig'ini
-  kamaytiradi.
+  kamaytiradi. Kategoriya ko'rsatilmasa — "O'zim uchun". Fonddan sarf
+  byudjet rejasiga bog'lanmaydi (reja — byudjet bandi).
 - **BR-063 [ASL]** Fond qoldig'i = Σ ajratilgan − Σ sarflangan
-  (= `personal_fund` hisobining qoldig'i).
+  (= `personal_fund` hisobining qoldig'i). Shu tenglik saqlanishi uchun fond
+  hisobiga daromad yozilmaydi — pul fondga faqat ajratma o'tkazmasi bilan
+  tushadi.
 - **BR-064 [ASL]** Fond ekrani: qoldiq, shu oy ajratilgan/sarflangan, jami
   ajratilgan/sarflangan, sarf qo'shish formasi, sarflar tarixi.
 - **BR-065 [ASL]** Fonddan sarfning tegishli oyi — sarf sanasi oyi.
@@ -388,7 +396,8 @@ hisobidan tashqari hisoblardagi daromad/xarajatlar + fondga ajratmalar.
   `owed_to_me` — menga qarzdor), umumiy summa, oldin to'langan (ilovadan
   tashqari), oylik to'lov, `[YANGI]` muddat, izoh, arxiv.
 - **BR-111 [ASL]** Bog'lanish **faqat aniq `debt_id` orqali** (nom bo'yicha
-  taxmin qilinmaydi — eski tizimdagi nom mosligi xatolari takrorlanmaydi):
+  taxmin qilinmaydi — eski tizimdagi nom mosligi xatolari takrorlanmaydi;
+  bog'langan amal qarz valyutasida bo'ladi):
   - `i_owe` ← bog'langan **xarajatlar** (qarzimni to'ladim);
   - `owed_to_me` ← bog'langan **daromadlar** (haqimni qaytarishdi).
   Doimiy reja qarzga bog'lansa, undan yaratilgan rejalar ham bog'lanadi.

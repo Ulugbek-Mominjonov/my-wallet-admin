@@ -43,6 +43,17 @@ Keep-alive va smoke testlar.
 | `invalid_parent` | subkategoriya faqat bir daraja va ota bilan bir turda (BR-034) |
 | `invalid_account` | bu amal uchun hisob yaroqsiz (masalan fond ajratmasi manbai — fondning o'zi) |
 | `invalid_fund_source` | fond manbai — shu byudjetning tirik, arxivlanmagan, fond bo'lmagan hisobi (BR-060) |
+| `account_currency_locked` | amali (yoki bog'langan maqsadi) bor hisob valyutasi o'zgarmaydi (BR-026) |
+| `debt_deleted` / `debt_kind_mismatch` | o'chirilgan qarz; qarz yo'nalishi amal turiga mos emas (i_owe ← xarajat, owed_to_me ← daromad — BR-111) |
+| `debt_in_use` | qarzga amal, reja yoki doimiy reja bog'langan — arxivlang |
+| `currency_mismatch` | valyutalar mos emas (qarzga bog'langan amal, hisobga bog'langan maqsad) |
+| `planned_deleted` / `planned_skipped` | o'chirilgan yoki o'tkazib yuborilgan rejaga to'lov |
+| `planned_kind_mismatch` | reja va amal turi mos emas (ajratma rejasi — faqat byudjet hisobidan fondga o'tkazma) |
+| `planned_in_use` | to'lovi bor reja o'chirilmaydi — o'tkazib yuboring (`skipped_at`) |
+| `to_amount_required` | turli valyutali o'tkazmada manzil summasi majburiy (BR-193) |
+| `fx_rate_missing` | amal sanasi uchun kurs yo'q — `fx_rate` kiriting (BR-191, BR-192) |
+| `month_closed` | qattiq qulf: yopilgan oyga yozish/tahrirlash/o'chirish mumkin emas (BR-055) |
+| `tag_deleted` | o'chirilgan teg qo'yilmaydi |
 
 Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masalan
 `accounts_name_key`), `23514` — qiymat cheklovi (masalan bo'sh nom, summa ≤ 0),
@@ -110,3 +121,59 @@ foydalanuvchi tilida oladi: shablondagi 18 kategoriya, hisoblar **Naqd**,
 | Transport | `bus`, `car`, `fuel`, `taxi`, `plane` |
 | Shaxsiy | `user`, `heart-pulse`, `graduation-cap`, `shirt`, `party`, `gift`, `baby`, `paw`, `dumbbell`, `book` |
 | Boshqa | `dots` — noma'lum kalit uchun ham shu ikon |
+
+## Amallar, rejalar, qarzlar, maqsadlar (E07) — PostgREST jadvallari
+
+Umumiy qoidalar E06 bilan bir xil (UUIDv7 klientda, soft delete, `DELETE` yo'q).
+**Valyuta:** amal summasi (`amount`) — hisob valyutasida; reja summalari
+(`planned_amount`, `paid_amount`) va `amount_base` — byudjetning asosiy
+valyutasida; qarz summalari — qarz valyutasida (bog'langan amallar ham shu valyutada).
+
+| Jadval | O'qish | Yozish | Klient yozadigan ustunlar (insert → update) |
+|---|---|---|---|
+| `debts` | a'zolar | owner/admin/member | `id, household_id, name, direction, currency, total, paid_before, monthly_payment, due_date, note` → `name, total, paid_before, monthly_payment, due_date, note, archived_at, deleted_at` |
+| `goals` | a'zolar | owner/admin/member | `id, household_id, name, currency, target, saved_manual, monthly_contribution, deadline, account_id, sort_order` → shular (`id, household_id, currency` dan tashqari) + `achieved_at, deleted_at` |
+| `months` | a'zolar | — (RPC: `open_month`, `set_month_closed` — E08) | — |
+| `planned_items` | a'zolar | owner/admin/member | `id, household_id, kind, name, category_id, account_id, planned_amount, due_date, budget_month, auto_pay, debt_id, recurring_rule_id, note` → `name, category_id, account_id, planned_amount, due_date, budget_month, auto_pay, debt_id, note, closed_at, skipped_at, deleted_at` |
+| `transactions` | a'zolar | owner/admin/member | `id, household_id, kind, account_id, to_account_id, amount, to_amount, fx_rate, category_id, payee, occurred_on, budget_month, budget_month_source, planned_item_id, debt_id, note, source` → shular (`id, household_id` dan tashqari) + `deleted_at` |
+| `transaction_tags` | a'zolar | owner/admin/member | `id, household_id, transaction_id, tag_id` → `deleted_at` |
+| `attachments` | a'zolar | owner/admin/member | `id, household_id, transaction_id, storage_path, mime, size_bytes` → `deleted_at` |
+
+**Server hisoblaydigan maydonlar** (javobdagi kanonik qiymat klientnikidan ustun):
+
+| Maydon | Qoida |
+|---|---|
+| `transactions.budget_month` (`budget_month_source = auto`) | rejaga bog'langan → reja oyi (BR-044); daromad → sana oyi + kategoriya `month_shift` (BR-040); xarajat/o'tkazma → sana oyi (BR-041, BR-046). Kirishlar (tur, kategoriya, sana, reja) o'zgarmasa qayta hisoblanmaydi (BR-043) |
+| `transactions.amount_base`, `fx_rate` | hisob valyutasi = asosiy → `amount`; aks holda `fx_rate` (qo'lda) yoki sanadagi/oldingi CBU kursi, bo'lmasa `fx_rate_missing` |
+| `transactions.to_amount` | bir valyutali o'tkazmada = `amount` |
+| `transactions.category_id` | 👤 fond hisobidan kategoriyasiz xarajat → "O'zim uchun" (BR-062) |
+| `transactions.debt_id` | qarzga bog'langan rejaning to'lovi → o'sha qarz (BR-111) |
+| `planned_items.paid_amount`, `settled_at` | bog'langan tirik amallar `amount_base` yig'indisi; to'landi = `paid ≥ planned` yoki summasiz rejaga to'lov yoki `closed_at` (BR-071, BR-073) |
+| fond rejasi (`system_code = personal_allocation`) `planned_amount` | foiz rejimi: `round(oy daromadi × foiz / 100 / birlik) × birlik` (so'mda birlik 1000), daromad o'zgarsa qayta; qat'iy — sozlamadagi summa (BR-060) |
+
+**Qoidalar:** daromad 👤 fond hisobiga yozilmaydi (BR-063); reja 👤 fond hisobiga
+havola qilmaydi; ajratma rejasi faqat byudjet hisobidan fondga o'tkazma bilan
+to'lanadi (BR-061); `strict_month_lock` yoqilgan byudjetda yopilgan oy yozuvlari
+o'zgarmaydi (`month_closed`).
+
+**Reja holati** (BR-071; saqlanmaydi, bugungi sana — byudjet vaqt zonasida):
+`skipped_at` → `skipped`; `settled_at` → `paid`; `due_date < bugun` → `overdue`;
+`paid_amount > 0` → `partial`; aks holda `pending`. Mobil ilova aynan shu
+tartibni takrorlaydi (`private.planned_status`).
+
+### O'qish view'lari
+
+| View | Ustunlar | Qoida |
+|---|---|---|
+| `account_balances` | `household_id, account_id, balance` (hisob valyutasida) | BR-021 |
+| `debt_balances` | `household_id, debt_id, paid_in_app, pending_amount, pending_count, remaining, progress, months_left, end_month, status` (`closed`/`paying`/`pending`/`unlinked`) | BR-112..116 |
+| `goal_progress` | `household_id, goal_id, saved, remaining, progress, months_left, end_month, on_track` | BR-121, BR-122 |
+
+### Chek rasmlari (Storage)
+
+- Bucket `receipts` (yopiq), fayl ≤ 1 MB, `image/jpeg`, `image/png`, `image/webp` (BR-201).
+- Yo'l: `{household_id}/{transaction_id}/{uuid}.{jpg|png|webp}`; o'qish — a'zolar,
+  yuklash/o'chirish — amal yozuvchilar.
+- Yuklangandan keyin `attachments` qatori yoziladi; amal o'chirilsa (soft)
+  biriktirmalar ham o'chiriladi, undo'da qaytadi; fayllarni server tozalaydi (E11).
+
