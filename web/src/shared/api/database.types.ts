@@ -9,6 +9,78 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      accounts: {
+        Row: {
+          archived_at: string | null
+          color: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          deleted_at: string | null
+          household_id: string
+          icon: string | null
+          id: string
+          name: string
+          opening_balance: number
+          opening_date: string
+          row_version: number
+          sort_order: number
+          type: Database["public"]["Enums"]["account_type"]
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency: string
+          deleted_at?: string | null
+          household_id: string
+          icon?: string | null
+          id?: string
+          name: string
+          opening_balance?: number
+          opening_date: string
+          row_version?: number
+          sort_order?: number
+          type: Database["public"]["Enums"]["account_type"]
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          deleted_at?: string | null
+          household_id?: string
+          icon?: string | null
+          id?: string
+          name?: string
+          opening_balance?: number
+          opening_date?: string
+          row_version?: number
+          sort_order?: number
+          type?: Database["public"]["Enums"]["account_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+          {
+            foreignKeyName: "accounts_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_config: {
         Row: {
           key: string
@@ -62,6 +134,141 @@ export type Database = {
           table_name?: string
         }
         Relationships: []
+      }
+      categories: {
+        Row: {
+          archived_at: string | null
+          color: string | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          household_id: string
+          icon: string | null
+          id: string
+          kind: Database["public"]["Enums"]["category_kind"]
+          month_shift: number
+          name: string
+          parent_id: string | null
+          row_version: number
+          sort_order: number
+          system_code:
+            | Database["public"]["Enums"]["category_system_code"]
+            | null
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id: string
+          icon?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["category_kind"]
+          month_shift?: number
+          name: string
+          parent_id?: string | null
+          row_version?: number
+          sort_order?: number
+          system_code?:
+            | Database["public"]["Enums"]["category_system_code"]
+            | null
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id?: string
+          icon?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["category_kind"]
+          month_shift?: number
+          name?: string
+          parent_id?: string | null
+          row_version?: number
+          sort_order?: number
+          system_code?:
+            | Database["public"]["Enums"]["category_system_code"]
+            | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "categories_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "categories_household_id_parent_id_fkey"
+            columns: ["household_id", "parent_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["household_id", "id"]
+          },
+        ]
+      }
+      category_limits: {
+        Row: {
+          alert_100: boolean
+          alert_80: boolean
+          amount: number
+          category_id: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          household_id: string
+          id: string
+          row_version: number
+          updated_at: string
+        }
+        Insert: {
+          alert_100?: boolean
+          alert_80?: boolean
+          amount: number
+          category_id: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id: string
+          id?: string
+          row_version?: number
+          updated_at?: string
+        }
+        Update: {
+          alert_100?: boolean
+          alert_80?: boolean
+          amount?: number
+          category_id?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id?: string
+          id?: string
+          row_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "category_limits_household_id_category_id_fkey"
+            columns: ["household_id", "category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "category_limits_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       category_templates: {
         Row: {
@@ -297,6 +504,13 @@ export type Database = {
             referencedRelation: "currencies"
             referencedColumns: ["code"]
           },
+          {
+            foreignKeyName: "households_personal_fund_source_fkey"
+            columns: ["id", "personal_fund_source_account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["household_id", "id"]
+          },
         ]
       }
       platform_admins: {
@@ -349,6 +563,208 @@ export type Database = {
           },
         ]
       }
+      quick_actions: {
+        Row: {
+          account_id: string
+          amount: number
+          category_id: string
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          household_id: string
+          id: string
+          name: string
+          payee: string | null
+          row_version: number
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          category_id: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id: string
+          id?: string
+          name: string
+          payee?: string | null
+          row_version?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          category_id?: string
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id?: string
+          id?: string
+          name?: string
+          payee?: string | null
+          row_version?: number
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quick_actions_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "quick_actions_household_id_category_id_fkey"
+            columns: ["household_id", "category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "quick_actions_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recurring_rules: {
+        Row: {
+          account_id: string | null
+          active: boolean
+          amount: number | null
+          auto_pay: boolean
+          category_id: string | null
+          created_at: string
+          created_by: string | null
+          day_of_month: number
+          debt_id: string | null
+          deleted_at: string | null
+          end_month: string | null
+          household_id: string
+          id: string
+          kind: Database["public"]["Enums"]["plan_kind"]
+          name: string
+          row_version: number
+          sort_order: number
+          start_month: string | null
+          updated_at: string
+        }
+        Insert: {
+          account_id?: string | null
+          active?: boolean
+          amount?: number | null
+          auto_pay?: boolean
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          day_of_month: number
+          debt_id?: string | null
+          deleted_at?: string | null
+          end_month?: string | null
+          household_id: string
+          id?: string
+          kind: Database["public"]["Enums"]["plan_kind"]
+          name: string
+          row_version?: number
+          sort_order?: number
+          start_month?: string | null
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string | null
+          active?: boolean
+          amount?: number | null
+          auto_pay?: boolean
+          category_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          day_of_month?: number
+          debt_id?: string | null
+          deleted_at?: string | null
+          end_month?: string | null
+          household_id?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["plan_kind"]
+          name?: string
+          row_version?: number
+          sort_order?: number
+          start_month?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recurring_rules_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
+            referencedRelation: "accounts"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "recurring_rules_household_id_category_id_fkey"
+            columns: ["household_id", "category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "recurring_rules_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          color: string | null
+          created_at: string
+          created_by: string | null
+          deleted_at: string | null
+          household_id: string
+          id: string
+          name: string
+          row_version: number
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id: string
+          id?: string
+          name: string
+          row_version?: number
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          created_by?: string | null
+          deleted_at?: string | null
+          household_id?: string
+          id?: string
+          name?: string
+          row_version?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tags_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -387,10 +803,19 @@ export type Database = {
       }
     }
     Enums: {
+      account_type:
+        | "cash"
+        | "card"
+        | "bank"
+        | "ewallet"
+        | "deposit"
+        | "personal_fund"
+        | "other"
       category_kind: "income" | "expense"
       category_system_code: "personal_allocation"
       member_role: "owner" | "admin" | "member" | "viewer"
       personal_fund_mode: "percent" | "fixed"
+      plan_kind: "expense" | "income" | "allocation"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -518,10 +943,20 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      account_type: [
+        "cash",
+        "card",
+        "bank",
+        "ewallet",
+        "deposit",
+        "personal_fund",
+        "other",
+      ],
       category_kind: ["income", "expense"],
       category_system_code: ["personal_allocation"],
       member_role: ["owner", "admin", "member", "viewer"],
       personal_fund_mode: ["percent", "fixed"],
+      plan_kind: ["expense", "income", "allocation"],
     },
   },
 } as const
