@@ -1398,6 +1398,16 @@ export type Database = {
           balance: number | null
           household_id: string | null
         }
+        Insert: {
+          account_id?: string | null
+          balance?: never
+          household_id?: string | null
+        }
+        Update: {
+          account_id?: string | null
+          balance?: never
+          household_id?: string | null
+        }
         Relationships: [
           {
             foreignKeyName: "accounts_household_id_fkey"

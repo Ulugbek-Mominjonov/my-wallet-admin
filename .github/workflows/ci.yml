@@ -49,6 +49,8 @@ jobs:
         run: make db-test
       - name: Kontrakt testlari (golden fixture'lar)
         run: make contract-test
+      - name: Ishlash — hisobotlar vaqti va Seq Scan (docs/PERF.md)
+        run: make perf
       - name: Generatsiya qilingan TS tiplari eskirmaganmi
         run: make db-types-check
       - name: Mobil bilan shartnoma (contracts/) eskirmaganmi
