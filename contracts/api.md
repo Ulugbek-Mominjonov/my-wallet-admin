@@ -322,3 +322,70 @@ Sinxron jadvallar (`t`): `households` (byudjetning o'zi), `accounts`,
 - `delete` — soft delete (`deleted_at`). `months` — faqat RPC orqali.
 - Jurnal: `sync_mutations` (owner/admin o'qiydi) — qurilma, holat, natija.
 
+
+## Bildirishnomalar (E11) — authenticated
+
+Navbat, kanallar va rejali ishlar — `docs/ARXITEKTURA.md` 7. Mobil faqat
+sozlaydi va qurilmani ro'yxatdan o'tkazadi; yuborish — server (outbox →
+`notify-dispatch`). Offline mahalliy eslatma (BR-168) — mobilning o'zida.
+
+### Sozlamalar — `notification_prefs` (PostgREST)
+
+Har a'zo × byudjet uchun bitta qator (a'zolik bilan avtomatik yaratiladi).
+O'qish — faqat o'ziniki; yozish — `update` (qator qo'shilmaydi/o'chmaydi).
+
+| Ustun | Standart | Qoida |
+|---|---|---|
+| `push`, `telegram`, `email` | `true`, `false`, `false` | kanallar (BR-163); email — server sozlangan bo'lsa |
+| `reminder_hour` | 9 | 0–23, byudjet vaqt zonasida (BR-160) |
+| `days_ahead` | 3 | 0–14 — kunlik eslatmada necha kun oldinga |
+| `monthly_report`, `report_day` | `true`, 21 | 1–28 — o'tgan oy hisoboti kuni (BR-161) |
+| `limit_alerts`, `income_missing` | `true`, `true` | BR-133, BR-165 |
+
+### Qurilma (FCM push)
+
+- `register_device(p_token, p_platform, p_app_version = null)` — ilova
+  ochilganda va token yangilanganda; token boshqa akkauntda bo'lsa — ko'chadi.
+- `unregister_device(p_token)` — chiqishda.
+- Push: `notification { title, body }` (tayyor matn, foydalanuvchi tilida) +
+  `data { type }`: `daily_reminder` | `monthly_report` | `limit_alert` |
+  `income_missing` | `test` — ilova bosilganda tegishli ekranni ochadi.
+  Eskirgan token server tomonda o'chiriladi.
+
+### Telegram (BR-163)
+
+- `telegram_link_token()` → `{ "token": "…32 belgi…", "expires_at": "…" }`
+  (15 daqiqa, bir martalik) → `https://t.me/<bot>?start=<token>` ni oching.
+- Holat: `telegram_links` (o'z qatori: `linked_at`) — bor bo'lsa "Ulangan".
+- `telegram_unlink()` — uzish (botda `/stop` ham).
+
+### Test xabar va "hozir yuborish" (BR-164)
+
+- `test_notification(p_household)` →
+  `[{ "channel": "push", "queued": true, "reason": null }, { "channel": "telegram", "queued": false, "reason": "not_linked" }, …]`.
+  `reason`: `disabled` (sozlamada o'chiq) | `no_device` | `not_linked` | `not_configured` (server kanalni qo'llamaydi).
+- `send_monthly_report_now(p_household, p_month)` → `{ "report": {…}, "channels": [ … yuqoridagidek … ] }`.
+
+### Jurnallar
+
+- `notification_outbox` (o'ziniki): `channel`, `type`, `status`
+  (`pending` | `sending` | `sent` | `failed` | `skipped`), `error` (sabab kodi,
+  masalan `no_device`), `created_at`, `sent_at` — 90 kun (BR-166).
+- `monthly_reports` (byudjet a'zolari, BR-167): `month`, `generated_at`,
+  `payload`: `income`, `expense`, `balance`, `saved`, `saved_ratio` (0–1),
+  `fund_balance`, `savings_total`, `debts_remaining`,
+  `top_categories [{name, actual}]` (5 ta), `limits_exceeded [{name, actual, limit}]`,
+  `suspicious` (BR-162).
+
+### Akkauntni o'chirish (BR-015) — Edge Function
+
+`POST /functions/v1/delete-account`, sarlavhalar `Authorization: Bearer <JWT>`,
+`apikey: <publishable>`:
+
+| Javob | Ma'nosi | Klient |
+|---|---|---|
+| `200 { "deleted_households": 1 }` | yolg'iz byudjetlar o'chirildi, qolganlaridan chiqdi, akkaunt o'chdi | lokal bazani tozalab, kirish ekraniga |
+| `401 { "error": "unauthorized" }` | sessiya yaroqsiz | qayta kirish |
+| `409 { "error": "last_owner" }` | boshqa a'zolari bor byudjetning yagona egasi (BR-014) | avval egalikni o'tkazish |
+
+Chek rasmlari server tomonda tozalanadi (kunlik ish, byudjeti yo'q fayllar — darhol).

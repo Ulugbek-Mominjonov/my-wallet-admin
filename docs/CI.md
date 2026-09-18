@@ -7,8 +7,8 @@
 
 | Fayl | Qachon | Nima qiladi | Yoqilishi |
 |---|---|---|---|
-| `ci.yml` | har PR, `main` push | web (format, ESLint, tiplar, Vitest, build), db (lokal Supabase, squawk + db lint, pgTAP, kontrakt testlari — golden fixture'lar, ishlash — `make perf`, TS tiplari eskirmaganmi), e2e (Playwright desktop + mobil) | doim |
-| `deploy.yml` → `deploy-env.yml` | `main` push → **staging**; qo'lda → istalgan muhit | `supabase db push` → Edge Functions → admin build → Cloudflare deploy → smoke (`health` RPC + Playwright) | `DEPLOY_ENABLED=true` |
+| `ci.yml` | har PR, `main` push | web (format, ESLint, tiplar, Vitest, build), functions (Deno fmt/lint/check, unit + snapshot testlari), db (lokal Supabase edge runtime bilan, squawk + db lint, pgTAP, kontrakt testlari — golden fixture'lar, sinxron, Edge Functions uchidan-uchiga — `make fn-smoke`, ishlash — `make perf`, TS tiplari eskirmaganmi), e2e (Playwright desktop + mobil) | doim |
+| `deploy.yml` → `deploy-env.yml` | `main` push → **staging**; qo'lda → istalgan muhit | `supabase db push` → Edge Function sirlari + Vault → Edge Functions → Telegram webhook → admin build → Cloudflare deploy → smoke (`health` RPC, Edge Function 403, Playwright) | `DEPLOY_ENABLED=true` |
 | `release.yml` | `main` push | release-please reliz PR'i; merge → teg + **production** deploy (reviewer tasdig'i) | `DEPLOY_ENABLED=true` |
 | `preview.yml` | har PR (fork'dan emas) | admin build (staging backend) → `wrangler versions upload --preview-alias pr-N` → PR izohi | `DEPLOY_ENABLED=true` |
 | `backup.yml` | har kecha 02:00 Toshkent | prod dump + storage siyosatlari + chek rasmlari (soni tekshiriladi) → toza Supabase'ga tiklab solishtirish → `age` shifrlash → artefakt (90 kun) | `BACKUP_AGE_RECIPIENT` bor bo'lsa |
@@ -39,5 +39,7 @@ Supabase Docker image keshi — −40…60 s.
   Dependabot haftalik yangilaydi.
 - `permissions` har workflow'da minimal (`contents: read` standart).
 - Sirlar loglarga chiqmaydi; zaxira va tiklash skriptlari raqam/ma'lumot
-  chiqarmaydi (loglar public).
+  chiqarmaydi (loglar public). Deploy sirlari vaqtinchalik `600` faylda
+  (`supabase secrets set --env-file`, `db query -f`) — buyruq qatorida emas.
+- `supabase/functions/.env.example` — faqat lokal/CI qiymatlari (haqiqiy sir emas).
 - Fork'dan kelgan PR'larda sirli qadamlar ishlamaydi.

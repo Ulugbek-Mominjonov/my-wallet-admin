@@ -74,7 +74,7 @@ yozmang.
    | Project ref (URL'dagi `abcd...`) | Settings → General | `SUPABASE_PROJECT_REF_STAGING` / `_PROD` (variable) |
    | Project URL | Settings → API | `SUPABASE_URL_STAGING` / `_PROD` (variable) |
    | **Publishable key** (`sb_publishable_...`) | Settings → API Keys | `SUPABASE_PUBLISHABLE_KEY_STAGING` / `_PROD` (variable — ochiq kalit) |
-   | **Secret key** (`sb_secret_...`) | Settings → API Keys | `SUPABASE_SECRET_KEY_STAGING` / `_PROD` (**secret**) |
+   | **Secret key** (`sb_secret_...`) | Settings → API Keys | `SUPABASE_SECRET_KEY` — Environment **secret** (Edge Function'larga platforma o'zi beradi; bu nusxa — ops skriptlari uchun) |
    | DB paroli | 1-qadam | `SUPABASE_DB_PASSWORD_STAGING` / `_PROD` (**secret**) |
    | Session pooler ulanish satri (IPv4) | Connect → Session pooler | `SUPABASE_DB_URL_PROD` (**secret**, zaxira uchun) |
 
@@ -185,9 +185,10 @@ sahifani yangilaganda (`/reports/month`) 404 bo'lmaydi (SPA rejimi).
    yuklab oling → mobil repo sirlari (`my-wallet-mobil/docs/DEPLOY.md`).
 3. **Cloud Messaging (FCM) — server kaliti:** Project settings → Service
    accounts → **Generate new private key** (JSON) → base64:
-   `base64 -w0 key.json` → admin repo **secret**
-   `FCM_SERVICE_ACCOUNT_STAGING` / `_PROD` (Edge Function `notify-dispatch`
-   ishlatadi). JSON faylni keyin o'chiring.
+   `base64 -w0 key.json` → admin repo **Environment secret**
+   `FCM_SERVICE_ACCOUNT` (`staging` va `production` — har biriga o'z Firebase
+   loyihasi kaliti). Deploy uni Edge Function muhitiga o'tkazadi
+   (`notify-dispatch`). JSON faylni keyin o'chiring.
 4. **App Distribution:** Release & Monitor → App Distribution → Get started →
    Testers & Groups → guruh `testers` (o'zingiz + oila a'zolari emaillari).
    CI yuklashi uchun servis akkaunt: Google Cloud Console (shu Firebase
@@ -206,17 +207,20 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
 
 1. Telegram'da **@BotFather** → `/newbot`:
    - **Ilova boti** (foydalanuvchilarga eslatma, `/balans`, tez kiritish):
-     masalan `@MyWalletUzBot` → token → `TELEGRAM_BOT_TOKEN_PROD` (**secret**).
-     Staging uchun alohida bot (`@MyWalletStgBot`) → `TELEGRAM_BOT_TOKEN_STAGING`.
+     masalan `@MyWalletUzBot` → token → `production` Environment **secret**
+     `TELEGRAM_BOT_TOKEN`. Staging uchun alohida bot (`@MyWalletStgBot`) →
+     `staging` Environment'dagi `TELEGRAM_BOT_TOKEN`.
    - **Ops boti** (CI ogohlantirishlari: zaxira/keep-alive xatosi) — alohida
      bot → `OPS_TELEGRAM_BOT_TOKEN` (**secret**). O'zingiz botga `/start`
      yozing, keyin `https://api.telegram.org/bot<token>/getUpdates` dan
      `chat.id` → `OPS_TELEGRAM_CHAT_ID` (variable).
-2. Webhook maxfiy kaliti: `openssl rand -hex 32` →
-   `TELEGRAM_WEBHOOK_SECRET_STAGING` / `_PROD` (**secret**).
-3. Webhook'ni ulash — **deploy workflow o'zi bajaradi** (`setWebhook` →
-   `https://<ref>.supabase.co/functions/v1/telegram-webhook`,
-   `secret_token` bilan). Qo'lda kerak emas.
+2. Webhook maxfiy kaliti: `openssl rand -hex 32` → har Environment'ga
+   **secret** `TELEGRAM_WEBHOOK_SECRET`.
+3. Webhook'ni ulash — **deploy workflow o'zi bajaradi**
+   (`scripts/telegram-setup.sh`: `setWebhook` →
+   `https://<ref>.supabase.co/functions/v1/telegram-webhook`, `secret_token`
+   bilan; buyruqlar menyusi `/balans`, `/bugun`, `/stop` — uz/ru/en).
+   Qo'lda kerak emas. Token bo'lmasa — Telegram qadami o'tkaziladi.
 4. BotFather → `/setdescription`, `/setuserpic` — ixtiyoriy.
 
 ✅ **Tekshiruv:** ilovada Sozlamalar → Telegram → "Ulash" → botda `/start`
@@ -287,7 +291,15 @@ reviewer tasdig'idan keyin ochiladi.
 | `SUPABASE_SECRET_KEY` | 2.2 |
 | `FCM_SERVICE_ACCOUNT` (base64 JSON) | 6.3 |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` | 7 |
-| `CRON_SECRET` (`openssl rand -hex 32`) — pg_cron → Edge Function chaqiruvlari uchun (deploy `vault` ga yozadi) | — |
+| `CRON_SECRET` (`openssl rand -hex 32`) — pg_cron → Edge Function chaqiruvlari uchun | — |
+
+> **Deploy nima qiladi** (`scripts/deploy-secrets.sh`, har deployda):
+> `CRON_SECRET`, `FCM_SERVICE_ACCOUNT`, `TELEGRAM_BOT_TOKEN`,
+> `TELEGRAM_WEBHOOK_SECRET` → Edge Function muhitiga (`supabase secrets set`);
+> Edge Function manzili va `CRON_SECRET` → **Vault** (`edge_functions_url`,
+> `cron_secret`) — pg_cron shu yerdan o'qiydi. Sirni almashtirish: GitHub'da
+> yangilang → deploy'ni qayta ishga tushiring (ikkala joy birga yangilanadi).
+> Ixtiyoriy sir bo'sh bo'lsa, shu kanal xabarlari `skipped` (sababi bilan).
 
 > Google Client Secret va SMTP paroli GitHub'ga **kerak emas** — ular
 > Supabase dashboard'ida bir marta kiritiladi (3.4, 4.2).
@@ -320,8 +332,12 @@ reviewer tasdig'idan keyin ochiladi.
 - [ ] Mobil ilova (shu muhit flavor'i) kiradi, amal yozadi, admin'da ko'rinadi.
 - [ ] Oflayn yozuv tarmoq kelganda sinxronlanadi.
 - [ ] Test push keldi; Telegram ulandi va test xabar keldi.
-- [ ] `job_runs` da `daily_sweep`, `enqueue_reminders`, `notify_dispatch`,
-      `purge` muvaffaqiyatli.
+- [ ] `job_runs` da ishlar muvaffaqiyatli (SQL Editor):
+      `select job, status, details, started_at from job_runs order by id desc limit 30;`
+      — `daily_sweep`, `enqueue_*`, `dispatch_notifications`, `fx_sync`,
+      `purge`, `purge_files`, `platform_stats`.
+- [ ] pg_cron → Edge Function chaqiruvlari: `select status_code, content from
+      net._http_response order by id desc limit 10;` — 200 (403 emas).
 - [ ] Zaxira workflow yashil, restore-drill yashil.
 - [ ] Supabase **Security Advisor** va **Performance Advisor** — ogohlantirish yo'q.
 
@@ -338,6 +354,9 @@ reviewer tasdig'idan keyin ochiladi.
 | Google kirish: redirect xato (web) | Redirect URI ro'yxatda yo'q | 2.4 va 3.3 |
 | Email kod kelmaydi | custom SMTP yo'q / App password xato | 4 |
 | Push kelmaydi | FCM servis akkaunti / token eskirgan | 6.3; admin "Qurilmalar" sahifasi |
-| Telegram javob bermaydi | webhook ulanmagan / secret mos emas | deploy logidagi `setWebhook` natijasi |
+| Telegram javob bermaydi | webhook ulanmagan / secret mos emas | deploy logidagi "Telegram webhook" qadami; `getWebhookInfo` |
+| Eslatmalar kelmaydi, `job_runs` da `{"skipped": "not_configured"}` | Vault bo'sh (deploy sirlar qadamidan o'tmagan) | 9-bo'lim: `CRON_SECRET` ni qo'shib deploy'ni qayta ishga tushiring |
+| `net._http_response` da 403 | Vault'dagi va Edge Function'dagi `CRON_SECRET` farq qiladi | deploy'ni qayta ishga tushiring (ikkalasini birga yozadi) |
+| Xabar `skipped`: `push_not_configured` / `telegram_not_configured` | Edge Function muhitida FCM / bot tokeni yo'q | 6.3 / 7; deploy'ni qayta ishga tushiring |
 | Admin sahifani yangilaganda 404 | SPA rejimi o'chiq | `wrangler.jsonc` → `not_found_handling` |
 | Actions minutlari tugayapti | ko'p ishga tushirish | `docs/CI.md` — `paths` filtrlari, keshlar |

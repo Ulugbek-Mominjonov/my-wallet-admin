@@ -97,9 +97,9 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E06 | Spravochniklar sxemasi | admin | E05 | ✅ |
 | | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ✅ |
 | | E08 | Biznes RPC'lar | admin | E07 | ✅ |
-| | E09 | Hisobotlar + golden fixtures + `contracts/` | admin | E08 | ⬜ |
+| | E09 | Hisobotlar + golden fixtures + `contracts/` | admin | E08 | ✅ |
 | | E10 | Sinxron API | admin | E07 | ✅ |
-| | E11 | Rejali ishlar va bildirishnomalar | admin | E08 | ⬜ |
+| | E11 | Rejali ishlar va bildirishnomalar | admin | E08 | ✅ |
 | **M2 Mobil MVP** | E12 | Domen paketi + fixtures pariteti | mobile | E09 | ⬜ |
 | | E13 | Lokal baza va sinxron dvigatel | mobile | E10, E12 | ⬜ |
 | | E14 | Auth, onboarding, ilova qobig'i | mobile | E13 | ⬜ |
@@ -528,34 +528,46 @@ E21–E26 (admin) M2 bilan.
 > **DoD:** har ish set-based va idempotent; pgTAP (nima yuboriladi) +
 > Deno testlari (qanday yuboriladi); `job_runs` da natija.
 
-- [ ] **E11-T01** `notification_prefs` (standart: push ✓, soat 9, 3 kun,
-  oylik hisobot ✓ 21-kun, limit ogohlantirishi ✓), `device_tokens`,
-  `telegram_links` + `telegram_link_tokens`, `notification_outbox`
-  (dedupe unique), `monthly_reports`, `job_runs` + RLS.
-- [ ] **E11-T02** `jobs.daily_sweep(now)`: lokal 00:05 dan o'tgan va bugun
-  ishlamagan byudjetlar — avto to'lov (`INSERT ... SELECT`, `source =
-  auto_pay`, takrorga qarshi unique), 1-kuni avto-ochish (`open_month`).
-  pgTAP: vaqt zonasi chegarasi, takroriy ishga tushirish.
-- [ ] **E11-T03** `jobs.enqueue_reminders(now)` (BR-160: bo'sh bo'lsa
-  yubormaydi, noma'lum summa matni), `jobs.enqueue_monthly_reports(now)`
-  (BR-161..162, `monthly_reports` ga saqlaydi), `jobs.enqueue_income_missing`
-  (BR-165), limit ogohlantirishlari `tx_after` dan (BR-133, oyda bir marta).
-- [ ] **E11-T04** Edge Function `notify-dispatch`: outbox'dan olish
-  (`FOR UPDATE SKIP LOCKED` — RPC orqali), FCM HTTP v1 (servis akkaunt JWT,
-  token keshi), Telegram `sendMessage` (HTML), email (SMTP — ixtiyoriy),
-  natija/xato yozish, eskirgan FCM tokenlarni o'chirish, 3 ta qayta urinish.
-- [ ] **E11-T05** Edge Function `telegram-webhook`: secret header tekshiruvi,
-  `/start <token>` → bog'lash (BR-163), `/stop`, `/balans`, `/bugun`;
-  noma'lum xabar → yordam matni.
-- [ ] **E11-T06** Xabar shablonlari (uz/ru/en) — `_shared/i18n.ts`: kunlik
-  eslatma, oylik hisobot (BR-161 bloklari), limit, daromad kechikdi.
-  Snapshot testlari.
-- [ ] **E11-T07** pg_cron jadvali (ARX 7) — migratsiyada `cron.schedule`,
-  Edge Function URL va sir `vault` da; `notify_dispatch` faqat outbox bo'sh
-  bo'lmasa HTTP chaqiradi. `test_notification(user, channel)` RPC (BR-164).
-- [ ] **E11-T08** `fx-sync` Edge Function (skelet; E29 da to'liq) va
-  `delete-account` Edge Function (BR-015: a'zoliklar, yolg'iz byudjetlar,
-  storage fayllari, auth foydalanuvchisi).
+- [x] **E11-T01** `notification_prefs` (standart: push ✓, soat 9, 3 kun,
+  oylik hisobot ✓ 21-kun, limit ogohlantirishi ✓; a'zolik bilan avtomatik),
+  `device_tokens` (akkaunt almashsa ko'chadi), `telegram_links` +
+  `telegram_link_tokens` (15 daqiqalik bir martalik), `notification_outbox`
+  (dedupe unique, navbat qisman indeksi), `monthly_reports`, `job_runs` + RLS
+  va ustun grant'lari; `register_device`, `telegram_link_token` RPC'lari.
+- [x] **E11-T02** `jobs.daily_sweep(now)`: lokal 00:05 dan o'tgan va bugun
+  ishlamagan byudjetlar — avval avto-ochish (`private.open_month_for` —
+  `open_month` RPC bilan umumiy), keyin avto to'lov (`INSERT ... SELECT`,
+  qolgan summa, `source = auto_pay`, rejaga bitta — unique, o'chirilgani qayta
+  yaratilmaydi; boshqa valyutadagi hisob va qattiq qulfli oy — yo'q).
+  pgTAP: vaqt zonasi chegarasi (Toshkent/London), takroriy ishga tushirish.
+- [x] **E11-T03** `jobs.enqueue_reminders(now)` (BR-160: bo'sh bo'lsa
+  yubormaydi, noma'lum summa — `null`), `jobs.enqueue_monthly_reports(now)`
+  (BR-161..162, hisobotlar yadrosidan, `monthly_reports` ga saqlaydi),
+  `jobs.enqueue_income_missing` (BR-165), limit ogohlantirishlari `tx_after`
+  dan (BR-133, oyda har chegara uchun bir marta, `alert_80`/`alert_100`
+  hisobga olinadi). Faqat yetkaziladigan manzillarga (`notification_targets`).
+- [x] **E11-T04** Edge Function `notify-dispatch`: outbox'dan olish
+  (`FOR UPDATE SKIP LOCKED` — `outbox_claim` RPC), FCM HTTP v1 (servis akkaunt
+  RS256 JWT — WebCrypto, token keshi), Telegram `sendMessage` (HTML), email —
+  hozircha `skipped` (SMTP ixtiyoriy), natija/xato (`outbox_complete`),
+  eskirgan FCM tokenlarni o'chirish, 3 urinish (5/30 daqiqa).
+- [x] **E11-T05** Edge Function `telegram-webhook`: secret header tekshiruvi,
+  `/start <token>` → bog'lash (BR-163), `/stop`, `/balans`, `/bugun`
+  (`telegram_summary`); noma'lum xabar → yordam matni; faqat shaxsiy chat.
+- [x] **E11-T06** Xabar shablonlari (uz/ru/en) — `_shared/i18n.ts`: kunlik
+  eslatma, oylik hisobot (BR-161 bloklari), limit, daromad kechikdi, test;
+  pul formati admin/mobil bilan bir xil. 15 snapshot + 60 Deno testi.
+- [x] **E11-T07** pg_cron jadvali (ARX 7, 9 ish) — `jobs.run` → `job_runs`,
+  Edge Function URL va sir `vault` da (deploy yozadi); `notify_dispatch` faqat
+  outbox bo'sh bo'lmasa HTTP chaqiradi; `platform_stats`. `test_notification
+  (household)` — har kanal natijasi va sababi (BR-164),
+  `send_monthly_report_now`.
+- [x] **E11-T08** `fx-sync` Edge Function (skelet: joriy CBU kurslari →
+  `fx_upsert`, qo'lda kiritilgan ustidan yozmaydi; tarix — E29) va
+  `delete-account` (BR-015: a'zoliklar, yolg'iz byudjetlar, auth
+  foydalanuvchisi; oxirgi owner — 409); chek fayllari — `purge-files`
+  (Storage API) + `receipt_files_to_delete`, biriktirma tombstone'lari
+  `jobs.purge` da. Uchidan-uchiga: `make fn-smoke` (CI, pg_cron yo'li bilan).
 
 > **E12–E20** (mobil MVP) — `my-wallet-mobil/docs/PLAN.md`.
 
@@ -878,6 +890,12 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | RLS'ga `deleted_at IS NULL` qo'shilmaydi | sinxron tombstone'larni, undo o'chirilganni ko'rishi kerak; ekran filtrlaydi | E10-T03 |
 | 2026-09-18 | Tozalash havola qilinayotgan tombstone'ni o'tkazib yuboradi (xato bermaydi, hisoblaydi) | FK tartibi va o'chirish vaqtlari farqi — keyingi ishga tushishda o'chadi | E10-T05 |
 | 2026-09-18 | Sinxron `schema-version` oshirilmadi | qo'shimcha RPC'lar (buzuvchi emas), mobil hali chiqmagan — README qoidasi | E10-T06 |
+| 2026-09-18 | Navbatga faqat yetkaziladigan manzil (qurilmasi bor push, ulangan Telegram) | yetkazib bo'lmaydigan xabar jurnalni to'ldirmaydi, dispatch chaqiruvlari tejaladi | E11-T03, ADR-11 |
+| 2026-09-18 | pg_cron → Edge Function: manzil va sir Vault'da, deploy yozadi; `verify_jwt = false`, har funksiya o'z himoyasi bilan | sir repoda yo'q; yangi JWT imzo kalitlari bilan platforma tekshiruvi ishlamaydi | E11-T07, ARX 7 |
+| 2026-09-18 | Chek fayllari — `purge-files` (Storage API), ro'yxat SQL'da: byudjeti yo'q — darhol, o'chirilgan biriktirma — 7 kun, yozuvsiz — 1 kun | Storage'da SQL DELETE taqiqlangan; bitta mexanizm akkaunt o'chirish va undo'ni qamraydi | E11-T08, BR-201, BR-015 |
+| 2026-09-18 | Avto to'lov sanasi — reja muddati; rejaga bitta (o'chirilsa qayta yaratilmaydi) | ish kechiksa ham to'g'ri sana; foydalanuvchi o'chirgan to'lov qaytib kelmaydi | E11-T02, BR-075 |
+| 2026-09-18 | Deno testlari `_tests/` da, `jsr:@std` — `deno.lock` bilan | `_` bilan boshlangan papka deploy qilinmaydi; bog'liqliklar qotirilgan | E11-T06 |
+| 2026-09-18 | `platform_stats` — qatorlar soni statistika bahosi (`reltuples`) | kunlik to'liq COUNT katta jadvallarni skan qilardi | E11-T07 |
 
 ## 7. Jarayon jurnali
 
@@ -906,3 +924,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E08-T01..T07 | 11 RPC: oy ochish (preview, idempotent, fond rejasi), to'lash/o'tkazib yuborish/ommaviy (bitta statement), qayta joylash (preview → apply, BR-040 yagona funksiyada), oyni yopish + tekshiruv, kategoriyalarni birlashtirish, onboarding (nomlar bo'yicha, bir marta); 56 pgTAP (jami 303); contracts/api.md. **E08 yakunlandi** |
 | 2026-09-18 | E09-T01..T07 | 8 hisobot RPC (bitta tasnif yadrosi), health_check; 51 golden fixture (40 tasi eski tizimdan — birinchi urinishda aynan mos) + Node kontrakt runner; perf: 25k amal + shovqin, auto_explain — 3 muammo topildi va tuzatildi (health_check 219 → 23 ms); 18 pgTAP (jami 321). **E09 yakunlandi** |
 | 2026-09-18 | E10-T01..T06 | sync_pull (14 jadval, indeks + LIMIT), sync_push (idempotent, conflict/rejected, grant'lar = oq ro'yxat), sync_mutations jurnali, jobs.purge (tombstone/audit/jurnal); parallel test (6 xossa) CI'da; 29 pgTAP (jami 350). **E10 yakunlandi** |
+| 2026-09-18 | E11-T01..T08 | 7 jadval, 9 pg_cron ishi (`job_runs`), outbox (dedupe, SKIP LOCKED, qayta urinish), 5 Edge Function (FCM v1, Telegram bot, CBU, fayllar, akkaunt o'chirish), uz/ru/en shablonlar; 71 pgTAP (jami 421), 60 Deno testi, uchidan-uchiga 13 tekshiruv (pg_cron → Vault → pg_net → Edge Function); testlar 2 xatoni topdi (limit sozlamalari, chek fayli muddati). **E11 yakunlandi — M1 (platforma yadrosi) tayyor** |

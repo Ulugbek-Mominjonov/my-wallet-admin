@@ -361,8 +361,9 @@ maydonlarga yozadiganlar (`open_month` — tizim rejasi va `months`,
 
 **Edge Functions:** `notify-dispatch` (cron → outbox → FCM/Telegram/email),
 `telegram-webhook` (bot; secret header bilan), `fx-sync` (CBU kurslari),
-`admin-ops` (platforma: foydalanuvchilar, e'lonlar; JWT + `is_platform_admin`),
-`delete-account` (BR-015).
+`purge-files` (chek fayllari, Storage API), `admin-ops` (platforma:
+foydalanuvchilar, e'lonlar; JWT + `is_platform_admin`), `delete-account`
+(BR-015) — batafsil 7-bo'lim.
 
 ---
 
@@ -411,21 +412,53 @@ ro'yxat yo'q, shuning uchun PostgREST va sinxron qoidalari farq qilmaydi).
 
 Hamma vaqt — byudjet vaqt zonasi bo'yicha (standart `Asia/Tashkent`); ishlar
 har soat ishga tushib, vaqti kelgan byudjetlarni oladi (set-based, sikl yo'q).
+Har ish `jobs.run(<ish>)` orqali `job_runs` ga yoziladi (boshlanish, tugash,
+natija yoki xato) — admin "Tekshiruv" va "Platforma" sahifalari shundan oladi.
 
 | Ish | Jadval (UTC) | Nima qiladi | Qoida |
 |---|---|---|---|
-| `daily_sweep` | har soat :05 | lokal 00:05 dan keyin, bugun hali ishlamagan byudjetlar: avto to'lov (`INSERT ... SELECT`), 1-kuni avto-ochish | BR-075, BR-084 |
-| `enqueue_reminders` | har soat :00 | lokal soati = `reminder_hour` bo'lgan a'zolarga kunlik eslatma → outbox | BR-160 |
-| `enqueue_monthly_reports` | har soat :00 | `report_day` kuni o'tgan oy hisobotini yaratib `monthly_reports` + outbox | BR-161, BR-167 |
-| `enqueue_income_missing` | har kuni 04:00 | kechikkan kutilayotgan daromadlar | BR-165 |
-| `notify_dispatch` | har 5 daqiqa | outbox bo'sh bo'lmasa `pg_net` bilan Edge Function'ni chaqiradi | ADR-11 |
-| `fx_sync` | har kuni 05:30 (10:30 Toshkent) | CBU kurslari | BR-192 |
-| `purge` | har kuni 22:30 | tombstone (90 kun), audit (180), outbox (90), sync_mutations (30) | |
-| `platform_stats` | har kuni 23:00 | DB hajmi, qatorlar soni → `job_runs` (500 MB limit monitoringi) | |
+| `daily_sweep` | har soat :05 | lokal 00:05 dan keyin, bugun hali ishlamagan byudjetlar: oy hali ochilmagan bo'lsa — ochish, keyin muddati kelgan avto to'lovlar (`INSERT ... SELECT`, qolgan summa, rejaga bitta — unique) | BR-075, BR-084 |
+| `enqueue_reminders` | har soat :00 | lokal soati = `reminder_hour` bo'lgan a'zolarga kunlik eslatma → outbox (eslatadigan narsa bo'lmasa — yo'q) | BR-160 |
+| `enqueue_monthly_reports` | har soat :00 | `report_day` kuni, eslatma soatida: o'tgan oy hisoboti → `monthly_reports` + outbox | BR-161, BR-162, BR-167 |
+| `enqueue_income_missing` | har soat :00 | eslatma soatida: 2 kundan ko'p kechikkan kutilayotgan daromad (rejaga bir marta) | BR-165 |
+| limit ogohlantirishi | amal yozilganda (trigger) | 80% / 100% (yoqilgan chegaralar), oyda har chegara uchun bir marta | BR-133 |
+| `notify_dispatch` | har 5 daqiqa | outbox bo'sh bo'lmasa `pg_net` bilan `notify-dispatch` Edge Function'ni chaqiradi | ADR-11 |
+| `fx_sync` | har kuni 05:30 (10:30 Toshkent) | `fx-sync` Edge Function: CBU kurslari → `fx_upsert` | BR-192 |
+| `purge` | har kuni 22:30 | tombstone (90 kun, biriktirmalar bilan), audit (180), outbox (90), sync_mutations (30) | BR-008, BR-166 |
+| `purge_files` | har kuni 22:45 | o'chiriladigan chek fayllari bo'lsa — `purge-files` Edge Function (Storage API) | BR-201, BR-015 |
+| `platform_stats` | har kuni 23:00 | DB va Storage hajmi (bepul chegaradan foiz), eng katta jadvallar → `job_runs` | E26-T05 |
 
-Har ish `job_runs` ga yozadi; admin "Tekshiruv" va "Platforma" sahifalari
-oxirgi natijani ko'rsatadi. Cron → Edge Function chaqiruvi uchun sir
-`vault` da saqlanadi.
+**Bildirishnoma oqimi (ADR-11):** ishlar faqat `notification_outbox` ga
+yozadi (`dedupe_key` — bir xabar bir marta, BR-166). Yetkazib bo'lmaydigan
+manzilga (qurilmasiz push, ulanmagan Telegram) xabar umuman qo'yilmaydi.
+`notify-dispatch` navbatdan `FOR UPDATE SKIP LOCKED` bilan oladi (≤ 100 ta,
+10 tadan parallel, 25 s chegarasi), FCM HTTP v1 / Telegram Bot API orqali
+yuboradi, natijani yozadi: `sent` | `skipped` (sababi bilan) | xato → 5 va 30
+daqiqadan keyin qayta, 3 urinishdan so'ng `failed`. Eskirgan FCM tokenlari
+o'chiriladi. Matnlar (uz/ru/en) — `supabase/functions/_shared/i18n.ts`.
+
+**Edge Functions** (`supabase/functions`, Deno):
+
+| Funksiya | Kim chaqiradi | Himoya |
+|---|---|---|
+| `notify-dispatch` | pg_cron (`pg_net`) | `x-cron-secret` = `CRON_SECRET` |
+| `fx-sync` | pg_cron | `x-cron-secret` |
+| `purge-files` | pg_cron | `x-cron-secret` |
+| `telegram-webhook` | Telegram | `X-Telegram-Bot-Api-Secret-Token` = `TELEGRAM_WEBHOOK_SECRET`; faqat shaxsiy chat |
+| `delete-account` | mobil / admin panel | foydalanuvchi JWT'i (Auth tekshiradi) |
+
+Platformaning `verify_jwt` tekshiruvi o'chiq (yangi imzo kalitlari bilan
+ishlamaydi) — har funksiya o'zini o'zi himoya qiladi. Supabase kalitlari
+(`SUPABASE_SECRET_KEYS` / `SUPABASE_PUBLISHABLE_KEYS`) funksiyaga platformadan
+keladi. pg_cron → Edge Function chaqiruvi uchun manzil va sir **Vault** da
+(`edge_functions_url`, `cron_secret`) — deploy yozadi; Vault bo'sh bo'lsa
+chaqiruv "sozlanmagan" deb o'tkaziladi (lokal/CI).
+
+Chek fayllari: Storage'dagi faylni SQL bilan o'chirib bo'lmaydi — baza
+`receipt_files_to_delete()` bilan ro'yxat beradi (byudjeti yo'q — darhol;
+biriktirmasi 7 kundan beri o'chirilgan; yozuvsiz va 1 kundan eski),
+`purge-files` Storage API bilan o'chiradi. Akkaunt o'chirilganda (BR-015)
+fayllar shu yo'l bilan keyingi kechada tozalanadi.
 
 ---
 
@@ -468,16 +501,17 @@ my-wallet-admin/
 │   ├── config.toml                 # lokal + remote auth sozlamalari (env() bilan)
 │   ├── migrations/                 # YYYYMMDDHHMMSS_<nom>.sql — faqat oldinga
 │   ├── seed.sql                    # dev: tizim spravochniklari + demo byudjet
-│   ├── functions/
-│   │   ├── _shared/                # auth guard, supabase client, fcm, telegram, i18n
-│   │   ├── notify-dispatch/
+│   ├── functions/                  # Deno (deno.json — lint/fmt/test sozlamasi)
+│   │   ├── _shared/                # env, supabase (RPC/Auth/Storage), cron, fcm, telegram, i18n, money
+│   │   ├── _tests/                 # Deno unit + snapshot testlari (deploy qilinmaydi)
+│   │   ├── notify-dispatch/        # index.ts (kirish) + dispatch.ts (sof mantiq)
 │   │   ├── telegram-webhook/
 │   │   ├── fx-sync/
-│   │   ├── admin-ops/
-│   │   └── delete-account/
+│   │   ├── purge-files/
+│   │   ├── delete-account/
+│   │   └── admin-ops/              # E26
 │   └── tests/
-│       ├── database/               # pgTAP: *.test.sql (qoidalar, RLS, triggerlar)
-│       └── contract/               # Deno: fixtures → RPC natijasi solishtiruvi
+│       └── database/               # pgTAP: *.test.sql (qoidalar, RLS, triggerlar)
 ├── contracts/                      # ★ mobil repo bilan shartnoma
 │   ├── README.md
 │   ├── api.md
@@ -492,7 +526,7 @@ my-wallet-admin/
 │   │   └── shared/                 # ui (shadcn), lib (supabase, format, i18n), config
 │   ├── e2e/                        # Playwright
 │   └── wrangler.jsonc              # Cloudflare (SPA rejimi)
-├── scripts/                        # legacy import CLI, fixtures, backup/restore
+├── scripts/                        # kontrakt/sinxron/Edge testlari, deploy sirlari, backup/restore
 ├── docs/                           # shu hujjatlar
 └── .github/workflows/
 ```
