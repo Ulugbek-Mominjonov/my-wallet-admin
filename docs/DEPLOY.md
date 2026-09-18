@@ -53,6 +53,10 @@ yozmang.
    Permissions: **Contents: Read-only** → muddati 1 yil.
    → mobil repo sirlari: `ADMIN_REPO_TOKEN`.
 
+5. **Settings → Actions → General → Workflow permissions:**
+   ✅ "Allow GitHub Actions to create and approve pull requests" — reliz PR'i
+   (release-please) uchun.
+
 ✅ **Tekshiruv:** PR ochganda "Merge" tugmasi CI tugamaguncha bloklangan.
 
 ---
@@ -241,45 +245,66 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
 
 ## 9. GitHub sirlari va o'zgaruvchilari — yig'ma jadval
 
-**Admin repo** (`Settings → Secrets and variables → Actions`; environment
-ustunidagi qiymatlar tegishli Environment'ga qo'yiladi):
+**Tamoyil:** ochiq qiymatlar (URL, publishable kalit, ref) — **repo
+o'zgaruvchilari** (`_STAGING` / `_PRODUCTION` qo'shimchasi bilan): keep-alive
+va zaxira ishlari ularni production tasdig'ini kutmasdan o'qiydi. Sirlar —
+**Environment secrets** (`staging` / `production`): production siri faqat
+reviewer tasdig'idan keyin ochiladi.
 
-| Nomi | Turi | Environment | Qadam |
-|---|---|---|---|
-| `SUPABASE_ACCESS_TOKEN` | secret | repo | 2.3 |
-| `SUPABASE_PROJECT_REF` | variable | staging / production | 2.2 |
-| `SUPABASE_URL` | variable | staging / production | 2.2 |
-| `SUPABASE_PUBLISHABLE_KEY` | variable | staging / production | 2.2 |
-| `SUPABASE_SECRET_KEY` | secret | staging / production | 2.2 |
-| `SUPABASE_DB_PASSWORD` | secret | staging / production | 2.1 |
-| `SUPABASE_DB_URL` | secret | production | 2.2 (zaxira) |
-| `GOOGLE_WEB_CLIENT_ID` | variable | repo | 3.5 |
-| `GOOGLE_WEB_CLIENT_SECRET` | secret | repo | 3.5 |
-| `SMTP_USER` / `SMTP_PASSWORD` | variable / secret | repo | 4 |
-| `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_API_TOKEN` | variable / secret | repo | 5 |
-| `FCM_SERVICE_ACCOUNT` | secret | staging / production | 6.3 |
-| `TELEGRAM_BOT_TOKEN` / `TELEGRAM_WEBHOOK_SECRET` | secret | staging / production | 7 |
-| `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID` | secret / variable | repo | 7.1 |
-| `CRON_SECRET` (`openssl rand -hex 32`) | secret | staging / production | Edge Function'larni pg_cron chaqirishi uchun (deploy `vault` ga yozadi) |
-| `BACKUP_AGE_RECIPIENT` | variable | repo | 8 |
+**Admin repo → Settings → Secrets and variables → Actions:**
+
+*Variables (repo):*
+
+| Nomi | Qiymat | Qadam |
+|---|---|---|
+| `DEPLOY_ENABLED` | `true` — hamma narsa sozlangandan keyin (shu paytgacha deploy workflow'lari o'chiq) | 10 |
+| `SUPABASE_PROJECT_REF_STAGING` / `_PRODUCTION` | loyiha ref | 2.2 |
+| `SUPABASE_URL_STAGING` / `_PRODUCTION` | `https://<ref>.supabase.co` | 2.2 |
+| `SUPABASE_PUBLISHABLE_KEY_STAGING` / `_PRODUCTION` | `sb_publishable_...` | 2.2 |
+| `ADMIN_URL_STAGING` / `_PRODUCTION` | admin panel manzili (workers.dev) | 5.4 |
+| `CLOUDFLARE_ACCOUNT_ID` | akkaunt ID | 5.2 |
+| `BACKUP_AGE_RECIPIENT` | `age1...` ochiq kalit | 8 |
+| `OPS_TELEGRAM_CHAT_ID` | ops chat ID | 7.1 |
+
+*Secrets (repo):*
+
+| Nomi | Qadam |
+|---|---|
+| `SUPABASE_ACCESS_TOKEN` | 2.3 |
+| `CLOUDFLARE_API_TOKEN` | 5.3 |
+| `SUPABASE_DB_URL_PRODUCTION` (session pooler, zaxira uchun) | 2.2 |
+| `OPS_TELEGRAM_BOT_TOKEN` | 7.1 |
+
+*Environment secrets (`staging` va `production` — har birida o'z qiymati):*
+
+| Nomi | Qadam |
+|---|---|
+| `SUPABASE_DB_PASSWORD` | 2.1 |
+| `SUPABASE_SECRET_KEY` | 2.2 |
+| `FCM_SERVICE_ACCOUNT` (base64 JSON) | 6.3 |
+| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` | 7 |
+| `CRON_SECRET` (`openssl rand -hex 32`) — pg_cron → Edge Function chaqiruvlari uchun (deploy `vault` ga yozadi) | — |
+
+> Google Client Secret va SMTP paroli GitHub'ga **kerak emas** — ular
+> Supabase dashboard'ida bir marta kiritiladi (3.4, 4.2).
 
 **Mobil repo** — `my-wallet-mobil/docs/DEPLOY.md` 4-bo'lim.
-
-> Environment darajasidagi nomlar bir xil (`SUPABASE_URL`), qiymati
-> muhitga qarab farq qiladi — workflow'lar `environment: staging |
-> production` orqali to'g'ri qiymatni oladi.
 
 ---
 
 ## 10. Birinchi ishga tushirish tartibi
 
-1. 1–8-qadamlar (akkauntlar va kalitlar) → 9-jadval to'ldirildi.
-2. `main` ga birinchi merge → **Deploy (staging)** avtomatik:
-   migratsiyalar → Edge Functions → sirlar → auth config → admin panel.
-3. Staging'da tekshiruv ro'yxati (11-bo'lim).
-4. `v1.0.0` teg → **Deploy (production)** → Environment tasdig'i → prod.
-5. Mobil: `my-wallet-mobil/docs/DEPLOY.md` 5-bo'lim.
-6. Eski ma'lumot importi (reja E27) — avval staging, keyin prod.
+1. 1–8-qadamlar (akkauntlar va kalitlar) → 9-bo'limdagi jadval to'ldirildi.
+2. Repo o'zgaruvchisi `DEPLOY_ENABLED = true`.
+3. **Actions → Deploy → Run workflow → staging**: migratsiyalar → Edge
+   Functions → admin panel → smoke testlar. Keyingi `main` push'lari
+   staging'ga avtomatik chiqadi.
+4. Staging'da tekshiruv ro'yxati (11-bo'lim).
+5. Production: reliz PR'i (release-please) merge qilinadi → `release.yml`
+   prod deploy'ni boshlaydi → `production` Environment'da tasdiqlaysiz.
+   Favqulodda: **Actions → Deploy → production** (qo'lda, tasdiq bilan).
+6. Mobil: `my-wallet-mobil/docs/DEPLOY.md` 5-bo'lim.
+7. Eski ma'lumot importi (reja E27) — avval staging, keyin prod.
 
 ---
 

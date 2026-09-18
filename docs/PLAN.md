@@ -91,7 +91,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | **M0 Poydevor** | E00 | Hujjatlar, repolar, konvensiyalar | admin + mobile | — | 🟨 (T08 🔑) |
 | | E01 | Supabase backend skeleti | admin | E00 | ✅ |
 | | E02 | Admin web skeleti | admin | E00 | ✅ |
-| | E03 | Platforma CI/CD, zaxira, keep-alive | admin | E01, E02 | ⬜ |
+| | E03 | Platforma CI/CD, zaxira, keep-alive | admin | E01, E02 | 🟨 (T08 🔑) |
 | | E04 | Mobil skelet + CI | mobile | E00 | 🟨 |
 | **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ⬜ |
 | | E06 | Spravochniklar sxemasi | admin | E05 | ⬜ |
@@ -162,7 +162,8 @@ E21–E26 (admin) M2 bilan.
   `--force-with-lease` bilan yuklanadi.
 - [ ] 🔑 **E00-T08** GitHub sozlamalari (foydalanuvchi, veb-interfeys —
   `DEPLOY.md` 1-bo'lim): `main` himoyasi (PR + CI yashil), Environments
-  `staging` va `production` (prod — reviewer tasdig'i).
+  `staging` va `production` (prod — reviewer tasdig'i), Actions'ga PR
+  yaratish ruxsati (release-please).
 
 ### E01 · Supabase backend skeleti `[admin]`
 
@@ -250,35 +251,39 @@ E21–E26 (admin) M2 bilan.
 > **Qoidalar:** ADR-12, ADR-13. **DoD:** bo'sh ilova staging va prod'ga
 > pipeline orqali chiqdi; zaxira faylini tiklash sinovdan o'tdi.
 
-- [ ] **E03-T01** `ci.yml` (PR + push): `web` job (install → lint → typecheck →
+- [x] **E03-T01** `ci.yml` (PR + push): `web` job (install → lint → typecheck →
   unit + coverage → build), `db` job (supabase start → `db reset` → `db lint` →
   squawk → pgTAP → tiplar farqi yo'qligi), `functions` job (deno fmt/lint/test),
   `e2e` job (lokal supabase + `vite preview` + Playwright; xatoda hisobot
   artefakt). Keshlar (pnpm store, Docker image'lar), `concurrency` bilan eski
   ishga tushishlarni bekor qilish, `paths` filtrlari (minutlarni tejash).
-- [ ] 🔑 **E03-T02** `deploy.yml`: `main` push → **staging**:
+- [x] **E03-T02** `deploy.yml`: `main` push → **staging**:
   `supabase link` → `db push` → `functions deploy` → `secrets set` →
   web build (staging env) → `wrangler deploy --env
   staging` → smoke (health RPC + Playwright smoke). `v*` teg yoki qo'lda →
   **production** (Environment tasdig'i bilan) — xuddi shu qadamlar.
   Sirlar: `DEPLOY.md` 4-bo'lim.
-- [ ] **E03-T03** `preview.yml` (PR): web'ni staging backend bilan build →
+- [x] **E03-T03** `preview.yml` (PR): web'ni staging backend bilan build →
   `wrangler versions upload --preview-alias pr-<N>` → PR'ga havola izohi.
-- [ ] 🔑 **E03-T04** `backup.yml` (har kecha 21:00 UTC = 02:00 Toshkent):
+- [x] **E03-T04** `backup.yml` (har kecha 21:00 UTC = 02:00 Toshkent):
   prod `pg_dump` (session pooler, `--no-owner`), gzip, `age` bilan shifrlash
   (ochiq kalit — repo o'zgaruvchisi), artefakt 90 kun; `scripts/restore.sh`
   (shifrni ochish → staging yoki lokalga tiklash) + `docs/DEPLOY.md` 8-bo'lim.
   - Qabul: haftalik `restore-drill` ishi zaxirani lokal Postgres'ga tiklaydi
     va qatorlar sonini tekshiradi.
-- [ ] **E03-T05** `keepalive.yml` (har 2 kunda): staging va prod `health`
+- [x] **E03-T05** `keepalive.yml` (har 2 kunda): staging va prod `health`
   RPC (publishable kalit bilan), javob > 3 s yoki xato → ops Telegram
   ogohlantirishi; rejali workflow'larni 60 kunlik o'chirilishdan saqlash
   (API orqali qayta faollashtirish, commit'siz). ADR-13.
-- [ ] **E03-T06** Reliz: `release-please` (CHANGELOG, semver teg) —
+- [x] **E03-T06** Reliz: `release-please` (CHANGELOG, semver teg) —
   teg production deploy'ni ishga tushiradi.
-- [ ] **E03-T07** CI tezligi hisobi `docs/CI.md`: har job necha daqiqa,
+- [x] **E03-T07** CI tezligi hisobi `docs/CI.md`: har job necha daqiqa,
   keshlar samarasi, sekin qadamlar (public repo — minutlar cheksiz, lekin
   PR kutish vaqti muhim: maqsad — `ci` < 8 daqiqa).
+- [ ] 🔑 **E03-T08** Birinchi haqiqiy deploy (foydalanuvchi `DEPLOY.md` 1–9
+  qadamlarini tugatgach): `DEPLOY_ENABLED=true` → staging deploy + smoke
+  yashil; preview PR'da havola; `backup.yml` qo'lda ishga tushirib tiklash
+  tekshiruvi yashil; `keepalive.yml` yashil; reliz PR'i yaratildi.
 
 > **E04** (mobil skelet + CI) — `my-wallet-mobil/docs/PLAN.md`.
 
@@ -385,6 +390,8 @@ E21–E26 (admin) M2 bilan.
   so'rov, `UNION ALL` (chiquvchi/kiruvchi) + `GROUP BY`.
 - [ ] **E07-T10** Storage: `receipts` bucket (private), RLS (yo'l =
   `{household_id}/...`), amal o'chirilganda fayl o'chirish navbati. BR-201.
+  Zaxiraga storage fayllari ham qo'shiladi (`scripts/backup-dump.sh` —
+  DB dump faqat metama'lumotni oladi).
 - [ ] **E07-T11** pgTAP to'plami: BR-040..046, 052, 060..063, 071..073, 110..116,
   121..122, 150..152 — har biriga kamida bitta ijobiy va bitta salbiy holat.
 
@@ -836,3 +843,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T06 | app-shell: Sidebar (Base UI), topbar, ⌘K, tema (next-themes + index.html skripti), til menyusi; vendor chunk'lar (eng kattasi 228 KB) |
 | 2026-09-18 | E02-T07 | 18 unit/komponent testi (Vitest + RTL), Playwright e2e 11/11 (3 marta barqaror); topilgan UX kamchiligi: ⌘K da til nomlari lotincha topilmasdi → kalit so'zlar |
 | 2026-09-18 | E02-T08 | wrangler (Static Assets, SPA), CSP hash plagini, xavfsizlik sarlavhalari; e2e `wrangler dev` ustida ✅. **E02 yakunlandi** |
+| 2026-09-18 | E03-T01..T07 | CI GitHub'da yashil (~2 daq); deploy/preview/release/backup/keep-alive workflow'lari (DEPLOY_ENABLED bilan yoqiladi); `health()` RPC; zaxira → tiklash → solishtirish lokalda tasdiqlandi (ijobiy va salbiy holat); action'lar SHA bilan pin |

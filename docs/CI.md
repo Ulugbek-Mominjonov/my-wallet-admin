@@ -1,0 +1,43 @@
+# CI/CD — platforma repo
+
+> Qarorlar: [`ARXITEKTURA.md`](ARXITEKTURA.md) ADR-11..14 · sozlash:
+> [`DEPLOY.md`](DEPLOY.md) · vazifalar: [`PLAN.md`](PLAN.md) E03.
+
+## Workflow'lar
+
+| Fayl | Qachon | Nima qiladi | Yoqilishi |
+|---|---|---|---|
+| `ci.yml` | har PR, `main` push | web (format, ESLint, tiplar, Vitest, build), db (lokal Supabase, squawk + db lint, pgTAP, TS tiplari eskirmaganmi), e2e (Playwright desktop + mobil) | doim |
+| `deploy.yml` → `deploy-env.yml` | `main` push → **staging**; qo'lda → istalgan muhit | `supabase db push` → Edge Functions → admin build → Cloudflare deploy → smoke (`health` RPC + Playwright) | `DEPLOY_ENABLED=true` |
+| `release.yml` | `main` push | release-please reliz PR'i; merge → teg + **production** deploy (reviewer tasdig'i) | `DEPLOY_ENABLED=true` |
+| `preview.yml` | har PR (fork'dan emas) | admin build (staging backend) → `wrangler versions upload --preview-alias pr-N` → PR izohi | `DEPLOY_ENABLED=true` |
+| `backup.yml` | har kecha 02:00 Toshkent | prod dump → toza Supabase'ga tiklab solishtirish → `age` shifrlash → artefakt (90 kun) | `BACKUP_AGE_RECIPIENT` bor bo'lsa |
+| `keepalive.yml` | har 2 kunda | staging/prod `health` (≤ 3 s), rejali workflow'larni 60 kunlik o'chirilishdan saqlash | `DEPLOY_ENABLED=true` |
+
+Umumiy qismlar: `.github/actions/setup` (pnpm + Node + install, kesh bilan),
+`.github/actions/ops-alert` (xato → ops Telegram).
+
+## Tezlik (2026-09-18, birinchi yashil run)
+
+| Job | Vaqt | Eng sekin qadam |
+|---|---|---|
+| db | 1,8 daq | lokal Supabase ishga tushishi — 79 s |
+| web | 0,7 daq | format + ESLint + tiplar — 15 s |
+| e2e (web'dan keyin) | 1,0 daq | Chromium o'rnatish — 25 s |
+| **PR kutish vaqti** | **~2 daq** | maqsad < 8 daq ✅ |
+
+Repo public — Actions minutlari cheksiz; `paths` filtrlari ataylab yo'q
+(branch himoyasidagi majburiy tekshiruvlar har PR'da hisobot berishi kerak).
+
+Keyingi optimallashtirish imkoniyatlari (kerak bo'lsa):
+Playwright brauzer keshi (`~/.cache/ms-playwright`) — −25 s;
+Supabase Docker image keshi — −40…60 s.
+
+## Xavfsizlik qoidalari
+
+- Barcha action'lar **commit SHA** bilan pin qilingan (versiya izohda);
+  Dependabot haftalik yangilaydi.
+- `permissions` har workflow'da minimal (`contents: read` standart).
+- Sirlar loglarga chiqmaydi; zaxira va tiklash skriptlari raqam/ma'lumot
+  chiqarmaydi (loglar public).
+- Fork'dan kelgan PR'larda sirli qadamlar ishlamaydi.

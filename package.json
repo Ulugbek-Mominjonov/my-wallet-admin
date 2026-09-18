@@ -1,7 +1,8 @@
 {
   "name": "my-wallet-admin",
+  "version": "0.1.0",
   "private": true,
-  "description": "My Wallet — platforma: Supabase backend va admin panel",
+  "description": "My Wallet \u2014 platforma: Supabase backend va admin panel",
   "packageManager": "pnpm@12.4.2",
   "engines": {
     "node": ">=24"
