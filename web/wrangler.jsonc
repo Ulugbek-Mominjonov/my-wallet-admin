@@ -7,11 +7,11 @@
   "assets": {
     "directory": "./dist",
     // Istalgan marshrut (/reports/month) index.html'ni oladi — SPA.
-    "not_found_handling": "single-page-application"
+    "not_found_handling": "single-page-application",
   },
   "env": {
     "staging": {
-      "name": "my-wallet-admin-staging"
-    }
-  }
+      "name": "my-wallet-admin-staging",
+    },
+  },
 }
