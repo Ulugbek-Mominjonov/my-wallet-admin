@@ -390,9 +390,20 @@ Har biri alohida savepoint'da:
 
 Klient yozishi mumkin bo'lgan maydonlar har jadval uchun oq ro'yxatda.
 
-**Tombstone tozalash.** 90 kundan eski `deleted_at` qatorlar o'chiriladi;
+**Tombstone tozalash.** 90 kundan eski `deleted_at` qatorlar o'chiriladi
+(`jobs.purge`; hali havola qilinayotgani keyingi safarga qoladi);
 `households.purged_version` dan eski kursor → `resync_required = true`
 (klient to'liq qayta yuklaydi).
+
+**O'chirilganlar va RLS (qaror).** RLS faqat a'zolikni tekshiradi —
+`deleted_at IS NULL` siyosatga qo'shilmaydi: sinxron tombstone'larni, "bekor
+qilish" (BR-009) esa o'chirilgan qatorni ko'rishi kerak. Ekranlar
+o'chirilganlarni o'zi filtrlaydi (admin ma'lumot qatlamida `deleted_at=is.null`
+standart; hisobot RPC'lari va view'lar allaqachon filtrlaydi).
+
+**Oq ro'yxat = grant'lar.** `sync_push` foydalanuvchi huquqi (`security
+invoker`) bilan yozadi; yoziladigan maydonlar — ustun grant'lari (alohida
+ro'yxat yo'q, shuning uchun PostgREST va sinxron qoidalari farq qilmaydi).
 
 ---
 

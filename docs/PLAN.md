@@ -98,7 +98,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ✅ |
 | | E08 | Biznes RPC'lar | admin | E07 | ✅ |
 | | E09 | Hisobotlar + golden fixtures + `contracts/` | admin | E08 | ⬜ |
-| | E10 | Sinxron API | admin | E07 | ⬜ |
+| | E10 | Sinxron API | admin | E07 | ✅ |
 | | E11 | Rejali ishlar va bildirishnomalar | admin | E08 | ⬜ |
 | **M2 Mobil MVP** | E12 | Domen paketi + fixtures pariteti | mobile | E09 | ⬜ |
 | | E13 | Lokal baza va sinxron dvigatel | mobile | E10, E12 | ⬜ |
@@ -498,24 +498,29 @@ E21–E26 (admin) M2 bilan.
 > idempotent; to'qnashuv va rad etish holatlari; parallel yozuvda kursor
 > hech narsani o'tkazib yubormaydi (test).
 
-- [ ] **E10-T01** `sync_pull(household, cursor, limit)` — `UNION ALL` +
-  `ORDER BY row_version LIMIT` (merge append), tombstone'lar,
-  `resync_required` (`households.purged_version`). Klientga kerakli
-  ustunlar ro'yxati (`contracts/api.md`).
-- [ ] **E10-T02** `sync_push(household, device, mutations)` — ≤ 100,
+- [x] **E10-T01** `sync_pull(household, cursor, limit)` — `UNION ALL` (har
+  jadval `(household_id, row_version)` indeksi va LIMIT bilan) + `ORDER BY
+  row_version LIMIT`, tombstone'lar (birinchi yuklashda — yo'q),
+  `resync_required` (`households.purged_version`). Qator — to'liq JSON.
+- [x] **E10-T02** `sync_push(household, device, mutations)` — ≤ 100,
   `sync_mutations` orqali idempotentlik, `base_version` tekshiruvi →
-  `conflict`, har mutatsiya savepoint'da → `ok | conflict | rejected`,
-  jadval bo'yicha oq ro'yxat maydonlar, `household_id` almashtirish taqiq.
-- [ ] **E10-T03** O'chirish = soft delete (`deleted_at`) barcha sinxron
-  jadvallarda; PostgREST o'qishlarida `deleted_at IS NULL` (RLS siyosatida
-  yoki view orqali — qaror `ARXITEKTURA.md` ga).
-- [ ] **E10-T04** Parallel test: ikki sessiya bir byudjetga bir vaqtda yozadi,
-  pull kursori hech qatorni o'tkazib yubormaydi (advisory lock kafolati);
-  boshqa byudjetlar bir-birini bloklamaydi.
-- [ ] **E10-T05** Tozalash: `jobs.purge()` — 90 kunlik tombstone,
-  `purged_version` yangilanadi; test: eski kursor → `resync_required`.
-- [ ] **E10-T06** `contracts/api.md` — sinxron protokoli (payload, holatlar,
-  xato kodlari, oq ro'yxatlar); `schema-version` oshiriladi.
+  `conflict`, har mutatsiya savepoint'da → `ok | conflict | rejected`;
+  yoziladigan maydonlar = foydalanuvchining ustun grant'lari (`security
+  invoker`), `household_id` almashtirish taqiq.
+- [x] **E10-T03** O'chirish = soft delete barcha sinxron jadvallarda (E06
+  dan beri); RLS faqat a'zolik — o'chirilganlarni ekran filtrlaydi (qaror
+  `ARXITEKTURA.md` 6).
+- [x] **E10-T04** Parallel test (`scripts/contract/sync-concurrency.mjs`,
+  `make sync-test`, CI): bir byudjetga ikkinchi yozuv lock'ni kutadi, boshqa
+  byudjet bloklanmaydi, commit qilinmagan ko'rinmaydi, kursor hech narsani
+  o'tkazib yubormaydi.
+- [x] **E10-T05** Tozalash: `jobs.purge()` — 90 kunlik tombstone (bolalardan
+  otalarga, hali havola qilinayotgani o'tkaziladi va hisoblanadi),
+  `purged_version`, audit 180 kun, sinxron jurnali 30 kun; test: eski
+  kursor → `resync_required`. pg_cron — E11-T07.
+- [x] **E10-T06** `contracts/api.md` — sinxron protokoli (payload, holatlar,
+  klient harakati, xato kodlari, oq ro'yxat = grant'lar). `schema-version` = 1
+  (qo'shimcha o'zgarish — mobil hali chiqmagan).
 
 ### E11 · Rejali ishlar va bildirishnomalar `[admin]`
 
@@ -869,6 +874,10 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | "Bugun" — `app.today` sessiya sozlamasi (bo'lmasa haqiqiy sana) | golden fixture'lar aniq sana bilan; PostgREST klienti uni o'rnata olmaydi | E09-T05 |
 | 2026-09-18 | Qoldiq view'lari — har hisob/qarz uchun indeksli qidiruv | UNION ALL + GROUP BY view'lari join bilan chaqirilganda butun jadvalni yig'ardi (perf tekshiruvi topdi) | E09-T07, docs/PERF.md |
 | 2026-09-18 | Perf tekshiruvi shovqin byudjetlar bilan | bitta byudjetda Seq Scan to'g'ri tanlov — tekshiruv ma'nosiz bo'lardi | E09-T07 |
+| 2026-09-18 | `sync_push` — `security invoker`, oq ro'yxat = ustun grant'lari | RLS va huquqlar PostgREST bilan bir xil; ikkinchi ro'yxat yuritilmaydi | E10-T02 |
+| 2026-09-18 | RLS'ga `deleted_at IS NULL` qo'shilmaydi | sinxron tombstone'larni, undo o'chirilganni ko'rishi kerak; ekran filtrlaydi | E10-T03 |
+| 2026-09-18 | Tozalash havola qilinayotgan tombstone'ni o'tkazib yuboradi (xato bermaydi, hisoblaydi) | FK tartibi va o'chirish vaqtlari farqi — keyingi ishga tushishda o'chadi | E10-T05 |
+| 2026-09-18 | Sinxron `schema-version` oshirilmadi | qo'shimcha RPC'lar (buzuvchi emas), mobil hali chiqmagan — README qoidasi | E10-T06 |
 
 ## 7. Jarayon jurnali
 
@@ -896,3 +905,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E07-T01..T11 | 8 jadval + 3 view + bucket: qarz/maqsad/oy, rejalar (holat funksiyasi), amallar (tegishli oy, asosiy valyuta, o'tkazma, fond qoidalari), statement triggerlar (to'lov, fond ajratmasi 1 499 600 × 10% → 150 000), oy qulfi, cheklar + zaxira/tiklash (storage siyosatlari va fayllar, lokalda sinaldi); 95 pgTAP (jami 247); 20k amalda EXPLAIN. **E07 yakunlandi** |
 | 2026-09-18 | E08-T01..T07 | 11 RPC: oy ochish (preview, idempotent, fond rejasi), to'lash/o'tkazib yuborish/ommaviy (bitta statement), qayta joylash (preview → apply, BR-040 yagona funksiyada), oyni yopish + tekshiruv, kategoriyalarni birlashtirish, onboarding (nomlar bo'yicha, bir marta); 56 pgTAP (jami 303); contracts/api.md. **E08 yakunlandi** |
 | 2026-09-18 | E09-T01..T07 | 8 hisobot RPC (bitta tasnif yadrosi), health_check; 51 golden fixture (40 tasi eski tizimdan — birinchi urinishda aynan mos) + Node kontrakt runner; perf: 25k amal + shovqin, auto_explain — 3 muammo topildi va tuzatildi (health_check 219 → 23 ms); 18 pgTAP (jami 321). **E09 yakunlandi** |
+| 2026-09-18 | E10-T01..T06 | sync_pull (14 jadval, indeks + LIMIT), sync_push (idempotent, conflict/rejected, grant'lar = oq ro'yxat), sync_mutations jurnali, jobs.purge (tombstone/audit/jurnal); parallel test (6 xossa) CI'da; 29 pgTAP (jami 350). **E10 yakunlandi** |

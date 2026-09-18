@@ -61,6 +61,7 @@ Keep-alive va smoke testlar.
 | `preview_outdated` | preview'dan keyin ma'lumot o'zgargan — preview'ni qayta oling (BR-043) |
 | `month_not_finished` | tugamagan oyni yopib bo'lmaydi (BR-150) |
 | `month_shift_mismatch` | oy siljishi farqli daromad turlari birlashtirilmaydi (BR-036, BR-043) |
+| `invalid_batch` / `invalid_device` | sinxron paketi massiv emas yoki 100 dan ortiq; qurilma ID bo'sh/uzun |
 
 Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masalan
 `accounts_name_key`), `23514` — qiymat cheklovi (masalan bo'sh nom, summa ≤ 0),
@@ -268,4 +269,56 @@ nomi o'xshash amallar), `debt_plans_overdue`; ogohlantirishlar —
 `no_active_rules`, `negative_cash` (`account_id, balance`), `long_overdue`
 (`count, days`), `edited_after_close`, `fx_rate_stale` (`currency,
 last_rate_date`). Bildirishnoma, rejali ish va sinxron tekshiruvlari — E10/E11.
+
+## Sinxron protokoli (E10) — mobil (ARXITEKTURA 6)
+
+Sinxron jadvallar (`t`): `households` (byudjetning o'zi), `accounts`,
+`categories`, `recurring_rules`, `category_limits`, `quick_actions`, `tags`,
+`debts`, `goals`, `months`, `planned_items`, `transactions`,
+`transaction_tags`, `attachments`. Qator — jadvalning to'liq qatori (JSON).
+
+### `sync_pull(p_household, p_cursor, p_limit = 500)` — a'zolar
+
+```json
+{ "changes": [{ "t": "transactions", "row": { "id": "…", "row_version": 1042, "deleted_at": null, … } }],
+  "next_cursor": 1042, "has_more": false, "resync_required": false }
+```
+
+- `row_version > p_cursor` bo'yicha, versiya tartibida, ≤ 500 ta; `has_more` —
+  yana bor, darhol keyingi sahifani `next_cursor` bilan so'rang.
+- `p_cursor = 0` — birinchi yuklash: tombstone'lar (`deleted_at` bor) yuborilmaydi.
+  Keyingi so'rovlarda o'chirilganlar `deleted_at` bilan keladi — lokal o'chiring.
+- `resync_required: true` — kursor tozalangan versiyadan eski (90 kunlik
+  tombstone'lar o'chirilgan): lokal bazani tozalab, `p_cursor = 0` dan qayta yuklang.
+- Kafolat: bir byudjet yozuvlari commit tartibida versiyalanadi — kursor hech
+  narsani o'tkazib yubormaydi (`make sync-test`).
+
+### `sync_push(p_household, p_device, p_mutations)` — amal yozuvchilar
+
+```json
+// kirish (≤ 100 ta mutatsiya)
+[{ "mutation_id": "uuid", "table": "transactions", "op": "upsert",
+   "id": "uuid (v7, klientda)", "base_version": 1042, "data": { "amount": 150000000, … } },
+ { "mutation_id": "uuid", "table": "transactions", "op": "delete", "id": "uuid", "base_version": 1043 }]
+// javob — har mutatsiyaga bittadan, shu tartibda
+{ "results": [{ "mutation_id": "…", "status": "ok", "row": { … kanonik qator … } },
+              { "mutation_id": "…", "status": "conflict", "row": { … server qatori … } },
+              { "mutation_id": "…", "status": "rejected", "code": "invalid_account", "message": "…" }] }
+```
+
+| Holat | Qachon | Klient nima qiladi |
+|---|---|---|
+| `ok` | yozildi | lokal qatorni `row` bilan almashtiradi (server hisoblagan `budget_month`, `amount_base`, `row_version`) |
+| `conflict` | `base_version` ≠ serverdagi versiya; yoki yangi (`base_version: null`) deb yuborilgan qator serverda bor | "Bu yozuv boshqa qurilmada o'zgartirilgan" (BR-006): `row` ni ko'rsatadi, foydalanuvchi tanlaydi |
+| `rejected` | cheklov/huquq/biznes qoida xatosi; `code` — biznes kod yoki SQLSTATE (`42501` huquq, `23514` qiymat, `23505` nom band…), `not_found`, `household_mismatch`, `invalid_mutation` | o'zgarishni qaytaradi, xabar ko'rsatadi |
+
+- **Idempotent:** bir xil `mutation_id` qayta yuborilsa — aynan birinchi natija
+  (30 kun saqlanadi). Har mutatsiya alohida savepoint'da — biri rad etilsa
+  qolganlari yoziladi.
+- **Yoziladigan maydonlar** — foydalanuvchining ustun huquqlari (yuqoridagi
+  "Klient yozadigan ustunlar" jadvallari); boshqa kalitlar e'tiborsiz
+  qoldiriladi (masalan `amount_base`, `row_version`). `id`, `household_id` —
+  mutatsiyadan; boshqa byudjet `household_id` si — rad.
+- `delete` — soft delete (`deleted_at`). `months` — faqat RPC orqali.
+- Jurnal: `sync_mutations` (owner/admin o'qiydi) — qurilma, holat, natija.
 
