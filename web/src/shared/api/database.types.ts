@@ -510,6 +510,13 @@ export type Database = {
             foreignKeyName: "goals_household_id_account_id_fkey"
             columns: ["household_id", "account_id"]
             isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["household_id", "account_id"]
+          },
+          {
+            foreignKeyName: "goals_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["household_id", "id"]
           },
@@ -662,6 +669,13 @@ export type Database = {
             foreignKeyName: "households_personal_fund_source_fkey"
             columns: ["id", "personal_fund_source_account_id"]
             isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["household_id", "account_id"]
+          },
+          {
+            foreignKeyName: "households_personal_fund_source_fkey"
+            columns: ["id", "personal_fund_source_account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["household_id", "id"]
           },
@@ -789,6 +803,13 @@ export type Database = {
             foreignKeyName: "planned_items_household_id_account_id_fkey"
             columns: ["household_id", "account_id"]
             isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["household_id", "account_id"]
+          },
+          {
+            foreignKeyName: "planned_items_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["household_id", "id"]
           },
@@ -798,6 +819,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "planned_items_household_id_debt_id_fkey"
+            columns: ["household_id", "debt_id"]
+            isOneToOne: false
+            referencedRelation: "debt_balances"
+            referencedColumns: ["household_id", "debt_id"]
           },
           {
             foreignKeyName: "planned_items_household_id_debt_id_fkey"
@@ -923,6 +951,13 @@ export type Database = {
             foreignKeyName: "quick_actions_household_id_account_id_fkey"
             columns: ["household_id", "account_id"]
             isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["household_id", "account_id"]
+          },
+          {
+            foreignKeyName: "quick_actions_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["household_id", "id"]
           },
@@ -1011,8 +1046,22 @@ export type Database = {
             foreignKeyName: "recurring_rules_debt_fkey"
             columns: ["household_id", "debt_id"]
             isOneToOne: false
+            referencedRelation: "debt_balances"
+            referencedColumns: ["household_id", "debt_id"]
+          },
+          {
+            foreignKeyName: "recurring_rules_debt_fkey"
+            columns: ["household_id", "debt_id"]
+            isOneToOne: false
             referencedRelation: "debts"
             referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "recurring_rules_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["household_id", "account_id"]
           },
           {
             foreignKeyName: "recurring_rules_household_id_account_id_fkey"
@@ -1220,6 +1269,13 @@ export type Database = {
             foreignKeyName: "transactions_household_id_account_id_fkey"
             columns: ["household_id", "account_id"]
             isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["household_id", "account_id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_account_id_fkey"
+            columns: ["household_id", "account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["household_id", "id"]
           },
@@ -1229,6 +1285,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "categories"
             referencedColumns: ["household_id", "id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_debt_id_fkey"
+            columns: ["household_id", "debt_id"]
+            isOneToOne: false
+            referencedRelation: "debt_balances"
+            referencedColumns: ["household_id", "debt_id"]
           },
           {
             foreignKeyName: "transactions_household_id_debt_id_fkey"
@@ -1255,6 +1318,13 @@ export type Database = {
             foreignKeyName: "transactions_household_id_to_account_id_fkey"
             columns: ["household_id", "to_account_id"]
             isOneToOne: false
+            referencedRelation: "account_balances"
+            referencedColumns: ["household_id", "account_id"]
+          },
+          {
+            foreignKeyName: "transactions_household_id_to_account_id_fkey"
+            columns: ["household_id", "to_account_id"]
+            isOneToOne: false
             referencedRelation: "accounts"
             referencedColumns: ["household_id", "id"]
           },
@@ -1262,7 +1332,66 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      account_balances: {
+        Row: {
+          account_id: string | null
+          balance: number | null
+          household_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "accounts_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      debt_balances: {
+        Row: {
+          debt_id: string | null
+          end_month: string | null
+          household_id: string | null
+          months_left: number | null
+          paid_in_app: number | null
+          pending_amount: number | null
+          pending_count: number | null
+          progress: number | null
+          remaining: number | null
+          status: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "debts_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goal_progress: {
+        Row: {
+          end_month: string | null
+          goal_id: string | null
+          household_id: string | null
+          months_left: number | null
+          on_track: boolean | null
+          progress: number | null
+          remaining: number | null
+          saved: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goals_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       accept_invite: { Args: { p_code: string }; Returns: string }
