@@ -75,6 +75,21 @@ export default defineConfig([
     },
   },
   {
+    // shadcn/ui primitivlari — vendored kod (`shadcn add` bilan yangilanadi).
+    // Ularni qo'lda "tozalash" keyingi yangilanishlarni buzadi, shuning uchun
+    // faqat shu qoidalar yumshatiladi. A11y ishlatish joyida ta'minlanadi
+    // (masalan <Label htmlFor>), input-group bosishi — faqat sichqoncha qulayligi.
+    files: ['src/shared/ui/**/*.tsx', 'src/shared/hooks/**/*.ts'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+      '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/no-confusing-void-expression': 'off',
+      'jsx-a11y/label-has-associated-control': 'off',
+      'jsx-a11y/click-events-have-key-events': 'off',
+      'jsx-a11y/no-noninteractive-element-interactions': 'off',
+    },
+  },
+  {
     files: ['*.config.{js,ts}', 'eslint.config.js'],
     languageOptions: { globals: globals.node },
   },

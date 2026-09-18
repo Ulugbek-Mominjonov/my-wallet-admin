@@ -209,13 +209,14 @@ E21–E26 (admin) M2 bilan.
   react-hooks, jsx-a11y, `boundaries` — FSD import qoidasi), Prettier,
   path aliaslar (`@/app`, `@/features`, `@/entities`, `@/shared`). Dependabot'ga
   `npm` (`/web`) yozuvi (guruhlangan: react, tanstack, dev-tools).
-- [ ] **E02-T02** Dizayn tizimi: Tailwind v4 + shadcn/ui; tokenlar
-  (`--background`, `--primary`, `--income`, `--expense`, `--warning`,
-  `--danger`, radius, soya) light/dark; shriftlar (Inter, `tabular-nums`
-  raqamlar uchun); asosiy komponentlar: Button, Input, Select, Dialog, Sheet,
-  DropdownMenu, Tabs, Badge, Card, Skeleton, Toast (sonner), Tooltip,
-  DataTable (TanStack Table), `MoneyText`, `MonthPicker`, `EmptyState`,
-  `PageHeader`, `StatCard`.
+- [x] **E02-T02** Dizayn tizimi: Tailwind v4 + shadcn/ui (Base UI, `nova`
+  preset, `@/shared/ui` ga moslangan); tokenlar: brend (indigo), `income`,
+  `expense`, `warning` light/dark; Geist shrifti, `tabular-nums`; komponentlar:
+  Button, Input, Select, Dialog, Sheet, DropdownMenu, Tabs, Badge, Card,
+  Skeleton, Toast (sonner), Tooltip, Table, Sidebar, Command, Popover, Switch,
+  Checkbox, Avatar; o'zimizniki: `MoneyText` (+ `formatMoney`, BR-001),
+  `EmptyState`, `PageHeader`, `StatCard`. DataTable → E22-T01, MonthPicker →
+  E24-T02 (birinchi ishlatilgan joyda — keraksiz abstraksiya yo'q).
 - [ ] **E02-T03** Marshrutlash: TanStack Router (fayl asosida, tipli
   search-param'lar), `_auth` va `_app` layoutlari, 404/xato sahifalari,
   lazy-loading (route-level code splitting).
@@ -807,6 +808,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Q1–Q4 javoblari: mavjud repolar, commit/push tartibi, faqat Sheets importi, faqat Android | foydalanuvchi qarori | 3-bo'lim |
 | 2026-09-18 | Remote auth sozlamalari dashboard'da qo'lda; `config push` ishlatilmaydi | lokal manzillar prod'ga tushmasin | E01-T01, DEPLOY 2.4 |
 | 2026-09-18 | Web: TypeScript 6.0 (7.0 emas), ESLint (oxlint emas) | typescript-eslint TS < 6.1 ni qo'llaydi; FSD chegaralari (`boundaries`) va type-aware qoidalar kerak | E02-T01 |
+| 2026-09-18 | shadcn/ui — Base UI asosida; shadcn fayllari vendored (lint qisman yumshatilgan) | Base UI faol rivojlanmoqda; shadcn fayllarini qo'lda o'zgartirish yangilanishni buzadi | E02-T02 |
 
 ## 7. Jarayon jurnali
 
@@ -820,3 +822,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E01-T01..T07 | lokal Supabase (Docker, PG 17), foundation + audit migratsiyalari, pgTAP harness (21 test), squawk + db lint, TS tiplar; topilgan xavfsizlik bo'shlig'i: PUBLIC EXECUTE global standarti yopildi |
 | 2026-09-18 | E04-T01 | Flutter (Android), `uz.mywallet.app`, pub workspace + `wallet_domain`, very_good_analysis 11 (Dart 3.13 `new(...)` konstruktor sintaksisi), debug APK build ✅ |
 | 2026-09-18 | E02-T01 | Vite 8 + React 19 + TS 6 (strict, noUncheckedIndexedAccess), ESLint 10 (strictTypeChecked, jsx-a11y, react-hooks, FSD `boundaries` — tekshirildi), Prettier, `make web-lint` |
+| 2026-09-18 | E02-T02 | Tailwind v4 + shadcn (Base UI), brend/semantik tokenlar, 20+ komponent, MoneyText/EmptyState/PageHeader/StatCard; build ✅ |
