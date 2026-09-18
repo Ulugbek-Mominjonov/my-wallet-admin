@@ -126,6 +126,25 @@ policy = "per_worker"
 inspector_port = 8083
 deno_version = 2
 
+# Edge Functions (E11). Platformaning JWT tekshiruvi o'chiq — har biri o'zini
+# o'zi himoya qiladi: cron'dan chaqiriladiganlar `x-cron-secret`, Telegram —
+# `X-Telegram-Bot-Api-Secret-Token`, delete-account — JWT'ni Auth tekshiradi
+# (yangi imzo kalitlari bilan platforma tekshiruvi ishlamaydi).
+[functions.notify-dispatch]
+verify_jwt = false
+
+[functions.purge-files]
+verify_jwt = false
+
+[functions.fx-sync]
+verify_jwt = false
+
+[functions.telegram-webhook]
+verify_jwt = false
+
+[functions.delete-account]
+verify_jwt = false
+
 # Og'ir log konteynerlari lokal ishga kerak emas.
 [analytics]
 enabled = false

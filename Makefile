@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev e2e contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check fn-lint fn-test fn-snapshots
+.PHONY: help check lint test fmt dev e2e contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check fn-lint fn-test fn-snapshots fn-smoke
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -74,6 +74,9 @@ fn-test: ## Edge Functions: unit va snapshot testlari
 
 fn-snapshots: ## Edge Functions: xabar snapshot'larini yangilash (matn o'zgarganda)
 	$(DENO) test $(FN_CONFIG) --allow-env --allow-read --allow-write supabase/functions/_tests/ -- --update
+
+fn-smoke: ## Edge Functions: lokal Supabase'da uchidan-uchiga (edge runtime bilan)
+	node scripts/functions-smoke.mjs
 
 # ─── Ma'lumotlar bazasi (lokal Supabase, Docker) ───────────────────────────
 SUPABASE := pnpm exec supabase

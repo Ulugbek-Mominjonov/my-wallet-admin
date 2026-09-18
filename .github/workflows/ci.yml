@@ -53,8 +53,11 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+      # Edge Functions lokal muhiti (faqat lokal/CI qiymatlari — haqiqiy sir emas).
+      - name: Edge Functions muhiti
+        run: cp supabase/functions/.env.example supabase/functions/.env
       - name: Lokal Supabase (keraksiz servislarsiz)
-        run: pnpm exec supabase start -x studio,imgproxy,edge-runtime,logflare,vector,supavisor
+        run: pnpm exec supabase start -x studio,imgproxy,logflare,vector,supavisor
       - name: Migratsiya xavfsizligi va SQL lint
         run: make db-lint
       - name: pgTAP testlari
@@ -63,6 +66,8 @@ jobs:
         run: make contract-test
       - name: Sinxron — parallel yozuv va kursor
         run: make sync-test
+      - name: Edge Functions — uchidan-uchiga (pg_cron yo'li bilan)
+        run: make fn-smoke
       - name: Ishlash — hisobotlar vaqti va Seq Scan (docs/PERF.md)
         run: make perf
       - name: Generatsiya qilingan TS tiplari eskirmaganmi

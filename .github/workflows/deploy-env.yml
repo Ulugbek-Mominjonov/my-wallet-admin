@@ -44,13 +44,25 @@ jobs:
       - name: Migratsiyalar
         run: pnpm exec supabase db push
 
+      # Sirlar funksiyalardan oldin: yangi versiya birinchi so'rovdanoq ularni ko'radi.
+      - name: Edge Function sirlari va Vault (pg_cron)
+        env:
+          SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          FCM_SERVICE_ACCOUNT: ${{ secrets.FCM_SERVICE_ACCOUNT }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_WEBHOOK_SECRET: ${{ secrets.TELEGRAM_WEBHOOK_SECRET }}
+        run: scripts/deploy-secrets.sh
+
       - name: Edge Functions
-        run: |
-          if compgen -G "supabase/functions/*/index.ts" > /dev/null; then
-            pnpm exec supabase functions deploy --project-ref "$SUPABASE_PROJECT_REF"
-          else
-            echo "Edge Functions hali yo'q (E11) — o'tkazildi"
-          fi
+        run: pnpm exec supabase functions deploy --project-ref "$SUPABASE_PROJECT_REF"
+
+      - name: Telegram webhook va buyruqlar
+        env:
+          SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_WEBHOOK_SECRET: ${{ secrets.TELEGRAM_WEBHOOK_SECRET }}
+        run: scripts/telegram-setup.sh
 
       - name: Admin panel build
         run: make web-build
@@ -72,6 +84,9 @@ jobs:
         run: |
           curl -fsS --max-time 10 -X POST "$VITE_SUPABASE_URL/rest/v1/rpc/health" \
             -H "apikey: $VITE_SUPABASE_PUBLISHABLE_KEY" -H "content-type: application/json" -d '{}'
+          # Edge Function ishlayapti va sirsiz chaqiruvni rad etadi.
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 20 -X POST "$VITE_SUPABASE_URL/functions/v1/notify-dispatch")
+          [ "$code" = "403" ] || { echo "notify-dispatch: kutilgan 403, olindi $code" >&2; exit 1; }
 
       - name: Smoke — admin panel (Playwright)
         env:

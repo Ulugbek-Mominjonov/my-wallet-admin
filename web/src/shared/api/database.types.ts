@@ -468,6 +468,33 @@ export type Database = {
           },
         ]
       }
+      device_tokens: {
+        Row: {
+          app_version: string | null
+          created_at: string
+          last_seen_at: string
+          platform: string
+          token: string
+          user_id: string
+        }
+        Insert: {
+          app_version?: string | null
+          created_at?: string
+          last_seen_at?: string
+          platform: string
+          token: string
+          user_id: string
+        }
+        Update: {
+          app_version?: string | null
+          created_at?: string
+          last_seen_at?: string
+          platform?: string
+          token?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       exchange_rates: {
         Row: {
           created_at: string
@@ -669,6 +696,7 @@ export type Database = {
           created_at: string
           created_by: string | null
           id: string
+          last_sweep_on: string | null
           name: string
           onboarded_at: string | null
           personal_fund_day: number
@@ -688,6 +716,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          last_sweep_on?: string | null
           name: string
           onboarded_at?: string | null
           personal_fund_day?: number
@@ -707,6 +736,7 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           id?: string
+          last_sweep_on?: string | null
           name?: string
           onboarded_at?: string | null
           personal_fund_day?: number
@@ -744,6 +774,62 @@ export type Database = {
           },
         ]
       }
+      job_runs: {
+        Row: {
+          details: Json | null
+          finished_at: string | null
+          id: number
+          job: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          details?: Json | null
+          finished_at?: string | null
+          id?: never
+          job: string
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          details?: Json | null
+          finished_at?: string | null
+          id?: never
+          job?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      monthly_reports: {
+        Row: {
+          generated_at: string
+          household_id: string
+          month: string
+          payload: Json
+        }
+        Insert: {
+          generated_at?: string
+          household_id: string
+          month: string
+          payload: Json
+        }
+        Update: {
+          generated_at?: string
+          household_id?: string
+          month?: string
+          payload?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "monthly_reports_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       months: {
         Row: {
           closed_at: string | null
@@ -778,6 +864,115 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "months_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_outbox: {
+        Row: {
+          attempts: number
+          channel: string
+          created_at: string
+          dedupe_key: string
+          error: string | null
+          household_id: string | null
+          id: number
+          next_attempt_at: string
+          payload: Json
+          sent_at: string | null
+          status: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          attempts?: number
+          channel: string
+          created_at?: string
+          dedupe_key: string
+          error?: string | null
+          household_id?: string | null
+          id?: never
+          next_attempt_at?: string
+          payload?: Json
+          sent_at?: string | null
+          status?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          attempts?: number
+          channel?: string
+          created_at?: string
+          dedupe_key?: string
+          error?: string | null
+          household_id?: string | null
+          id?: never
+          next_attempt_at?: string
+          payload?: Json
+          sent_at?: string | null
+          status?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_outbox_household_id_fkey"
+            columns: ["household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_prefs: {
+        Row: {
+          days_ahead: number
+          email: boolean
+          household_id: string
+          income_missing: boolean
+          limit_alerts: boolean
+          monthly_report: boolean
+          push: boolean
+          reminder_hour: number
+          report_day: number
+          telegram: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          days_ahead?: number
+          email?: boolean
+          household_id: string
+          income_missing?: boolean
+          limit_alerts?: boolean
+          monthly_report?: boolean
+          push?: boolean
+          reminder_hour?: number
+          report_day?: number
+          telegram?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          days_ahead?: number
+          email?: boolean
+          household_id?: string
+          income_missing?: boolean
+          limit_alerts?: boolean
+          monthly_report?: boolean
+          push?: boolean
+          reminder_hour?: number
+          report_day?: number
+          telegram?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_prefs_household_id_fkey"
             columns: ["household_id"]
             isOneToOne: false
             referencedRelation: "households"
@@ -1237,6 +1432,45 @@ export type Database = {
           },
         ]
       }
+      telegram_link_tokens: {
+        Row: {
+          expires_at: string
+          token: string
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          expires_at: string
+          token: string
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          expires_at?: string
+          token?: string
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      telegram_links: {
+        Row: {
+          chat_id: number
+          linked_at: string
+          user_id: string
+        }
+        Insert: {
+          chat_id: number
+          linked_at?: string
+          user_id: string
+        }
+        Update: {
+          chat_id?: number
+          linked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transaction_tags: {
         Row: {
           created_at: string
@@ -1528,6 +1762,7 @@ export type Database = {
           expires_at: string
         }[]
       }
+      fx_upsert: { Args: { p_rates: Json }; Returns: number }
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }
       leave_household: { Args: { p_household: string }; Returns: undefined }
@@ -1551,6 +1786,11 @@ export type Database = {
         Args: { p_household: string; p_month: unknown }
         Returns: Json
       }
+      outbox_claim: { Args: { p_limit?: number }; Returns: Json }
+      outbox_complete: {
+        Args: { p_results: Json; p_stale_tokens?: string[] }
+        Returns: undefined
+      }
       pay_planned: {
         Args: {
           p_account?: string
@@ -1561,6 +1801,7 @@ export type Database = {
         }
         Returns: Json
       }
+      prepare_account_deletion: { Args: never; Returns: Json }
       recalc_income_months_apply: {
         Args: { p_expected_count: number; p_household: string }
         Returns: Json
@@ -1568,6 +1809,14 @@ export type Database = {
       recalc_income_months_preview: {
         Args: { p_household: string }
         Returns: Json
+      }
+      receipt_files_to_delete: {
+        Args: { p_limit?: number; p_now?: string }
+        Returns: string[]
+      }
+      register_device: {
+        Args: { p_app_version?: string; p_platform: string; p_token: string }
+        Returns: undefined
       }
       remove_member: {
         Args: { p_household: string; p_user: string }
@@ -1597,6 +1846,10 @@ export type Database = {
         Args: { p_household: string; p_year: number }
         Returns: Json
       }
+      send_monthly_report_now: {
+        Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
       set_member_role: {
         Args: {
           p_household: string
@@ -1621,10 +1874,20 @@ export type Database = {
         Args: { p_device: string; p_household: string; p_mutations: Json }
         Returns: Json
       }
+      telegram_link_consume: {
+        Args: { p_chat_id: number; p_token: string }
+        Returns: Json
+      }
+      telegram_link_token: { Args: never; Returns: Json }
+      telegram_summary: { Args: { p_chat_id: number }; Returns: Json }
+      telegram_unlink: { Args: never; Returns: undefined }
+      telegram_unlink_chat: { Args: { p_chat_id: number }; Returns: boolean }
+      test_notification: { Args: { p_household: string }; Returns: Json }
       transfer_ownership: {
         Args: { p_household: string; p_new_owner: string }
         Returns: undefined
       }
+      unregister_device: { Args: { p_token: string }; Returns: undefined }
     }
     Enums: {
       account_type:
