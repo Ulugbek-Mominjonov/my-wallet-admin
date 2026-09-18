@@ -93,7 +93,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E02 | Admin web skeleti | admin | E00 | ✅ |
 | | E03 | Platforma CI/CD, zaxira, keep-alive | admin | E01, E02 | 🟨 (T08 🔑) |
 | | E04 | Mobil skelet + CI | mobile | E00 | ✅ |
-| **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ⬜ |
+| **M1 Backend yadrosi** | E05 | Byudjet, a'zolar, rollar, RLS | admin | E01 | ✅ |
 | | E06 | Spravochniklar sxemasi | admin | E05 | ⬜ |
 | | E07 | Amallar, rejalar, fond, qarz, maqsad | admin | E06 | ⬜ |
 | | E08 | Biznes RPC'lar | admin | E07 | ⬜ |
@@ -293,26 +293,27 @@ E21–E26 (admin) M2 bilan.
 > **DoD:** ro'yxatdan o'tgan foydalanuvchi avtomatik shaxsiy byudjetga ega;
 > RLS testlari: begona byudjet ko'rinmaydi, rollar huquqlari aniq.
 
-- [ ] **E05-T01** Jadvallar: `profiles`, `households`, `household_members`
+- [x] **E05-T01** Jadvallar: `profiles`, `households`, `household_members`
   (`member_role` enum), `household_invites`; FK, unique, CHECK
   (`personal_fund_day` 1–31, `timezone` mavjud zona, `base_currency` 3 harf).
-- [ ] **E05-T02** `private` yordamchilar: `my_household_ids()`,
+- [x] **E05-T02** `private` yordamchilar: `my_household_ids()`,
   `my_writable_household_ids()`, `my_admin_household_ids()`,
   `is_platform_admin()` (`security definer`, `stable`, `search_path=''`).
-- [ ] **E05-T03** RLS siyosatlari (ARX 4): profil — faqat o'zi; byudjet —
+- [x] **E05-T03** RLS siyosatlari (ARX 4): profil — faqat o'zi; byudjet —
   a'zolar o'qiydi, `owner/admin` tahrirlaydi; a'zolar — a'zolar ko'radi,
   `owner/admin` boshqaradi; oxirgi owner'ni o'chirish/rolini tushirish taqiq
   (trigger, BR-014).
-- [ ] **E05-T04** `on_auth_user_created` trigger: profil + "Shaxsiy byudjet"
+- [x] **E05-T04** `on_auth_user_created` trigger: profil + "Shaxsiy byudjet"
   (UZS, Asia/Tashkent) + `owner` a'zolik. Standart spravochniklar E06-T08 da
   qo'shiladi. BR-010.
-- [ ] **E05-T05** Takliflar: `create_invite(household, role)` (8 belgili kod,
+- [x] **E05-T05** Takliflar: `create_invite(household, role)` (8 belgili kod,
   7 kun), `accept_invite(code)` (bir martalik, muddat, allaqachon a'zo),
-  `leave_household`, `transfer_ownership`. BR-012, BR-014.
-- [ ] **E05-T06** `app_bootstrap()` RPC: profil, byudjetlar ro'yxati (rol
+  `leave_household`, `transfer_ownership`. BR-012, BR-014. Qo'shimcha: `set_member_role`,
+  `remove_member` (invariantlar bitta joyda — E30 UI shularni ishlatadi).
+- [x] **E05-T06** `app_bootstrap()` RPC: profil, byudjetlar ro'yxati (rol
   bilan), `app_config` (min versiyalar). `app_config` va `platform_admins`
   jadvallari + RLS.
-- [ ] **E05-T07** pgTAP: 2 foydalanuvchi, 2 byudjet — o'qish/yozish matritsasi
+- [x] **E05-T07** pgTAP: 2 foydalanuvchi, 2 byudjet — o'qish/yozish matritsasi
   (owner/admin/member/viewer × jadval), taklif oqimi, oxirgi owner himoyasi.
 
 ### E06 · Spravochniklar sxemasi `[admin]`
@@ -847,3 +848,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E02-T08 | wrangler (Static Assets, SPA), CSP hash plagini, xavfsizlik sarlavhalari; e2e `wrangler dev` ustida ✅. **E02 yakunlandi** |
 | 2026-09-18 | E03-T01..T07 | CI GitHub'da yashil (~2 daq); deploy/preview/release/backup/keep-alive workflow'lari (DEPLOY_ENABLED bilan yoqiladi); `health()` RPC; zaxira → tiklash → solishtirish lokalda tasdiqlandi (ijobiy va salbiy holat); action'lar SHA bilan pin |
 | 2026-09-18 | E09-T08 | contracts/ (README, api.md, schema-version, BIZNES-QOIDALAR nusxasi) + publish/check skripti — mobil E04-T08 uchun oldinroq |
+| 2026-09-18 | E05-T01..T07 | tenancy: 6 jadval + RLS (initPlan pattern), signup triggeri (profil + shaxsiy byudjet), 8 RPC (takliflar, egalik, rollar, bootstrap), oxirgi owner himoyasi; 33 pgTAP testi birinchi urinishda yashil; contracts/api.md kengaytirildi. **E05 yakunlandi** |

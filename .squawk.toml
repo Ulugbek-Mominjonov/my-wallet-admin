@@ -13,4 +13,7 @@ excluded_rules = [
   # Xuddi shu sabab: kichik jadvallarda lock qisqa. Katta/qizg'in jadvalni
   # o'zgartirishda `set lock_timeout` qo'lda qo'yiladi.
   "require-lock-timeout",
+  # smallint faqat CHECK bilan chegaralangan kichik qiymatlar uchun (oy kuni
+  # 1–31, oy siljishi −1..1) — hisoblagich/ID emas, to'lib ketish xavfi yo'q.
+  "prefer-bigint-over-smallint",
 ]
