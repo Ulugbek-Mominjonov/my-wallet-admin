@@ -141,7 +141,7 @@ E21–E26 (admin) M2 bilan.
   mobil arxitektura → `my-wallet-mobil/docs/ARXITEKTURA.md`.
 - [x] **E00-T03** Reja (shu fayl + mobil `PLAN.md`) va deploy yo'riqnomasi
   (`docs/DEPLOY.md`, `my-wallet-mobil/docs/DEPLOY.md`).
-- [ ] **E00-T04** Repo asoslari (ikkala repo): `.editorconfig`,
+- [x] **E00-T04** Repo asoslari (ikkala repo): `.editorconfig`,
   `.gitattributes`, `.gitignore` (aniq yo'llar bilan — `lib/` kabi keng naqsh
   yo'q), `README.md` (nima, qanday ishga tushadi, hujjatlarga havolalar),
   `LICENSE` (private — "All rights reserved"), `Makefile` (`check`, `dev`,
@@ -799,3 +799,4 @@ E21–E26 (admin) M2 bilan.
 | Sana | Vazifa | Natija | Commit |
 |---|---|---|---|
 | 2026-09-18 | E00-T01..T03 | eski loyihalar o'rganildi; BIZNES-QOIDALAR, ARXITEKTURA, PLAN, DEPLOY yozildi | — |
+| 2026-09-18 | E00-T04 | ikkala repoda .editorconfig, .gitattributes, .gitignore, LICENSE, Makefile, README | E00-T04 |

@@ -19,6 +19,16 @@ Mobil ilova — alohida repo: `my-wallet-mobil`.
 | [`docs/ARXITEKTURA.md`](docs/ARXITEKTURA.md) | arxitektura, ADR'lar, ma'lumotlar modeli, API, sinxron |
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | bepul deploy uchun akkaunt va kalitlarni tayyorlash |
 
+## Lokal ishga tushirish
+
+```bash
+make help     # barcha buyruqlar
+make dev      # Supabase (Docker) + admin panel
+make check    # lint + testlar — PR'dan oldin majburiy
+```
+
+Talablar: Docker, Node 24, pnpm. Batafsil: [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
+
 ## Holat
 
 Loyiha rejalashtirish bosqichida — kod `docs/PLAN.md` dagi E01 dan boshlanadi.
