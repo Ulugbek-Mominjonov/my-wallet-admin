@@ -1,0 +1,211 @@
+{
+  "description": "Jamg'arma, BR-092 invarianti, shaxsiy fond, yillik jami.",
+  "cases": [
+    {
+      "name": "jamg'arma jadvali: 1 400 000 → 4 150 000",
+      "rules": [
+        "BR-100",
+        "BR-101",
+        "BR-102"
+      ],
+      "today": "2026-09-30",
+      "setup": {
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 400000000,
+            "date": "2026-08-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 260000000,
+            "date": "2026-08-10",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 575000000,
+            "date": "2026-09-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 300000000,
+            "date": "2026-09-10",
+            "category": "Oziq-ovqat"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_savings",
+          "result": {
+            "months": [
+              {
+                "month": "2026-08-01",
+                "income": 400000000,
+                "expense": 260000000,
+                "balance": 140000000,
+                "accumulated": 140000000,
+                "is_current": false
+              },
+              {
+                "month": "2026-09-01",
+                "income": 575000000,
+                "expense": 300000000,
+                "balance": 275000000,
+                "accumulated": 415000000,
+                "is_current": true
+              }
+            ],
+            "summary": {
+              "months_count": 2,
+              "total_income": 975000000,
+              "total_expense": 560000000,
+              "total_balance": 415000000,
+              "total_saved": 415000000,
+              "avg_monthly_saved": 207500000,
+              "avg_monthly_expense": 280000000
+            }
+          }
+        },
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-09-01"
+          },
+          "result": {
+            "savings": {
+              "before": 140000000,
+              "this_month": 275000000,
+              "total": 415000000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "br092-invariant: Σ orttirgan = umumiy qoldiq + fond qoldig'i",
+      "rules": [
+        "BR-063",
+        "BR-064",
+        "BR-092"
+      ],
+      "today": "2026-10-31",
+      "setup": {
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 500000000,
+            "date": "2026-09-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 200000000,
+            "date": "2026-09-10",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "transfer",
+            "account": "card",
+            "amount": 50000000,
+            "date": "2026-09-11",
+            "to": "fund"
+          },
+          {
+            "kind": "expense",
+            "account": "fund",
+            "amount": 20000000,
+            "date": "2026-09-20"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 400000000,
+            "date": "2026-10-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-10",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "transfer",
+            "account": "card",
+            "amount": 40000000,
+            "date": "2026-10-11",
+            "to": "fund"
+          },
+          {
+            "kind": "expense",
+            "account": "fund",
+            "amount": 30000000,
+            "date": "2026-10-20"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_savings",
+          "result": {
+            "summary": {
+              "total_balance": 510000000,
+              "total_saved": 550000000
+            }
+          }
+        },
+        {
+          "rpc": "report_personal_fund",
+          "args": {
+            "from": "2026-09-01",
+            "to": "2026-10-01"
+          },
+          "result": {
+            "balance": 40000000,
+            "total_allocated": 90000000,
+            "total_spent": 50000000,
+            "months": [
+              {
+                "month": "2026-09-01",
+                "allocated": 50000000,
+                "spent": 20000000
+              },
+              {
+                "month": "2026-10-01",
+                "allocated": 40000000,
+                "spent": 30000000
+              }
+            ]
+          }
+        },
+        {
+          "rpc": "report_year",
+          "args": {
+            "year": 2026
+          },
+          "result": {
+            "totals": {
+              "income": 900000000,
+              "expense": 390000000,
+              "allocated": 90000000,
+              "fund_spent": 50000000,
+              "balance": 510000000,
+              "saved": 550000000
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

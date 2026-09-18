@@ -1,0 +1,207 @@
+{
+  "description": "Qarzlar (4 holat) va maqsadlar (ulguradi/ulgurmaydi, hisob qoldig'i).",
+  "cases": [
+    {
+      "name": "qarzlar: to'lanyapti, kutilmoqda, bog'lanmagan, yopildi",
+      "rules": [
+        "BR-112",
+        "BR-113",
+        "BR-114",
+        "BR-116"
+      ],
+      "today": "2026-10-15",
+      "setup": {
+        "debts": [
+          {
+            "key": "a",
+            "name": "A mashina",
+            "direction": "i_owe",
+            "total": 1000000000,
+            "paid_before": 200000000,
+            "monthly_payment": 100000000
+          },
+          {
+            "key": "b",
+            "name": "B telefon",
+            "direction": "i_owe",
+            "total": 50000000
+          },
+          {
+            "key": "c",
+            "name": "C akamga",
+            "direction": "owed_to_me",
+            "total": 30000000
+          },
+          {
+            "key": "d",
+            "name": "D do'stim",
+            "direction": "owed_to_me",
+            "total": 10000000
+          }
+        ],
+        "plans": [
+          {
+            "key": "tel",
+            "kind": "expense",
+            "name": "Telefon to'lovi",
+            "category": "Kredit/Qarz",
+            "planned": 20000000,
+            "due": "2026-10-20",
+            "month": "2026-10-01",
+            "debt": "b"
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-10",
+            "category": "Kredit/Qarz",
+            "debt": "a"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 10000000,
+            "date": "2026-10-11",
+            "category": "Avans",
+            "debt": "d"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_debts",
+          "result": {
+            "debts": {
+              "A mashina": {
+                "status": "paying",
+                "paid_in_app": 100000000,
+                "remaining": 700000000,
+                "months_left": 7,
+                "end_month": "2027-05-01",
+                "progress": 0.3
+              },
+              "B telefon": {
+                "status": "pending",
+                "pending_amount": 20000000,
+                "pending_count": 1,
+                "remaining": 50000000
+              },
+              "C akamga": {
+                "status": "unlinked",
+                "remaining": 30000000
+              },
+              "D do'stim": {
+                "status": "closed",
+                "remaining": 0
+              }
+            },
+            "totals": {
+              "i_owe": 750000000,
+              "owed_to_me": 30000000,
+              "monthly_obligation": 100000000,
+              "net": -720000000,
+              "paid_this_month": 110000000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "maqsadlar: ulguradi, ulgurmaydi (o'rtacha orttirish bilan), hisob qoldig'i",
+      "rules": [
+        "BR-092",
+        "BR-121",
+        "BR-122"
+      ],
+      "today": "2026-10-15",
+      "setup": {
+        "goals": [
+          {
+            "name": "Ta'til",
+            "target": 1000000000,
+            "saved": 300000000,
+            "monthly": 100000000,
+            "deadline": "2027-10-01"
+          },
+          {
+            "name": "Noutbuk",
+            "target": 1000000000,
+            "deadline": "2027-01-01"
+          },
+          {
+            "name": "Karta",
+            "target": 400000000,
+            "account": "card"
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 600000000,
+            "date": "2026-09-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 300000000,
+            "date": "2026-09-10",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 400000000,
+            "date": "2026-10-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 200000000,
+            "date": "2026-10-10",
+            "category": "Oziq-ovqat"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_goals",
+          "result": {
+            "avg_monthly_saved": 250000000,
+            "goals": {
+              "Ta'til": {
+                "saved": 300000000,
+                "remaining": 700000000,
+                "monthly": 100000000,
+                "monthly_source": "goal",
+                "months_left": 7,
+                "end_month": "2027-05-01",
+                "on_track": true
+              },
+              "Noutbuk": {
+                "saved": 0,
+                "remaining": 1000000000,
+                "monthly": 250000000,
+                "monthly_source": "average",
+                "months_left": 4,
+                "end_month": "2027-02-01",
+                "on_track": false
+              },
+              "Karta": {
+                "saved": 500000000,
+                "remaining": 0,
+                "progress": 1,
+                "months_left": null
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,709 @@
+{
+  "description": "Oylik hisobot: BR-091 misoli, BR-040 jadvali, reja holatlari, limitlar, prognoz.",
+  "cases": [
+    {
+      "name": "br091-misol: qoldiq 2 750 000, orttirgan 3 300 000 (57%)",
+      "rules": [
+        "BR-061",
+        "BR-062",
+        "BR-063",
+        "BR-091",
+        "BR-093",
+        "BR-094"
+      ],
+      "today": "2026-08-31",
+      "setup": {
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 575000000,
+            "date": "2026-08-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 150000000,
+            "date": "2026-08-06",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "expense",
+            "account": "cash",
+            "amount": 50000000,
+            "date": "2026-08-07",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "transfer",
+            "account": "cash",
+            "amount": 100000000,
+            "date": "2026-08-08",
+            "to": "fund"
+          },
+          {
+            "kind": "expense",
+            "account": "fund",
+            "amount": 45000000,
+            "date": "2026-08-09"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-08-01"
+          },
+          "result": {
+            "is_current": true,
+            "totals": {
+              "income": 575000000,
+              "income_card": 575000000,
+              "income_cash": 0,
+              "expense": 300000000,
+              "expense_card": 150000000,
+              "expense_cash": 150000000,
+              "planned": 0,
+              "unpaid": 0,
+              "unknown_count": 0,
+              "allocated": 100000000,
+              "fund_spent": 45000000
+            },
+            "derived": {
+              "balance": 275000000,
+              "forecast": 275000000,
+              "saved": 330000000,
+              "saved_ratio": 0.5739,
+              "spent_ratio": 0.5217,
+              "card": 425000000,
+              "cash": -150000000
+            },
+            "by_category": {
+              "Oziq-ovqat": {
+                "planned": 0,
+                "actual": 200000000
+              },
+              "O'zim uchun": {
+                "planned": 0,
+                "actual": 100000000
+              }
+            },
+            "fund": {
+              "allocated": 100000000,
+              "spent": 45000000,
+              "balance": 55000000
+            },
+            "savings": {
+              "before": 0,
+              "this_month": 275000000,
+              "total": 275000000
+            },
+            "projection": {
+              "days_in_month": 31,
+              "days_elapsed": 31,
+              "daily_spend": 9677419,
+              "month_end_spend": 300000000,
+              "income_received": 575000000,
+              "income_expected": 575000000,
+              "income_pending": false,
+              "month_end_balance": 275000000,
+              "per_day_available": 275000000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "br040-jadval: 02.10 Oylik → 09, 06.10 KPI → 09, 16.10 Avans → 10, 18.10 Qo'shimcha → 09",
+      "rules": [
+        "BR-040",
+        "BR-090"
+      ],
+      "today": "2026-10-31",
+      "setup": {
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-02",
+            "category": "Oylik"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-06",
+            "category": "KPI"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-16",
+            "category": "Avans"
+          },
+          {
+            "kind": "income",
+            "account": "cash",
+            "amount": 100000000,
+            "date": "2026-10-18",
+            "category": "Qo'shimcha"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-09-01"
+          },
+          "result": {
+            "totals": {
+              "income": 300000000,
+              "income_card": 200000000,
+              "income_cash": 100000000
+            },
+            "by_type": {
+              "Oylik": {
+                "card": 100000000,
+                "cash": 0
+              },
+              "KPI": {
+                "card": 100000000,
+                "cash": 0
+              },
+              "Qo'shimcha": {
+                "card": 0,
+                "cash": 100000000
+              }
+            }
+          }
+        },
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-10-01"
+          },
+          "result": {
+            "totals": {
+              "income": 100000000
+            },
+            "by_type": {
+              "Avans": {
+                "card": 100000000,
+                "cash": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "rejalar-holati: qisman, noma'lum summa, bugungi muddat, kechikkan",
+      "rules": [
+        "BR-002",
+        "BR-071",
+        "BR-073",
+        "BR-076",
+        "BR-090"
+      ],
+      "today": "2026-10-15",
+      "setup": {
+        "plans": [
+          {
+            "key": "ijara",
+            "kind": "expense",
+            "name": "Ijara",
+            "category": "Ijara",
+            "planned": 300000000,
+            "due": "2026-10-05",
+            "month": "2026-10-01"
+          },
+          {
+            "key": "kommunal",
+            "kind": "expense",
+            "name": "Kommunal",
+            "category": "Kommunal",
+            "planned": 40000000,
+            "due": "2026-10-20",
+            "month": "2026-10-01"
+          },
+          {
+            "key": "internet",
+            "kind": "expense",
+            "name": "Internet",
+            "category": "Internet/Aloqa",
+            "planned": 15000000,
+            "due": "2026-10-10",
+            "month": "2026-10-01"
+          },
+          {
+            "key": "suv",
+            "kind": "expense",
+            "name": "Suv",
+            "category": "Kommunal",
+            "planned": null,
+            "due": "2026-10-25",
+            "month": "2026-10-01"
+          },
+          {
+            "key": "gaz",
+            "kind": "expense",
+            "name": "Gaz",
+            "category": "Kommunal",
+            "planned": null,
+            "due": "2026-10-12",
+            "month": "2026-10-01"
+          },
+          {
+            "key": "svet",
+            "kind": "expense",
+            "name": "Svet",
+            "category": "Kommunal",
+            "planned": 20000000,
+            "due": "2026-10-15",
+            "month": "2026-10-01"
+          },
+          {
+            "key": "musor",
+            "kind": "expense",
+            "name": "Musor",
+            "category": "Kommunal",
+            "planned": 5000000,
+            "due": "2026-10-03",
+            "month": "2026-10-01"
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 25000000,
+            "date": "2026-10-14",
+            "category": "Kommunal",
+            "plan": "kommunal"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 10000000,
+            "date": "2026-10-09",
+            "category": "Internet/Aloqa",
+            "plan": "internet"
+          },
+          {
+            "kind": "expense",
+            "account": "cash",
+            "amount": 5000000,
+            "date": "2026-10-03",
+            "category": "Kommunal",
+            "plan": "musor"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-10-01"
+          },
+          "result": {
+            "totals": {
+              "planned": 380000000,
+              "unpaid": 340000000,
+              "unknown_count": 2,
+              "expense": 40000000,
+              "expense_card": 35000000,
+              "expense_cash": 5000000
+            },
+            "derived": {
+              "balance": -40000000,
+              "forecast": -380000000
+            },
+            "unpaid": {
+              "Ijara": {
+                "status": "overdue",
+                "paid_amount": 0
+              },
+              "Kommunal": {
+                "status": "partial",
+                "paid_amount": 25000000
+              },
+              "Internet": {
+                "status": "overdue",
+                "paid_amount": 10000000
+              },
+              "Suv": {
+                "status": "pending",
+                "planned_amount": null
+              },
+              "Gaz": {
+                "status": "overdue",
+                "planned_amount": null
+              },
+              "Svet": {
+                "status": "pending",
+                "paid_amount": 0
+              }
+            },
+            "by_category": {
+              "Ijara": {
+                "planned": 300000000,
+                "actual": 0
+              },
+              "Kommunal": {
+                "planned": 65000000,
+                "actual": 30000000
+              },
+              "Internet/Aloqa": {
+                "planned": 15000000,
+                "actual": 10000000
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "limitlar: 79% ok, 80% yaqin, 100% yaqin, 101% oshdi; ota-kategoriya subkategoriyalar bilan",
+      "rules": [
+        "BR-130",
+        "BR-132"
+      ],
+      "today": "2026-10-31",
+      "setup": {
+        "categories": [
+          {
+            "name": "Taksi",
+            "kind": "expense",
+            "parent": "Transport"
+          }
+        ],
+        "limits": [
+          {
+            "category": "Oziq-ovqat",
+            "amount": 100000000
+          },
+          {
+            "category": "Transport",
+            "amount": 100000000
+          },
+          {
+            "category": "Kiyim",
+            "amount": 100000000
+          },
+          {
+            "category": "Sog'liq",
+            "amount": 100000000
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 79000000,
+            "date": "2026-10-05",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 70000000,
+            "date": "2026-10-06",
+            "category": "Transport"
+          },
+          {
+            "kind": "expense",
+            "account": "cash",
+            "amount": 10000000,
+            "date": "2026-10-07",
+            "category": "Taksi"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-08",
+            "category": "Kiyim"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 101000000,
+            "date": "2026-10-09",
+            "category": "Sog'liq"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-10-01"
+          },
+          "result": {
+            "by_category": {
+              "Oziq-ovqat": {
+                "actual": 79000000,
+                "limit": 100000000,
+                "limit_ratio": 0.79,
+                "limit_status": "ok"
+              },
+              "Transport": {
+                "actual": 70000000,
+                "actual_total": 80000000,
+                "limit_ratio": 0.8,
+                "limit_status": "near"
+              },
+              "Taksi": {
+                "actual": 10000000,
+                "limit": null,
+                "limit_status": null
+              },
+              "Kiyim": {
+                "actual": 100000000,
+                "limit_ratio": 1,
+                "limit_status": "near"
+              },
+              "Sog'liq": {
+                "actual": 101000000,
+                "limit_ratio": 1.01,
+                "limit_status": "over"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "prognoz: joriy oy, kutilayotgan daromad rejasi bilan",
+      "rules": [
+        "BR-077",
+        "BR-093",
+        "BR-094"
+      ],
+      "today": "2026-10-10",
+      "setup": {
+        "plans": [
+          {
+            "key": "ijara",
+            "kind": "expense",
+            "name": "Ijara",
+            "category": "Ijara",
+            "planned": 150000000,
+            "due": "2026-10-25",
+            "month": "2026-10-01"
+          },
+          {
+            "key": "oylik",
+            "kind": "income",
+            "name": "Oylik",
+            "category": "Oylik",
+            "planned": 500000000,
+            "due": "2026-10-20",
+            "month": "2026-10-01"
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 600000000,
+            "date": "2026-09-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 300000000,
+            "date": "2026-09-15",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 200000000,
+            "date": "2026-10-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-08",
+            "category": "Oziq-ovqat"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-10-01"
+          },
+          "result": {
+            "is_current": true,
+            "totals": {
+              "unpaid": 150000000
+            },
+            "projection": {
+              "days_in_month": 31,
+              "days_elapsed": 10,
+              "daily_spend": 10000000,
+              "month_end_spend": 310000000,
+              "income_received": 200000000,
+              "income_expected": 700000000,
+              "income_pending": true,
+              "month_end_balance": 390000000,
+              "per_day_available": 20454545
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "prognoz: joriy oy, rejasiz — boshqa oylar o'rtachasi",
+      "rules": [
+        "BR-093",
+        "BR-094"
+      ],
+      "today": "2026-10-10",
+      "setup": {
+        "plans": [
+          {
+            "key": "ijara",
+            "kind": "expense",
+            "name": "Ijara",
+            "category": "Ijara",
+            "planned": 150000000,
+            "due": "2026-10-25",
+            "month": "2026-10-01"
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 600000000,
+            "date": "2026-09-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 300000000,
+            "date": "2026-09-15",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 200000000,
+            "date": "2026-10-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-08",
+            "category": "Oziq-ovqat"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-10-01"
+          },
+          "result": {
+            "projection": {
+              "income_received": 200000000,
+              "income_expected": 600000000,
+              "income_pending": true,
+              "month_end_spend": 310000000,
+              "month_end_balance": 290000000,
+              "per_day_available": 15909090
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "prognoz: o'tgan oy — kelgan daromad, to'liq xarajat",
+      "rules": [
+        "BR-093"
+      ],
+      "today": "2026-10-10",
+      "setup": {
+        "plans": [
+          {
+            "key": "ijara",
+            "kind": "expense",
+            "name": "Ijara",
+            "category": "Ijara",
+            "planned": 150000000,
+            "due": "2026-10-25",
+            "month": "2026-10-01"
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 600000000,
+            "date": "2026-09-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 300000000,
+            "date": "2026-09-15",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 200000000,
+            "date": "2026-10-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-08",
+            "category": "Oziq-ovqat"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-09-01"
+          },
+          "result": {
+            "is_current": false,
+            "projection": {
+              "days_in_month": 30,
+              "days_elapsed": 30,
+              "daily_spend": 10000000,
+              "month_end_spend": 300000000,
+              "income_received": 600000000,
+              "income_expected": 600000000,
+              "income_pending": false,
+              "month_end_balance": 300000000,
+              "per_day_available": null
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
