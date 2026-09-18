@@ -16,4 +16,11 @@ excluded_rules = [
   # smallint faqat CHECK bilan chegaralangan kichik qiymatlar uchun (oy kuni
   # 1–31, oy siljishi −1..1) — hisoblagich/ID emas, to'lib ketish xavfi yo'q.
   "prefer-bigint-over-smallint",
+  # integer faqat tartib raqami (sort_order) kabi kichik qiymatlar uchun. ID —
+  # uuid, pul — doim bigint (ADR-08); hisoblagichlar review'da tekshiriladi.
+  "prefer-bigint-over-int",
+  # Domenlar (entity_name, icon_key, hex_color, month_start) — bir qoidani
+  # o'nlab ustunda takrorlamaslik uchun. Jadvallar kichik; domen cheklovini
+  # o'zgartirish kerak bo'lsa — ADD CONSTRAINT ... NOT VALID + VALIDATE.
+  "ban-create-domain-with-constraint",
 ]

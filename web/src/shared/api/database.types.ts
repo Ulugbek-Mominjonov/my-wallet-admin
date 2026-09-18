@@ -63,6 +63,104 @@ export type Database = {
         }
         Relationships: []
       }
+      category_templates: {
+        Row: {
+          color: string
+          icon: string
+          id: string
+          kind: Database["public"]["Enums"]["category_kind"]
+          month_shift: number
+          name_i18n: Json
+          sort_order: number
+          system_code:
+            | Database["public"]["Enums"]["category_system_code"]
+            | null
+        }
+        Insert: {
+          color: string
+          icon: string
+          id?: string
+          kind: Database["public"]["Enums"]["category_kind"]
+          month_shift?: number
+          name_i18n: Json
+          sort_order?: number
+          system_code?:
+            | Database["public"]["Enums"]["category_system_code"]
+            | null
+        }
+        Update: {
+          color?: string
+          icon?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["category_kind"]
+          month_shift?: number
+          name_i18n?: Json
+          sort_order?: number
+          system_code?:
+            | Database["public"]["Enums"]["category_system_code"]
+            | null
+        }
+        Relationships: []
+      }
+      currencies: {
+        Row: {
+          active: boolean
+          code: string
+          exponent: number
+          name_i18n: Json
+          sort_order: number
+          symbol: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          exponent?: number
+          name_i18n: Json
+          sort_order?: number
+          symbol: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          exponent?: number
+          name_i18n?: Json
+          sort_order?: number
+          symbol?: string
+        }
+        Relationships: []
+      }
+      exchange_rates: {
+        Row: {
+          created_at: string
+          currency: string
+          rate_date: string
+          rate_to_base: number
+          source: string
+        }
+        Insert: {
+          created_at?: string
+          currency: string
+          rate_date: string
+          rate_to_base: number
+          source?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          rate_date?: string
+          rate_to_base?: number
+          source?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exchange_rates_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       household_invites: {
         Row: {
           accepted_at: string | null
@@ -191,7 +289,15 @@ export type Database = {
           timezone?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "households_base_currency_fkey"
+            columns: ["base_currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+        ]
       }
       platform_admins: {
         Row: {
@@ -281,6 +387,8 @@ export type Database = {
       }
     }
     Enums: {
+      category_kind: "income" | "expense"
+      category_system_code: "personal_allocation"
       member_role: "owner" | "admin" | "member" | "viewer"
       personal_fund_mode: "percent" | "fixed"
     }
@@ -410,6 +518,8 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      category_kind: ["income", "expense"],
+      category_system_code: ["personal_allocation"],
       member_role: ["owner", "admin", "member", "viewer"],
       personal_fund_mode: ["percent", "fixed"],
     },
