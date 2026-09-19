@@ -704,6 +704,118 @@
           }
         }
       ]
+    },
+    {
+      "name": "fonddan qaytish (manfiy ajratma) va byudjet hisoblari orasidagi o'tkazma",
+      "rules": [
+        "BR-023",
+        "BR-061",
+        "BR-062",
+        "BR-063",
+        "BR-092"
+      ],
+      "today": "2026-08-31",
+      "setup": {
+        "accounts": [
+          {
+            "key": "deposit",
+            "name": "Omonat",
+            "type": "deposit"
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "card",
+            "amount": 500000000,
+            "date": "2026-08-05",
+            "category": "Avans"
+          },
+          {
+            "kind": "transfer",
+            "account": "cash",
+            "to": "fund",
+            "amount": 100000000,
+            "date": "2026-08-06"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-08-10",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "transfer",
+            "account": "card",
+            "to": "deposit",
+            "amount": 150000000,
+            "date": "2026-08-15"
+          },
+          {
+            "kind": "transfer",
+            "account": "fund",
+            "to": "card",
+            "amount": 30000000,
+            "date": "2026-08-20"
+          },
+          {
+            "kind": "expense",
+            "account": "fund",
+            "amount": 20000000,
+            "date": "2026-08-21"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-08-01"
+          },
+          "result": {
+            "totals": {
+              "income": 500000000,
+              "expense": 170000000,
+              "expense_card": 70000000,
+              "expense_cash": 100000000,
+              "allocated": 70000000,
+              "fund_spent": 20000000
+            },
+            "derived": {
+              "balance": 330000000,
+              "saved": 380000000,
+              "card": 430000000,
+              "cash": -100000000
+            },
+            "by_category": {
+              "Oziq-ovqat": {
+                "actual": 100000000
+              },
+              "O'zim uchun": {
+                "actual": 70000000
+              }
+            },
+            "fund": {
+              "allocated": 70000000,
+              "spent": 20000000,
+              "balance": 50000000
+            },
+            "savings": {
+              "total": 330000000
+            }
+          }
+        },
+        {
+          "rpc": "report_savings",
+          "result": {
+            "summary": {
+              "total_balance": 330000000,
+              "total_saved": 380000000
+            }
+          }
+        }
+      ]
     }
   ]
 }

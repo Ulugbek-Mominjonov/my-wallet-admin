@@ -12,7 +12,7 @@ holatdan bir xil natija chiqarishi shart.
 | Fayl | Nima |
 |---|---|
 | `month-legacy.json` | eski tizimning 40 ta tasodifiy oy holati — yangi modelga o'girilgan (arifmetika aynan eski tizimdek) |
-| `month.json` | BR-091 misoli, BR-040 jadvali, reja holatlari, limitlar, prognoz |
+| `month.json` | BR-091 misoli, BR-040 jadvali, reja holatlari, limitlar, prognoz, fonddan qaytish (manfiy ajratma) |
 | `savings.json` | jamg'arma jadvali, BR-092 invarianti, shaxsiy fond, yillik jami |
 | `debts-goals.json` | qarzlar (4 holat), maqsadlar |
 
