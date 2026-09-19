@@ -100,7 +100,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E09 | Hisobotlar + golden fixtures + `contracts/` | admin | E08 | ✅ |
 | | E10 | Sinxron API | admin | E07 | ✅ |
 | | E11 | Rejali ishlar va bildirishnomalar | admin | E08 | ✅ |
-| **M2 Mobil MVP** | E12 | Domen paketi + fixtures pariteti | mobile | E09 | ⬜ |
+| **M2 Mobil MVP** | E12 | Domen paketi + fixtures pariteti | mobile | E09 | ✅ |
 | | E13 | Lokal baza va sinxron dvigatel | mobile | E10, E12 | ⬜ |
 | | E14 | Auth, onboarding, ilova qobig'i | mobile | E13 | ⬜ |
 | | E15 | Amallar | mobile | E14 | ⬜ |
@@ -896,6 +896,11 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | Avto to'lov sanasi — reja muddati; rejaga bitta (o'chirilsa qayta yaratilmaydi) | ish kechiksa ham to'g'ri sana; foydalanuvchi o'chirgan to'lov qaytib kelmaydi | E11-T02, BR-075 |
 | 2026-09-18 | Deno testlari `_tests/` da, `jsr:@std` — `deno.lock` bilan | `_` bilan boshlangan papka deploy qilinmaydi; bog'liqliklar qotirilgan | E11-T06 |
 | 2026-09-18 | `platform_stats` — qatorlar soni statistika bahosi (`reltuples`) | kunlik to'liq COUNT katta jadvallarni skan qilardi | E11-T07 |
+| 2026-09-19 | Mobil domen: pul va nisbatlar faqat butun sonlarda, `round` — noldan uzoqqa (Postgres bilan bir xil); fond foizi — bazis punktda | double yaxlitlash chegarada serverdan farq qilardi — parite buzilardi | E12-T01, T04 |
+| 2026-09-19 | Entity'lar — freezed 4 (Dart 3.13 `new`/`factory ()` sintaksisi), enum'lar server `wire` qiymati bilan | immutable, copyWith, tenglik; shartnoma qiymatlari bitta joyda | E12-T02 |
+| 2026-09-19 | Amal tasnifi (`BudgetLine`, `monthFactsOf`) — domen qoidasi; fixture pariteti uchun test "ledger"i server loader'ini takrorlaydi | E13 SQL'i va hisobotlar uchun bitta namuna; 51/51 holat mos, mutatsiya testi bilan tekshirilgan | E12-T05 |
+| 2026-09-19 | Use-case'lar `Result` qaytaradi (exception emas), kodlar server bilan bir xil; reja to'lovi lokal taxmin (`settlePlan`), sinxronda server qiymati | offline UI darhol to'g'ri holatni ko'rsatadi, server — hakam | E12-T06 |
+| 2026-09-19 | `app_bootstrap` valyutalariga `allocation_rounding` (E14 da, qo'shimcha o'zgarish) | mobil fond ajratmasini oldindan ko'rsatishi uchun birlik kerak | E14-T02 |
 
 ## 7. Jarayon jurnali
 
@@ -925,3 +930,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E09-T01..T07 | 8 hisobot RPC (bitta tasnif yadrosi), health_check; 51 golden fixture (40 tasi eski tizimdan — birinchi urinishda aynan mos) + Node kontrakt runner; perf: 25k amal + shovqin, auto_explain — 3 muammo topildi va tuzatildi (health_check 219 → 23 ms); 18 pgTAP (jami 321). **E09 yakunlandi** |
 | 2026-09-18 | E10-T01..T06 | sync_pull (14 jadval, indeks + LIMIT), sync_push (idempotent, conflict/rejected, grant'lar = oq ro'yxat), sync_mutations jurnali, jobs.purge (tombstone/audit/jurnal); parallel test (6 xossa) CI'da; 29 pgTAP (jami 350). **E10 yakunlandi** |
 | 2026-09-18 | E11-T01..T08 | 7 jadval, 9 pg_cron ishi (`job_runs`), outbox (dedupe, SKIP LOCKED, qayta urinish), 5 Edge Function (FCM v1, Telegram bot, CBU, fayllar, akkaunt o'chirish), uz/ru/en shablonlar; 71 pgTAP (jami 421), 60 Deno testi, uchidan-uchiga 13 tekshiruv (pg_cron → Vault → pg_net → Edge Function); testlar 2 xatoni topdi (limit sozlamalari, chek fayli muddati). **E11 yakunlandi — M1 (platforma yadrosi) tayyor** |
+| 2026-09-19 | E12-T01..T06 | mobil `wallet_domain`: value object'lar, 12 entity (freezed), 14 qoida moduli (tegishli oy, reja holati, fond, eslatma, amal tasnifi, oylik yakun, prognoz, jamg'arma, qarz, maqsad, limit), 9 use-case + repository interfeyslari; golden fixture pariteti **51/51** (40 tasi eski tizimdan) — mutatsiya testi bilan; 191 test, domen qoplamasi 100%. **E12 yakunlandi** |
