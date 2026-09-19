@@ -101,7 +101,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E10 | Sinxron API | admin | E07 | ✅ |
 | | E11 | Rejali ishlar va bildirishnomalar | admin | E08 | ✅ |
 | **M2 Mobil MVP** | E12 | Domen paketi + fixtures pariteti | mobile | E09 | ✅ |
-| | E13 | Lokal baza va sinxron dvigatel | mobile | E10, E12 | ⬜ |
+| | E13 | Lokal baza va sinxron dvigatel | mobile | E10, E12 | ✅ |
 | | E14 | Auth, onboarding, ilova qobig'i | mobile | E13 | ⬜ |
 | | E15 | Amallar | mobile | E14 | ⬜ |
 | | E16 | Xulosa (dashboard) va hisobotlar | mobile | E15 | ⬜ |
@@ -901,6 +901,12 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-19 | Amal tasnifi (`BudgetLine`, `monthFactsOf`) — domen qoidasi; fixture pariteti uchun test "ledger"i server loader'ini takrorlaydi | E13 SQL'i va hisobotlar uchun bitta namuna; 51/51 holat mos, mutatsiya testi bilan tekshirilgan | E12-T05 |
 | 2026-09-19 | Use-case'lar `Result` qaytaradi (exception emas), kodlar server bilan bir xil; reja to'lovi lokal taxmin (`settlePlan`), sinxronda server qiymati | offline UI darhol to'g'ri holatni ko'rsatadi, server — hakam | E12-T06 |
 | 2026-09-19 | `app_bootstrap` valyutalariga `allocation_rounding` (E14 da, qo'shimcha o'zgarish) | mobil fond ajratmasini oldindan ko'rsatishi uchun birlik kerak | E14-T02 |
+| 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
+| 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
+| 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
+| 2026-09-19 | Sinxron: bir vaqtda bitta sikl, yozuv debounce 1 s, oflaynda 1→300 s backoff, fon — WorkManager 6 soat | server va batareya yuklamasi cheklangan; tarmoq qaytishi darhol sinxronlaydi | E13-T05, T06 |
+| 2026-09-19 | Pull upsert — `toCompanion(false)` (drift data-class emas) | data-class insert NULL maydonni tashlab yuboradi — tiklangan tombstone qaytmasdi (integratsiya testi topdi) | E13-T07 |
+| 2026-09-19 | Mobil integratsiya testlari host'da (`integration/`, emulyatorsiz), server `contracts.lock` commit'idan | CI arzon va tez; mobil tekshirgan shartnoma bilan bir xil server | E13-T07 |
 
 ## 7. Jarayon jurnali
 
@@ -931,3 +937,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-18 | E10-T01..T06 | sync_pull (14 jadval, indeks + LIMIT), sync_push (idempotent, conflict/rejected, grant'lar = oq ro'yxat), sync_mutations jurnali, jobs.purge (tombstone/audit/jurnal); parallel test (6 xossa) CI'da; 29 pgTAP (jami 350). **E10 yakunlandi** |
 | 2026-09-18 | E11-T01..T08 | 7 jadval, 9 pg_cron ishi (`job_runs`), outbox (dedupe, SKIP LOCKED, qayta urinish), 5 Edge Function (FCM v1, Telegram bot, CBU, fayllar, akkaunt o'chirish), uz/ru/en shablonlar; 71 pgTAP (jami 421), 60 Deno testi, uchidan-uchiga 13 tekshiruv (pg_cron → Vault → pg_net → Edge Function); testlar 2 xatoni topdi (limit sozlamalari, chek fayli muddati). **E11 yakunlandi — M1 (platforma yadrosi) tayyor** |
 | 2026-09-19 | E12-T01..T06 | mobil `wallet_domain`: value object'lar, 12 entity (freezed), 14 qoida moduli (tegishli oy, reja holati, fond, eslatma, amal tasnifi, oylik yakun, prognoz, jamg'arma, qarz, maqsad, limit), 9 use-case + repository interfeyslari; golden fixture pariteti **51/51** (40 tasi eski tizimdan) — mutatsiya testi bilan; 191 test, domen qoplamasi 100%. **E12 yakunlandi** |
+| 2026-09-19 | E13-T01..T07 | mobil lokal baza (drift, 14 jadval + outbox/kursor/muammolar), `LedgerDao` (oy yig'indisi SQL'da — domen bilan parite 52/52; yangi fixture: fonddan qaytish va byudjet hisoblari o'tkazmasi), `RemoteApi`, atomar repository'lar, `SyncEngine`/`SyncScheduler`, WorkManager, holat nishoni va ekrani; 155 test (92,5%), domen 192 (97,7%); lokal Supabase bilan 4 integratsiya testi (`integration.yml`) — drift upsert NULL xatosini topdi. **E13 yakunlandi** |
