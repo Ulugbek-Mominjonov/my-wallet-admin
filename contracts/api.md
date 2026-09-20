@@ -81,6 +81,15 @@ Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masa
 | `set_member_role(p_household, p_user, p_role)` | rol (`owner` emas) | — | owner/admin (admin owner'ga tegolmaydi) |
 | `remove_member(p_household, p_user)` | a'zo | — | owner/admin |
 
+### `app_config` qiymatlari
+
+| Kalit | Qiymat | Ma'nosi |
+|---|---|---|
+| `min_android_version` | `"1.2.3"` | BR-214: ilova versiyasi shundan kichik bo'lsa — "Yangilash kerak" ekrani (ilova ishlamaydi) |
+| `maintenance` | `null` yoki `{"message": {"uz": …, "ru": …, "en": …}, "until": "2026-10-05T12:00:00Z"}` | texnik ishlar banneri (E26-T02); `until` ixtiyoriy, o'tgan bo'lsa banner ko'rsatilmaydi |
+
+Noma'lum kalitlar e'tiborsiz qoldiriladi (qo'shimcha flaglar uchun joy).
+
 ## Spravochniklar (E06) — PostgREST jadvallari
 
 Umumiy qoidalar (barcha sinxron jadvallar):
