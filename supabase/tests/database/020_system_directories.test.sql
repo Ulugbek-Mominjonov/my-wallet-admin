@@ -1,7 +1,7 @@
 -- E06-T01: tizim spravochniklari — valyutalar, kategoriya shablonlari,
 -- kurslar (BR-031..033, BR-190, BR-213).
 begin;
-select plan(14);
+select plan(15);
 
 create temporary table u (name text primary key, id uuid) on commit drop;
 insert into u values
@@ -73,6 +73,11 @@ select throws_ok(
 select is(
   public.app_bootstrap() #>> '{currencies,0,code}', 'UZS',
   'app_bootstrap valyutalarni tartib bilan qaytaradi'
+);
+-- BR-060: mobil ajratmani oldindan ko'rsatishi uchun yaxlitlash birligi.
+select is(
+  public.app_bootstrap() #>> '{currencies,0,allocation_rounding}', '100000',
+  'app_bootstrap valyutada allocation_rounding ham qaytaradi'
 );
 
 select tests.authenticate_as((select id from u where name = 'root'));
