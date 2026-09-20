@@ -146,13 +146,18 @@ jamoa a'zolariga — ishlatib bo'lmaydi. Bepul yechim — Gmail SMTP.
    host `smtp.gmail.com`, port `587`, user — Gmail manzil, password — App
    password, sender name "My Wallet".
 3. **Rate limits** → email: soatiga 30 (Gmail kunlik ~500 dan oshmaydi).
-4. GitHub (admin): `SMTP_USER` (variable), `SMTP_PASSWORD` (**secret**) —
+4. **Authentication → Emails → Templates** → **Magic Link** va **Confirm
+   signup** ikkalasiga `supabase/templates/sign-in-code.html` mazmunini
+   qo'ying (subject: `My Wallet — kirish kodi`). Standart shablonda havola
+   bo'ladi, ilova esa **kod** (`{{ .Token }}`) kutadi.
+5. GitHub (admin): `SMTP_USER` (variable), `SMTP_PASSWORD` (**secret**) —
    `config.toml` va ixtiyoriy email bildirishnomalari uchun.
 
 > 💲 Muqobil: o'z domeningiz bo'lsa Resend (oyiga 3000 xat bepul, domen
 > tasdig'i kerak) — deliverability yaxshiroq.
 
-✅ **Tekshiruv:** admin login → "Email orqali" → 6 xonali kod keladi.
+✅ **Tekshiruv:** admin login → "Email orqali" → 6 xonali kod keladi
+(lokalda: `make db-start` → Mailpit <http://127.0.0.1:54324>).
 
 ---
 

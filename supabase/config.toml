@@ -97,6 +97,16 @@ otp_length = 6
 # Kirish kodi 10 daqiqa amal qiladi.
 otp_expiry = 600
 
+# Xatda havola emas, 6 xonali kod (mobil va admin kod kiritadi). Yangi
+# foydalanuvchiga tasdiq yoqilgan bo'lsa "confirmation" ketadi — shablon bitta.
+[auth.email.template.magic_link]
+subject = "My Wallet — kirish kodi"
+content_path = "./supabase/templates/sign-in-code.html"
+
+[auth.email.template.confirmation]
+subject = "My Wallet — kirish kodi"
+content_path = "./supabase/templates/sign-in-code.html"
+
 [auth.sms]
 enable_signup = false
 
