@@ -3,13 +3,12 @@ import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { HouseholdProvider } from '@/entities/household'
+import { TEST_HOUSEHOLD_ID, WithHousehold } from '@/entities/household/testing'
 import { CategoriesPage } from '@/features/categories/ui/categories-page'
 import { server, signInTestUser, supabasePath } from '@/shared/test/msw'
 import { renderWithProviders } from '@/shared/test/render'
-import { Toaster } from '@/shared/ui/sonner'
 
-const HOUSEHOLD = '0198f000-0000-7000-8000-00000000000a'
+const HOUSEHOLD = TEST_HOUSEHOLD_ID
 
 const row = (
   id: string,
@@ -41,19 +40,9 @@ const CATEGORIES = [
 function renderPage() {
   server.use(http.get(supabasePath('/rest/v1/categories'), () => HttpResponse.json(CATEGORIES)))
   renderWithProviders(
-    <HouseholdProvider
-      household={{
-        id: HOUSEHOLD,
-        name: 'Uy',
-        role: 'owner',
-        base_currency: 'UZS',
-        timezone: 'Asia/Tashkent',
-        onboarded: true,
-      }}
-    >
+    <WithHousehold>
       <CategoriesPage householdId={HOUSEHOLD} baseCurrency="UZS" />
-      <Toaster />
-    </HouseholdProvider>,
+    </WithHousehold>,
   )
   return userEvent.setup()
 }

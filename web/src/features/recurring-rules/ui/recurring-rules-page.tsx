@@ -25,17 +25,13 @@ import { useAppLocale } from '@/shared/i18n'
 import { currentMonthKey, formatMonth, shiftMonth } from '@/shared/lib/month'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
 import { DataTable } from '@/shared/ui/data-table/data-table'
 import { createDataTableColumns } from '@/shared/ui/data-table/features'
+import { DirectoryPage } from '@/shared/ui/directory-page'
 import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { MoneyText } from '@/shared/ui/money-text'
-import { PageHeader } from '@/shared/ui/page-header'
-import { QueryError } from '@/shared/ui/query-error'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
 import { Switch } from '@/shared/ui/switch'
-import { TableSkeleton } from '@/shared/ui/table-skeleton'
 
 const helper = createDataTableColumns<RecurringRule>()
 
@@ -138,112 +134,61 @@ export function RecurringRulesPage({
   )
 
   return (
-    <>
-      <PageHeader
-        title={t('rules.title')}
-        description={t('rules.description')}
-        actions={
-          <>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setPreviewOpen(true)
-              }}
-            >
-              <CalendarSearch aria-hidden />
-              {t('rules.preview')}
-            </Button>
-            {addButton}
-          </>
-        }
-      />
-      {query.isPending ? (
-        <TableSkeleton />
-      ) : query.isError ? (
-        <QueryError
-          error={query.error}
-          onRetry={() => {
-            void query.refetch()
-          }}
-        />
-      ) : (
-        <DataTable
-          data={query.data}
-          columns={columns}
-          rowLabel={(rule) => rule.name}
-          onReorder={
-            canManage
-              ? (ids) => {
-                  reorder.mutate(ids)
-                }
-              : undefined
-          }
-          initialVisibility={{ period: false }}
-          empty={
-            <EmptyState
-              icon={Repeat}
-              title={t('rules.emptyTitle')}
-              description={t('rules.emptyText')}
-              action={addButton}
-            />
-          }
-        />
-      )}
-
-      <Sheet
-        open={editing !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditing(null)
-        }}
-      >
-        <SheetContent className="overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>
-              {editing === 'new' ? t('rules.newTitle') : t('rules.editTitle')}
-            </SheetTitle>
-          </SheetHeader>
-          {editing !== null && (
-            <RuleForm
-              key={editing === 'new' ? 'new' : editing.id}
-              rule={editing === 'new' ? undefined : editing}
-              categories={categories}
-              accounts={accounts}
-              currency={baseCurrency}
-              pending={save.isPending}
-              error={save.error}
-              onSubmit={(input) => {
-                save.mutate(input)
-              }}
-              onCancel={() => {
-                setEditing(null)
-              }}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
-
-      <MonthPreviewDialog
-        householdId={householdId}
-        month={nextMonth}
-        currency={baseCurrency}
-        open={previewOpen}
-        onClose={() => {
-          setPreviewOpen(false)
-        }}
-      />
-
-      <ConfirmDialog
-        open={deleting !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleting(null)
-        }}
-        title={t('directories.deleteTitle', { name: deleting?.name ?? '' })}
-        description={t('directories.deleteText')}
-        confirmLabel={t('directories.delete')}
-        cancelLabel={t('common.cancel')}
-        destructive
-        pending={remove.isPending}
-        onConfirm={() => {
+    <DirectoryPage
+      title={t('rules.title')}
+      description={t('rules.description')}
+      actions={
+        <>
+          <Button
+            variant="outline"
+            onClick={() => {
+              setPreviewOpen(true)
+            }}
+          >
+            <CalendarSearch aria-hidden />
+            {t('rules.preview')}
+          </Button>
+          {addButton}
+        </>
+      }
+      status={{
+        isPending: query.isPending,
+        error: query.error,
+        onRetry: () => {
+          void query.refetch()
+        },
+      }}
+      form={{
+        open: editing !== null,
+        title: editing === 'new' ? t('rules.newTitle') : t('rules.editTitle'),
+        onClose: () => {
+          setEditing(null)
+        },
+        content: editing !== null && (
+          <RuleForm
+            key={editing === 'new' ? 'new' : editing.id}
+            rule={editing === 'new' ? undefined : editing}
+            categories={categories}
+            accounts={accounts}
+            currency={baseCurrency}
+            pending={save.isPending}
+            error={save.error}
+            onSubmit={(input) => {
+              save.mutate(input)
+            }}
+            onCancel={() => {
+              setEditing(null)
+            }}
+          />
+        ),
+      }}
+      remove={{
+        name: deleting?.name ?? null,
+        pending: remove.isPending,
+        onClose: () => {
+          setDeleting(null)
+        },
+        onConfirm: () => {
           if (deleting) {
             remove.mutate(deleting.id, {
               onSettled: () => {
@@ -251,9 +196,42 @@ export function RecurringRulesPage({
               },
             })
           }
-        }}
+        },
+      }}
+      dialogs={
+        <MonthPreviewDialog
+          householdId={householdId}
+          month={nextMonth}
+          currency={baseCurrency}
+          open={previewOpen}
+          onClose={() => {
+            setPreviewOpen(false)
+          }}
+        />
+      }
+    >
+      <DataTable
+        data={query.data ?? []}
+        columns={columns}
+        rowLabel={(rule) => rule.name}
+        onReorder={
+          canManage
+            ? (ids) => {
+                reorder.mutate(ids)
+              }
+            : undefined
+        }
+        initialVisibility={{ period: false }}
+        empty={
+          <EmptyState
+            icon={Repeat}
+            title={t('rules.emptyTitle')}
+            description={t('rules.emptyText')}
+            action={addButton}
+          />
+        }
       />
-    </>
+    </DirectoryPage>
   )
 }
 

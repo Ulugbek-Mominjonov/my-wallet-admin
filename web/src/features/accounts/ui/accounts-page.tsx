@@ -21,18 +21,14 @@ import { useDirectoryMutations } from '@/shared/api/use-directory-mutations'
 import { todayIso } from '@/shared/lib/date'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
 import { DataTable } from '@/shared/ui/data-table/data-table'
 import { createDataTableColumns } from '@/shared/ui/data-table/features'
+import { DirectoryPage } from '@/shared/ui/directory-page'
 import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { EntityIcon } from '@/shared/ui/entity-icon'
 import { MoneyText } from '@/shared/ui/money-text'
-import { PageHeader } from '@/shared/ui/page-header'
-import { QueryError } from '@/shared/ui/query-error'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
 import { Switch } from '@/shared/ui/switch'
-import { TableSkeleton } from '@/shared/ui/table-skeleton'
 
 const helper = createDataTableColumns<Account>()
 
@@ -121,94 +117,47 @@ export function AccountsPage({
   )
 
   return (
-    <>
-      <PageHeader
-        title={t('accounts.title')}
-        description={t('accounts.description')}
-        actions={addButton}
-      />
-      {query.isPending ? (
-        <TableSkeleton />
-      ) : query.isError ? (
-        <QueryError
-          error={query.error}
-          onRetry={() => {
-            void query.refetch()
-          }}
-        />
-      ) : (
-        <DataTable
-          data={query.data}
-          columns={columns}
-          rowLabel={(account) => account.name}
-          onReorder={
-            canManage && !archived
-              ? (ids) => {
-                  reorder.mutate(ids)
-                }
-              : undefined
-          }
-          initialVisibility={{ openingBalance: false }}
-          toolbar={
-            <label className="flex items-center gap-2 text-sm">
-              <Switch checked={archived} onCheckedChange={setArchived} />
-              {t('directories.showArchived')}
-            </label>
-          }
-          empty={
-            <EmptyState
-              icon={Wallet}
-              title={t('accounts.emptyTitle')}
-              description={t('accounts.emptyText')}
-              action={addButton}
-            />
-          }
-        />
-      )}
-
-      <Sheet
-        open={editing !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditing(null)
-        }}
-      >
-        <SheetContent className="overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>
-              {editing === 'new' ? t('accounts.newTitle') : t('accounts.editTitle')}
-            </SheetTitle>
-          </SheetHeader>
-          {editing !== null && (
-            <AccountForm
-              key={editing === 'new' ? 'new' : editing.id}
-              account={editing === 'new' ? undefined : editing}
-              currencies={currencies}
-              defaults={{ currency: baseCurrency, today: todayIso(timezone) }}
-              pending={save.isPending}
-              error={save.error}
-              onSubmit={(input) => {
-                save.mutate(input)
-              }}
-              onCancel={() => {
-                setEditing(null)
-              }}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
-
-      <ConfirmDialog
-        open={deleting !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleting(null)
-        }}
-        title={t('directories.deleteTitle', { name: deleting?.name ?? '' })}
-        description={t('directories.deleteText')}
-        confirmLabel={t('directories.delete')}
-        cancelLabel={t('common.cancel')}
-        destructive
-        pending={remove.isPending}
-        onConfirm={() => {
+    <DirectoryPage
+      title={t('accounts.title')}
+      description={t('accounts.description')}
+      actions={addButton}
+      status={{
+        isPending: query.isPending,
+        error: query.error,
+        onRetry: () => {
+          void query.refetch()
+        },
+      }}
+      form={{
+        open: editing !== null,
+        title: editing === 'new' ? t('accounts.newTitle') : t('accounts.editTitle'),
+        onClose: () => {
+          setEditing(null)
+        },
+        content: editing !== null && (
+          <AccountForm
+            key={editing === 'new' ? 'new' : editing.id}
+            account={editing === 'new' ? undefined : editing}
+            currencies={currencies}
+            defaults={{ currency: baseCurrency, today: todayIso(timezone) }}
+            pending={save.isPending}
+            error={save.error}
+            onSubmit={(input) => {
+              save.mutate(input)
+            }}
+            onCancel={() => {
+              setEditing(null)
+            }}
+          />
+        ),
+      }}
+      remove={{
+        name: deleting?.name ?? null,
+        pending: remove.isPending,
+        onClose: () => {
+          setDeleting(null)
+        },
+        onConfirm: () => {
           if (deleting) {
             // Xatoda ham yopiladi: sabab toast'da, qayta urinish foyda bermaydi.
             remove.mutate(deleting.id, {
@@ -217,9 +166,37 @@ export function AccountsPage({
               },
             })
           }
-        }}
+        },
+      }}
+    >
+      <DataTable
+        data={query.data ?? []}
+        columns={columns}
+        rowLabel={(account) => account.name}
+        onReorder={
+          canManage && !archived
+            ? (ids) => {
+                reorder.mutate(ids)
+              }
+            : undefined
+        }
+        initialVisibility={{ openingBalance: false }}
+        toolbar={
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={archived} onCheckedChange={setArchived} />
+            {t('directories.showArchived')}
+          </label>
+        }
+        empty={
+          <EmptyState
+            icon={Wallet}
+            title={t('accounts.emptyTitle')}
+            description={t('accounts.emptyText')}
+            action={addButton}
+          />
+        }
       />
-    </>
+    </DirectoryPage>
   )
 }
 

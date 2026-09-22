@@ -59,7 +59,10 @@
     "directories": "Directories",
     "accounts": "Accounts",
     "categories": "Categories",
-    "recurringRules": "Recurring payments"
+    "recurringRules": "Recurring payments",
+    "limits": "Limits",
+    "quickActions": "Quick actions",
+    "tags": "Tags"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -217,7 +220,8 @@
       "invalidParent": "A subcategory must be one level deep and of the same kind as its parent",
       "kindMismatch": "Category kind doesn't match",
       "monthShiftMismatch": "Income types with different month shifts can't be merged — align the shift first",
-      "previewOutdated": "Data has changed — review the move again"
+      "previewOutdated": "Data has changed — review the move again",
+      "amountPositive": "The amount must be greater than zero"
     }
   },
   "accounts": {
@@ -329,5 +333,59 @@
     "previewExisting": "exists",
     "previewEmpty": "Nothing to create",
     "previewClosed": "The month is closed"
+  },
+  "limits": {
+    "title": "Limits",
+    "description": "Monthly spending limits by category and the current month's status",
+    "add": "Add limit",
+    "newTitle": "New limit",
+    "editTitle": "Edit limit",
+    "category": "Category",
+    "amount": "Monthly limit",
+    "thisMonth": "This month",
+    "progress": "Status",
+    "ratio": "{{percent}}%",
+    "status": {
+      "ok": "On track",
+      "near": "Close to limit",
+      "over": "Exceeded"
+    },
+    "alerts": "Alerts",
+    "alert80": "Notify at 80%",
+    "alert100": "Notify at 100%",
+    "categoryHint": "A parent category's limit includes its subcategories",
+    "noCategories": "Every expense category already has a limit",
+    "emptyTitle": "No limits",
+    "emptyText": "Set a monthly limit for a category — you'll be notified at 80% and 100%."
+  },
+  "quickActions": {
+    "title": "Quick actions",
+    "description": "Expenses recorded in the mobile app with a single tap",
+    "add": "Add quick action",
+    "newTitle": "New quick action",
+    "editTitle": "Edit quick action",
+    "name": "Name",
+    "amount": "Amount",
+    "category": "Category",
+    "account": "Account",
+    "payee": "Place / payee",
+    "payeeHint": "Optional",
+    "preview": "Preview",
+    "emptyTitle": "No quick actions",
+    "emptyText": "Add frequent expenses: coffee, bus fare and so on.",
+    "errors": {
+      "category": "Choose a category",
+      "account": "Choose an account"
+    }
+  },
+  "tags": {
+    "title": "Tags",
+    "description": "Free labels for transactions (e.g. “Vacation”, “Renovation”)",
+    "add": "Add tag",
+    "newTitle": "New tag",
+    "editTitle": "Edit tag",
+    "name": "Name",
+    "emptyTitle": "No tags",
+    "emptyText": "Add tags to group transactions."
   }
 }

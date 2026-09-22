@@ -32,18 +32,14 @@ import { useDirectoryMutations } from '@/shared/api/use-directory-mutations'
 import { DEFAULT_ICON } from '@/shared/config/icons'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
-import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
 import { DataTable } from '@/shared/ui/data-table/data-table'
 import { createDataTableColumns } from '@/shared/ui/data-table/features'
+import { DirectoryPage } from '@/shared/ui/directory-page'
 import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { EntityIcon } from '@/shared/ui/entity-icon'
-import { PageHeader } from '@/shared/ui/page-header'
-import { QueryError } from '@/shared/ui/query-error'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
 import { Switch } from '@/shared/ui/switch'
-import { TableSkeleton } from '@/shared/ui/table-skeleton'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 
 const helper = createDataTableColumns<CategoryNode>()
@@ -172,12 +168,88 @@ export function CategoriesPage({
   const hasChildren = current ? categories.some((c) => c.parentId === current.id) : false
 
   return (
-    <>
-      <PageHeader
-        title={t('categories.title')}
-        description={t('categories.description')}
-        actions={addButton}
-      />
+    <DirectoryPage
+      title={t('categories.title')}
+      description={t('categories.description')}
+      actions={addButton}
+      status={{
+        isPending: query.isPending,
+        error: query.error,
+        onRetry: () => {
+          void query.refetch()
+        },
+      }}
+      form={{
+        open: editing !== null,
+        title: current
+          ? t('categories.editTitle')
+          : kind === 'income'
+            ? t('categories.newIncomeTitle')
+            : t('categories.newTitle'),
+        onClose: () => {
+          setEditing(null)
+        },
+        content: editing !== null && (
+          <CategoryForm
+            key={current?.id ?? `new-${editing.parentId ?? ''}`}
+            kind={current?.kind ?? kind}
+            category={current}
+            parentId={editing.parentId}
+            parents={parentOptions(categories, current?.kind ?? kind, current)}
+            hasChildren={hasChildren}
+            pending={save.isPending}
+            error={save.error}
+            onSubmit={(input) => {
+              save.mutate(input)
+            }}
+            onCancel={() => {
+              setEditing(null)
+            }}
+          />
+        ),
+      }}
+      remove={{
+        name: deleting?.name ?? null,
+        pending: remove.isPending,
+        onClose: () => {
+          setDeleting(null)
+        },
+        onConfirm: () => {
+          if (deleting) {
+            remove.mutate(deleting.id, {
+              onSettled: () => {
+                setDeleting(null)
+              },
+            })
+          }
+        },
+      }}
+      dialogs={
+        <>
+          <MergeDialog
+            source={merging}
+            categories={categories}
+            pending={merge.isPending}
+            error={merge.error}
+            onMerge={(to) => {
+              if (merging) merge.mutate({ from: merging.id, to })
+            }}
+            onClose={() => {
+              merge.reset()
+              setMerging(null)
+            }}
+          />
+          <RecalcDialog
+            householdId={householdId}
+            baseCurrency={baseCurrency}
+            open={recalc}
+            onClose={() => {
+              setRecalc(false)
+            }}
+          />
+        </>
+      }
+    >
       <Tabs
         value={kind}
         onValueChange={(value: CategoryKind) => {
@@ -189,128 +261,34 @@ export function CategoriesPage({
           <TabsTrigger value="income">{t('categories.income')}</TabsTrigger>
         </TabsList>
       </Tabs>
-      {query.isPending ? (
-        <TableSkeleton />
-      ) : query.isError ? (
-        <QueryError
-          error={query.error}
-          onRetry={() => {
-            void query.refetch()
-          }}
-        />
-      ) : (
-        <DataTable
-          key={kind}
-          data={rows}
-          columns={columns}
-          rowLabel={(category) => category.name}
-          onReorder={
-            canManage && !archived
-              ? (ids) => {
-                  reorder.mutate(ids)
-                }
-              : undefined
-          }
-          toolbar={
-            <label className="flex items-center gap-2 text-sm">
-              <Switch checked={archived} onCheckedChange={setArchived} />
-              {t('directories.showArchived')}
-            </label>
-          }
-          empty={
-            <EmptyState
-              icon={FolderTree}
-              title={t('categories.emptyTitle')}
-              description={t('categories.emptyText')}
-              action={addButton}
-            />
-          }
-        />
-      )}
-
-      <Sheet
-        open={editing !== null}
-        onOpenChange={(open) => {
-          if (!open) setEditing(null)
-        }}
-      >
-        <SheetContent className="overflow-y-auto">
-          <SheetHeader>
-            <SheetTitle>
-              {current
-                ? t('categories.editTitle')
-                : kind === 'income'
-                  ? t('categories.newIncomeTitle')
-                  : t('categories.newTitle')}
-            </SheetTitle>
-          </SheetHeader>
-          {editing !== null && (
-            <CategoryForm
-              key={current?.id ?? `new-${editing.parentId ?? ''}`}
-              kind={current?.kind ?? kind}
-              category={current}
-              parentId={editing.parentId}
-              parents={parentOptions(categories, current?.kind ?? kind, current)}
-              hasChildren={hasChildren}
-              pending={save.isPending}
-              error={save.error}
-              onSubmit={(input) => {
-                save.mutate(input)
-              }}
-              onCancel={() => {
-                setEditing(null)
-              }}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
-
-      <MergeDialog
-        source={merging}
-        categories={categories}
-        pending={merge.isPending}
-        error={merge.error}
-        onMerge={(to) => {
-          if (merging) merge.mutate({ from: merging.id, to })
-        }}
-        onClose={() => {
-          merge.reset()
-          setMerging(null)
-        }}
+      <DataTable
+        key={kind}
+        data={rows}
+        columns={columns}
+        rowLabel={(category) => category.name}
+        onReorder={
+          canManage && !archived
+            ? (ids) => {
+                reorder.mutate(ids)
+              }
+            : undefined
+        }
+        toolbar={
+          <label className="flex items-center gap-2 text-sm">
+            <Switch checked={archived} onCheckedChange={setArchived} />
+            {t('directories.showArchived')}
+          </label>
+        }
+        empty={
+          <EmptyState
+            icon={FolderTree}
+            title={t('categories.emptyTitle')}
+            description={t('categories.emptyText')}
+            action={addButton}
+          />
+        }
       />
-
-      <RecalcDialog
-        householdId={householdId}
-        baseCurrency={baseCurrency}
-        open={recalc}
-        onClose={() => {
-          setRecalc(false)
-        }}
-      />
-
-      <ConfirmDialog
-        open={deleting !== null}
-        onOpenChange={(open) => {
-          if (!open) setDeleting(null)
-        }}
-        title={t('directories.deleteTitle', { name: deleting?.name ?? '' })}
-        description={t('directories.deleteText')}
-        confirmLabel={t('directories.delete')}
-        cancelLabel={t('common.cancel')}
-        destructive
-        pending={remove.isPending}
-        onConfirm={() => {
-          if (deleting) {
-            // Xatoda ham yopiladi: sabab toast'da, qayta urinish foyda bermaydi.
-            remove.mutate(deleting.id, {
-              onSettled: () => {
-                setDeleting(null)
-              },
-            })
-          }
-        }}
-      />
-    </>
+    </DirectoryPage>
   )
 }
 

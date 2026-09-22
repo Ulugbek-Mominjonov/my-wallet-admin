@@ -59,7 +59,10 @@
     "directories": "Spravochniklar",
     "accounts": "Hisoblar",
     "categories": "Kategoriyalar",
-    "recurringRules": "Doimiy rejalar"
+    "recurringRules": "Doimiy rejalar",
+    "limits": "Limitlar",
+    "quickActions": "Tez tugmalar",
+    "tags": "Teglar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -217,7 +220,8 @@
       "invalidParent": "Subkategoriya faqat bir daraja va ota bilan bir turda bo'ladi",
       "kindMismatch": "Kategoriya turi mos emas",
       "monthShiftMismatch": "Oy siljishi farqli daromad turlari birlashtirilmaydi — avval siljishni tenglang",
-      "previewOutdated": "Ma'lumot o'zgargan — ko'chirishni qaytadan ko'ring"
+      "previewOutdated": "Ma'lumot o'zgargan — ko'chirishni qaytadan ko'ring",
+      "amountPositive": "Summa noldan katta bo'lsin"
     }
   },
   "accounts": {
@@ -329,5 +333,59 @@
     "previewExisting": "bor",
     "previewEmpty": "Yaratiladigan reja yo'q",
     "previewClosed": "Bu oy yopilgan"
+  },
+  "limits": {
+    "title": "Limitlar",
+    "description": "Kategoriyalar bo'yicha oylik xarajat chegarasi va joriy oy holati",
+    "add": "Limit qo'shish",
+    "newTitle": "Yangi limit",
+    "editTitle": "Limitni tahrirlash",
+    "category": "Kategoriya",
+    "amount": "Oylik limit",
+    "thisMonth": "Shu oy",
+    "progress": "Holat",
+    "ratio": "{{percent}}%",
+    "status": {
+      "ok": "Me'yorda",
+      "near": "Yaqinlashdi",
+      "over": "Oshib ketdi"
+    },
+    "alerts": "Ogohlantirish",
+    "alert80": "80% da xabar",
+    "alert100": "100% da xabar",
+    "categoryHint": "Ota-kategoriya limiti subkategoriyalar bilan hisoblanadi",
+    "noCategories": "Barcha xarajat kategoriyalarida limit bor",
+    "emptyTitle": "Limit yo'q",
+    "emptyText": "Kategoriya uchun oylik chegara qo'ying — 80% va 100% da xabar keladi."
+  },
+  "quickActions": {
+    "title": "Tez tugmalar",
+    "description": "Mobil ilovada bir bosishda yoziladigan xarajatlar",
+    "add": "Tez tugma qo'shish",
+    "newTitle": "Yangi tez tugma",
+    "editTitle": "Tez tugmani tahrirlash",
+    "name": "Nomi",
+    "amount": "Summa",
+    "category": "Kategoriya",
+    "account": "Hisob",
+    "payee": "Joy / kimga",
+    "payeeHint": "Ixtiyoriy",
+    "preview": "Ko'rinishi",
+    "emptyTitle": "Tez tugma yo'q",
+    "emptyText": "Kofe, yo'l kira kabi tez-tez takrorlanadigan xarajatlarni qo'shing.",
+    "errors": {
+      "category": "Kategoriyani tanlang",
+      "account": "Hisobni tanlang"
+    }
+  },
+  "tags": {
+    "title": "Teglar",
+    "description": "Amallarni erkin belgilash (masalan \"Ta'til\", \"Ta'mirlash\")",
+    "add": "Teg qo'shish",
+    "newTitle": "Yangi teg",
+    "editTitle": "Tegni tahrirlash",
+    "name": "Nomi",
+    "emptyTitle": "Teg yo'q",
+    "emptyText": "Amallarni guruhlash uchun teg qo'shing."
   }
 }

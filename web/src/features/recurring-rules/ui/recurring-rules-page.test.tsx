@@ -4,13 +4,12 @@ import { http, HttpResponse } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Category } from '@/entities/category'
-import { HouseholdProvider } from '@/entities/household'
+import { TEST_HOUSEHOLD_ID, WithHousehold } from '@/entities/household/testing'
 import { RecurringRulesPage } from '@/features/recurring-rules/ui/recurring-rules-page'
 import { server, signInTestUser, supabasePath } from '@/shared/test/msw'
 import { renderWithProviders } from '@/shared/test/render'
-import { Toaster } from '@/shared/ui/sonner'
 
-const HOUSEHOLD = '0198f000-0000-7000-8000-00000000000a'
+const HOUSEHOLD = TEST_HOUSEHOLD_ID
 
 const category = (id: string, name: string, kind: Category['kind']): Category => ({
   id,
@@ -73,16 +72,7 @@ const RULES = [
 function renderPage() {
   server.use(http.get(supabasePath('/rest/v1/recurring_rules'), () => HttpResponse.json(RULES)))
   renderWithProviders(
-    <HouseholdProvider
-      household={{
-        id: HOUSEHOLD,
-        name: 'Uy',
-        role: 'owner',
-        base_currency: 'UZS',
-        timezone: 'Asia/Tashkent',
-        onboarded: true,
-      }}
-    >
+    <WithHousehold>
       <RecurringRulesPage
         householdId={HOUSEHOLD}
         categories={CATEGORIES}
@@ -90,8 +80,7 @@ function renderPage() {
         baseCurrency="UZS"
         timezone="Asia/Tashkent"
       />
-      <Toaster />
-    </HouseholdProvider>,
+    </WithHousehold>,
   )
   return userEvent.setup()
 }
