@@ -5,7 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import { ArrowLeftRight, Plus } from 'lucide-react'
+import { ArrowLeftRight, Download, Plus } from 'lucide-react'
 import { useMemo, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -16,28 +16,34 @@ import { useCan } from '@/entities/household'
 import type { Tag } from '@/entities/tag'
 import type { Transaction } from '@/entities/transaction'
 import {
+  bulkTransactions,
   deleteTransaction,
+  fetchAllTransactions,
   saveTransaction,
   transactionsKey,
   transactionsQuery,
   transactionsSummaryQuery,
+  type BulkAction,
+  type BulkResult,
   type TransactionsSummary,
 } from '@/features/transactions/api/transactions-api'
+import { exportFileName, transactionsCsv } from '@/features/transactions/model/export'
 import {
   activeFilterCount,
   clearFilters,
+  periodOf,
   toRpcFilters,
   type TransactionSearch,
 } from '@/features/transactions/model/filters'
-import { transactionName } from '@/features/transactions/model/labels'
+import { transactionName, type TransactionLookup } from '@/features/transactions/model/labels'
 import type { TransactionInput } from '@/features/transactions/model/transaction-form'
+import { BulkActions } from '@/features/transactions/ui/bulk-actions'
 import { TransactionFiltersBar } from '@/features/transactions/ui/transaction-filters'
 import { TransactionForm, type DebtOption } from '@/features/transactions/ui/transaction-form'
-import {
-  TransactionsTable,
-  type TransactionLookup,
-} from '@/features/transactions/ui/transactions-table'
+import { TransactionsTable } from '@/features/transactions/ui/transactions-table'
+import { businessErrorMessage } from '@/shared/api/errors'
 import { qk } from '@/shared/api/query-keys'
+import { downloadFile } from '@/shared/lib/download'
 import type { MonthKey } from '@/shared/lib/month'
 import { Button } from '@/shared/ui/button'
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
@@ -48,6 +54,17 @@ import { PageHeader } from '@/shared/ui/page-header'
 import { QueryError } from '@/shared/ui/query-error'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
 import { TableSkeleton } from '@/shared/ui/table-skeleton'
+
+const NO_SELECTION: ReadonlySet<string> = new Set()
+
+/** O'tkazib yuborilganlar sababi bo'yicha: "Oy yopilgan… (2); Amal topilmadi… (1)". */
+function skippedSummary(skipped: BulkResult['skipped']): string {
+  const counts = new Map<string, number>()
+  for (const { reason } of skipped) counts.set(reason, (counts.get(reason) ?? 0) + 1)
+  return [...counts]
+    .map(([reason, n]) => `${businessErrorMessage(reason)} (${String(n)})`)
+    .join('; ')
+}
 
 /**
  * E23-T01, T02: amallar — filtrlar URL'da, keyset sahifalar ("Yana yuklash"),
@@ -84,6 +101,28 @@ export function TransactionsPage({
   const { t } = useTranslation()
   const canWrite = useCan('write')
   const queryClient = useQueryClient()
+  const lookup = useMemo<TransactionLookup>(
+    () => ({
+      accounts: new Map(accounts.map((a) => [a.id, a])),
+      categories: new Map(categories.map((c) => [c.id, c])),
+      tags: new Map(tags.map((tag) => [tag.id, tag])),
+      members: new Map(members.map((m) => [m.value, m.label])),
+    }),
+    [accounts, categories, tags, members],
+  )
+  const options = useMemo(
+    () => ({
+      accounts: accounts.map((a) => ({ value: a.id, label: a.name })),
+      categories: categoryTree(categories).map((c) => ({
+        value: c.id,
+        label: c.name,
+        depth: c.depth,
+      })),
+      members,
+      tags: tags.map((tag) => ({ value: tag.id, label: tag.name })),
+    }),
+    [accounts, categories, tags, members],
+  )
   const [editing, setEditing] = useState<Transaction | 'new' | null>(null)
   const [deleting, setDeleting] = useState<Transaction | null>(null)
   // Amal qoldiq, hisobot, limit, qarzlarga ta'sir qiladi: ro'yxat darhol
@@ -107,6 +146,44 @@ export function TransactionsPage({
     },
     meta: { silent: true },
   })
+  // Tanlov filtrga bog'langan: filtr o'zgarsa — yangi ro'yxat, bo'sh tanlov.
+  const filtersKey = JSON.stringify(toRpcFilters(search, currentMonth))
+  const [selection, setSelection] = useState({ key: filtersKey, ids: NO_SELECTION })
+  const selected = selection.key === filtersKey ? selection.ids : NO_SELECTION
+  const select = (ids: ReadonlySet<string>) => {
+    setSelection({ key: filtersKey, ids })
+  }
+  const bulk = useMutation({
+    mutationFn: ({ ids, action, value }: { ids: string[]; action: BulkAction; value?: string }) =>
+      bulkTransactions(householdId, ids, action, value),
+    onSuccess: async (result) => {
+      if (result.skipped.length === 0) {
+        toast.success(t('transactions.bulk.done', { count: result.done.length }))
+      } else {
+        toast.warning(
+          t('transactions.bulk.partial', {
+            done: result.done.length,
+            skipped: result.skipped.length,
+          }),
+          { description: skippedSummary(result.skipped) },
+        )
+      }
+      // O'tkazib yuborilganlar tanlangan qoladi — qaysilari ekani ko'rinadi.
+      select(new Set(result.skipped.map((s) => s.id)))
+      await refresh()
+    },
+  })
+  const exportCsv = useMutation({
+    mutationFn: () => fetchAllTransactions(householdId, filters),
+    onSuccess: (rows) => {
+      downloadFile(
+        exportFileName(t('transactions.export.fileName'), periodOf(search, currentMonth)),
+        transactionsCsv(rows, lookup, { t, baseCurrency }),
+        'text/csv;charset=utf-8',
+      )
+      toast.success(t('transactions.export.done', { count: rows.length }))
+    },
+  })
   const remove = useMutation({
     mutationFn: (row: Transaction) => deleteTransaction(row.id),
     onSuccess: async () => {
@@ -128,30 +205,13 @@ export function TransactionsPage({
     placeholderData: keepPreviousData,
   })
 
-  const lookup = useMemo<TransactionLookup>(
-    () => ({
-      accounts: new Map(accounts.map((a) => [a.id, a])),
-      categories: new Map(categories.map((c) => [c.id, c])),
-      tags: new Map(tags.map((tag) => [tag.id, tag])),
-      members: new Map(members.map((m) => [m.value, m.label])),
-    }),
-    [accounts, categories, tags, members],
-  )
-  const options = useMemo(
-    () => ({
-      accounts: accounts.map((a) => ({ value: a.id, label: a.name })),
-      categories: categoryTree(categories).map((c) => ({
-        value: c.id,
-        label: c.name,
-        depth: c.depth,
-      })),
-      members,
-      tags: tags.map((tag) => ({ value: tag.id, label: tag.name })),
-    }),
-    [accounts, categories, tags, members],
-  )
-
   const rows = list.data?.pages.flat() ?? []
+  // Ommaviy kategoriya: tanlangan amallar turlariga mos (aralash — ikkalasi,
+  // mos kelmaganini server sababi bilan o'tkazadi).
+  const selectedKinds = new Set(rows.filter((row) => selected.has(row.id)).map((row) => row.kind))
+  const bulkCategories = categoryTree(
+    categories.filter((c) => c.archivedAt === null && selectedKinds.has(c.kind)),
+  ).map((c) => ({ value: c.id, label: c.name, depth: c.depth }))
   const filtered = activeFilterCount(search) > 0
 
   return (
@@ -160,17 +220,29 @@ export function TransactionsPage({
         title={t('transactions.title')}
         description={t('transactions.description')}
         actions={
-          canWrite && (
+          <>
             <Button
+              variant="outline"
+              disabled={exportCsv.isPending}
               onClick={() => {
-                save.reset()
-                setEditing('new')
+                exportCsv.mutate()
               }}
             >
-              <Plus aria-hidden />
-              {t('transactions.add')}
+              <Download aria-hidden />
+              {t('transactions.export.button')}
             </Button>
-          )
+            {canWrite && (
+              <Button
+                onClick={() => {
+                  save.reset()
+                  setEditing('new')
+                }}
+              >
+                <Plus aria-hidden />
+                {t('transactions.add')}
+              </Button>
+            )}
+          </>
         }
       />
       <TransactionFiltersBar
@@ -210,6 +282,20 @@ export function TransactionsPage({
         />
       ) : (
         <div className="space-y-3">
+          {selected.size > 0 && (
+            <BulkActions
+              count={selected.size}
+              categories={bulkCategories}
+              tags={options.tags}
+              pending={bulk.isPending}
+              onApply={(action, value) => {
+                bulk.mutate({ ids: [...selected], action, value })
+              }}
+              onClear={() => {
+                select(NO_SELECTION)
+              }}
+            />
+          )}
           <TransactionsTable
             rows={rows}
             lookup={lookup}
@@ -226,6 +312,7 @@ export function TransactionsPage({
                   }
                 : undefined
             }
+            selection={canWrite ? { selected, onChange: select } : undefined}
           />
           <div className="flex flex-wrap items-center justify-between gap-2">
             {summary.data && (

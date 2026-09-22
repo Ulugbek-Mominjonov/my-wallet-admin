@@ -81,7 +81,13 @@ const BUSINESS_ERRORS: Record<string, ParseKeys> = {
   month_closed: 'transactions.errors.monthClosed',
   tag_deleted: 'transactions.errors.tagDeleted',
   transaction_not_found: 'transactions.errors.notFound',
+  // Ommaviy amal natijasi: qator topilmadi (boshqa byudjet yoki o'chirilgan).
+  not_found: 'transactions.errors.notFound',
 }
+
+/** Biznes kod (xato yoki ommaviy amal natijasidagi `reason`) → foydalanuvchi matni. */
+export const businessErrorMessage = (code: string): string =>
+  i18n.t(BUSINESS_ERRORS[code] ?? 'errors.unknown')
 
 /** Supabase/tarmoq xatosini AppError'ga aylantiradi. */
 export function toAppError(error: unknown): AppError {
@@ -97,8 +103,7 @@ export function toAppError(error: unknown): AppError {
   }
   if (isPostgrestLike(error)) {
     if (error.code === 'P0001') {
-      const key = BUSINESS_ERRORS[error.message]
-      return new AppError(error.message, i18n.t(key ?? 'errors.unknown'), { cause: error })
+      return new AppError(error.message, businessErrorMessage(error.message), { cause: error })
     }
     // Nom band (masalan `accounts_name_key` — byudjet ichida registrsiz, BR-003).
     if (error.code === '23505') {

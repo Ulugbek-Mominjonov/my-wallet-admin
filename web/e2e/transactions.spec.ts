@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises'
+
 import { expect, test, type Page } from '@playwright/test'
 
 import { accessToken, HOUSEHOLD_URL, signIn } from './support/app.ts'
@@ -155,5 +157,53 @@ test.describe('E23: amallar jadvali va formasi', () => {
       .getByRole('button', { name: "O'chirish" })
       .click()
     await expect(table.getByRole('row')).toHaveCount(4)
+  })
+
+  test('ommaviy: teg qo‘shish va o‘chirish; CSV — joriy filtr bilan', async ({ page }) => {
+    const householdId = await ownerWithTransactions(page)
+    await page.goto(`/h/${householdId}/transactions`)
+    const table = page.getByRole('table', { name: 'Amallar' })
+    await expect(table.getByRole('row')).toHaveCount(4)
+
+    // Teg — spravochnikda bo'lishi kerak (teglar sahifasi E22).
+    const token = await accessToken(page)
+    await insert(token, 'tags', [{ household_id: householdId, name: 'Oila' }])
+    await page.reload()
+
+    await page.getByRole('checkbox', { name: 'Tanlash: Korzinka' }).check()
+    await page.getByRole('checkbox', { name: 'Tanlash: Yandex Go' }).check()
+    const bar = page.getByRole('region', { name: 'Tanlangan: 2' })
+    await bar.getByRole('button', { name: "Teg qo'shish" }).click()
+    const dialog = page.getByRole('dialog', { name: 'Tanlangan amallarga teg' })
+    await dialog.getByRole('combobox', { name: 'Teglar' }).click()
+    await page.getByRole('option', { name: 'Oila' }).click()
+    await dialog.getByRole('button', { name: "Qo'llash" }).click()
+    await expect(page.getByText('Bajarildi: 2 ta amal')).toBeVisible()
+    await expect(table.getByRole('row', { name: /Korzinka/ })).toContainText('Oila')
+    await expect(table.getByRole('row', { name: /Yandex Go/ })).toContainText('Oila')
+
+    // CSV: faqat xarajatlar (filtr) — 2 qator + sarlavha.
+    await page.getByRole('button', { name: 'Xarajat' }).click()
+    await expect(table.getByRole('row')).toHaveCount(3)
+    const downloading = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'CSV eksport' }).click()
+    const download = await downloading
+    expect(download.suggestedFilename()).toMatch(/^amallar-\d{4}-\d{2}\.csv$/)
+    const csv = await readFile(await download.path(), 'utf8')
+    const lines = csv.trim().split('\r\n')
+    expect(lines).toHaveLength(3)
+    expect(csv).toContain('Korzinka')
+    expect(csv).not.toContain('Bankomat')
+
+    await page.getByRole('checkbox', { name: 'Sahifadagilarni tanlash' }).check()
+    await page
+      .getByRole('region', { name: 'Tanlangan: 2' })
+      .getByRole('button', { name: "O'chirish" })
+      .click()
+    await page
+      .getByRole('dialog', { name: "Tanlangan amallar o'chirilsinmi?" })
+      .getByRole('button', { name: "O'chirish" })
+      .click()
+    await expect(page.getByText("Filtr bo'yicha amal topilmadi")).toBeVisible()
   })
 })

@@ -201,14 +201,15 @@ select throws_ok(
 select is(
   public.bulk_transactions((select id from ref where name = 'h'),
     array[(select id from tx where name = 'korzinka'), (select id from tx where name = 'avans'),
-          '00000000-0000-0000-0000-000000000001'::uuid],
+          (select id from tx where name = 'bankomat'), '00000000-0000-0000-0000-000000000001'::uuid],
     'set_category', (select id from ref where name = 'c_kiyim')),
   jsonb_build_object(
     'done', jsonb_build_array((select id from tx where name = 'korzinka')),
     'skipped', jsonb_build_array(
       jsonb_build_object('id', (select id from tx where name = 'avans'), 'reason', 'category_kind_mismatch'),
+      jsonb_build_object('id', (select id from tx where name = 'bankomat'), 'reason', 'category_kind_mismatch'),
       jsonb_build_object('id', '00000000-0000-0000-0000-000000000001', 'reason', 'not_found'))),
-  'set_category — mos kelmagan tur va begona id o''tkaziladi, qolgani bajariladi'
+  'set_category — mos kelmagan tur, o''tkazma va begona id o''tkaziladi, qolgani bajariladi'
 );
 select is(
   public.bulk_transactions((select id from ref where name = 'h'),

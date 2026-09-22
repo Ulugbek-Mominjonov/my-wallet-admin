@@ -2,39 +2,45 @@ import { ArrowLeftRight, Paperclip } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { ACCOUNT_TYPE_ICON, type Account } from '@/entities/account'
-import type { Category } from '@/entities/category'
-import type { Tag } from '@/entities/tag'
 import type { Transaction } from '@/entities/transaction'
-import { MISSING, transactionName } from '@/features/transactions/model/labels'
+import {
+  MISSING,
+  transactionName,
+  type TransactionLookup,
+} from '@/features/transactions/model/labels'
 import { DEFAULT_ICON } from '@/shared/config/icons'
 import { useAppLocale } from '@/shared/i18n'
 import { formatDate } from '@/shared/lib/date'
 import { formatMonth } from '@/shared/lib/month'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
+import { Checkbox } from '@/shared/ui/checkbox'
 import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { EntityIcon, EntityIconTile, IconTile } from '@/shared/ui/entity-icon'
 import { MoneyText } from '@/shared/ui/money-text'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
-/** Jadval uchun ID → yozuv xaritalari (har qatorda qidiruv O(1)). */
-export interface TransactionLookup {
-  accounts: ReadonlyMap<string, Account>
-  categories: ReadonlyMap<string, Category>
-  tags: ReadonlyMap<string, Tag>
-  members: ReadonlyMap<string, string>
-}
-
 /** `YYYY-MM-DD` / `YYYY-MM-01` → `YYYY-MM`. */
 const monthOf = (isoDate: string) => isoDate.slice(0, 7)
 
 /** E23-T01: amallar jadvali (server tartibi — sana va id bo'yicha kamayish). */
+interface RowActions {
+  onEdit: (row: Transaction) => void
+  onDelete: (row: Transaction) => void
+}
+
+interface Selection {
+  selected: ReadonlySet<string>
+  onChange: (next: ReadonlySet<string>) => void
+}
+
 export function TransactionsTable({
   rows,
   lookup,
   baseCurrency,
   busy,
   actions,
+  selection,
 }: {
   rows: readonly Transaction[]
   lookup: TransactionLookup
@@ -42,14 +48,34 @@ export function TransactionsTable({
   /** Yangi filtr natijasi kutilmoqda — eski qatorlar xiralashtiriladi. */
   busy: boolean
   /** Yozish huquqi bo'lsa — qator amallari (tahrirlash, o'chirish). */
-  actions?: { onEdit: (row: Transaction) => void; onDelete: (row: Transaction) => void }
+  actions?: RowActions
+  /** Ommaviy amallar uchun tanlov (E23-T03). */
+  selection?: Selection
 }) {
   const { t } = useTranslation()
+  const selectedHere = selection ? rows.filter((row) => selection.selected.has(row.id)).length : 0
   return (
     <div className={cn('rounded-lg border transition-opacity', busy && 'opacity-60')}>
       <Table aria-label={t('transactions.title')} aria-busy={busy}>
         <TableHeader>
           <TableRow>
+            {selection && (
+              <TableHead className="w-10">
+                <Checkbox
+                  aria-label={t('transactions.bulk.selectAll')}
+                  checked={rows.length > 0 && selectedHere === rows.length}
+                  indeterminate={selectedHere > 0 && selectedHere < rows.length}
+                  onCheckedChange={(checked) => {
+                    const next = new Set(selection.selected)
+                    for (const row of rows) {
+                      if (checked) next.add(row.id)
+                      else next.delete(row.id)
+                    }
+                    selection.onChange(next)
+                  }}
+                />
+              </TableHead>
+            )}
             <TableHead>{t('transactions.columns.date')}</TableHead>
             <TableHead>{t('transactions.columns.category')}</TableHead>
             <TableHead>{t('transactions.columns.description')}</TableHead>
@@ -71,6 +97,7 @@ export function TransactionsTable({
               lookup={lookup}
               baseCurrency={baseCurrency}
               actions={actions}
+              selection={selection}
             />
           ))}
         </TableBody>
@@ -84,11 +111,13 @@ function TransactionRow({
   lookup,
   baseCurrency,
   actions,
+  selection,
 }: {
   row: Transaction
   lookup: TransactionLookup
   baseCurrency: string
-  actions?: { onEdit: (row: Transaction) => void; onDelete: (row: Transaction) => void }
+  actions?: RowActions
+  selection?: Selection
 }) {
   const { t } = useTranslation()
   const locale = useAppLocale()
@@ -101,8 +130,25 @@ function TransactionRow({
   // BR-040..045: tegishli oy sana oyidan farq qilsa — ko'rsatiladi.
   const shifted = monthOf(row.budgetMonth) !== monthOf(row.occurredOn)
 
+  const selected = selection?.selected.has(row.id) ?? false
   return (
-    <TableRow>
+    <TableRow data-state={selected ? 'selected' : undefined}>
+      {selection && (
+        <TableCell>
+          <Checkbox
+            aria-label={t('transactions.bulk.select', {
+              name: transactionName(row, category, t('transactions.transfer')),
+            })}
+            checked={selected}
+            onCheckedChange={(checked) => {
+              const next = new Set(selection.selected)
+              if (checked) next.add(row.id)
+              else next.delete(row.id)
+              selection.onChange(next)
+            }}
+          />
+        </TableCell>
+      )}
       <TableCell className="whitespace-nowrap tabular-nums">
         {formatDate(row.occurredOn, locale)}
       </TableCell>

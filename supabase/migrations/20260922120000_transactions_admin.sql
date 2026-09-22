@@ -158,7 +158,8 @@ as $$
            coalesce(p_filters, '{}'),
            coalesce(p_after_date, 'infinity'::date),
            coalesce(p_after_id, 'ffffffff-ffff-ffff-ffff-ffffffffffff'::uuid),
-           least(greatest(coalesce(p_limit, 50), 1), 200)) t
+           -- 1000 — PostgREST max_rows: UI 50 tadan, CSV eksport 1000 tadan oladi.
+           least(greatest(coalesce(p_limit, 50), 1), 1000)) t
    order by t.occurred_on desc, t.id desc
 $$;
 
@@ -230,6 +231,11 @@ begin
   foreach v_id in array coalesce(p_ids, '{}') loop
     begin
       if p_action = 'set_category' then
+        -- O'tkazmada kategoriya yo'q (CHECK) — tushunarli sabab bilan o'tkaziladi.
+        if exists (select 1 from public.transactions t
+                    where t.household_id = p_household and t.id = v_id and t.kind = 'transfer') then
+          raise exception 'category_kind_mismatch' using errcode = 'P0001';
+        end if;
         update public.transactions t set category_id = p_value
          where t.household_id = p_household and t.id = v_id and t.deleted_at is null;
         get diagnostics v_count = row_count;

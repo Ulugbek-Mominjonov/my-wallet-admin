@@ -675,6 +675,30 @@
       "tagDeleted": "Teg o'chirilgan — ro'yxatni yangilang",
       "notFound": "Amal topilmadi — ehtimol o'chirilgan",
       "categoryDeleted": "Kategoriya o'chirilgan — boshqasini tanlang"
+    },
+    "export": {
+      "button": "CSV eksport",
+      "fileName": "amallar",
+      "currency": "Valyuta",
+      "amountBase": "Summa ({{currency}})",
+      "done": "Eksport tayyor: {{count}} ta amal"
+    },
+    "bulk": {
+      "selected": "Tanlangan: {{count}}",
+      "selectAll": "Sahifadagilarni tanlash",
+      "select": "Tanlash: {{name}}",
+      "clear": "Tanlovni bekor qilish",
+      "setCategory": "Kategoriyani almashtirish",
+      "addTag": "Teg qo'shish",
+      "delete": "O'chirish",
+      "apply": "Qo'llash",
+      "categoryTitle": "Tanlangan amallar kategoriyasi",
+      "tagTitle": "Tanlangan amallarga teg",
+      "chooseTag": "Tegni tanlang",
+      "deleteTitle": "Tanlangan amallar o'chirilsinmi?",
+      "deleteText": "{{count}} ta amal o'chiriladi; hisob qoldiqlari va hisobotlar qayta hisoblanadi.",
+      "done": "Bajarildi: {{count}} ta amal",
+      "partial": "Bajarildi: {{done}}, o'tkazib yuborildi: {{skipped}}"
     }
   }
 }

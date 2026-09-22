@@ -675,6 +675,30 @@
       "tagDeleted": "A tag was deleted — refresh the list",
       "notFound": "Transaction not found — it may have been deleted",
       "categoryDeleted": "The category was deleted — choose another"
+    },
+    "export": {
+      "button": "Export CSV",
+      "fileName": "transactions",
+      "currency": "Currency",
+      "amountBase": "Amount ({{currency}})",
+      "done": "Export ready: {{count}} transactions"
+    },
+    "bulk": {
+      "selected": "Selected: {{count}}",
+      "selectAll": "Select all on page",
+      "select": "Select: {{name}}",
+      "clear": "Clear selection",
+      "setCategory": "Change category",
+      "addTag": "Add tag",
+      "delete": "Delete",
+      "apply": "Apply",
+      "categoryTitle": "Category for selected transactions",
+      "tagTitle": "Tag for selected transactions",
+      "chooseTag": "Choose a tag",
+      "deleteTitle": "Delete the selected transactions?",
+      "deleteText": "Transactions to delete: {{count}}; balances and reports will be recalculated.",
+      "done": "Done: {{count}} transactions",
+      "partial": "Done: {{done}}, skipped: {{skipped}}"
     }
   }
 }

@@ -67,6 +67,30 @@ interface Cursor {
   id: string
 }
 
+/** Keyingi sahifa kursori; sahifa to'lmagan bo'lsa — oxiri. */
+const nextCursor = (page: readonly Transaction[], size: number): Cursor | null => {
+  const last = page.at(-1)
+  if (page.length < size || last === undefined) return null
+  return { date: last.occurredOn, id: last.id }
+}
+
+async function fetchPage(
+  householdId: string,
+  filters: TransactionFilters,
+  cursor: Cursor | null,
+  size: number,
+): Promise<Transaction[]> {
+  const { data, error } = await supabase.rpc('transactions_list', {
+    p_household: householdId,
+    p_filters: filters,
+    p_after_date: cursor?.date,
+    p_after_id: cursor?.id,
+    p_limit: size,
+  })
+  if (error) throw toAppError(error)
+  return z.array(rowSchema).parse(data).map(toTransaction)
+}
+
 /**
  * E23-T01: amallar — keyset sahifalar (`occurred_on, id` kamayish). Kalitda
  * RPC filtri: har filtr o'z keshiga ega, orqaga qaytish tez.
@@ -75,23 +99,56 @@ export const transactionsQuery = (householdId: string, filters: TransactionFilte
   infiniteQueryOptions({
     queryKey: [...transactionsKey(householdId), 'list', filters],
     initialPageParam: null as Cursor | null,
-    queryFn: async ({ pageParam }): Promise<Transaction[]> => {
-      const { data, error } = await supabase.rpc('transactions_list', {
-        p_household: householdId,
-        p_filters: filters,
-        p_after_date: pageParam?.date,
-        p_after_id: pageParam?.id,
-        p_limit: TRANSACTIONS_PAGE_SIZE,
-      })
-      if (error) throw toAppError(error)
-      return z.array(rowSchema).parse(data).map(toTransaction)
-    },
-    getNextPageParam: (page): Cursor | null => {
-      const last = page.at(-1)
-      if (page.length < TRANSACTIONS_PAGE_SIZE || last === undefined) return null
-      return { date: last.occurredOn, id: last.id }
-    },
+    queryFn: ({ pageParam }) => fetchPage(householdId, filters, pageParam, TRANSACTIONS_PAGE_SIZE),
+    getNextPageParam: (page) => nextCursor(page, TRANSACTIONS_PAGE_SIZE),
   })
+
+/** Eksport sahifasi — PostgREST `max_rows` (RPC chegarasi ham shu). */
+const EXPORT_PAGE_SIZE = 1000
+
+/**
+ * E23-T03: CSV uchun filtr bo'yicha hamma amallar — 1000 tadan keyset
+ * sahifalar (ketma-ket: har sahifa oldingisining kursoriga bog'liq).
+ */
+export async function fetchAllTransactions(
+  householdId: string,
+  filters: TransactionFilters,
+): Promise<Transaction[]> {
+  const rows: Transaction[] = []
+  let cursor: Cursor | null = null
+  do {
+    const page = await fetchPage(householdId, filters, cursor, EXPORT_PAGE_SIZE)
+    rows.push(...page)
+    cursor = nextCursor(page, EXPORT_PAGE_SIZE)
+  } while (cursor !== null)
+  return rows
+}
+
+export type BulkAction = 'set_category' | 'add_tag' | 'delete'
+
+const bulkResultSchema = z.object({
+  done: z.array(z.string()),
+  skipped: z.array(z.object({ id: z.string(), reason: z.string() })),
+})
+
+export type BulkResult = z.infer<typeof bulkResultSchema>
+
+/** E23-T03 (BR-183): bitta so'rov; rad etilgan qatorlar sababi bilan qaytadi. */
+export async function bulkTransactions(
+  householdId: string,
+  ids: readonly string[],
+  action: BulkAction,
+  value?: string,
+): Promise<BulkResult> {
+  const { data, error } = await supabase.rpc('bulk_transactions', {
+    p_household: householdId,
+    p_ids: [...ids],
+    p_action: action,
+    p_value: value,
+  })
+  if (error) throw toAppError(error)
+  return bulkResultSchema.parse(data)
+}
 
 const summarySchema = z.object({
   count: z.number(),

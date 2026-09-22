@@ -211,7 +211,7 @@ xil filtrdan; a'zo bo'lmagan — `forbidden`.
 
 - `transactions_list(p_household, p_filters = '{}', p_after_date, p_after_id, p_limit = 50)` —
   keyset sahifa, `(occurred_on, id)` bo'yicha kamayish; keyingi sahifa — oxirgi
-  qatorning `occurred_on` va `id` si. `p_limit` 1..200. Qator: amal ustunlari +
+  qatorning `occurred_on` va `id` si. `p_limit` 1..1000 (PostgREST `max_rows`; eksport — 1000 tadan). Qator: amal ustunlari +
   `tag_ids uuid[]`, `has_receipt boolean`.
 - `transactions_summary(p_household, p_filters = '{}')` →
   `{count, income, expense, transfer}` (asosiy valyutada).

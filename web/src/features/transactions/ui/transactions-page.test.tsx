@@ -2,7 +2,7 @@ import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { useState } from 'react'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import type { Account } from '@/entities/account'
 import type { Category } from '@/entities/category'
@@ -499,5 +499,129 @@ describe('TransactionForm (E23-T02)', () => {
     expect(await within(dialog).findByRole('alert')).toHaveTextContent(
       'Oy yopilgan (qattiq qulf) — avval oyni qayta oching',
     )
+  })
+})
+
+describe('Ommaviy amallar va CSV (E23-T03)', () => {
+  beforeEach(() => {
+    signInTestUser()
+  })
+
+  const ROWS = [
+    row('t1'),
+    row('t2', { payee: 'Makro', amount: 2000000, amount_base: 2000000 }),
+    row('t3', { payee: 'Evos', amount: 7000000, amount_base: 7000000 }),
+  ]
+
+  function mockBulk(result: object) {
+    const bodies: Record<string, unknown>[] = []
+    server.use(
+      http.post(supabasePath('/rest/v1/rpc/bulk_transactions'), async ({ request }) => {
+        bodies.push((await request.json()) as Record<string, unknown>)
+        return HttpResponse.json(result)
+      }),
+    )
+    return bodies
+  }
+
+  it('kategoriya almashtirish — bitta so‘rov; o‘tkazib yuborilgani sababi bilan, tanlangan qoladi', async () => {
+    mockRpc(() => ROWS)
+    const bodies = mockBulk({ done: ['t1'], skipped: [{ id: 't2', reason: 'month_closed' }] })
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('checkbox', { name: 'Tanlash: Korzinka' }))
+    await user.click(screen.getByRole('checkbox', { name: 'Tanlash: Makro' }))
+    const bar = screen.getByRole('region', { name: 'Tanlangan: 2' })
+    await user.click(within(bar).getByRole('button', { name: 'Kategoriyani almashtirish' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Tanlangan amallar kategoriyasi' })
+    await chooseOption(user, dialog, 'Kategoriya', 'Transport')
+    await user.click(within(dialog).getByRole('button', { name: "Qo'llash" }))
+
+    expect(await screen.findByText("Bajarildi: 1, o'tkazib yuborildi: 1")).toBeInTheDocument()
+    expect(screen.getByText(/Oy yopilgan \(qattiq qulf\).*\(1\)/)).toBeInTheDocument()
+    expect(bodies).toEqual([
+      {
+        p_household: TEST_HOUSEHOLD_ID,
+        p_ids: ['t1', 't2'],
+        p_action: 'set_category',
+        p_value: TRANSPORT,
+      },
+    ])
+    expect(await screen.findByRole('region', { name: 'Tanlangan: 1' })).toBeInTheDocument()
+    expect(screen.getByRole('checkbox', { name: 'Tanlash: Makro' })).toBeChecked()
+  })
+
+  it('sahifadagilarni tanlash; filtr o‘zgarsa tanlov tozalanadi', async () => {
+    mockRpc(() => ROWS)
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('checkbox', { name: 'Sahifadagilarni tanlash' }))
+    expect(screen.getByRole('region', { name: 'Tanlangan: 3' })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Xarajat' }))
+    await waitFor(() => {
+      expect(screen.queryByRole('region', { name: /Tanlangan/ })).toBeNull()
+    })
+  })
+
+  it('ommaviy o‘chirish — tasdiqdan keyin', async () => {
+    mockRpc(() => ROWS)
+    const bodies = mockBulk({ done: ['t3'], skipped: [] })
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('checkbox', { name: 'Tanlash: Evos' }))
+    await user.click(screen.getByRole('button', { name: "O'chirish" }))
+    expect(bodies).toEqual([])
+    const confirm = await screen.findByRole('dialog', { name: "Tanlangan amallar o'chirilsinmi?" })
+    await user.click(within(confirm).getByRole('button', { name: "O'chirish" }))
+    expect(await screen.findByText('Bajarildi: 1 ta amal')).toBeInTheDocument()
+    expect(bodies[0]).toMatchObject({ p_ids: ['t3'], p_action: 'delete' })
+  })
+
+  describe('CSV', () => {
+    const files: { name: string; text: Promise<string> }[] = []
+    beforeEach(() => {
+      files.length = 0
+      const blobs = new Map<string, Blob>()
+      Object.defineProperty(URL, 'createObjectURL', {
+        configurable: true,
+        value: (blob: Blob) => {
+          const url = `blob:test/${String(blobs.size)}`
+          blobs.set(url, blob)
+          return url
+        },
+      })
+      Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: () => undefined })
+      vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (
+        this: HTMLAnchorElement,
+      ) {
+        const blob = blobs.get(this.href)
+        if (blob) files.push({ name: this.download, text: blob.text() })
+      })
+    })
+    afterEach(() => {
+      vi.restoreAllMocks()
+    })
+
+    it('joriy filtr bo‘yicha hamma amallar (1000 tadan sahifalar), fayl nomi davrdan', async () => {
+      const calls = mockRpc(() => ROWS)
+      const user = userEvent.setup()
+      renderWithProviders(<Harness initial={{ month: '2026-08', kinds: ['expense'] }} />)
+      await screen.findByRole('table', { name: 'Amallar' })
+
+      await user.click(screen.getByRole('button', { name: 'CSV eksport' }))
+      expect(await screen.findByText('Eksport tayyor: 3 ta amal')).toBeInTheDocument()
+      expect(calls.at(-1)).toEqual({
+        p_household: TEST_HOUSEHOLD_ID,
+        p_filters: { month: '2026-08-01', kinds: ['expense'] },
+        p_limit: 1000,
+      })
+      expect(files.map((f) => f.name)).toEqual(['amallar-2026-08.csv'])
+      const text = await files[0]?.text
+      expect(text?.split('\r\n')).toHaveLength(5)
+      expect(text).toContain('Evos')
+    })
   })
 })
