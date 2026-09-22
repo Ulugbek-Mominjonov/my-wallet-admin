@@ -18,6 +18,7 @@ import { Route as AuthMfaRouteImport } from './routes/_auth/mfa'
 import { Route as AppHHouseholdIdRouteImport } from './routes/_app/h/$householdId'
 import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callback'
 import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
+import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$householdId/accounts'
 import { Route as AppHHouseholdIdProfileRouteImport } from './routes/_app/h/$householdId/profile'
 
 const AppRoute = AppRouteImport.update({
@@ -63,6 +64,11 @@ const AppHHouseholdIdIndexRoute = AppHHouseholdIdIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppHHouseholdIdRoute,
 } as any)
+const AppHHouseholdIdAccountsRoute = AppHHouseholdIdAccountsRouteImport.update({
+  id: '/accounts',
+  path: '/accounts',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
 const AppHHouseholdIdProfileRoute = AppHHouseholdIdProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/mfa': typeof AuthMfaRoute
   '/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/auth/callback': typeof AuthAuthCallbackRoute
+  '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/mfa': typeof AuthMfaRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
+  '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId': typeof AppHHouseholdIdIndexRoute
 }
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/_app/': typeof AppIndexRoute
   '/_app/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/_auth/auth/callback': typeof AuthAuthCallbackRoute
+  '/_app/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/_app/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/_app/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/mfa'
     | '/h/$householdId'
     | '/auth/callback'
+    | '/h/$householdId/accounts'
     | '/h/$householdId/profile'
     | '/h/$householdId/'
   fileRoutesByTo: FileRoutesByTo
@@ -119,6 +129,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/mfa'
     | '/auth/callback'
+    | '/h/$householdId/accounts'
     | '/h/$householdId/profile'
     | '/h/$householdId'
   id:
@@ -131,6 +142,7 @@ export interface FileRouteTypes {
     | '/_app/'
     | '/_app/h/$householdId'
     | '/_auth/auth/callback'
+    | '/_app/h/$householdId/accounts'
     | '/_app/h/$householdId/profile'
     | '/_app/h/$householdId/'
   fileRoutesById: FileRoutesById
@@ -205,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdIndexRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
+    '/_app/h/$householdId/accounts': {
+      id: '/_app/h/$householdId/accounts'
+      path: '/accounts'
+      fullPath: '/h/$householdId/accounts'
+      preLoaderRoute: typeof AppHHouseholdIdAccountsRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
     '/_app/h/$householdId/profile': {
       id: '/_app/h/$householdId/profile'
       path: '/profile'
@@ -216,11 +235,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppHHouseholdIdRouteChildren {
+  AppHHouseholdIdAccountsRoute: typeof AppHHouseholdIdAccountsRoute
   AppHHouseholdIdProfileRoute: typeof AppHHouseholdIdProfileRoute
   AppHHouseholdIdIndexRoute: typeof AppHHouseholdIdIndexRoute
 }
 
 const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
+  AppHHouseholdIdAccountsRoute: AppHHouseholdIdAccountsRoute,
   AppHHouseholdIdProfileRoute: AppHHouseholdIdProfileRoute,
   AppHHouseholdIdIndexRoute: AppHHouseholdIdIndexRoute,
 }
