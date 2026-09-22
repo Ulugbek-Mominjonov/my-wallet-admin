@@ -31,6 +31,18 @@ Lokal (16 yadro, Docker'dagi Postgres 17), 2026-09-18:
 | `report_savings` | < 150 ms | 53 ms | yo'q |
 | `health_check` | < 100 ms | 23 ms | yo'q |
 
+E23 amallar jadvali (2026-09-22, shu yukda; o'lchanadigan byudjet 25 000 amal):
+
+| So'rov | Maqsad | Mediana | Seq Scan |
+|---|---|---|---|
+| `transactions_list` — birinchi sahifa | < 20 ms | 2 ms | yo'q |
+| `transactions_list` — chuqur sahifa (keyset, 2019) | < 20 ms | 2 ms | yo'q |
+| `transactions_list` — mos kelmaydigan qidiruv (eng yomon) | < 50 ms | 1 ms | yo'q |
+| `transactions_summary` — oy | < 30 ms | 1 ms | yo'q |
+
+Qo'lda: keng tarqalgan qidiruv ("karzinka" — xato bilan, 10% qator) ro'yxat
+va jami ≈ 12 ms; 2 harfli qidiruv ≈ 2 ms.
+
 ## Topilgan va tuzatilgan muammolar
 
 | Muammo | Sabab | Yechim |
@@ -38,6 +50,8 @@ Lokal (16 yadro, Docker'dagi Postgres 17), 2026-09-18:
 | `health_check` 219 ms, butun jadval skaneri | `account_balances` / `debt_balances` (UNION ALL + GROUP BY) join sharti bilan chaqirilganda Postgres shartni ichkariga tushirmaydi — byudjetning barcha amallari yig'iladi | qoldiq har hisob uchun `private.account_balance(id)` — `account_id`/`to_account_id` indekslari; qarzlar — har qarz uchun lateral (`debt_id` indeksi) |
 | "yopilgandan keyin tahrir" tekshiruvi — Seq Scan | `t.id::text = audit.record_id` — PK ishlatilmaydi | avval audit yozuvlari (byudjet + vaqt indeksi), keyin `t.id = record_id::uuid` |
 | `report_month` 96 ms | oy yig'indilari ikki marta hisoblanardi (shu oy + barcha oylar) | bitta `month_facts` o'tishi (materialized CTE) |
+| Amallar filtri — har sahifa byudjetning barcha amallarini aylanardi | "(filtr yo'q yoki shart)" statik so'rov + `set search_path` (funksiya inline bo'lmaydi) — umumiy rejada keyset indeksi ishlamaydi | dinamik SQL: faqat faol filtr shartlari (o'zgarmas matn, qiymatlar `using`), kursor doim qator taqqoslash — `transactions_list_idx` |
+| Mos kelmaydigan qidiruv 36 ms (25 000 qator Filter) | RLS ostida trgm operatorlari (leakproof emas) indeks sharti bo'lmaydi | sahifa va jami — security definer + aniq a'zolik tekshiruvi; qidiruv — joy+izoh ifodasi bo'yicha bitta GIN indeks → 1 ms |
 | O'lchov 2× sekin ko'rinardi | har chaqiruv yangi sessiyada — plpgsql rejalari keshlanmagan | bitta sessiyada qizdirish + o'lchov |
 
 ## Eslatmalar

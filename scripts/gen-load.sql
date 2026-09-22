@@ -24,10 +24,16 @@ select row_number() over (order by c.sort_order) - 1 as n, c.id
  where c.household_id = :'hid' and c.kind = 'expense' and c.system_code is null;
 create temporary table perf_accounts on commit drop as
 select a.type, a.id from public.accounts a where a.household_id = :'hid';
+-- Joy nomlari (E23 qidiruvi): shovqin byudjetlarda ham — GIN indeks boshqa
+-- byudjet mosliklarini ham qaytaradi, o'lchov real bo'lsin.
+create temporary table perf_payees on commit drop as
+select n - 1 as n, payee
+  from unnest(array['Korzinka', 'Makro', 'Havas', 'Yandex Go', 'Uzum Market',
+                    'Artel', 'Evos', 'Bi1', 'Zara', 'Oqtepa Lavash']) with ordinality as x(payee, n);
 
 -- 25 000 amal 120 oyga (2016-10 .. 2026-09) teng taqsimlangan: har 10-si
 -- daromad, qolgani xarajat (naqd/karta aralash), + oylik ajratma va fond sarfi.
-insert into public.transactions (household_id, kind, account_id, amount, category_id, occurred_on, budget_month)
+insert into public.transactions (household_id, kind, account_id, amount, category_id, payee, occurred_on, budget_month)
 select :'hid',
        case when g % 10 = 0 then 'income'::public.transaction_kind else 'expense' end,
        (select a.id from perf_accounts a where a.type = case when g % 3 = 0 then 'cash' else 'card' end::public.account_type),
@@ -35,6 +41,7 @@ select :'hid',
        case when g % 10 = 0
             then (select c.id from public.categories c where c.household_id = :'hid' and c.name = 'Avans')
             else (select pc.id from perf_categories pc where pc.n = g % (select count(*) from perf_categories)) end,
+       (select x.payee from perf_payees x where x.n = g % 10),
        date '2016-10-01' + (g::bigint * 3651 / 24760)::integer,
        date_trunc('month', date '2016-10-01' + (g::bigint * 3651 / 24760)::integer)::date
   from generate_series(1, 24760) as g;
@@ -72,8 +79,9 @@ select p.user_id, p.last_household_id as household_id
  where u.email like 'perf-noise-%@example.test';
 
 set local session_replication_role = replica;
-insert into public.transactions (household_id, kind, account_id, amount, amount_base, category_id, occurred_on, budget_month)
+insert into public.transactions (household_id, kind, account_id, amount, amount_base, category_id, payee, occurred_on, budget_month)
 select z.household_id, 'expense', a.id, (1000 + (g * 7919) % 500000) * 100, (1000 + (g * 7919) % 500000) * 100, c.id,
+       (select x.payee from perf_payees x where x.n = g % 10),
        date '2016-10-01' + (g::bigint * 3651 / 25000)::integer,
        date_trunc('month', date '2016-10-01' + (g::bigint * 3651 / 25000)::integer)::date
   from perf_noise z

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# E09-T07: hisobotlar ishlashi — 10 yillik sintetik yukda (25 000 amal)
-# vaqt va reja tekshiruvi. Faqat lokal/CI Supabase (Docker).
+# E09-T07: hisobotlar (va E23 amallar jadvali) ishlashi — 10 yillik sintetik
+# yukda (25 000 amal) vaqt va reja tekshiruvi. Faqat lokal/CI Supabase (Docker).
 #
 #   scripts/perf-check.sh
 #
@@ -16,7 +16,8 @@ DB_URL="${DB_URL:-postgresql://postgres:postgres@127.0.0.1:54322/postgres}"
 ADMIN_URL="${ADMIN_URL:-postgresql://supabase_admin:postgres@127.0.0.1:54322/postgres}"
 RUNS=5
 # Hisobot → maqsad (ms): docs/PERF.md
-declare -A TARGET_MS=([report_month]=50 [report_year]=150 [report_savings]=150 [health_check]=100)
+declare -A TARGET_MS=([report_month]=50 [report_year]=150 [report_savings]=150 [health_check]=100
+  [tx_first_page]=20 [tx_deep_page]=20 [tx_search]=50 [tx_summary]=30)
 
 out="$(psql "$ADMIN_URL" --no-psqlrc --quiet --file scripts/gen-load.sql)"
 household="$(sed -n 's/^perf_household=//p' <<< "$out")"
@@ -49,11 +50,18 @@ declare -A CALLS=(
   [report_year]="public.report_year('$household', 2025)"
   [report_savings]="public.report_savings('$household')"
   [health_check]="public.health_check('$household')"
+  # E23: birinchi va chuqur (keyset) sahifa, mos kelmaydigan qidiruv (eng
+  # yomon holat — sahifa to'lmaydi), oy jami.
+  [tx_first_page]="(select count(*) from public.transactions_list('$household'))"
+  [tx_deep_page]="(select count(*) from public.transactions_list('$household', '{}', '2019-06-15', null, 50))"
+  [tx_search]="(select count(*) from public.transactions_list('$household', '{\"q\": \"qwxzv\"}'))"
+  [tx_summary]="public.transactions_summary('$household', '{\"month\": \"2026-09-01\"}')"
 )
 
 failed=0
 printf '%-16s %10s %10s\n' "hisobot" "mediana" "maqsad"
-for report in report_month report_year report_savings health_check; do
+for report in report_month report_year report_savings health_check \
+  tx_first_page tx_deep_page tx_search tx_summary; do
   # Rejalar: auto_explain NOTICE sifatida mijozga chiqaradi.
   plans="$(psql "$ADMIN_URL" --no-psqlrc --quiet 2>&1 <<SQL
 load 'auto_explain';

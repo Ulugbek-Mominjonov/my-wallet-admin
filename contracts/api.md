@@ -61,8 +61,9 @@ Keep-alive va smoke testlar.
 | `preview_outdated` | preview'dan keyin ma'lumot o'zgargan — preview'ni qayta oling (BR-043) |
 | `month_not_finished` | tugamagan oyni yopib bo'lmaydi (BR-150) |
 | `month_shift_mismatch` | oy siljishi farqli daromad turlari birlashtirilmaydi (BR-036, BR-043) |
-| `invalid_batch` / `invalid_device` | sinxron paketi massiv emas yoki 100 dan ortiq (`set_sort_order` — 1000 dan ortiq); qurilma ID bo'sh/uzun |
+| `invalid_batch` / `invalid_device` | sinxron paketi massiv emas yoki 100 dan ortiq (`set_sort_order` — 1000, `bulk_transactions` — 500 dan ortiq); qurilma ID bo'sh/uzun |
 | `invalid_table` | `set_sort_order` ga tartibli spravochnik bo'lmagan jadval |
+| `invalid_action` | `bulk_transactions` ga noma'lum amal yoki qiymatsiz `set_category`/`add_tag` |
 | `confirm_mismatch` | `delete_household` tasdiq nomi byudjet nomiga mos emas |
 
 Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masalan
@@ -197,6 +198,29 @@ tartibni takrorlaydi (`private.planned_status`).
 | `account_balances` | `household_id, account_id, balance` (hisob valyutasida) | BR-021 |
 | `debt_balances` | `household_id, debt_id, paid_in_app, pending_amount, pending_count, remaining, progress, months_left, end_month, status` (`closed`/`paying`/`pending`/`unlinked`) | BR-112..116 |
 | `goal_progress` | `household_id, goal_id, saved, remaining, progress, months_left, end_month, on_track` | BR-121, BR-122 |
+
+### Admin amallar jadvali (E23) — a'zolar
+
+Filtr (`p_filters jsonb`, hammasi ixtiyoriy): `month` (oy boshi, tegishli oy),
+`from`/`to` (amal sanasi), `kinds[]`, `accounts[]` (manba **yoki** manzil),
+`categories[]` (subkategoriyalari bilan), `members[]` (`created_by`), `tags[]`,
+`min`/`max` (asosiy valyutada, chegaralar kiradi), `q` (joy yoki izoh: qism-matn,
+3+ belgida xatoli yozuv ham — BR-202; `%`/`_` oddiy belgi). Ro'yxat va jami bir
+xil filtrdan; a'zo bo'lmagan — `forbidden`.
+
+- `transactions_list(p_household, p_filters = '{}', p_after_date, p_after_id, p_limit = 50)` —
+  keyset sahifa, `(occurred_on, id)` bo'yicha kamayish; keyingi sahifa — oxirgi
+  qatorning `occurred_on` va `id` si. `p_limit` 1..200. Qator: amal ustunlari +
+  `tag_ids uuid[]`, `has_receipt boolean`.
+- `transactions_summary(p_household, p_filters = '{}')` →
+  `{count, income, expense, transfer}` (asosiy valyutada).
+- `bulk_transactions(p_household, p_ids, p_action, p_value)` — owner/admin/member;
+  `p_action`: `set_category` (`p_value` — kategoriya), `add_tag` (`p_value` — teg,
+  idempotent), `delete`. Har qator alohida: biri rad etilsa qolganlari bajariladi.
+  Javob — `{done: [id], skipped: [{id, reason}]}`; `reason` — biznes kod
+  (`month_closed`, `category_kind_mismatch`, ...), `not_found` (boshqa byudjet
+  yoki o'chirilgan) yoki SQLSTATE. Xatolar: `forbidden`, `invalid_action`,
+  `invalid_batch` (> 500 ID).
 
 ### Chek rasmlari (Storage)
 

@@ -1751,6 +1751,15 @@ export type Database = {
         Args: { p_account?: string; p_date?: string; p_items: string[] }
         Returns: Json
       }
+      bulk_transactions: {
+        Args: {
+          p_action: string
+          p_household: string
+          p_ids: string[]
+          p_value?: string
+        }
+        Returns: Json
+      }
       create_household: { Args: { p_name: string }; Returns: string }
       create_invite: {
         Args: {
@@ -1891,6 +1900,40 @@ export type Database = {
       telegram_unlink: { Args: never; Returns: undefined }
       telegram_unlink_chat: { Args: { p_chat_id: number }; Returns: boolean }
       test_notification: { Args: { p_household: string }; Returns: Json }
+      transactions_list: {
+        Args: {
+          p_after_date?: string
+          p_after_id?: string
+          p_filters?: Json
+          p_household: string
+          p_limit?: number
+        }
+        Returns: {
+          account_id: string
+          amount: number
+          amount_base: number
+          budget_month: string
+          budget_month_source: Database["public"]["Enums"]["budget_month_source"]
+          category_id: string
+          created_by: string
+          debt_id: string
+          has_receipt: boolean
+          id: string
+          kind: Database["public"]["Enums"]["transaction_kind"]
+          note: string
+          occurred_on: string
+          payee: string
+          planned_item_id: string
+          source: Database["public"]["Enums"]["transaction_source"]
+          tag_ids: string[]
+          to_account_id: string
+          to_amount: number
+        }[]
+      }
+      transactions_summary: {
+        Args: { p_filters?: Json; p_household: string }
+        Returns: Json
+      }
       transfer_ownership: {
         Args: { p_household: string; p_new_owner: string }
         Returns: undefined
