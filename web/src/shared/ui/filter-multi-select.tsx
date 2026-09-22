@@ -45,7 +45,13 @@ export function FilterMultiSelect({
   return (
     <Popover>
       <PopoverTrigger
-        render={<Button variant="outline" className={cn(value.length === 0 && 'border-dashed')} />}
+        render={
+          <Button
+            type="button"
+            variant="outline"
+            className={cn(value.length === 0 && 'border-dashed')}
+          />
+        }
       >
         <ListFilter aria-hidden />
         {label}
@@ -81,6 +87,7 @@ export function FilterMultiSelect({
           {value.length > 0 && (
             <div className="border-t p-1">
               <Button
+                type="button"
                 variant="ghost"
                 size="sm"
                 className="w-full"

@@ -1,4 +1,5 @@
 export {
+  autoBudgetMonth,
   TRANSACTION_KINDS,
   type Transaction,
   type TransactionKind,

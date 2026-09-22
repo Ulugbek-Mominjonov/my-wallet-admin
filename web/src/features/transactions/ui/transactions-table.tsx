@@ -5,12 +5,14 @@ import { ACCOUNT_TYPE_ICON, type Account } from '@/entities/account'
 import type { Category } from '@/entities/category'
 import type { Tag } from '@/entities/tag'
 import type { Transaction } from '@/entities/transaction'
+import { MISSING, transactionName } from '@/features/transactions/model/labels'
 import { DEFAULT_ICON } from '@/shared/config/icons'
 import { useAppLocale } from '@/shared/i18n'
 import { formatDate } from '@/shared/lib/date'
 import { formatMonth } from '@/shared/lib/month'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
+import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { EntityIcon, EntityIconTile, IconTile } from '@/shared/ui/entity-icon'
 import { MoneyText } from '@/shared/ui/money-text'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
@@ -23,7 +25,6 @@ export interface TransactionLookup {
   members: ReadonlyMap<string, string>
 }
 
-const MISSING = '—'
 /** `YYYY-MM-DD` / `YYYY-MM-01` → `YYYY-MM`. */
 const monthOf = (isoDate: string) => isoDate.slice(0, 7)
 
@@ -33,12 +34,15 @@ export function TransactionsTable({
   lookup,
   baseCurrency,
   busy,
+  actions,
 }: {
   rows: readonly Transaction[]
   lookup: TransactionLookup
   baseCurrency: string
   /** Yangi filtr natijasi kutilmoqda — eski qatorlar xiralashtiriladi. */
   busy: boolean
+  /** Yozish huquqi bo'lsa — qator amallari (tahrirlash, o'chirish). */
+  actions?: { onEdit: (row: Transaction) => void; onDelete: (row: Transaction) => void }
 }) {
   const { t } = useTranslation()
   return (
@@ -52,11 +56,22 @@ export function TransactionsTable({
             <TableHead>{t('transactions.columns.account')}</TableHead>
             <TableHead>{t('transactions.columns.member')}</TableHead>
             <TableHead className="text-right">{t('transactions.columns.amount')}</TableHead>
+            {actions && (
+              <TableHead className="w-10">
+                <span className="sr-only">{t('table.actions')}</span>
+              </TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
           {rows.map((row) => (
-            <TransactionRow key={row.id} row={row} lookup={lookup} baseCurrency={baseCurrency} />
+            <TransactionRow
+              key={row.id}
+              row={row}
+              lookup={lookup}
+              baseCurrency={baseCurrency}
+              actions={actions}
+            />
           ))}
         </TableBody>
       </Table>
@@ -68,10 +83,12 @@ function TransactionRow({
   row,
   lookup,
   baseCurrency,
+  actions,
 }: {
   row: Transaction
   lookup: TransactionLookup
   baseCurrency: string
+  actions?: { onEdit: (row: Transaction) => void; onDelete: (row: Transaction) => void }
 }) {
   const { t } = useTranslation()
   const locale = useAppLocale()
@@ -168,6 +185,20 @@ function TransactionRow({
           </div>
         )}
       </TableCell>
+      {actions && (
+        <TableCell>
+          <DirectoryRowActions
+            name={transactionName(row, category, t('transactions.transfer'))}
+            archived={false}
+            onEdit={() => {
+              actions.onEdit(row)
+            }}
+            onDelete={() => {
+              actions.onDelete(row)
+            }}
+          />
+        </TableCell>
+      )}
     </TableRow>
   )
 }

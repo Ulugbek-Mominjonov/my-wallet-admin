@@ -646,7 +646,7 @@ E21–E26 (admin) M2 bilan.
   filtrlar (oy, davr, turi, kategoriya, hisob, a'zo, teg, summa oralig'i),
   qidiruv (payee/izoh, trgm), filtrlar URL'da (ulashiladigan havola),
   jami qatori (filtr bo'yicha — alohida yengil RPC).
-- [ ] **E23-T02** Amal formasi (Sheet): turi (xarajat / daromad / o'tkazma),
+- [x] **E23-T02** Amal formasi (Sheet): turi (xarajat / daromad / o'tkazma),
   summa, hisob(lar), kategoriya (qidiruvli), sana, **tegishli oy jonli
   ko'rsatkichi va almashtirish** (BR-045), payee avto-to'ldirish (BR-056),
   reja/qarz bog'lash, teglar, izoh, chek rasmi ko'rish. Yopilgan oy
@@ -955,6 +955,10 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-22 | Qidiruv (BR-202): joy+izoh ifodasi bo'yicha bitta GIN; 3+ belgida xatoga chidamli (`word_similarity` ≥ 0,5) | bitta harf xatosi (8 harfli so'zda ≈ 0,55) standart 0,6 dan o'tmasdi; ikki ustun o'rniga bitta shart | E23-T01 |
 | 2026-09-22 | Ommaviy amallar — bitta RPC, har qator o'z savepoint'ida, javob `{done, skipped: [{id, reason}]}` | BR-183 (bitta so'rov); yopilgan oy yoki tur mos kelmasligi butun to'plamni bekor qilmasin — foydalanuvchi nima o'tkazilganini ko'radi | E23-T03 |
 | 2026-09-22 | Amallar filtri URL'da (zod; yaroqsiz maydon tashlanadi, sahifa yiqilmaydi), sahifalar — "Yana yuklash" tugmasi | ulashiladigan havola; eski/buzilgan havola ham ochiladi; tugma klaviatura va ekran o'quvchi uchun oddiy | E23-T01 |
+| 2026-09-22 | Admin amal yozuvi — `save_transaction` RPC (amal + teglar bitta tranzaksiyada, invoker) | PostgREST'da amal va teglar alohida so'rov — yarim yozuv qolishi mumkin; invoker — RLS, ustun grant'lari va trigger tekshiruvlari takrorlanmaydi | E23-T02 |
+| 2026-09-22 | Formadagi tegishli oy — klientda `autoBudgetMonth` (trigger bilan bir xil tartib), yozuvda server hisoblaydi; avto tahrirda saqlangan oy yuboriladi | BR-045 jonli ko'rsatish so'rovsiz; izoh tahriri eski daromadni yangi siljishga ko'chirmasligi kerak (BR-043) | E23-T02 |
+| 2026-09-22 | Joy nomi avto-to'ldirish — native `datalist` + `payee_suggestions`; faqat bo'sh kategoriya/hisob to'ldiriladi | qo'shimcha kutubxonasiz, klaviatura/ekran o'quvchi brauzerniki; foydalanuvchi tanlovi ustiga yozilmaydi | E23-T02, BR-056 |
+| 2026-09-22 | Bog'lash uchun rejalar — shu va oldingi oy | o'tgan oy rejasi keyingi oy boshida to'lanadi (BR-044) — faqat joriy oy ro'yxati asosiy holatni yo'qotardi | E23-T02 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

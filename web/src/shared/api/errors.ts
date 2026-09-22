@@ -68,6 +68,19 @@ const BUSINESS_ERRORS: Record<string, ParseKeys> = {
   confirm_mismatch: 'directories.errors.confirmMismatch',
   not_member: 'directories.errors.notMember',
   invalid_role: 'directories.errors.invalidRole',
+  account_deleted: 'transactions.errors.accountDeleted',
+  category_deleted: 'transactions.errors.categoryDeleted',
+  invalid_account: 'transactions.errors.invalidAccount',
+  planned_deleted: 'transactions.errors.plannedDeleted',
+  planned_skipped: 'transactions.errors.plannedSkipped',
+  planned_kind_mismatch: 'transactions.errors.plannedKindMismatch',
+  debt_deleted: 'transactions.errors.debtDeleted',
+  debt_kind_mismatch: 'transactions.errors.debtKindMismatch',
+  to_amount_required: 'transactions.errors.toAmountRequired',
+  fx_rate_missing: 'transactions.errors.fxRateMissing',
+  month_closed: 'transactions.errors.monthClosed',
+  tag_deleted: 'transactions.errors.tagDeleted',
+  transaction_not_found: 'transactions.errors.notFound',
 }
 
 /** Supabase/tarmoq xatosini AppError'ga aylantiradi. */

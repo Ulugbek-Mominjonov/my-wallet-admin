@@ -6,10 +6,17 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import type { Account } from '@/entities/account'
 import type { Category } from '@/entities/category'
-import { TEST_HOUSEHOLD_ID } from '@/entities/household/testing'
+import type { Role } from '@/entities/household'
+import { TEST_HOUSEHOLD_ID, WithHousehold } from '@/entities/household/testing'
 import type { TransactionSearch } from '@/features/transactions/model/filters'
 import { TransactionsPage } from '@/features/transactions/ui/transactions-page'
-import { server, signInTestUser, supabasePath, TEST_USER_ID } from '@/shared/test/msw'
+import {
+  businessError,
+  server,
+  signInTestUser,
+  supabasePath,
+  TEST_USER_ID,
+} from '@/shared/test/msw'
 import { renderWithProviders } from '@/shared/test/render'
 
 const CASH = '0198f000-0000-7000-8000-0000000000a1'
@@ -39,12 +46,13 @@ const category = (
   name: string,
   kind: Category['kind'] = 'expense',
   parentId: string | null = null,
+  monthShift = 0,
 ): Category => ({
   id,
   kind,
   name,
   parentId,
-  monthShift: 0,
+  monthShift,
   systemCode: null,
   icon: null,
   color: null,
@@ -76,31 +84,44 @@ const row = (id: string, overrides: Record<string, unknown> = {}) => ({
   ...overrides,
 })
 
+const DEBT = '0198f000-0000-7000-8000-0000000000d1'
+const DEBTS = [{ id: DEBT, name: 'Mashina krediti', direction: 'i_owe' as const, archived: false }]
+
 const SUMMARY = { count: 3, income: 800000000, expense: 5000000, transfer: 100000000 }
 
 /** URL o'rnida — holat: filtr o'zgarsa sahifa yangi so'rov yuboradi. */
-function Harness({ initial = {} }: { initial?: TransactionSearch }) {
+function Harness({
+  initial = {},
+  memberRole = 'owner',
+}: {
+  initial?: TransactionSearch
+  memberRole?: Role
+}) {
   const [search, setSearch] = useState<TransactionSearch>(initial)
   return (
-    <TransactionsPage
-      householdId={TEST_HOUSEHOLD_ID}
-      search={search}
-      onSearchChange={setSearch}
-      currentMonth="2026-09"
-      baseCurrency="UZS"
-      accounts={[account(CASH, 'Naqd', 'cash'), account(CARD, 'Karta', 'card')]}
-      categories={[
-        category(FOOD, 'Oziq-ovqat'),
-        category(TRANSPORT, 'Transport'),
-        category(TAXI, 'Taksi', 'expense', TRANSPORT),
-        category(SALARY, 'Oylik', 'income'),
-      ]}
-      tags={[{ id: TAG, name: "Ta'til", color: null }]}
-      members={[
-        { value: TEST_USER_ID, label: 'Ali' },
-        { value: BOB, label: 'Vali' },
-      ]}
-    />
+    <WithHousehold memberRole={memberRole}>
+      <TransactionsPage
+        householdId={TEST_HOUSEHOLD_ID}
+        search={search}
+        onSearchChange={setSearch}
+        currentMonth="2026-09"
+        today="2026-09-22"
+        baseCurrency="UZS"
+        accounts={[account(CASH, 'Naqd', 'cash'), account(CARD, 'Karta', 'card')]}
+        categories={[
+          category(FOOD, 'Oziq-ovqat'),
+          category(TRANSPORT, 'Transport'),
+          category(TAXI, 'Taksi', 'expense', TRANSPORT),
+          category(SALARY, 'Oylik', 'income', null, -1),
+        ]}
+        tags={[{ id: TAG, name: "Ta'til", color: null }]}
+        members={[
+          { value: TEST_USER_ID, label: 'Ali' },
+          { value: BOB, label: 'Vali' },
+        ]}
+        debts={DEBTS}
+      />
+    </WithHousehold>
   )
 }
 
@@ -274,6 +295,209 @@ describe('TransactionsPage (E23-T01)', () => {
     expect(calls.at(-1)?.p_filters).toEqual({ month: '2026-08-01' })
     expect(screen.getByRole('searchbox', { name: "Joy yoki izoh bo'yicha qidirish" })).toHaveValue(
       '',
+    )
+  })
+})
+
+const SAVED_ID = '0198f000-0000-7000-8000-0000000000f1'
+
+/** Forma so'rovlari: rejalar, oy holati, joy takliflari, saqlash. */
+function mockForm({
+  closed = false,
+  suggestions = [],
+  saveError,
+}: {
+  closed?: boolean
+  suggestions?: object[]
+  saveError?: string
+} = {}) {
+  const saved: Record<string, unknown>[] = []
+  server.use(
+    http.get(supabasePath('/rest/v1/planned_items'), () => HttpResponse.json([])),
+    http.get(supabasePath('/rest/v1/months'), () =>
+      HttpResponse.json(closed ? [{ closed_at: '2026-10-01T00:00:00Z' }] : []),
+    ),
+    http.post(supabasePath('/rest/v1/rpc/payee_suggestions'), () => HttpResponse.json(suggestions)),
+    http.post(supabasePath('/rest/v1/rpc/save_transaction'), async ({ request }) => {
+      saved.push((await request.json()) as Record<string, unknown>)
+      return saveError
+        ? HttpResponse.json(businessError(saveError), { status: 400 })
+        : HttpResponse.json(SAVED_ID)
+    }),
+  )
+  return saved
+}
+
+async function chooseOption(
+  user: ReturnType<typeof userEvent.setup>,
+  scope: HTMLElement,
+  field: string,
+  option: string,
+) {
+  await user.click(within(scope).getByRole('combobox', { name: field }))
+  await user.click(await screen.findByRole('option', { name: option }))
+}
+
+describe('TransactionForm (E23-T02)', () => {
+  beforeEach(() => {
+    signInTestUser()
+  })
+
+  it('yangi xarajat: tegishli oy jonli, RPC ga aniq parametrlar, ro‘yxat yangilanadi', async () => {
+    const calls = mockRpc(() => [])
+    const saved = mockForm()
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('button', { name: "Amal qo'shish" }))
+    const dialog = await screen.findByRole('dialog', { name: 'Yangi amal' })
+    expect(within(dialog).getByText('Sentabr 2026')).toBeInTheDocument()
+
+    await user.type(within(dialog).getByLabelText('Summa (UZS)'), '50 000')
+    await chooseOption(user, dialog, 'Hisob', 'Naqd')
+    await chooseOption(user, dialog, 'Kategoriya', 'Oziq-ovqat')
+    await user.type(within(dialog).getByLabelText('Joy / nomi'), 'Korzinka')
+    await user.click(within(dialog).getByRole('button', { name: 'Saqlash' }))
+
+    await waitFor(() => {
+      expect(screen.queryByRole('dialog', { name: 'Yangi amal' })).toBeNull()
+    })
+    expect(saved).toEqual([
+      {
+        p_household: TEST_HOUSEHOLD_ID,
+        p_kind: 'expense',
+        p_account_id: CASH,
+        p_amount: 5000000,
+        p_occurred_on: '2026-09-22',
+        p_category_id: FOOD,
+        p_payee: 'Korzinka',
+        p_tag_ids: [],
+      },
+    ])
+    await waitFor(() => {
+      expect(calls.length).toBeGreaterThan(1)
+    })
+  })
+
+  it('BR-040/045: daromad oyi kategoriya siljishi bilan jonli; BR-042: qo‘lda oy', async () => {
+    mockRpc(() => [])
+    const saved = mockForm()
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('button', { name: "Amal qo'shish" }))
+    const dialog = await screen.findByRole('dialog', { name: 'Yangi amal' })
+    await user.click(within(dialog).getByRole('button', { name: 'Daromad' }))
+    await user.type(within(dialog).getByLabelText('Summa (UZS)'), '9 000 000')
+    await chooseOption(user, dialog, 'Hisob', 'Karta')
+    await chooseOption(user, dialog, 'Kategoriya', 'Oylik')
+    // 22-sentabr, siljish −1 → avgust.
+    expect(within(dialog).getByText('Avgust 2026')).toBeInTheDocument()
+
+    await user.click(within(dialog).getByRole('button', { name: "Oyni o'zgartirish" }))
+    await chooseOption(user, dialog, 'Tegishli oy', 'Iyul 2026')
+    await user.click(within(dialog).getByRole('button', { name: 'Saqlash' }))
+
+    await waitFor(() => {
+      expect(saved[0]).toMatchObject({
+        p_kind: 'income',
+        p_account_id: CARD,
+        p_category_id: SALARY,
+        p_budget_month: '2026-07-01',
+      })
+    })
+  })
+
+  it('BR-056: tarixdagi joy nomi tanlansa — oxirgi kategoriya va hisob to‘ldiriladi', async () => {
+    mockRpc(() => [])
+    mockForm({
+      suggestions: [
+        { payee: 'Korzinka', category_id: FOOD, account_id: CASH, last_used: '2026-09-01' },
+      ],
+    })
+    const user = userEvent.setup()
+    const { container } = renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('button', { name: "Amal qo'shish" }))
+    const dialog = await screen.findByRole('dialog', { name: 'Yangi amal' })
+    const payee = within(dialog).getByLabelText('Joy / nomi')
+    await user.type(payee, 'Kor')
+    await waitFor(() => {
+      expect(
+        container.ownerDocument.querySelector('#tx-payee-suggestions option[value="Korzinka"]'),
+      ).not.toBeNull()
+    })
+    await user.type(payee, 'zinka')
+
+    expect(within(dialog).getByRole('combobox', { name: 'Kategoriya' })).toHaveTextContent(
+      'Oziq-ovqat',
+    )
+    expect(within(dialog).getByRole('combobox', { name: 'Hisob' })).toHaveTextContent('Naqd')
+  })
+
+  it('tahrirlash — mavjud qiymatlar va id bilan; o‘chirish — tasdiq bilan', async () => {
+    mockRpc(() => [row('t1', { tag_ids: [TAG], note: 'eski' })])
+    const saved = mockForm()
+    const removed: Record<string, unknown>[] = []
+    server.use(
+      http.patch(supabasePath('/rest/v1/transactions'), async ({ request }) => {
+        removed.push({
+          query: new URL(request.url).searchParams.get('id'),
+          ...((await request.json()) as object),
+        })
+        return new HttpResponse(null, { status: 204 })
+      }),
+    )
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('button', { name: 'Korzinka: amallar' }))
+    await user.click(await screen.findByRole('menuitem', { name: 'Tahrirlash' }))
+    const dialog = await screen.findByRole('dialog', { name: 'Amalni tahrirlash' })
+    // Guruhlash — bo'linmas probel (formatMoneyInput).
+    expect(within(dialog).getByLabelText('Summa (UZS)')).toHaveValue('50\u00a0000')
+    const note = within(dialog).getByLabelText('Izoh')
+    await user.clear(note)
+    await user.type(note, 'yangi izoh')
+    await user.click(within(dialog).getByRole('button', { name: 'Saqlash' }))
+    await waitFor(() => {
+      expect(saved[0]).toMatchObject({ p_id: 't1', p_note: 'yangi izoh', p_tag_ids: [TAG] })
+    })
+
+    await user.click(await screen.findByRole('button', { name: 'Korzinka: amallar' }))
+    await user.click(await screen.findByRole('menuitem', { name: "O'chirish" }))
+    const confirm = await screen.findByRole('dialog', { name: "Amal o'chirilsinmi?" })
+    await user.click(within(confirm).getByRole('button', { name: "O'chirish" }))
+    await waitFor(() => {
+      expect(removed[0]?.query).toBe('eq.t1')
+    })
+    expect(typeof removed[0]?.deleted_at).toBe('string')
+  })
+
+  it('viewer: qo‘shish tugmasi va qator amallari yo‘q', async () => {
+    mockRpc(() => [row('t1')])
+    renderWithProviders(<Harness memberRole="viewer" />)
+    await screen.findByRole('table', { name: 'Amallar' })
+    expect(screen.queryByRole('button', { name: "Amal qo'shish" })).toBeNull()
+    expect(screen.queryByRole('button', { name: 'Korzinka: amallar' })).toBeNull()
+  })
+
+  it('BR-055: yopilgan oy — ogohlantirish; qattiq qulf xatosi formada', async () => {
+    mockRpc(() => [])
+    mockForm({ closed: true, saveError: 'month_closed' })
+    const user = userEvent.setup()
+    renderWithProviders(<Harness />)
+
+    await user.click(await screen.findByRole('button', { name: "Amal qo'shish" }))
+    const dialog = await screen.findByRole('dialog', { name: 'Yangi amal' })
+    expect(await within(dialog).findByRole('status')).toHaveTextContent('Bu oy yopilgan')
+
+    await user.type(within(dialog).getByLabelText('Summa (UZS)'), '1 000')
+    await chooseOption(user, dialog, 'Hisob', 'Naqd')
+    await chooseOption(user, dialog, 'Kategoriya', 'Oziq-ovqat')
+    await user.click(within(dialog).getByRole('button', { name: 'Saqlash' }))
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent(
+      'Oy yopilgan (qattiq qulf) — avval oyni qayta oching',
     )
   })
 })
