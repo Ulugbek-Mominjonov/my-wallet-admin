@@ -109,7 +109,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E18 | Hamyon: hisoblar, fond, jamg'arma, qarz, maqsad, limit | mobile | E15 | ✅ |
 | | E19 | Bildirishnomalar va sozlamalar | mobile | E11, E14 | ✅ |
 | | E20 | Sifat, sayqal, reliz konveyeri | mobile | E15–E19 | ⬜ |
-| **M3 Admin MVP** | E21 | Auth, byudjet konteksti, layout | admin | E05, E02 | ⬜ |
+| **M3 Admin MVP** | E21 | Auth, byudjet konteksti, layout | admin | E05, E02 | ✅ |
 | | E22 | Spravochniklar | admin | E21, E06 | ⬜ |
 | | E23 | Amallar va rejalar | admin | E22, E08 | ⬜ |
 | | E24 | Hisobotlar va dashboard | admin | E23, E09 | ⬜ |
@@ -576,20 +576,27 @@ E21–E26 (admin) M2 bilan.
 > **Qoidalar:** BR-011, BR-213, ADR-10. **DoD:** Google va email kod bilan
 > kirish; rolga qarab menyu; platforma admini uchun 2FA majburiy.
 
-- [ ] **E21-T01** Kirish sahifasi: Google OAuth (PKCE redirect), email OTP
+- [x] **E21-T01** Kirish sahifasi: Google OAuth (PKCE redirect), email OTP
   (6 xonali kod), xatolar tarjimasi, "Qayerdan kirdim" — sessiya holati.
   MSW (Supabase Auth/REST mock'lari) komponent testlari uchun shu yerda ulanadi.
-- [ ] **E21-T02** Byudjet konteksti: `app_bootstrap` → joriy byudjet
+  Kirish usuli va vaqti (AMR) — profil sahifasining "Sessiyalar" bo'limida
+  (E21-T04); PostgREST biznes xatolari (`P0001`) ham tarjima qilinadi.
+- [x] **E21-T02** Byudjet konteksti: `app_bootstrap` → joriy byudjet
   (URL'da `?h=` emas, `/h/$householdId/...` marshrut prefiksi), almashtirgich,
-  oxirgi tanlangan byudjet eslab qolinadi.
-- [ ] **E21-T03** Rolga asoslangan himoya: marshrut `beforeLoad` da rol
+  oxirgi tanlangan byudjet eslab qolinadi. Byudjeti yo'q (yoki yangisini
+  qo'shmoqchi) foydalanuvchi — `/welcome` (yaratish yoki taklif kodi).
+- [x] **E21-T03** Rolga asoslangan himoya: marshrut `beforeLoad` da rol
   tekshiruvi, menyu elementlari yashirinadi, `viewer` uchun faqat o'qish
-  (tugmalar o'chiq), 403 sahifasi.
-- [ ] **E21-T04** 2FA (TOTP): sozlash (QR), tasdiqlash, platforma sahifalari
+  (tugmalar o'chiq), 403 sahifasi. Mexanizm: `requirePermission`,
+  `navSectionsFor`, `useCan`; bo'lim sahifalari (E22+) shularni ishlatadi.
+- [x] **E21-T04** 2FA (TOTP): sozlash (QR), tasdiqlash, platforma sahifalari
   AAL2 talab qiladi. Profil: ism, til, tema, sessiyadan chiqish (barcha
-  qurilmalardan).
-- [ ] **E21-T05** E2E: kirish → byudjet tanlash → rolga mos menyu
-  (Playwright, lokal supabase'da test foydalanuvchilar).
+  qurilmalardan). 2FA yoqqan foydalanuvchi har kirishda `/mfa` da kod
+  kiritadi; platforma marshrutlari `mfaGate(..., { required: true })` bilan
+  (E26-T01 da ulanadi).
+- [x] **E21-T05** E2E: kirish → byudjet tanlash → rolga mos menyu
+  (Playwright, lokal supabase'da test foydalanuvchilar). CI e2e job lokal
+  Supabase'ni ishga tushiradi; deploy smoke — `public` loyiha.
 
 ### E22 · Admin: spravochniklar `[admin]`
 
@@ -924,6 +931,11 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-21 | Push bosilganda faqat `data.type` → oq ro'yxatdagi marshrut; lokal eslatma payload'i ham shu ro'yxat bilan tekshiriladi | tashqi kirish marshrut sifatida ishlatilmaydi | E19-T01 |
 | 2026-09-21 | Lokal eslatmalar (BR-168): 14 kun, ≤ 30 ta, aniq-vaqt ruxsatisiz, rejalar o'zgarsa 2 s debounce | Android cheklovlari; sinxron paketi bitta qayta rejalash | E19-T02 |
 | 2026-09-21 | Eksport — jadvallar `rowid` keyset bo'laklari (500) bilan faylga oqim | katta tarix xotiraga to'liq yuklanmaydi | E19-T04 |
+| 2026-09-22 | Admin byudjet konteksti URL prefiksida (`/h/$householdId/...`); a'zolik keshdagi `app_bootstrap` dan, topilmasa bir marta serverdan | havola ulashilsa/yangi tabda ham to'g'ri byudjet; har sahifada qo'shimcha so'rov yo'q (bootstrap 5 daq kesh) | E21-T02 |
+| 2026-09-22 | Feature'lar bir-birini import qilmaydi: almashtirgich va hisob menyusi AppShell'ga marshrutdan slot orqali beriladi | FSD chegarasi (ESLint `boundaries`) buzilmaydi | E21-T02, T04 |
+| 2026-09-22 | Rol himoyasi uch qatlamda: menyu (`permission`), marshrut (`requirePermission` → 403), tugmalar (`useCan`); haqiqiy chegara — server RLS | URL'dan to'g'ridan ochish ham tushunarli 403 beradi, UI serverdan erkin emas | E21-T03 |
+| 2026-09-22 | 2FA: kod kiritilmagan aal1 sessiya `/mfa` ga yo'naltiriladi; AAL sessiya JWT'sidan (tarmoqsiz) | 2FA yoqqan foydalanuvchi uchun himoya har kirishda; marshrut tekshiruvi serverga so'rovsiz | E21-T04 |
+| 2026-09-22 | Web testlari: MSW (`onUnhandledRequest: 'error'`), E2E — lokal Supabase + Mailpit, foydalanuvchilar oddiy kirish yo'li bilan (secret kalitsiz); deploy smoke faqat kirmagan holat | kutilmagan so'rov yashirinmaydi; haqiqiy muhitda test foydalanuvchi yaratilmaydi | E21-T01, T05 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
@@ -967,3 +979,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-21 | E17-T01..T06 | mobil To'lovlar: xarajat/daromad tablari, holat bo'limlari va `X + N ta ?` jami (domen `PlanBoard`), to'lash varag'i (qolgan summa, summasizda majburiy), qisman → keyin/yopish (BR-073), swipe, shu oy summasi (BR-083), yopish/qayta ochish, o'tkazish + undo, kalendar, oyni ochish preview'i (BR-081, oflayn xabar); domen `ClosePlan`/`EditPlan`; 341 test (91,4%), domen 203 (97,8%). **E17 yakunlandi** |
 | 2026-09-21 | E18-T01..T07 | mobil Hamyon: hisoblar (fondsiz jami, manfiy naqd), 👤 fond (jonli ajratma, oylar), 🏦 jamg'arma (chiziq, jadval, ⏳), 💳 qarzlar (jamlar, 4 holat, tafsilot, forma, arxiv), 🎯 maqsadlar (prognoz, ulguradimi, tabrik), 📊 limitlar (rol bo'yicha); 4 hisobot pariteti 5/5; domen qarz/maqsad/limit use-case'lari; 365 test (92,0%), domen 212. Topilgan xatolar: qo'shish varag'i tanlovi hisoblar yuklanganda tushib qolishi, tor ekranda 2 ta toshib ketish. **E18 yakunlandi** |
 | 2026-09-21 | E19-T01..T05 | mobil bildirishnomalar va sozlamalar: FCM (register/unregister_device, bosilganda ekran, ochiq paytidagi push), lokal eslatmalar, onboarding'da ruxsat, `notification_prefs` sozlamalari (Telegram ulash, sinov xabari), Sozlamalar (tema, til, eksport, `delete-account` ikki bosqichli), 386 test (90,0%), 9 integratsiya, dev APK. E18 integratsiya CI xatosi — sekin CI'da sinxron dashboard'dan keyin kelishi; test shartga asoslangan kutishga o'tkazildi. **E19 yakunlandi** |
+| 2026-09-22 | E21-T01..T05 | admin: kirish (email kodi, Google PKCE, xatolar tarjimasi), `/h/$householdId` konteksti, almashtirgich (oxirgi byudjet eslab qolinadi), `/welcome` (yaratish/taklif kodi), rol himoyasi (menyu, 403, viewer belgisi), 2FA (QR, `/mfa`), profil (ism, til, mavzu, sessiyalar, hamma qurilmadan chiqish); 60 Vitest (MSW) + 25 Playwright (lokal Supabase, TOTP generatori bilan to'liq 2FA oqimi). Topilgan xatolar: login xatolari ikki marta (toast + forma), Mailpit'dan eski kod olinishi, AMR tartibi, brauzer ICU'sida uz sana formati. **E21 yakunlandi** |
