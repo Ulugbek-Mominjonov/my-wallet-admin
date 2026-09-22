@@ -17,6 +17,18 @@ describe('toAppError', () => {
     expect(toAppError({ code: '42501', message: 'permission denied' }).code).toBe('forbidden')
   })
 
+  it('biznes xato (P0001) → kod va tarjima', () => {
+    const error = toAppError({ code: 'P0001', message: 'invite_expired' })
+    expect(error.code).toBe('invite_expired')
+    expect(error.message).toBe('Kod muddati tugagan (7 kun)')
+  })
+
+  it('noma’lum biznes kod — kod saqlanadi, matn umumiy', () => {
+    const error = toAppError({ code: 'P0001', message: 'something_new' })
+    expect(error.code).toBe('something_new')
+    expect(error.message).toBe("Kutilmagan xato. Qayta urinib ko'ring.")
+  })
+
   it('AppError o‘zgarishsiz qaytadi', () => {
     const original = new AppError('planned_already_paid', 'x')
     expect(toAppError(original)).toBe(original)

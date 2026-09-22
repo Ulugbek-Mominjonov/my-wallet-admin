@@ -12,6 +12,7 @@
     "notFoundTitle": "Sahifa topilmadi",
     "notFoundText": "Havola eskirgan yoki noto'g'ri yozilgan bo'lishi mumkin.",
     "unexpectedTitle": "Nimadir xato ketdi",
+    "forbiddenTitle": "Ruxsat yo'q",
     "network": "Server bilan aloqa yo'q. Internetni tekshiring.",
     "unauthorized": "Sessiya tugagan. Qayta kiring.",
     "forbidden": "Bu amal uchun huquqingiz yo'q.",
@@ -19,7 +20,27 @@
   },
   "auth": {
     "loginTitle": "Boshqaruv paneliga kirish",
-    "methodsSoon": "Kirish usullari (Google, email kod) tez orada qo'shiladi."
+    "email": "Email",
+    "emailPlaceholder": "siz@misol.uz",
+    "sendCode": "Kod olish",
+    "codeSent": "Kod {{email}} manziliga yuborildi",
+    "code": "Kod",
+    "signIn": "Kirish",
+    "changeEmail": "Boshqa email",
+    "resend": "Kodni qayta yuborish",
+    "resendIn": "Qayta yuborish: {{seconds}} s",
+    "or": "yoki",
+    "google": "Google bilan kirish",
+    "callbackLoading": "Kirilmoqda…",
+    "callbackFailed": "Kirib bo'lmadi",
+    "backToLogin": "Kirish sahifasiga",
+    "errors": {
+      "codeInvalid": "Kod noto'g'ri yoki eskirgan — yangisini oling",
+      "rateLimited": "Juda ko'p urinish — biroz kuting",
+      "emailInvalid": "Email manzilini to'g'ri kiriting",
+      "mfaFailed": "Kod noto'g'ri — ilovadagi yangi kodni kiriting",
+      "codeFormat": "{{count}} xonali kodni kiriting"
+    }
   },
   "dashboard": {
     "title": "Xulosa",
@@ -45,6 +66,35 @@
       "title": "Buyruqlar",
       "placeholder": "Sahifa yoki buyruq nomini yozing…",
       "empty": "Hech narsa topilmadi"
+    }
+  },
+  "household": {
+    "switch": "Byudjetni almashtirish",
+    "current": "Joriy byudjet",
+    "add": "Yangi byudjet yoki taklif kodi",
+    "setupTitle": "Byudjetni boshlang",
+    "setupSubtitle": "Yangi byudjet yarating yoki taklif kodi bilan mavjudiga qo'shiling.",
+    "createTitle": "Yangi byudjet",
+    "nameLabel": "Byudjet nomi",
+    "nameDefault": "Mening byudjetim",
+    "create": "Yaratish",
+    "joinTitle": "Taklif kodi bilan qo'shilish",
+    "codeLabel": "Taklif kodi",
+    "join": "Qo'shilish",
+    "back": "Byudjetga qaytish",
+    "roles": {
+      "owner": "Egasi",
+      "admin": "Admin",
+      "member": "A'zo",
+      "viewer": "Kuzatuvchi"
+    },
+    "errors": {
+      "name": "Byudjet nomini kiriting (80 belgigacha)",
+      "code": "Kod 8 belgidan iborat",
+      "notFound": "Bunday kod topilmadi",
+      "used": "Kod allaqachon ishlatilgan",
+      "expired": "Kod muddati tugagan (7 kun)",
+      "member": "Siz allaqachon bu byudjet a'zosisiz"
     }
   }
 }

@@ -8,6 +8,8 @@ allowBuilds:
   # wrangler: Cloudflare lokal runtime (workerd) va bundler (esbuild) binarlari
   esbuild: true
   workerd: true
+  # msw: postinstall faqat brauzer service worker'ini nusxalaydi — testlar msw/node
+  msw: false
 
 peerDependencyRules:
   allowedVersions:

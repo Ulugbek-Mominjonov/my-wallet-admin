@@ -53,6 +53,16 @@ export default defineConfig([
     rules: {
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+      // TanStack Router: `redirect()` / `notFound()` marshrutni boshqarish uchun tashlanadi.
+      '@typescript-eslint/only-throw-error': [
+        'error',
+        {
+          allow: [
+            { from: 'package', package: '@tanstack/router-core', name: 'Redirect' },
+            { from: 'package', package: '@tanstack/router-core', name: 'NotFoundError' },
+          ],
+        },
+      ],
       'boundaries/dependencies': [
         'error',
         {

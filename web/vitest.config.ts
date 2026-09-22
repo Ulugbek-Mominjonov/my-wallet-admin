@@ -10,6 +10,12 @@ export default mergeConfig(
       include: ['src/**/*.test.{ts,tsx}'],
       environment: 'jsdom',
       setupFiles: ['./src/shared/test/setup.ts'],
+      // MSW so'rovlarni shu manzilda ushlaydi — lokal `.env.local` ga bog'liq emas.
+      env: {
+        VITE_SUPABASE_URL: 'http://supabase.test',
+        VITE_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
+        VITE_APP_ENV: 'local',
+      },
       coverage: {
         provider: 'v8',
         include: ['src/**'],

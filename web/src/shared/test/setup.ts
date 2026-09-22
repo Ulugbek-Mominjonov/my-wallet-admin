@@ -1,9 +1,19 @@
 import '@testing-library/jest-dom/vitest'
 import { cleanup } from '@testing-library/react'
-import { afterEach, beforeEach } from 'vitest'
+import { afterAll, afterEach, beforeAll, beforeEach } from 'vitest'
 
 import { DEFAULT_LOCALE } from '@/shared/config/locale'
 import { setLocale } from '@/shared/i18n'
+import { server } from '@/shared/test/msw'
+
+// Kutilmagan tarmoq so'rovi — test xatosi (har so'rov aniq handler bilan).
+beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'error' })
+})
+
+afterAll(() => {
+  server.close()
+})
 
 // jsdom brauzer tili en-US — testlar standart til (uz) bilan boshlanadi.
 beforeEach(() => {
@@ -12,4 +22,7 @@ beforeEach(() => {
 
 afterEach(() => {
   cleanup()
+  server.resetHandlers()
+  // Supabase sessiyasi localStorage'da — testlar orasida qolmasin.
+  localStorage.clear()
 })

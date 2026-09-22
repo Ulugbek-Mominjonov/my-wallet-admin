@@ -12,6 +12,7 @@
     "notFoundTitle": "Page not found",
     "notFoundText": "The link may be outdated or mistyped.",
     "unexpectedTitle": "Something went wrong",
+    "forbiddenTitle": "Access denied",
     "network": "No connection to the server. Check your internet.",
     "unauthorized": "Your session has expired. Please sign in again.",
     "forbidden": "You don't have permission for this action.",
@@ -19,7 +20,27 @@
   },
   "auth": {
     "loginTitle": "Sign in to the admin panel",
-    "methodsSoon": "Sign-in methods (Google, email code) are coming soon."
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "sendCode": "Get code",
+    "codeSent": "Code sent to {{email}}",
+    "code": "Code",
+    "signIn": "Sign in",
+    "changeEmail": "Use another email",
+    "resend": "Resend code",
+    "resendIn": "Resend in {{seconds}} s",
+    "or": "or",
+    "google": "Sign in with Google",
+    "callbackLoading": "Signing in…",
+    "callbackFailed": "Couldn't sign in",
+    "backToLogin": "Back to sign in",
+    "errors": {
+      "codeInvalid": "The code is wrong or expired — request a new one",
+      "rateLimited": "Too many attempts — please wait a moment",
+      "emailInvalid": "Enter a valid email",
+      "mfaFailed": "Wrong code — enter the new code from your app",
+      "codeFormat": "Enter the {{count}}-digit code"
+    }
   },
   "dashboard": {
     "title": "Overview",
@@ -45,6 +66,35 @@
       "title": "Commands",
       "placeholder": "Type a page or command…",
       "empty": "Nothing found"
+    }
+  },
+  "household": {
+    "switch": "Switch budget",
+    "current": "Current budget",
+    "add": "New budget or invite code",
+    "setupTitle": "Start your budget",
+    "setupSubtitle": "Create a new budget or join an existing one with an invite code.",
+    "createTitle": "New budget",
+    "nameLabel": "Budget name",
+    "nameDefault": "My budget",
+    "create": "Create",
+    "joinTitle": "Join with an invite code",
+    "codeLabel": "Invite code",
+    "join": "Join",
+    "back": "Back to budget",
+    "roles": {
+      "owner": "Owner",
+      "admin": "Admin",
+      "member": "Member",
+      "viewer": "Viewer"
+    },
+    "errors": {
+      "name": "Enter a budget name (up to 80 characters)",
+      "code": "The code is 8 characters long",
+      "notFound": "No such code",
+      "used": "The code has already been used",
+      "expired": "The code has expired (7 days)",
+      "member": "You're already a member of this budget"
     }
   }
 }
