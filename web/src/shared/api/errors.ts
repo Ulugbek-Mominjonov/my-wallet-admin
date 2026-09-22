@@ -32,6 +32,7 @@ const AUTH_ERRORS: Record<string, { code: string; key: ParseKeys }> = {
   validation_failed: { code: 'email_invalid', key: 'auth.errors.emailInvalid' },
   mfa_verification_failed: { code: 'mfa_failed', key: 'auth.errors.mfaFailed' },
   mfa_challenge_expired: { code: 'mfa_failed', key: 'auth.errors.mfaFailed' },
+  insufficient_aal: { code: 'mfa_required', key: 'auth.errors.mfaRequired' },
   session_not_found: { code: 'unauthorized', key: 'errors.unauthorized' },
   session_expired: { code: 'unauthorized', key: 'errors.unauthorized' },
   refresh_token_not_found: { code: 'unauthorized', key: 'errors.unauthorized' },

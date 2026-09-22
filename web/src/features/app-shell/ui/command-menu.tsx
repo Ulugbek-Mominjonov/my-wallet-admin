@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 
 import type { Role } from '@/entities/household'
 import { navSectionsFor } from '@/features/app-shell/navigation'
-import { LOCALE_KEYWORDS, LOCALE_NAMES, THEME_ICON, THEMES } from '@/features/app-shell/preferences'
+import { LOCALE_KEYWORDS, LOCALE_NAMES, THEME_ICON, THEMES } from '@/shared/config/preferences'
 import { APP_LOCALES } from '@/shared/config/locale'
 import { setLocale } from '@/shared/i18n'
 import { Button } from '@/shared/ui/button'

@@ -1,7 +1,7 @@
 import { Languages } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { LOCALE_NAMES } from '@/features/app-shell/preferences'
+import { LOCALE_NAMES } from '@/shared/config/preferences'
 import { APP_LOCALES, type AppLocale } from '@/shared/config/locale'
 import { setLocale, useAppLocale } from '@/shared/i18n'
 import { Button } from '@/shared/ui/button'

@@ -13,19 +13,20 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/shared/ui/sideb
 
 /**
  * Byudjet sahifalari karkasi: yig'iladigan sidebar (mobilda drawer) va topbar.
- * Menyu joriy byudjet va rolga moslanadi; byudjet almashtirgich — boshqa
- * feature, shuning uchun marshrut uni `switcher` sloti orqali beradi.
- * Profil menyusi (E21-T04) topbar'ga qo'shiladi.
+ * Menyu joriy byudjet va rolga moslanadi; byudjet almashtirgich va hisob
+ * menyusi — boshqa feature'lar, shuning uchun marshrut ularni slot orqali beradi.
  */
 export function AppShell({
   householdId,
   role,
   switcher,
+  userMenu,
   children,
 }: {
   householdId: string
   role: Role
   switcher: ReactNode
+  userMenu: ReactNode
   children: ReactNode
 }) {
   const { t } = useTranslation()
@@ -48,6 +49,7 @@ export function AppShell({
             <CommandMenu householdId={householdId} role={role} />
             <LanguageMenu />
             <ThemeMenu />
+            {userMenu}
           </div>
         </header>
         <div className="mx-auto w-full max-w-7xl space-y-6 p-4 md:p-6">{children}</div>

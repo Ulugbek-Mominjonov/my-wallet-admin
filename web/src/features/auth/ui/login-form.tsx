@@ -11,6 +11,7 @@ import {
   signInWithGoogle,
   verifyEmailCode,
 } from '@/features/auth/api/auth-api'
+import { digitCodeSchema } from '@/features/auth/model/code-schema'
 import { toAppError } from '@/shared/api/errors'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -20,7 +21,7 @@ import { Label } from '@/shared/ui/label'
 const RESEND_SECONDS = 60
 
 const emailSchema = z.object({ email: z.email() })
-const codeSchema = z.object({ code: z.string().regex(new RegExp(`^\\d{${EMAIL_CODE_LENGTH}}$`)) })
+const codeSchema = digitCodeSchema(EMAIL_CODE_LENGTH)
 
 /**
  * E21-T01: email kodi (2 qadam) va Google. Muvaffaqiyatda [onSignedIn] —

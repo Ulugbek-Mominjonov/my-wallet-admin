@@ -59,3 +59,30 @@ export const bootstrapQuery = queryOptions({
   },
   staleTime: 5 * 60_000,
 })
+
+/** "Qayerdan kirdim": joriy sessiyaning kirish usullari (AMR) va vaqti. */
+export interface SessionInfo {
+  methods: string[]
+  signedInAt: string | null
+}
+
+export const sessionInfoQuery = queryOptions({
+  queryKey: qk.session(),
+  queryFn: async (): Promise<SessionInfo> => {
+    const { data, error } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel()
+    if (error) throw toAppError(error)
+    // AMR yozuvi obyekt ({method, timestamp}) yoki RFC 8176 satri bo'lishi mumkin;
+    // eng yangisi birinchi keladi — ko'rsatishda kirish tartibida (email → 2FA).
+    const entries = data.currentAuthenticationMethods.map((m) =>
+      typeof m === 'string' ? { method: m, timestamp: 0 } : m,
+    )
+    entries.sort((a, b) => a.timestamp - b.timestamp)
+    const timestamps = entries.map((m) => m.timestamp).filter((t) => t > 0)
+    return {
+      methods: entries.map((m) => m.method),
+      // Soniyalarda; eng birinchisi — kirish paytining o'zi.
+      signedInAt:
+        timestamps.length > 0 ? new Date(Math.min(...timestamps) * 1000).toISOString() : null,
+    }
+  },
+})

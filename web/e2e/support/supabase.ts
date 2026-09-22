@@ -26,15 +26,23 @@ interface MailpitSearch {
   messages: { ID: string }[]
 }
 
-/** Mailpit'dagi oxirgi xatdan 6 xonali kirish kodi. */
-export async function emailCode(email: string): Promise<string> {
+/** Email'ga kelgan xatlar (eng yangisi birinchi). */
+export async function mailIds(email: string): Promise<string[]> {
+  const search = await getJson<MailpitSearch>(
+    `${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:"${email}"`)}`,
+  )
+  return search.messages.map((m) => m.ID)
+}
+
+/**
+ * Yangi xatdagi 6 xonali kirish kodi. [seen] — kod so'ralishidan oldingi
+ * xatlar: eski kod qayta olinmaydi (yangi xat hali yetib kelmagan bo'lsa).
+ */
+export async function emailCode(email: string, seen: readonly string[] = []): Promise<string> {
   for (let attempt = 0; attempt < CODE_ATTEMPTS; attempt++) {
-    const search = await getJson<MailpitSearch>(
-      `${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:"${email}"`)}`,
-    )
-    const latest = search.messages.at(0)
+    const latest = (await mailIds(email)).find((id) => !seen.includes(id))
     if (latest) {
-      const message = await getJson<{ Text: string }>(`${MAILPIT_URL}/api/v1/message/${latest.ID}`)
+      const message = await getJson<{ Text: string }>(`${MAILPIT_URL}/api/v1/message/${latest}`)
       const code = /\b\d{6}\b/.exec(message.Text)?.[0]
       if (code) return code
     }
@@ -45,11 +53,12 @@ export async function emailCode(email: string): Promise<string> {
 
 /** UI'siz kirish (email kodi) — access token (boshqa foydalanuvchi tayyorlash uchun). */
 export async function signInViaApi(email: string): Promise<string> {
+  const seen = await mailIds(email)
   await postJson('/auth/v1/otp', { email, create_user: true })
   const session = await postJson<{ access_token: string }>('/auth/v1/verify', {
     type: 'email',
     email,
-    token: await emailCode(email),
+    token: await emailCode(email, seen),
   })
   return session.access_token
 }

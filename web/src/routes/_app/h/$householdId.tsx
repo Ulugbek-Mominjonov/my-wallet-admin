@@ -3,7 +3,7 @@ import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 import { HouseholdProvider, type Bootstrap } from '@/entities/household'
 import { AppShell } from '@/features/app-shell'
-import { bootstrapQuery } from '@/features/auth'
+import { bootstrapQuery, UserMenu } from '@/features/auth'
 import { HouseholdSwitcher, useRememberHousehold } from '@/features/household'
 import { forbiddenError } from '@/shared/api/errors'
 
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_app/h/$householdId')({
 })
 
 function HouseholdLayout() {
-  const { household } = Route.useRouteContext()
+  const { household, email } = Route.useRouteContext()
   const { data: boot } = useSuspenseQuery(bootstrapQuery)
   useRememberHousehold(boot.profile, household.id)
 
@@ -36,6 +36,9 @@ function HouseholdLayout() {
         householdId={household.id}
         role={household.role}
         switcher={<HouseholdSwitcher households={boot.households} current={household} />}
+        userMenu={
+          <UserMenu name={boot.profile.display_name} email={email} householdId={household.id} />
+        }
       >
         <Outlet />
       </AppShell>

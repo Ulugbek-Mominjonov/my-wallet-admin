@@ -6,7 +6,9 @@
   "common": {
     "retry": "Qayta urinish",
     "toHome": "Bosh sahifaga",
-    "comingSoon": "Tez orada"
+    "comingSoon": "Tez orada",
+    "cancel": "Bekor qilish",
+    "save": "Saqlash"
   },
   "errors": {
     "notFoundTitle": "Sahifa topilmadi",
@@ -39,7 +41,8 @@
       "rateLimited": "Juda ko'p urinish — biroz kuting",
       "emailInvalid": "Email manzilini to'g'ri kiriting",
       "mfaFailed": "Kod noto'g'ri — ilovadagi yangi kodni kiriting",
-      "codeFormat": "{{count}} xonali kodni kiriting"
+      "codeFormat": "{{count}} xonali kodni kiriting",
+      "mfaRequired": "Avval 2FA kodini kiriting — qayta kiring"
     }
   },
   "dashboard": {
@@ -98,5 +101,56 @@
       "expired": "Kod muddati tugagan (7 kun)",
       "member": "Siz allaqachon bu byudjet a'zosisiz"
     }
+  },
+  "account": {
+    "menu": "Hisob",
+    "profile": "Profil va xavfsizlik",
+    "signOut": "Chiqish"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Shaxsiy ma'lumotlar, ko'rinish va xavfsizlik",
+    "detailsTitle": "Shaxsiy ma'lumotlar",
+    "name": "Ism",
+    "nameError": "Ismni kiriting (100 belgigacha)",
+    "language": "Til",
+    "languageHint": "Ilova va bildirishnomalar tili",
+    "saved": "Profil saqlandi",
+    "appearanceTitle": "Ko'rinish",
+    "appearanceHint": "Mavzu shu brauzerda saqlanadi",
+    "sessionsTitle": "Sessiyalar",
+    "signedInWith": "Kirish usuli",
+    "signedInAt": "Kirgan vaqt",
+    "methods": {
+      "otp": "Email kodi",
+      "oauth": "Google",
+      "totp": "2FA kodi",
+      "other": "Boshqa usul"
+    },
+    "signOutEverywhere": "Barcha qurilmalardan chiqish",
+    "signOutEverywhereTitle": "Barcha qurilmalardan chiqilsinmi?",
+    "signOutEverywhereText": "Bu brauzer, boshqa brauzerlar va mobil ilova qayta kirishni so'raydi."
+  },
+  "mfa": {
+    "title": "Ikki bosqichli himoya (2FA)",
+    "description": "Kirishda email kodidan tashqari autentifikator ilovadagi kod ham so'raladi.",
+    "enabledSince": "{{date}} dan beri yoqilgan",
+    "disabled": "O'chiq",
+    "enable": "Yoqish",
+    "disable": "O'chirish",
+    "disableTitle": "2FA o'chirilsinmi?",
+    "disableText": "Kirishda faqat email kodi so'raladi.",
+    "scanStep": "Autentifikator ilovada (Google Authenticator, 1Password, Authy…) QR kodni skanerlang.",
+    "secretHint": "Skanerlay olmasangiz, kalitni qo'lda kiriting:",
+    "codeStep": "Ilova ko'rsatgan 6 xonali kodni kiriting.",
+    "code": "Tasdiqlash kodi",
+    "verify": "Tasdiqlash",
+    "qrAlt": "2FA sozlash uchun QR kod",
+    "turnedOn": "2FA yoqildi",
+    "turnedOff": "2FA o'chirildi",
+    "challengeTitle": "Ikki bosqichli tekshiruv",
+    "challengeText": "Autentifikator ilovadagi 6 xonali kodni kiriting.",
+    "otherAccount": "Boshqa hisob bilan kirish",
+    "noFactor": "2FA omili topilmadi — qayta kiring."
   }
 }

@@ -1,15 +1,16 @@
 import { expect, type Page } from '@playwright/test'
 
-import { emailCode } from './supabase.ts'
+import { emailCode, mailIds } from './supabase.ts'
 
 /** Byudjet sahifasi manzili (`/h/<uuid>`). */
 export const HOUSEHOLD_URL = /\/h\/[0-9a-f-]{36}$/
 
 /** Kirish sahifasi orqali (email → Mailpit'dagi kod). */
 export async function signIn(page: Page, email: string): Promise<void> {
+  const seen = await mailIds(email)
   await page.getByLabel('Email').fill(email)
   await page.getByRole('button', { name: 'Kod olish' }).click()
-  await page.getByLabel('Kod').fill(await emailCode(email))
+  await page.getByLabel('Kod').fill(await emailCode(email, seen))
   await page.getByRole('button', { name: 'Kirish' }).click()
 }
 
@@ -23,4 +24,19 @@ export async function openHouseholdSwitcher(
   const trigger = page.getByRole('button', { name: new RegExp(current) })
   await expect(trigger).toBeVisible()
   await trigger.click()
+}
+
+/** GoTrue `max_frequency` (supabase/config.toml): bir email'ga kod oralig'i. */
+const OTP_COOLDOWN_MS = 31_000
+
+/** Shu email'ga oldingi kod [sentAt] da yuborilgan — cheklov tugaguncha kutadi. */
+export async function waitForOtpCooldown(page: Page, sentAt: number): Promise<void> {
+  const left = sentAt + OTP_COOLDOWN_MS - Date.now()
+  if (left > 0) await page.waitForTimeout(left)
+}
+
+/** Topbar'dagi hisob menyusidan band tanlash. */
+export async function openAccountMenuItem(page: Page, item: string): Promise<void> {
+  await page.getByRole('button', { name: 'Hisob' }).click()
+  await page.getByRole('menuitem', { name: item }).click()
 }

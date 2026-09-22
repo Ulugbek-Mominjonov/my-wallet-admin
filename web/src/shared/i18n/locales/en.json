@@ -6,7 +6,9 @@
   "common": {
     "retry": "Try again",
     "toHome": "Go home",
-    "comingSoon": "Coming soon"
+    "comingSoon": "Coming soon",
+    "cancel": "Cancel",
+    "save": "Save"
   },
   "errors": {
     "notFoundTitle": "Page not found",
@@ -39,7 +41,8 @@
       "rateLimited": "Too many attempts — please wait a moment",
       "emailInvalid": "Enter a valid email",
       "mfaFailed": "Wrong code — enter the new code from your app",
-      "codeFormat": "Enter the {{count}}-digit code"
+      "codeFormat": "Enter the {{count}}-digit code",
+      "mfaRequired": "Enter your 2FA code first — sign in again"
     }
   },
   "dashboard": {
@@ -98,5 +101,56 @@
       "expired": "The code has expired (7 days)",
       "member": "You're already a member of this budget"
     }
+  },
+  "account": {
+    "menu": "Account",
+    "profile": "Profile and security",
+    "signOut": "Sign out"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Personal details, appearance and security",
+    "detailsTitle": "Personal details",
+    "name": "Name",
+    "nameError": "Enter a name (up to 100 characters)",
+    "language": "Language",
+    "languageHint": "Language of the app and notifications",
+    "saved": "Profile saved",
+    "appearanceTitle": "Appearance",
+    "appearanceHint": "The theme is saved in this browser",
+    "sessionsTitle": "Sessions",
+    "signedInWith": "Sign-in method",
+    "signedInAt": "Signed in at",
+    "methods": {
+      "otp": "Email code",
+      "oauth": "Google",
+      "totp": "2FA code",
+      "other": "Other method"
+    },
+    "signOutEverywhere": "Sign out everywhere",
+    "signOutEverywhereTitle": "Sign out on all devices?",
+    "signOutEverywhereText": "This and other browsers, and the mobile app, will ask you to sign in again."
+  },
+  "mfa": {
+    "title": "Two-factor authentication (2FA)",
+    "description": "Signing in asks for a code from your authenticator app in addition to the email code.",
+    "enabledSince": "On since {{date}}",
+    "disabled": "Off",
+    "enable": "Turn on",
+    "disable": "Turn off",
+    "disableTitle": "Turn off 2FA?",
+    "disableText": "Signing in will only ask for the email code.",
+    "scanStep": "Scan the QR code with an authenticator app (Google Authenticator, 1Password, Authy…).",
+    "secretHint": "Can't scan it? Enter the key manually:",
+    "codeStep": "Enter the 6-digit code shown in the app.",
+    "code": "Verification code",
+    "verify": "Verify",
+    "qrAlt": "QR code for setting up 2FA",
+    "turnedOn": "2FA turned on",
+    "turnedOff": "2FA turned off",
+    "challengeTitle": "Two-step verification",
+    "challengeText": "Enter the 6-digit code from your authenticator app.",
+    "otherAccount": "Sign in with another account",
+    "noFactor": "No 2FA factor found — sign in again."
   }
 }

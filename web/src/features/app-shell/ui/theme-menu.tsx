@@ -2,7 +2,7 @@ import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useTranslation } from 'react-i18next'
 
-import { THEME_ICON, THEMES } from '@/features/app-shell/preferences'
+import { THEME_ICON, THEMES } from '@/shared/config/preferences'
 import { Button } from '@/shared/ui/button'
 import {
   DropdownMenu,
