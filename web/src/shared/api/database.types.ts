@@ -1762,6 +1762,10 @@ export type Database = {
           expires_at: string
         }[]
       }
+      delete_household: {
+        Args: { p_confirm_name: string; p_household: string }
+        Returns: undefined
+      }
       fx_upsert: { Args: { p_rates: Json }; Returns: number }
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }

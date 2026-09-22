@@ -63,6 +63,7 @@ Keep-alive va smoke testlar.
 | `month_shift_mismatch` | oy siljishi farqli daromad turlari birlashtirilmaydi (BR-036, BR-043) |
 | `invalid_batch` / `invalid_device` | sinxron paketi massiv emas yoki 100 dan ortiq (`set_sort_order` — 1000 dan ortiq); qurilma ID bo'sh/uzun |
 | `invalid_table` | `set_sort_order` ga tartibli spravochnik bo'lmagan jadval |
+| `confirm_mismatch` | `delete_household` tasdiq nomi byudjet nomiga mos emas |
 
 Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masalan
 `accounts_name_key`), `23514` — qiymat cheklovi (masalan bo'sh nom, summa ≤ 0),
@@ -81,6 +82,7 @@ Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masa
 | `transfer_ownership(p_household, p_new_owner)` | byudjet, a'zo | — | owner |
 | `set_member_role(p_household, p_user, p_role)` | rol (`owner` emas) | — | owner/admin (admin owner'ga tegolmaydi) |
 | `remove_member(p_household, p_user)` | a'zo | — | owner/admin |
+| `delete_household(p_household, p_confirm_name)` | byudjet, nomi (registrsiz) | — | owner (BR-014); ma'lumotlar kaskadda, chek fayllari `purge-files` bilan |
 
 ### `app_config` qiymatlari
 
