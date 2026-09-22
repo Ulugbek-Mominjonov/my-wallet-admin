@@ -1862,6 +1862,10 @@ export type Database = {
         Args: { p_closed: boolean; p_household: string; p_month: unknown }
         Returns: Json
       }
+      set_sort_order: {
+        Args: { p_household: string; p_ids: string[]; p_table: string }
+        Returns: number
+      }
       skip_planned: {
         Args: { p_item: string; p_skipped?: boolean }
         Returns: Json

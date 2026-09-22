@@ -61,7 +61,8 @@ Keep-alive va smoke testlar.
 | `preview_outdated` | preview'dan keyin ma'lumot o'zgargan — preview'ni qayta oling (BR-043) |
 | `month_not_finished` | tugamagan oyni yopib bo'lmaydi (BR-150) |
 | `month_shift_mismatch` | oy siljishi farqli daromad turlari birlashtirilmaydi (BR-036, BR-043) |
-| `invalid_batch` / `invalid_device` | sinxron paketi massiv emas yoki 100 dan ortiq; qurilma ID bo'sh/uzun |
+| `invalid_batch` / `invalid_device` | sinxron paketi massiv emas yoki 100 dan ortiq (`set_sort_order` — 1000 dan ortiq); qurilma ID bo'sh/uzun |
+| `invalid_table` | `set_sort_order` ga tartibli spravochnik bo'lmagan jadval |
 
 Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masalan
 `accounts_name_key`), `23514` — qiymat cheklovi (masalan bo'sh nom, summa ≤ 0),
@@ -127,6 +128,15 @@ Asosiy cheklovlar:
 Yangi byudjet (ro'yxatdan o'tish yoki `create_household`) standart to'plamni
 foydalanuvchi tilida oladi: shablondagi 18 kategoriya, hisoblar **Naqd**,
 **Karta**, **Shaxsiy fond**; fond qoidasi — 10%, 5-kun, manba — Naqd (BR-060).
+
+### Tartib — `set_sort_order(p_household, p_table, p_ids)` (E22)
+
+Drag & drop natijasi bitta so'rovda: `sort_order` = `p_ids` dagi o'rin (0 dan).
+`p_table`: `accounts`, `categories`, `recurring_rules`, `quick_actions`
+(owner/admin), `goals` (owner/admin/member). Boshqa byudjet yoki o'chirilgan
+qatorlar e'tiborsiz; o'zgarmaganlari yozilmaydi (`row_version` oshmaydi).
+Javob — yangilangan qatorlar soni. Xatolar: `forbidden`, `invalid_table`,
+`invalid_batch` (> 1000 ID).
 
 ### Ikon kalitlari
 
