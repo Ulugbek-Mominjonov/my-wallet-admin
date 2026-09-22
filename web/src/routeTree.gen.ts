@@ -12,7 +12,11 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppWelcomeRouteImport } from './routes/_app/welcome'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AppHHouseholdIdRouteImport } from './routes/_app/h/$householdId'
+import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callback'
+import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -27,33 +31,79 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppWelcomeRoute = AppWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => AppRoute,
+} as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const AppHHouseholdIdRoute = AppHHouseholdIdRouteImport.update({
+  id: '/h/$householdId',
+  path: '/h/$householdId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AuthAuthCallbackRoute = AuthAuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AppHHouseholdIdIndexRoute = AppHHouseholdIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/welcome': typeof AppWelcomeRoute
   '/login': typeof AuthLoginRoute
+  '/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
+  '/auth/callback': typeof AuthAuthCallbackRoute
+  '/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof AppIndexRoute
+  '/welcome': typeof AppWelcomeRoute
   '/login': typeof AuthLoginRoute
+  '/auth/callback': typeof AuthAuthCallbackRoute
+  '/h/$householdId': typeof AppHHouseholdIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
+  '/_app/welcome': typeof AppWelcomeRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
+  '/_auth/auth/callback': typeof AuthAuthCallbackRoute
+  '/_app/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login'
+  fullPaths:
+    | '/'
+    | '/welcome'
+    | '/login'
+    | '/h/$householdId'
+    | '/auth/callback'
+    | '/h/$householdId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login'
-  id: '__root__' | '/_app' | '/_auth' | '/_auth/login' | '/_app/'
+  to: '/' | '/welcome' | '/login' | '/auth/callback' | '/h/$householdId'
+  id:
+    | '__root__'
+    | '/_app'
+    | '/_auth'
+    | '/_app/welcome'
+    | '/_auth/login'
+    | '/_app/'
+    | '/_app/h/$householdId'
+    | '/_auth/auth/callback'
+    | '/_app/h/$householdId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -84,6 +134,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/welcome': {
+      id: '/_app/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof AppWelcomeRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_auth/login': {
       id: '/_auth/login'
       path: '/login'
@@ -91,25 +148,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_app/h/$householdId': {
+      id: '/_app/h/$householdId'
+      path: '/h/$householdId'
+      fullPath: '/h/$householdId'
+      preLoaderRoute: typeof AppHHouseholdIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_auth/auth/callback': {
+      id: '/_auth/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthAuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_app/h/$householdId/': {
+      id: '/_app/h/$householdId/'
+      path: '/'
+      fullPath: '/h/$householdId/'
+      preLoaderRoute: typeof AppHHouseholdIdIndexRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
   }
 }
 
+interface AppHHouseholdIdRouteChildren {
+  AppHHouseholdIdIndexRoute: typeof AppHHouseholdIdIndexRoute
+}
+
+const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
+  AppHHouseholdIdIndexRoute: AppHHouseholdIdIndexRoute,
+}
+
+const AppHHouseholdIdRouteWithChildren = AppHHouseholdIdRoute._addFileChildren(
+  AppHHouseholdIdRouteChildren,
+)
+
 interface AppRouteChildren {
+  AppWelcomeRoute: typeof AppWelcomeRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppHHouseholdIdRoute: typeof AppHHouseholdIdRouteWithChildren
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppWelcomeRoute: AppWelcomeRoute,
   AppIndexRoute: AppIndexRoute,
+  AppHHouseholdIdRoute: AppHHouseholdIdRouteWithChildren,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 interface AuthRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
+  AuthAuthCallbackRoute: typeof AuthAuthCallbackRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
+  AuthAuthCallbackRoute: AuthAuthCallbackRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

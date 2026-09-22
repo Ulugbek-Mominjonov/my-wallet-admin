@@ -4,7 +4,8 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { NAV_SECTIONS } from '@/features/app-shell/navigation'
+import type { Role } from '@/entities/household'
+import { navSectionsFor } from '@/features/app-shell/navigation'
 import { LOCALE_KEYWORDS, LOCALE_NAMES, THEME_ICON, THEMES } from '@/features/app-shell/preferences'
 import { APP_LOCALES } from '@/shared/config/locale'
 import { setLocale } from '@/shared/i18n'
@@ -20,7 +21,7 @@ import {
 } from '@/shared/ui/command'
 
 /** ⌘K / Ctrl+K — sahifalarga o'tish va sozlamalar klaviaturadan. */
-export function CommandMenu() {
+export function CommandMenu({ householdId, role }: { householdId: string; role: Role }) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { setTheme } = useTheme()
@@ -70,13 +71,13 @@ export function CommandMenu() {
           <CommandInput placeholder={t('shell.command.placeholder')} />
           <CommandList>
             <CommandEmpty>{t('shell.command.empty')}</CommandEmpty>
-            {NAV_SECTIONS.map((section) => (
+            {navSectionsFor(role).map((section) => (
               <CommandGroup key={section.id} heading={t(section.titleKey)}>
                 {section.items.map((item) => (
                   <CommandItem
                     key={item.to}
                     onSelect={() => {
-                      run(() => void navigate({ to: item.to }))
+                      run(() => void navigate({ to: item.to, params: { householdId } }))
                     }}
                   >
                     <item.icon aria-hidden />

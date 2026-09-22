@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { PageHeader } from '@/shared/ui/page-header'
 
-export const Route = createFileRoute('/_app/')({
+export const Route = createFileRoute('/_app/h/$householdId/')({
   component: DashboardPage,
 })
 

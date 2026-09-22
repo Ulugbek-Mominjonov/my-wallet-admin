@@ -2,10 +2,19 @@ import type { LinkProps } from '@tanstack/react-router'
 import type { ParseKeys } from 'i18next'
 import { LayoutDashboard, type LucideIcon } from 'lucide-react'
 
+import { roleCan, type Permission, type Role } from '@/entities/household'
+
+/** Byudjet ichidagi sahifa manzili — hammasi `/h/$householdId` prefiksida (E21-T02). */
+export type HouseholdPath = Extract<NonNullable<LinkProps['to']>, `/h/$householdId${string}`>
+
 export interface NavItem {
-  to: NonNullable<LinkProps['to']>
+  to: HouseholdPath
   labelKey: ParseKeys
   icon: LucideIcon
+  /** Faqat aniq mos kelganda faol (bosh sahifa); boshqalari — prefiks bo'yicha. */
+  exact?: boolean
+  /** Ko'rinish uchun kerakli huquq (BR-011); berilmasa — `read`, ya'ni hamma. */
+  permission?: Permission
 }
 
 export interface NavSection {
@@ -22,6 +31,21 @@ export const NAV_SECTIONS: readonly NavSection[] = [
   {
     id: 'overview',
     titleKey: 'nav.overview',
-    items: [{ to: '/', labelKey: 'nav.dashboard', icon: LayoutDashboard }],
+    items: [
+      { to: '/h/$householdId', labelKey: 'nav.dashboard', icon: LayoutDashboard, exact: true },
+    ],
   },
 ]
+
+/** E21-T03: rolga ruxsat etilmagan bandlar (va bo'shab qolgan bo'limlar) yashiriladi. */
+export function navSectionsFor(
+  role: Role,
+  sections: readonly NavSection[] = NAV_SECTIONS,
+): NavSection[] {
+  return sections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => roleCan(role, item.permission ?? 'read')),
+    }))
+    .filter((section) => section.items.length > 0)
+}

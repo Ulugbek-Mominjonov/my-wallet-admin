@@ -1,8 +1,9 @@
 import { Link, useMatchRoute } from '@tanstack/react-router'
-import { WalletMinimal } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { NAV_SECTIONS } from '@/features/app-shell/navigation'
+import type { Role } from '@/entities/household'
+import { navSectionsFor } from '@/features/app-shell/navigation'
 import {
   Sidebar,
   SidebarContent,
@@ -16,44 +17,37 @@ import {
   SidebarRail,
 } from '@/shared/ui/sidebar'
 
-export function AppSidebar() {
+export function AppSidebar({
+  householdId,
+  role,
+  header,
+}: {
+  householdId: string
+  role: Role
+  header: ReactNode
+}) {
   const { t } = useTranslation()
   const matchRoute = useMatchRoute()
+  const params = { householdId }
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link to="/" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <WalletMinimal className="size-4" aria-hidden />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{t('app.name')}</span>
-                <span className="truncate text-xs text-muted-foreground">
-                  {t('app.adminTitle')}
-                </span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
+      <SidebarHeader>{header}</SidebarHeader>
       <SidebarContent>
-        {NAV_SECTIONS.map((section) => (
+        {navSectionsFor(role).map((section) => (
           <SidebarGroup key={section.id}>
             <SidebarGroupLabel>{t(section.titleKey)}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {section.items.map((item) => {
                   const label = t(item.labelKey)
-                  const isActive = Boolean(matchRoute({ to: item.to, fuzzy: item.to !== '/' }))
+                  const isActive = Boolean(matchRoute({ to: item.to, params, fuzzy: !item.exact }))
                   return (
                     <SidebarMenuItem key={item.to}>
                       <SidebarMenuButton
                         isActive={isActive}
                         tooltip={label}
-                        render={<Link to={item.to} />}
+                        render={<Link to={item.to} params={params} />}
                       >
                         <item.icon aria-hidden />
                         <span>{label}</span>
