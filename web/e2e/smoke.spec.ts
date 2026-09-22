@@ -1,22 +1,35 @@
 import { expect, test } from '@playwright/test'
 
-test.describe('admin panel karkasi', () => {
-  test('bosh sahifa: xulosa sarlavhasi va bo‘sh holat', async ({ page }) => {
-    await page.goto('/')
-    await expect(page.getByRole('heading', { level: 1, name: 'Xulosa' })).toBeVisible()
-    await expect(page.getByText("Hozircha ma'lumot yo'q")).toBeVisible()
-  })
+import { HOUSEHOLD_URL } from './support/app.ts'
+import { SIGNED_OUT } from './support/state.ts'
+
+test.describe('kirmagan foydalanuvchi', { tag: '@public' }, () => {
+  test.use({ storageState: SIGNED_OUT })
 
   test('kirish sahifasi ochiladi (SPA deep-link)', async ({ page }) => {
     await page.goto('/login')
     await expect(page.getByText('Boshqaruv paneliga kirish')).toBeVisible()
   })
 
+  test('ichki sahifa — kirishga, kerakli manzil eslab qolinadi', async ({ page }) => {
+    await page.goto('/welcome')
+    await expect(page).toHaveURL(/\/login\?redirect=%2Fwelcome$/)
+  })
+})
+
+test.describe('admin panel karkasi', () => {
+  test('bosh sahifa: byudjetga yo‘naltiradi, xulosa va bo‘sh holat', async ({ page }) => {
+    await page.goto('/')
+    await expect(page).toHaveURL(HOUSEHOLD_URL)
+    await expect(page.getByRole('heading', { level: 1, name: 'Xulosa' })).toBeVisible()
+    await expect(page.getByText("Hozircha ma'lumot yo'q")).toBeVisible()
+  })
+
   test("noma'lum manzil — 404 sahifasi va bosh sahifaga qaytish", async ({ page }) => {
     await page.goto('/mavjud-emas')
     await expect(page.getByText('Sahifa topilmadi')).toBeVisible()
     await page.getByRole('link', { name: 'Bosh sahifaga' }).click()
-    await expect(page).toHaveURL(/\/$/)
+    await expect(page).toHaveURL(HOUSEHOLD_URL)
   })
 
   test('til almashtirish ruscha sarlavhani beradi va eslab qolinadi', async ({ page }) => {

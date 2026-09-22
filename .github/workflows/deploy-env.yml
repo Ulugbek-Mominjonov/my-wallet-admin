@@ -93,4 +93,4 @@ jobs:
           E2E_BASE_URL: ${{ env.ADMIN_URL }}
         run: |
           pnpm --filter @my-wallet/web exec playwright install --with-deps chromium
-          pnpm --filter @my-wallet/web exec playwright test --project desktop
+          pnpm --filter @my-wallet/web exec playwright test --project public

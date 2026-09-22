@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 env:
-  # Karkas bosqichida web build/e2e backendga murojaat qilmaydi — lokal
-  # manzil va joy egallovchi kalit yetarli (haqiqiy kalit shart emas).
+  # web build lokal manzil va joy egallovchi kalit bilan (backendga murojaat
+  # yo'q); e2e job haqiqiy lokal kalitni `supabase status` dan oladi.
   VITE_SUPABASE_URL: http://127.0.0.1:54321
   VITE_SUPABASE_PUBLISHABLE_KEY: ci-build-placeholder
   VITE_APP_ENV: local
@@ -79,14 +79,20 @@ jobs:
     name: e2e — Playwright
     runs-on: ubuntu-latest
     needs: web
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
+      # E21-T05: kirish va byudjetlar haqiqiy Auth/RPC bilan (email kodi — Mailpit).
+      - name: Lokal Supabase (auth, rest, mailpit)
+        run: pnpm exec supabase start -x studio,imgproxy,logflare,vector,supavisor,edge-runtime,realtime
       - name: Chromium
         run: pnpm --filter @my-wallet/web exec playwright install --with-deps chromium
       - name: E2E (desktop + mobil)
-        run: make web-e2e
+        # Lokal publishable kalit (sir emas) — build va test yordamchilari uchun.
+        run: |
+          VITE_SUPABASE_PUBLISHABLE_KEY="$(pnpm exec supabase status -o env \
+            | sed -n 's/^PUBLISHABLE_KEY="\(.*\)"/\1/p')" make web-e2e
       - name: Hisobot (xato bo'lsa)
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

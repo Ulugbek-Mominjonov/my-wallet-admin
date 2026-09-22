@@ -7,7 +7,7 @@
 
 | Fayl | Qachon | Nima qiladi | Yoqilishi |
 |---|---|---|---|
-| `ci.yml` | har PR, `main` push | web (format, ESLint, tiplar, Vitest, build), functions (Deno fmt/lint/check, unit + snapshot testlari), db (lokal Supabase edge runtime bilan, squawk + db lint, pgTAP, kontrakt testlari — golden fixture'lar, sinxron, Edge Functions uchidan-uchiga — `make fn-smoke`, ishlash — `make perf`, TS tiplari eskirmaganmi), e2e (Playwright desktop + mobil) | doim |
+| `ci.yml` | har PR, `main` push | web (format, ESLint, tiplar, Vitest, build), functions (Deno fmt/lint/check, unit + snapshot testlari), db (lokal Supabase edge runtime bilan, squawk + db lint, pgTAP, kontrakt testlari — golden fixture'lar, sinxron, Edge Functions uchidan-uchiga — `make fn-smoke`, ishlash — `make perf`, TS tiplari eskirmaganmi), e2e (lokal Supabase — Auth, RPC, Mailpit; Playwright desktop + mobil; deploy smoke — `public` loyiha, kirmagan holat) | doim |
 | `deploy.yml` → `deploy-env.yml` | `main` push → **staging**; qo'lda → istalgan muhit | `supabase db push` → Edge Function sirlari + Vault → Edge Functions → Telegram webhook → admin build → Cloudflare deploy → smoke (`health` RPC, Edge Function 403, Playwright) | `DEPLOY_ENABLED=true` |
 | `release.yml` | `main` push | release-please reliz PR'i; merge → teg + **production** deploy (reviewer tasdig'i) | `DEPLOY_ENABLED=true` |
 | `preview.yml` | har PR (fork'dan emas) | admin build (staging backend) → `wrangler versions upload --preview-alias pr-N` → PR izohi | `DEPLOY_ENABLED=true` |
