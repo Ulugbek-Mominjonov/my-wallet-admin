@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { formatMoney } from '@/shared/lib/money'
+import { formatMoney, formatMoneyInput, parseMoney } from '@/shared/lib/money'
 
 const NBSP = ' '
 
@@ -29,5 +29,31 @@ describe('formatMoney (BR-001)', () => {
 
   it('boshqa valyutalar — Intl, sent bilan', () => {
     expect(formatMoney(123_45, { currency: 'USD', locale: 'en' })).toBe('$123.45')
+  })
+})
+
+describe('parseMoney / formatMoneyInput', () => {
+  it.each([
+    ['1 234 567', 123456700],
+    ['1 234 567,5', 123456750],
+    ['0.01', 1],
+    ['-500', -50000],
+    ['−500', -50000],
+    ['12,', 1200],
+  ])('%s → %d tiyin', (text, minor) => {
+    expect(parseMoney(text)).toBe(minor)
+  })
+
+  it.each(['', 'abc', '1,234', '1.2.3', '--5', '1e5'])('%s — son emas', (text) => {
+    expect(parseMoney(text)).toBeNull()
+  })
+
+  it('forma matni: butun — kasrsiz, qolgani vergul bilan; qaytadan o‘qiladi', () => {
+    expect(formatMoneyInput(150000000)).toBe('1 500 000')
+    expect(formatMoneyInput(123456750)).toBe('1 234 567,5')
+    expect(formatMoneyInput(-1)).toBe('-0,01')
+    for (const minor of [0, 1, 99, 150000000, -123456750]) {
+      expect(parseMoney(formatMoneyInput(minor))).toBe(minor)
+    }
   })
 })

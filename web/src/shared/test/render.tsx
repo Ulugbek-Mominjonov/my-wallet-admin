@@ -1,12 +1,20 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
 import { render, type RenderOptions } from '@testing-library/react'
 import type { ReactElement, ReactNode } from 'react'
 
-/** Har test uchun toza kesh: testlar bir-biriga ta'sir qilmaydi, qayta urinish yo'q. */
+import { createQueryClient } from '@/shared/api/query-client'
+
+/**
+ * Har test uchun toza kesh — ilovadagi bilan bir xil (global xato → toast),
+ * faqat qayta urinish yo'q: testlar bir-biriga ta'sir qilmaydi, tez tugaydi.
+ */
 export function createTestQueryClient(): QueryClient {
-  return new QueryClient({
-    defaultOptions: { queries: { retry: false, gcTime: Infinity }, mutations: { retry: false } },
+  const client = createQueryClient()
+  client.setDefaultOptions({
+    queries: { retry: false, gcTime: Infinity },
+    mutations: { retry: false },
   })
+  return client
 }
 
 export function renderWithProviders(ui: ReactElement, options?: Omit<RenderOptions, 'wrapper'>) {

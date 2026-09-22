@@ -51,6 +51,9 @@ const BUSINESS_ERRORS: Record<string, ParseKeys> = {
   invite_used: 'household.errors.used',
   invite_expired: 'household.errors.expired',
   already_member: 'household.errors.member',
+  account_in_use: 'directories.errors.accountInUse',
+  system_account: 'directories.errors.systemAccount',
+  account_currency_locked: 'directories.errors.currencyLocked',
 }
 
 /** Supabase/tarmoq xatosini AppError'ga aylantiradi. */
@@ -69,6 +72,10 @@ export function toAppError(error: unknown): AppError {
     if (error.code === 'P0001') {
       const key = BUSINESS_ERRORS[error.message]
       return new AppError(error.message, i18n.t(key ?? 'errors.unknown'), { cause: error })
+    }
+    // Nom band (masalan `accounts_name_key` — byudjet ichida registrsiz, BR-003).
+    if (error.code === '23505') {
+      return new AppError('name_taken', i18n.t('errors.nameTaken'), { cause: error })
     }
     if (error.status === 401 || error.code === 'PGRST301') {
       return new AppError('unauthorized', i18n.t('errors.unauthorized'), { cause: error })

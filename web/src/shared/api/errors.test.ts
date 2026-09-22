@@ -29,6 +29,12 @@ describe('toAppError', () => {
     expect(error.message).toBe("Kutilmagan xato. Qayta urinib ko'ring.")
   })
 
+  it('nom band (23505) → name_taken', () => {
+    const error = toAppError({ code: '23505', message: 'accounts_name_key' })
+    expect(error.code).toBe('name_taken')
+    expect(error.message).toBe('Bu nom band — boshqasini tanlang')
+  })
+
   it('AppError o‘zgarishsiz qaytadi', () => {
     const original = new AppError('planned_already_paid', 'x')
     expect(toAppError(original)).toBe(original)

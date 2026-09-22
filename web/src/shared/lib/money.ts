@@ -55,3 +55,38 @@ export function formatMoney(minor: number, options: FormatMoneyOptions = {}): st
   }).format(Math.abs(major))
   return `${signOf(major, signed)}${formatted}`
 }
+
+/**
+ * Forma maydonidagi summa → eng kichik birlik (BR-001). Bo'shliqlar (guruh),
+ * `,` yoki `.` kasr belgisi, boshida `-`/`−`; kasr xonalari valyutanikidan
+ * ko'p bo'lsa yoki son bo'lmasa — `null`.
+ *
+ * @example parseMoney('1 234 567,5') // 123456750
+ */
+export function parseMoney(text: string, currency = 'UZS'): number | null {
+  const exponent = currencyExponent(currency)
+  const normalized = text.replace(/\s/g, '').replace(MINUS, '-').replace(',', '.')
+  const match = new RegExp(`^(-?)(\\d+)(?:\\.(\\d{0,${String(exponent)}}))?$`).exec(normalized)
+  if (!match) return null
+  const [, sign = '', whole = '0', fraction = ''] = match
+  const minor = Number(whole) * 10 ** exponent + Number(fraction.padEnd(exponent, '0') || '0')
+  if (!Number.isSafeInteger(minor)) return null
+  return sign === '-' ? -minor : minor
+}
+
+/**
+ * Eng kichik birlik → forma maydoni matni (qo'shimchasiz, guruhlangan):
+ * butun bo'lsa kasrsiz, aks holda `,` bilan.
+ *
+ * @example formatMoneyInput(150000000) // "1 500 000"
+ */
+export function formatMoneyInput(minor: number, currency = 'UZS'): string {
+  const exponent = currencyExponent(currency)
+  const unit = 10 ** exponent
+  const whole = Math.trunc(Math.abs(minor) / unit)
+  const fraction = Math.abs(minor) % unit
+  const sign = minor < 0 ? '-' : ''
+  const tail =
+    fraction === 0 ? '' : `,${String(fraction).padStart(exponent, '0').replace(/0+$/, '')}`
+  return `${sign}${groupDigits(whole)}${tail}`
+}

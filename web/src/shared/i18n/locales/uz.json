@@ -18,7 +18,8 @@
     "network": "Server bilan aloqa yo'q. Internetni tekshiring.",
     "unauthorized": "Sessiya tugagan. Qayta kiring.",
     "forbidden": "Bu amal uchun huquqingiz yo'q.",
-    "unknown": "Kutilmagan xato. Qayta urinib ko'ring."
+    "unknown": "Kutilmagan xato. Qayta urinib ko'ring.",
+    "nameTaken": "Bu nom band — boshqasini tanlang"
   },
   "auth": {
     "loginTitle": "Boshqaruv paneliga kirish",
@@ -53,7 +54,9 @@
   },
   "nav": {
     "overview": "Umumiy",
-    "dashboard": "Xulosa"
+    "dashboard": "Xulosa",
+    "directories": "Spravochniklar",
+    "accounts": "Hisoblar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -152,5 +155,85 @@
     "challengeText": "Autentifikator ilovadagi 6 xonali kodni kiriting.",
     "otherAccount": "Boshqa hisob bilan kirish",
     "noFactor": "2FA omili topilmadi — qayta kiring."
+  },
+  "table": {
+    "search": "Qidirish…",
+    "columns": "Ustunlar",
+    "reorder": "Tartibni o'zgartirish: {{name}}",
+    "reorderHint": "Tartibni sudrab o'zgartirish uchun qidiruv va saralashni o'chiring",
+    "sortAsc": "O'sish bo'yicha saralangan",
+    "sortDesc": "Kamayish bo'yicha saralangan",
+    "noResults": "Qidiruv bo'yicha hech narsa topilmadi",
+    "actions": "Amallar",
+    "dnd": {
+      "instructions": "Tartibni o'zgartirish uchun Probel yoki Enter bosing, strelkalar bilan siljiting, yana Probel bilan qo'ying; Esc — bekor qilish.",
+      "picked": "{{name}} olindi",
+      "over": "{{name}} — {{over}} o'rnida",
+      "dropped": "{{name}} qo'yildi",
+      "cancelled": "{{name}}: tartiblash bekor qilindi"
+    }
+  },
+  "directories": {
+    "add": "Qo'shish",
+    "edit": "Tahrirlash",
+    "archive": "Arxivlash",
+    "unarchive": "Arxivdan qaytarish",
+    "delete": "O'chirish",
+    "showArchived": "Arxivdagilar",
+    "archived": "Arxivda",
+    "system": "Tizim",
+    "actions": "Amallar",
+    "moreActions": "{{name}}: amallar",
+    "saved": "Saqlandi",
+    "deleted": "O'chirildi",
+    "archivedToast": "Arxivlandi",
+    "restoredToast": "Arxivdan qaytarildi",
+    "deleteTitle": "«{{name}}» o'chirilsinmi?",
+    "deleteText": "Ishlatilayotgan bo'lsa o'chirilmaydi — unda arxivlang.",
+    "icon": "Ikon",
+    "chooseIcon": "Ikon tanlash",
+    "color": "Rang",
+    "noColor": "Rangsiz",
+    "iconGroups": {
+      "finance": "Moliya",
+      "home": "Uy",
+      "food": "Ovqat",
+      "transport": "Transport",
+      "personal": "Shaxsiy",
+      "other": "Boshqa"
+    },
+    "errors": {
+      "accountInUse": "Hisob ishlatilmoqda (fond manbai, doimiy reja yoki tez tugma) — arxivlang",
+      "systemAccount": "👤 Shaxsiy fond hisobi: turi o'zgarmaydi, arxivlanmaydi va o'chirilmaydi",
+      "currencyLocked": "Amali bor hisobning valyutasi o'zgarmaydi",
+      "name": "Nom 1–60 belgi bo'lsin",
+      "amount": "Summani to'g'ri kiriting (masalan 1 500 000)",
+      "date": "Sanani kiriting"
+    }
+  },
+  "accounts": {
+    "title": "Hisoblar",
+    "description": "Naqd, karta, bank va boshqa hamyonlar; qoldiq amallardan hisoblanadi",
+    "add": "Hisob qo'shish",
+    "newTitle": "Yangi hisob",
+    "editTitle": "Hisobni tahrirlash",
+    "name": "Nomi",
+    "type": "Turi",
+    "currency": "Valyuta",
+    "balance": "Qoldiq",
+    "openingBalance": "Boshlang'ich qoldiq",
+    "openingBalanceHint": "Kredit karta qarzi — minus bilan",
+    "openingDate": "Boshlang'ich sana",
+    "emptyTitle": "Hisob yo'q",
+    "emptyText": "Birinchi hisobni qo'shing — amallar hisoblarga yoziladi.",
+    "types": {
+      "cash": "Naqd",
+      "card": "Karta",
+      "bank": "Bank hisobi",
+      "ewallet": "Elektron hamyon",
+      "deposit": "Omonat",
+      "personal_fund": "👤 Shaxsiy fond",
+      "other": "Boshqa"
+    }
   }
 }

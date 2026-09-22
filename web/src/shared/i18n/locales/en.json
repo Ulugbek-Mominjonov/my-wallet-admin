@@ -18,7 +18,8 @@
     "network": "No connection to the server. Check your internet.",
     "unauthorized": "Your session has expired. Please sign in again.",
     "forbidden": "You don't have permission for this action.",
-    "unknown": "Unexpected error. Please try again."
+    "unknown": "Unexpected error. Please try again.",
+    "nameTaken": "This name is taken — choose another"
   },
   "auth": {
     "loginTitle": "Sign in to the admin panel",
@@ -53,7 +54,9 @@
   },
   "nav": {
     "overview": "Overview",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "directories": "Directories",
+    "accounts": "Accounts"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -152,5 +155,85 @@
     "challengeText": "Enter the 6-digit code from your authenticator app.",
     "otherAccount": "Sign in with another account",
     "noFactor": "No 2FA factor found — sign in again."
+  },
+  "table": {
+    "search": "Search…",
+    "columns": "Columns",
+    "reorder": "Reorder: {{name}}",
+    "reorderHint": "Clear search and sorting to reorder by dragging",
+    "sortAsc": "Sorted ascending",
+    "sortDesc": "Sorted descending",
+    "noResults": "Nothing matches the search",
+    "actions": "Actions",
+    "dnd": {
+      "instructions": "To reorder, press Space or Enter, move with the arrow keys and press Space again; Esc cancels.",
+      "picked": "Picked up {{name}}",
+      "over": "{{name}} is over {{over}}",
+      "dropped": "Dropped {{name}}",
+      "cancelled": "Reordering {{name}} cancelled"
+    }
+  },
+  "directories": {
+    "add": "Add",
+    "edit": "Edit",
+    "archive": "Archive",
+    "unarchive": "Restore",
+    "delete": "Delete",
+    "showArchived": "Archived",
+    "archived": "Archived",
+    "system": "System",
+    "actions": "Actions",
+    "moreActions": "{{name}}: actions",
+    "saved": "Saved",
+    "deleted": "Deleted",
+    "archivedToast": "Archived",
+    "restoredToast": "Restored from archive",
+    "deleteTitle": "Delete “{{name}}”?",
+    "deleteText": "Items in use can't be deleted — archive them instead.",
+    "icon": "Icon",
+    "chooseIcon": "Choose icon",
+    "color": "Color",
+    "noColor": "No color",
+    "iconGroups": {
+      "finance": "Finance",
+      "home": "Home",
+      "food": "Food",
+      "transport": "Transport",
+      "personal": "Personal",
+      "other": "Other"
+    },
+    "errors": {
+      "accountInUse": "The account is in use (fund source, recurring payment or quick action) — archive it",
+      "systemAccount": "👤 Personal fund: its type can't change and it can't be archived or deleted",
+      "currencyLocked": "An account with transactions can't change currency",
+      "name": "Name must be 1–60 characters",
+      "amount": "Enter a valid amount (e.g. 1 500 000)",
+      "date": "Enter a date"
+    }
+  },
+  "accounts": {
+    "title": "Accounts",
+    "description": "Cash, cards, bank and other wallets; balances come from transactions",
+    "add": "Add account",
+    "newTitle": "New account",
+    "editTitle": "Edit account",
+    "name": "Name",
+    "type": "Type",
+    "currency": "Currency",
+    "balance": "Balance",
+    "openingBalance": "Opening balance",
+    "openingBalanceHint": "Credit card debt — with a minus sign",
+    "openingDate": "Opening date",
+    "emptyTitle": "No accounts",
+    "emptyText": "Add your first account — transactions are recorded against accounts.",
+    "types": {
+      "cash": "Cash",
+      "card": "Card",
+      "bank": "Bank account",
+      "ewallet": "E-wallet",
+      "deposit": "Deposit",
+      "personal_fund": "👤 Personal fund",
+      "other": "Other"
+    }
   }
 }

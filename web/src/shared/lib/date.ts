@@ -13,3 +13,9 @@ const DATE_TIME: Intl.DateTimeFormatOptions = {
 export function formatDateTime(value: Date | string, locale: AppLocale = DEFAULT_LOCALE): string {
   return new Intl.DateTimeFormat(INTL_LOCALE[locale], DATE_TIME).format(new Date(value))
 }
+
+/** Bugungi sana `YYYY-MM-DD` — byudjet vaqt zonasida (BR-002). */
+export function todayIso(timeZone: string, now = new Date()): string {
+  // en-CA — ISO tartibidagi sana (YYYY-MM-DD).
+  return new Intl.DateTimeFormat('en-CA', { timeZone }).format(now)
+}
