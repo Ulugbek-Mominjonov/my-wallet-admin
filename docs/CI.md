@@ -26,6 +26,10 @@ Umumiy qismlar: `.github/actions/setup` (pnpm + Node + install, kesh bilan),
 | e2e (web'dan keyin) | 1,0 daq | Chromium o'rnatish — 25 s |
 | **PR kutish vaqti** | **~2 daq** | maqsad < 8 daq ✅ |
 
+2026-09-22 (E21-T05 — e2e lokal Supabase bilan): e2e 2,9 daq (Supabase
+ishga tushishi 70 s, Playwright 63 s — 27 test, 2FA oqimida GoTrue email
+cheklovi 30 s kutish), web'dan keyin → PR kutish vaqti ~3,7 daq ✅.
+
 Repo public — Actions minutlari cheksiz; `paths` filtrlari ataylab yo'q
 (branch himoyasidagi majburiy tekshiruvlar har PR'da hisobot berishi kerak).
 
