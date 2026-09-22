@@ -19,8 +19,8 @@ import { Button } from '@/shared/ui/button'
 import { ColorPicker } from '@/shared/ui/color-picker'
 import { IconPicker } from '@/shared/ui/icon-picker'
 import { Input } from '@/shared/ui/input'
+import { FormSelect } from '@/shared/ui/form-select'
 import { Label } from '@/shared/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 export interface CurrencyOption {
   code: string
@@ -90,25 +90,13 @@ export function AccountForm({
             control={form.control}
             name="type"
             render={({ field }) => (
-              <Select
+              <FormSelect
+                labelId="account-type-label"
                 value={field.value}
+                options={types.map((type) => ({ value: type, label: typeLabel(type) }))}
+                onChange={field.onChange}
                 disabled={system}
-                items={types.map((type) => ({ value: type, label: typeLabel(type) }))}
-                onValueChange={(value) => {
-                  if (value) field.onChange(value)
-                }}
-              >
-                <SelectTrigger className="w-full" aria-labelledby="account-type-label">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {types.map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {typeLabel(type)}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              />
             )}
           />
         </div>
@@ -118,24 +106,12 @@ export function AccountForm({
             control={form.control}
             name="currency"
             render={({ field }) => (
-              <Select
+              <FormSelect
+                labelId="account-currency-label"
                 value={field.value}
-                items={currencies.map((c) => ({ value: c.code, label: c.label }))}
-                onValueChange={(value) => {
-                  if (value) field.onChange(value)
-                }}
-              >
-                <SelectTrigger className="w-full" aria-labelledby="account-currency-label">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {currencies.map((currency) => (
-                    <SelectItem key={currency.code} value={currency.code}>
-                      {currency.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                options={currencies.map((c) => ({ value: c.code, label: c.label }))}
+                onChange={field.onChange}
+              />
             )}
           />
         </div>

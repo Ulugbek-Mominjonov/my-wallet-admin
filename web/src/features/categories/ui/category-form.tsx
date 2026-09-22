@@ -15,8 +15,8 @@ import { Button } from '@/shared/ui/button'
 import { ColorPicker } from '@/shared/ui/color-picker'
 import { IconPicker } from '@/shared/ui/icon-picker'
 import { Input } from '@/shared/ui/input'
+import { FormSelect } from '@/shared/ui/form-select'
 import { Label } from '@/shared/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 /**
  * E22-T03: kategoriya formasi. Tur — tab'dan (o'zgarmaydi, BR-036); ota —
@@ -91,29 +91,14 @@ export function CategoryForm({
           control={form.control}
           name="parentId"
           render={({ field }) => (
-            <Select
+            <FormSelect
+              labelId="category-parent-label"
               value={field.value}
+              options={parentItems}
+              onChange={field.onChange}
               disabled={parentLocked}
-              items={parentItems}
-              onValueChange={(value) => {
-                field.onChange(value ?? '')
-              }}
-            >
-              <SelectTrigger
-                className="w-full"
-                aria-labelledby="category-parent-label"
-                aria-describedby={parentLocked ? 'category-parent-hint' : undefined}
-              >
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {parentItems.map((item) => (
-                  <SelectItem key={item.value} value={item.value}>
-                    {item.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              describedBy={parentLocked ? 'category-parent-hint' : undefined}
+            />
           )}
         />
         {hasChildren && (
@@ -130,28 +115,13 @@ export function CategoryForm({
             control={form.control}
             name="monthShift"
             render={({ field }) => (
-              <Select
+              <FormSelect
+                labelId="category-shift-label"
                 value={field.value}
-                items={shiftItems}
-                onValueChange={(value) => {
-                  if (value) field.onChange(value)
-                }}
-              >
-                <SelectTrigger
-                  className="w-full"
-                  aria-labelledby="category-shift-label"
-                  aria-describedby="category-shift-hint"
-                >
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {shiftItems.map((item) => (
-                    <SelectItem key={item.value} value={item.value}>
-                      {item.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                options={shiftItems}
+                onChange={field.onChange}
+                describedBy="category-shift-hint"
+              />
             )}
           />
           <p id="category-shift-hint" className="text-xs text-muted-foreground">

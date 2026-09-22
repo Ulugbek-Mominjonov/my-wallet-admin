@@ -4,38 +4,33 @@ import { toast } from 'sonner'
 
 import { optimisticList } from '@/shared/api/optimistic'
 
-interface Archivable {
+interface DirectoryItem {
   id: string
-  archivedAt: string | null
+  archivedAt?: string | null
   /** Bo'lsa — tartib optimistik shu maydonda ham (daraxt kabi ko'rinishlar saralaydi). */
   sortOrder?: number
 }
 
-/**
- * Spravochniklar uchun umumiy o'zgarishlar (E22-T01): arxivlash, o'chirish va
- * tartib — optimistik, xatoda qaytadi (xato matni — global toast).
- */
-export function useDirectoryMutations<TItem extends Archivable>({
-  listKey,
-  allKey,
-  showingArchived,
-  archive,
-  remove,
-  reorder,
-}: {
+interface ListKeys {
   /** Ekrandagi ro'yxat kaliti (optimistik o'zgarish shu keshda). */
   listKey: QueryKey
   /** Barcha filtr variantlari prefiksi — oxirida qayta olinadi. */
   allKey: QueryKey
+}
+
+/** Arxivlash/qaytarish — optimistik (arxiv ko'rinmasa qator darhol yo'qoladi). */
+export function useOptimisticArchive<TItem extends DirectoryItem>({
+  listKey,
+  allKey,
+  showingArchived,
+  archive,
+}: ListKeys & {
   showingArchived: boolean
   archive: (id: string, archived: boolean) => Promise<void>
-  remove: (id: string) => Promise<void>
-  reorder: (ids: string[]) => Promise<void>
 }) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
-
-  const archiveMutation = useMutation({
+  return useMutation({
     mutationFn: ({ id, value }: { id: string; value: boolean }) => archive(id, value),
     ...optimisticList<TItem, { id: string; value: boolean }>(
       queryClient,
@@ -54,8 +49,17 @@ export function useDirectoryMutations<TItem extends Archivable>({
       toast.success(value ? t('directories.archivedToast') : t('directories.restoredToast'))
     },
   })
+}
 
-  const removeMutation = useMutation({
+/** O'chirish — optimistik; server rad etsa (ishlatilmoqda) qator qaytadi. */
+export function useOptimisticRemove<TItem extends DirectoryItem>({
+  listKey,
+  allKey,
+  remove,
+}: ListKeys & { remove: (id: string) => Promise<void> }) {
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
+  return useMutation({
     mutationFn: (id: string) => remove(id),
     ...optimisticList<TItem, string>(
       queryClient,
@@ -67,8 +71,16 @@ export function useDirectoryMutations<TItem extends Archivable>({
       toast.success(t('directories.deleted'))
     },
   })
+}
 
-  const reorderMutation = useMutation({
+/** Tartib (drag & drop) — optimistik, bitta so'rovda (`set_sort_order`). */
+export function useOptimisticReorder<TItem extends DirectoryItem>({
+  listKey,
+  allKey,
+  reorder,
+}: ListKeys & { reorder: (ids: string[]) => Promise<void> }) {
+  const queryClient = useQueryClient()
+  return useMutation({
     mutationFn: (ids: string[]) => reorder(ids),
     ...optimisticList<TItem, string[]>(
       queryClient,
@@ -88,6 +100,28 @@ export function useDirectoryMutations<TItem extends Archivable>({
       allKey,
     ),
   })
+}
 
-  return { archive: archiveMutation, remove: removeMutation, reorder: reorderMutation }
+/**
+ * Spravochniklar uchun umumiy o'zgarishlar (E22-T01): arxivlash, o'chirish va
+ * tartib — optimistik, xatoda qaytadi (xato matni — global toast).
+ */
+export function useDirectoryMutations<TItem extends DirectoryItem>({
+  listKey,
+  allKey,
+  showingArchived,
+  archive,
+  remove,
+  reorder,
+}: ListKeys & {
+  showingArchived: boolean
+  archive: (id: string, archived: boolean) => Promise<void>
+  remove: (id: string) => Promise<void>
+  reorder: (ids: string[]) => Promise<void>
+}) {
+  return {
+    archive: useOptimisticArchive<TItem>({ listKey, allKey, showingArchived, archive }),
+    remove: useOptimisticRemove<TItem>({ listKey, allKey, remove }),
+    reorder: useOptimisticReorder<TItem>({ listKey, allKey, reorder }),
+  }
 }

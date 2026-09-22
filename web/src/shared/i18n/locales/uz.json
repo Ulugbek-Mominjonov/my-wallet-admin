@@ -58,7 +58,8 @@
     "dashboard": "Xulosa",
     "directories": "Spravochniklar",
     "accounts": "Hisoblar",
-    "categories": "Kategoriyalar"
+    "categories": "Kategoriyalar",
+    "recurringRules": "Doimiy rejalar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -277,5 +278,56 @@
     "recalcLater": "Keyinroq",
     "recalcMove": "{{from}} → {{to}}: {{count}} ta, {{amount}}",
     "recalcDone": "{{count}} ta amal qayta joylandi"
+  },
+  "rules": {
+    "title": "Doimiy rejalar",
+    "description": "Har oy takrorlanadigan to'lov va daromadlar — oy ochilganda rejalar shulardan yaratiladi",
+    "add": "Doimiy reja qo'shish",
+    "newTitle": "Yangi doimiy reja",
+    "editTitle": "Doimiy rejani tahrirlash",
+    "kind": "Turi",
+    "kinds": {
+      "expense": "Xarajat",
+      "income": "Daromad",
+      "allocation": "👤 Fondga ajratma"
+    },
+    "name": "Nomi",
+    "category": "Kategoriya",
+    "account": "Hisob",
+    "sourceAccount": "Manba hisob",
+    "noAccount": "Tanlanmagan (to'lashda tanlanadi)",
+    "amount": "Summa",
+    "amountHint": "Bo'sh — har oy o'zgaradi",
+    "varies": "O'zgaruvchan",
+    "day": "Kuni",
+    "dayHint": "Qisqa oyda — oyning oxirgi kuni",
+    "dayValue": "{{day}}-kuni",
+    "autoPay": "Avto to'lov",
+    "autoPayHint": "Kuni kelganda o'zi to'lanadi (summa va hisob kerak)",
+    "active": "Faol",
+    "inactive": "To'xtatilgan",
+    "period": "Davr",
+    "startMonth": "Boshlanishi",
+    "endMonth": "Tugashi",
+    "always": "Doim",
+    "from": "{{month}} dan",
+    "until": "{{month}} gacha",
+    "range": "{{from}} — {{to}}",
+    "errors": {
+      "category": "Kategoriyani tanlang",
+      "account": "Manba hisobni tanlang",
+      "amount": "Summani to'g'ri kiriting yoki bo'sh qoldiring",
+      "day": "Kun 1 dan 31 gacha",
+      "autoPay": "Avto to'lov uchun summa va hisob kerak",
+      "endMonth": "Tugashi boshlanishidan oldin bo'lmaydi"
+    },
+    "emptyTitle": "Doimiy reja yo'q",
+    "emptyText": "Ijara, kommunal, maosh kabi har oylik to'lov va daromadlarni qo'shing.",
+    "preview": "Keyingi oy",
+    "previewTitle": "{{month}}: oy ochilganda",
+    "previewNew": "{{count}} ta yangi reja yaratiladi",
+    "previewExisting": "bor",
+    "previewEmpty": "Yaratiladigan reja yo'q",
+    "previewClosed": "Bu oy yopilgan"
   }
 }

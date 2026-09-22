@@ -58,7 +58,8 @@
     "dashboard": "Dashboard",
     "directories": "Directories",
     "accounts": "Accounts",
-    "categories": "Categories"
+    "categories": "Categories",
+    "recurringRules": "Recurring payments"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -277,5 +278,56 @@
     "recalcLater": "Later",
     "recalcMove": "{{from}} → {{to}}: {{count}}, {{amount}}",
     "recalcDone": "Moved {{count}} transactions"
+  },
+  "rules": {
+    "title": "Recurring payments",
+    "description": "Monthly payments and income — plans are created from them when a month opens",
+    "add": "Add recurring payment",
+    "newTitle": "New recurring payment",
+    "editTitle": "Edit recurring payment",
+    "kind": "Type",
+    "kinds": {
+      "expense": "Expense",
+      "income": "Income",
+      "allocation": "👤 Fund allocation"
+    },
+    "name": "Name",
+    "category": "Category",
+    "account": "Account",
+    "sourceAccount": "Source account",
+    "noAccount": "Not set (chosen when paying)",
+    "amount": "Amount",
+    "amountHint": "Empty — varies every month",
+    "varies": "Varies",
+    "day": "Day",
+    "dayHint": "In a short month — the last day",
+    "dayValue": "on day {{day}}",
+    "autoPay": "Auto-pay",
+    "autoPayHint": "Paid automatically on its day (needs amount and account)",
+    "active": "Active",
+    "inactive": "Paused",
+    "period": "Period",
+    "startMonth": "Starts",
+    "endMonth": "Ends",
+    "always": "Always",
+    "from": "from {{month}}",
+    "until": "until {{month}}",
+    "range": "{{from}} — {{to}}",
+    "errors": {
+      "category": "Choose a category",
+      "account": "Choose a source account",
+      "amount": "Enter a valid amount or leave it empty",
+      "day": "Day from 1 to 31",
+      "autoPay": "Auto-pay needs an amount and an account",
+      "endMonth": "The end can't be before the start"
+    },
+    "emptyTitle": "No recurring payments",
+    "emptyText": "Add monthly payments and income: rent, utilities, salary.",
+    "preview": "Next month",
+    "previewTitle": "{{month}}: when the month opens",
+    "previewNew": "{{count}} new plans will be created",
+    "previewExisting": "exists",
+    "previewEmpty": "Nothing to create",
+    "previewClosed": "The month is closed"
   }
 }

@@ -21,6 +21,7 @@ import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$house
 import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$householdId/accounts'
 import { Route as AppHHouseholdIdCategoriesRouteImport } from './routes/_app/h/$householdId/categories'
 import { Route as AppHHouseholdIdProfileRouteImport } from './routes/_app/h/$householdId/profile'
+import { Route as AppHHouseholdIdRecurringRulesRouteImport } from './routes/_app/h/$householdId/recurring-rules'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -81,6 +82,12 @@ const AppHHouseholdIdProfileRoute = AppHHouseholdIdProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppHHouseholdIdRoute,
 } as any)
+const AppHHouseholdIdRecurringRulesRoute =
+  AppHHouseholdIdRecurringRulesRouteImport.update({
+    id: '/recurring-rules',
+    path: '/recurring-rules',
+    getParentRoute: () => AppHHouseholdIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
@@ -92,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
+  '/h/$householdId/recurring-rules': typeof AppHHouseholdIdRecurringRulesRoute
   '/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
 export interface FileRoutesByTo {
@@ -103,6 +111,7 @@ export interface FileRoutesByTo {
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
+  '/h/$householdId/recurring-rules': typeof AppHHouseholdIdRecurringRulesRoute
   '/h/$householdId': typeof AppHHouseholdIdIndexRoute
 }
 export interface FileRoutesById {
@@ -118,6 +127,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/_app/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/_app/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
+  '/_app/h/$householdId/recurring-rules': typeof AppHHouseholdIdRecurringRulesRoute
   '/_app/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
 export interface FileRouteTypes {
@@ -132,6 +142,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/accounts'
     | '/h/$householdId/categories'
     | '/h/$householdId/profile'
+    | '/h/$householdId/recurring-rules'
     | '/h/$householdId/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/accounts'
     | '/h/$householdId/categories'
     | '/h/$householdId/profile'
+    | '/h/$householdId/recurring-rules'
     | '/h/$householdId'
   id:
     | '__root__'
@@ -157,6 +169,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId/accounts'
     | '/_app/h/$householdId/categories'
     | '/_app/h/$householdId/profile'
+    | '/_app/h/$householdId/recurring-rules'
     | '/_app/h/$householdId/'
   fileRoutesById: FileRoutesById
 }
@@ -251,6 +264,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdProfileRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
+    '/_app/h/$householdId/recurring-rules': {
+      id: '/_app/h/$householdId/recurring-rules'
+      path: '/recurring-rules'
+      fullPath: '/h/$householdId/recurring-rules'
+      preLoaderRoute: typeof AppHHouseholdIdRecurringRulesRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
   }
 }
 
@@ -258,6 +278,7 @@ interface AppHHouseholdIdRouteChildren {
   AppHHouseholdIdAccountsRoute: typeof AppHHouseholdIdAccountsRoute
   AppHHouseholdIdCategoriesRoute: typeof AppHHouseholdIdCategoriesRoute
   AppHHouseholdIdProfileRoute: typeof AppHHouseholdIdProfileRoute
+  AppHHouseholdIdRecurringRulesRoute: typeof AppHHouseholdIdRecurringRulesRoute
   AppHHouseholdIdIndexRoute: typeof AppHHouseholdIdIndexRoute
 }
 
@@ -265,6 +286,7 @@ const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
   AppHHouseholdIdAccountsRoute: AppHHouseholdIdAccountsRoute,
   AppHHouseholdIdCategoriesRoute: AppHHouseholdIdCategoriesRoute,
   AppHHouseholdIdProfileRoute: AppHHouseholdIdProfileRoute,
+  AppHHouseholdIdRecurringRulesRoute: AppHHouseholdIdRecurringRulesRoute,
   AppHHouseholdIdIndexRoute: AppHHouseholdIdIndexRoute,
 }
 

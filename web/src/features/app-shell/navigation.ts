@@ -1,6 +1,6 @@
 import type { LinkProps } from '@tanstack/react-router'
 import type { ParseKeys } from 'i18next'
-import { FolderTree, LayoutDashboard, Wallet, type LucideIcon } from 'lucide-react'
+import { FolderTree, LayoutDashboard, Repeat, Wallet, type LucideIcon } from 'lucide-react'
 
 import { roleCan, type Permission, type Role } from '@/entities/household'
 
@@ -41,6 +41,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
     items: [
       { to: '/h/$householdId/accounts', labelKey: 'nav.accounts', icon: Wallet },
       { to: '/h/$householdId/categories', labelKey: 'nav.categories', icon: FolderTree },
+      { to: '/h/$householdId/recurring-rules', labelKey: 'nav.recurringRules', icon: Repeat },
     ],
   },
 ]
