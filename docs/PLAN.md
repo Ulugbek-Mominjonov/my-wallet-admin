@@ -110,7 +110,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E19 | Bildirishnomalar va sozlamalar | mobile | E11, E14 | ✅ |
 | | E20 | Sifat, sayqal, reliz konveyeri | mobile | E15–E19 | 🟨 (T08 🔑) |
 | **M3 Admin MVP** | E21 | Auth, byudjet konteksti, layout | admin | E05, E02 | ✅ |
-| | E22 | Spravochniklar | admin | E21, E06 | ⬜ |
+| | E22 | Spravochniklar | admin | E21, E06 | ✅ |
 | | E23 | Amallar va rejalar | admin | E22, E08 | ⬜ |
 | | E24 | Hisobotlar va dashboard | admin | E23, E09 | ⬜ |
 | | E25 | Vositalar: tekshiruv, import/eksport, audit | admin | E24 | ⬜ |
@@ -604,31 +604,37 @@ E21–E26 (admin) M2 bilan.
 > BR-130, BR-140, BR-200. **DoD:** har spravochnik: jadval, qidiruv, forma
 > (zod), yaratish/tahrirlash/arxivlash, tartiblash, bo'sh holat, testlar.
 
-- [ ] **E22-T01** Umumiy `DirectoryPage` shabloni: DataTable (saralash,
+- [x] **E22-T01** Umumiy `DirectoryPage` shabloni: DataTable (saralash,
   qidiruv, ustunlarni yashirish), yon panelda forma (Sheet), optimistik
   yangilash + xatoda qaytarish, arxivlanganlarni ko'rsatish filtri,
   drag & drop tartib (dnd-kit → `sort_order` bitta so'rovda).
-- [ ] **E22-T02** **Hisoblar**: turi (ikon), valyuta, boshlang'ich qoldiq/sana,
+  TanStack Table v9, `set_sort_order` RPC, klaviatura bilan tartib va UI
+  tilidagi ekran o'quvchi e'lonlari; FormSelect, AmountField, IconPicker,
+  ColorPicker, ProgressBar, SectionCard.
+- [x] **E22-T02** **Hisoblar**: turi (ikon), valyuta, boshlang'ich qoldiq/sana,
   joriy qoldiq ustuni (`account_balances`), arxiv; `personal_fund` o'chirilmaydi.
-- [ ] **E22-T03** **Kategoriyalar**: daraxt ko'rinishi (daromad / xarajat
+- [x] **E22-T03** **Kategoriyalar**: daraxt ko'rinishi (daromad / xarajat
   tablari), ikon va rang tanlagich, subkategoriya, daromad uchun "Qaysi oyga
   tegishli" (joriy / oldingi) + o'zgartirilganda **qayta joylash preview**
   (E25-T04 ga havola), birlashtirish dialogi (`merge_categories`), tizim
   kategoriyasi belgisi.
-- [ ] **E22-T04** **Doimiy rejalar**: turi (xarajat / daromad / fond ajratmasi),
+- [x] **E22-T04** **Doimiy rejalar**: turi (xarajat / daromad / fond ajratmasi),
   summa (bo'sh = "har oy o'zgaradi"), kun, avto to'lov, aktiv, qarz, amal
   davri; "Keyingi oyda nima yaratiladi" preview.
-- [ ] **E22-T05** **Limitlar** (kategoriya + summa + joriy oy holati ustuni),
+- [x] **E22-T05** **Limitlar** (kategoriya + summa + joriy oy holati ustuni),
   **Tez tugmalar** (tartib, oldindan ko'rish chipi), **Teglar**.
-- [ ] **E22-T06** **Qarzlar** (yo'nalish, umumiy, oldin to'langan, oylik,
+- [x] **E22-T06** **Qarzlar** (yo'nalish, umumiy, oldin to'langan, oylik,
   muddat; ro'yxatda qolgan/progress/tugash — `debt_balances`), **Maqsadlar**
   (hisobga bog'lash yoki qo'lda, oyiga, muddat; progress).
-- [ ] **E22-T07** **Byudjet sozlamalari**: nomi, asosiy valyuta, vaqt zonasi,
+- [x] **E22-T07** **Byudjet sozlamalari**: nomi, asosiy valyuta, vaqt zonasi,
   👤 fond qoidasi (rejim, qiymat, hisob, kun — "joriy oy ajratmasi: X" jonli
   hisob), oy siyosati (avto-ochish, qattiq qulf), a'zolar ro'yxati va
   takliflar (E30 da kengayadi), xavfli zona (byudjetni o'chirish).
-- [ ] **E22-T08** Testlar: har forma zod sxemasi (unit), CRUD e2e (hisob,
-  kategoriya, doimiy reja).
+  `delete_household` RPC (faqat owner, nom bilan tasdiq); asosiy valyuta —
+  faqat ko'rinadi (E29 gacha).
+- [x] **E22-T08** Testlar: har forma zod sxemasi (unit), CRUD e2e (hisob,
+  kategoriya, doimiy reja). + limit, tez tugma, teg, qarz, maqsad,
+  sozlamalar E2E'lari (haqiqiy view/RPC qiymatlari bilan).
 
 ### E23 · Admin: amallar va rejalar `[admin]`
 
@@ -939,6 +945,11 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-22 | Mobil outbox server hisoblaydigan, klient yozmaydigan maydonlarni (`planned_items.paid_amount`, `settled_at`) yubormaydi; faqat shular o'zgargan yozuv mutatsiya yaratmaydi; rad etilgan amalda bog'langan reja lokal qayta hisoblanadi | amal trigger'i reja versiyasini oshiradi — hosila yangilanishi har safar conflict bo'lardi (E2E topdi); server qiymati pull'da keladi | E20-T04 |
 | 2026-09-22 | Mobil E2E — patrol, emulyatorda har kecha (`e2e.yml`, KVM), lokal Supabase `contracts.lock` commit'idan | haqiqiy UI + tarmoq + airplane mode; PR'ni sekinlashtirmaydi | E20-T04 |
 | 2026-09-22 | Spravochnik tartibi — `set_sort_order` RPC (bitta so'rov, o'zgarmagan qatorlar yozilmaydi) | PostgREST upsert NOT NULL ustunlarni talab qiladi, qatorma-qator PATCH — N so'rov; ortiqcha `row_version` sinxron trafigini oshiradi | E22-T01 |
+| 2026-09-22 | Admin jadvallari — TanStack Table v9 (faqat ro'yxatdan o'tkazilgan imkoniyatlar), tartib — dnd-kit (klaviatura + UI tilidagi e'lonlar) | bundle'ga faqat kerakli qism; tartiblash sichqonchasiz ham (a11y) | E22-T01 |
+| 2026-09-22 | Feature'lar bir-birini import qilmaydi: boshqa spravochnik ro'yxatlari (hisob, kategoriya) marshrutda olinib props bilan beriladi | FSD chegarasi; har feature mustaqil test qilinadi | E22-T04..T07 |
+| 2026-09-22 | Asosiy valyuta UI'da faqat ko'rinadi | serverda himoya yo'q, lekin `amount_base` va hisobotlar unga bog'liq — o'zgartirish ko'p valyuta (E29) bilan | E22-T07 |
+| 2026-09-22 | Byudjetni o'chirish — `delete_household` (owner, nomni yozib tasdiq), ma'lumotlar kaskadda, fayllar `purge-files` bilan | BR-014; tasodifiy bosishdan himoya; storage alohida tozalanadi | E22-T07 |
+| 2026-09-22 | Lokal auth cheklovlari yuqori (email 300/soat) | E2E ketma-ket ishga tushirishda 429; `config push` ishlatilmaydi — remote qiymatlari dashboard'da | E22-T08 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
@@ -984,3 +995,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-21 | E19-T01..T05 | mobil bildirishnomalar va sozlamalar: FCM (register/unregister_device, bosilganda ekran, ochiq paytidagi push), lokal eslatmalar, onboarding'da ruxsat, `notification_prefs` sozlamalari (Telegram ulash, sinov xabari), Sozlamalar (tema, til, eksport, `delete-account` ikki bosqichli), 386 test (90,0%), 9 integratsiya, dev APK. E18 integratsiya CI xatosi — sekin CI'da sinxron dashboard'dan keyin kelishi; test shartga asoslangan kutishga o'tkazildi. **E19 yakunlandi** |
 | 2026-09-22 | E21-T01..T05 | admin: kirish (email kodi, Google PKCE, xatolar tarjimasi), `/h/$householdId` konteksti, almashtirgich (oxirgi byudjet eslab qolinadi), `/welcome` (yaratish/taklif kodi), rol himoyasi (menyu, 403, viewer belgisi), 2FA (QR, `/mfa`), profil (ism, til, mavzu, sessiyalar, hamma qurilmadan chiqish); 60 Vitest (MSW) + 25 Playwright (lokal Supabase, TOTP generatori bilan to'liq 2FA oqimi). Topilgan xatolar: login xatolari ikki marta (toast + forma), Mailpit'dan eski kod olinishi, AMR tartibi, brauzer ICU'sida uz sana formati. **E21 yakunlandi** |
 | 2026-09-22 | E20-T02, T04 | mobil: E2E (patrol) emulyatorda yashil, nightly workflow; E2E topgan sinxron xatosi (reja to'lovi → conflict) tuzatildi + integratsiya testlari; sovuq start ~1,5 s (emulyator, `docs/PERF.md` — parallel init yutuq bermadi, halol qayd); chek rasmlari keshi. E20-T08 🔑 (keystore, testerlar) |
+| 2026-09-22 | E22-T01..T08 | admin spravochniklar: DirectoryPage shabloni (DataTable v9, Sheet forma, optimistik arxiv/o'chirish/tartib, klaviatura bilan dnd), hisoblar (joriy qoldiq), kategoriyalar (daraxt, oy siljishi + qayta joylash, birlashtirish), doimiy rejalar (keyingi oy preview), limitlar (joriy oy holati), tez tugmalar, teglar, qarzlar (debt_balances, jami), maqsadlar (prognoz), byudjet sozlamalari (fond jonli preview, a'zolar, takliflar, o'chirish); 2 RPC (`set_sort_order`, `delete_household`), 15 pgTAP (jami 437); 170 Vitest (MSW) + 50 Playwright (lokal Supabase). Topilgan xatolar: optimistik tartibda daraxt sakrashi, o'chirish tasdig'i xatoda ochiq qolishi, sidebar'da eski byudjet nomi, disabled register bilan bekor bo'lishi, dnd e'lonlari inglizcha. **E22 yakunlandi** |
