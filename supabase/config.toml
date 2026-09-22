@@ -81,11 +81,13 @@ enable_manual_linking = false
 minimum_password_length = 8
 
 [auth.rate_limit]
-# Remote'da custom SMTP bilan soatiga 30 (DEPLOY.md 4-qadam).
-email_sent = 30
+# Remote'da custom SMTP bilan soatiga 30 (DEPLOY.md 4-qadam, dashboard'da).
+# Lokalda yuqori: E2E har ishga tushirishda ~12 foydalanuvchi yaratadi (web +
+# mobil), ketma-ket ishga tushirishlar cheklovga urilib yolg'on yiqilardi.
+email_sent = 300
 token_refresh = 150
-sign_in_sign_ups = 30
-token_verifications = 30
+sign_in_sign_ups = 300
+token_verifications = 300
 
 [auth.email]
 enable_signup = true
