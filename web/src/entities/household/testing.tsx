@@ -8,13 +8,19 @@ import { Toaster } from '@/shared/ui/sonner'
 export const TEST_HOUSEHOLD_ID = '0198f000-0000-7000-8000-00000000000a'
 
 /** Sahifa testlari uchun: byudjet konteksti (rol bilan) va toast'lar. */
-export function WithHousehold({ role = 'owner', children }: { role?: Role; children: ReactNode }) {
+export function WithHousehold({
+  memberRole = 'owner',
+  children,
+}: {
+  memberRole?: Role
+  children: ReactNode
+}) {
   return (
     <HouseholdProvider
       household={{
         id: TEST_HOUSEHOLD_ID,
         name: 'Uy',
-        role,
+        role: memberRole,
         base_currency: 'UZS',
         timezone: 'Asia/Tashkent',
         onboarded: true,

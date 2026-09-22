@@ -15,7 +15,7 @@ function renderPage(role: 'owner' | 'member' | 'viewer') {
     ),
   )
   renderWithProviders(
-    <WithHousehold role={role}>
+    <WithHousehold memberRole={role}>
       <TagsPage householdId={TEST_HOUSEHOLD_ID} />
     </WithHousehold>,
   )

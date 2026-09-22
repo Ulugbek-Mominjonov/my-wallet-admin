@@ -27,13 +27,14 @@ import { DirectoryPage } from '@/shared/ui/directory-page'
 import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { MoneyText } from '@/shared/ui/money-text'
+import { ProgressBar, type ProgressTone } from '@/shared/ui/progress-bar'
 
 const helper = createDataTableColumns<CategoryLimit>()
 
-const STATUS_BAR: Record<LimitStatus, string> = {
-  ok: 'bg-income',
-  near: 'bg-warning',
-  over: 'bg-expense',
+const STATUS_TONE: Record<LimitStatus, ProgressTone> = {
+  ok: 'income',
+  near: 'warning',
+  over: 'expense',
 }
 
 /**
@@ -250,28 +251,22 @@ export function LimitsPage({
 function LimitBar({ limit }: { limit: CategoryLimit }) {
   const { t } = useTranslation()
   const percent = Math.round(limit.ratio * 100)
+  const status = t(`limits.status.${limit.status}`)
   return (
     <div className="flex min-w-40 items-center gap-2">
-      <div
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-valuenow={Math.min(percent, 100)}
-        aria-valuetext={`${String(percent)}% — ${t(`limits.status.${limit.status}`)}`}
-        className="h-2 flex-1 overflow-hidden rounded-full bg-muted"
-      >
-        <div
-          className={cn('h-full rounded-full', STATUS_BAR[limit.status])}
-          style={{ width: `${String(Math.min(percent, 100))}%` }}
-        />
-      </div>
+      <ProgressBar
+        className="flex-1"
+        value={limit.ratio}
+        tone={STATUS_TONE[limit.status]}
+        label={`${String(percent)}% — ${status}`}
+      />
       <span
         className={cn(
           'w-24 text-xs tabular-nums',
           limit.status === 'over' ? 'text-expense' : 'text-muted-foreground',
         )}
       >
-        {t('limits.ratio', { percent })} · {t(`limits.status.${limit.status}`)}
+        {t('limits.ratio', { percent })} · {status}
       </span>
     </div>
   )

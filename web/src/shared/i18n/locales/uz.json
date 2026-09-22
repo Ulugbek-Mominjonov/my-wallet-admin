@@ -62,7 +62,9 @@
     "recurringRules": "Doimiy rejalar",
     "limits": "Limitlar",
     "quickActions": "Tez tugmalar",
-    "tags": "Teglar"
+    "tags": "Teglar",
+    "debts": "Qarzlar",
+    "goals": "Maqsadlar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -221,7 +223,9 @@
       "kindMismatch": "Kategoriya turi mos emas",
       "monthShiftMismatch": "Oy siljishi farqli daromad turlari birlashtirilmaydi — avval siljishni tenglang",
       "previewOutdated": "Ma'lumot o'zgargan — ko'chirishni qaytadan ko'ring",
-      "amountPositive": "Summa noldan katta bo'lsin"
+      "amountPositive": "Summa noldan katta bo'lsin",
+      "debtInUse": "Qarzga amal, reja yoki doimiy reja bog'langan — arxivlang",
+      "currencyMismatch": "Valyutalar mos emas (bog'langan hisob maqsad valyutasida bo'lsin)"
     }
   },
   "accounts": {
@@ -387,5 +391,81 @@
     "name": "Nomi",
     "emptyTitle": "Teg yo'q",
     "emptyText": "Amallarni guruhlash uchun teg qo'shing."
+  },
+  "debts": {
+    "title": "Qarzlar",
+    "description": "Men qarzdorman va menga qarzdorlar; to'lovlar amallar orqali bog'lanadi",
+    "add": "Qarz qo'shish",
+    "newTitle": "Yangi qarz",
+    "editTitle": "Qarzni tahrirlash",
+    "name": "Nomi",
+    "direction": "Yo'nalish",
+    "directions": {
+      "i_owe": "Men qarzdorman",
+      "owed_to_me": "Menga qarzdor"
+    },
+    "currency": "Valyuta",
+    "total": "Umumiy summa",
+    "paidBefore": "Oldin to'langan",
+    "paidBeforeHint": "Ilovadan tashqarida to'langan qism",
+    "monthlyPayment": "Oylik to'lov",
+    "dueDate": "Muddat",
+    "note": "Izoh",
+    "remaining": "Qolgan",
+    "progress": "To'langan",
+    "finish": "Tugashi",
+    "finishValue": "{{months}} oy ({{month}})",
+    "noSchedule": "— oylik to'lov yo'q",
+    "status": {
+      "unlinked": "Bog'lanmagan",
+      "pending": "Kutilmoqda",
+      "paying": "To'lanyapti",
+      "closed": "✅ Yopildi"
+    },
+    "pending": "kutilmoqda: {{amount}}",
+    "summary": {
+      "iOwe": "Men qarzdorman",
+      "owedToMe": "Menga qarzdor",
+      "monthly": "Oylik majburiyat",
+      "net": "Sof holat"
+    },
+    "errors": {
+      "total": "Umumiy summa noldan katta bo'lsin",
+      "paidBefore": "Oldin to'langan umumiy summadan oshmaydi",
+      "amount": "Summani to'g'ri kiriting"
+    },
+    "emptyTitle": "Qarz yo'q",
+    "emptyText": "Kredit, qarz yoki haqlaringizni qo'shing — to'lovlar amallar orqali hisoblanadi.",
+    "statusLabel": "Holat"
+  },
+  "goals": {
+    "title": "Maqsadlar",
+    "description": "Jamg'arma maqsadlari: yig'ilgan, prognoz va muddatga ulgurish",
+    "add": "Maqsad qo'shish",
+    "newTitle": "Yangi maqsad",
+    "editTitle": "Maqsadni tahrirlash",
+    "name": "Nomi",
+    "currency": "Valyuta",
+    "target": "Kerakli summa",
+    "saved": "Yig'ilgan",
+    "savedManual": "Yig'ilgan (qo'lda)",
+    "account": "Hisobga bog'lash",
+    "noAccount": "Bog'lanmagan (qo'lda kiritiladi)",
+    "accountHint": "Bog'langan bo'lsa — yig'ilgan = hisob qoldig'i",
+    "monthly": "Oyiga ajratma",
+    "deadline": "Muddat",
+    "progress": "Holat",
+    "forecast": "Prognoz",
+    "done": "✅ Yig'ildi",
+    "forecastValue": "{{months}} oy ({{month}})",
+    "noMonthly": "— oyiga ajratma yo'q",
+    "onTrack": "Ulguradi",
+    "offTrack": "Ulgurmaydi",
+    "errors": {
+      "target": "Kerakli summa noldan katta bo'lsin",
+      "amount": "Summani to'g'ri kiriting"
+    },
+    "emptyTitle": "Maqsad yo'q",
+    "emptyText": "Uy, mashina yoki ta'til uchun jamg'arma maqsadini qo'shing."
   }
 }

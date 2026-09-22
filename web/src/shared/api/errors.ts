@@ -60,6 +60,8 @@ const BUSINESS_ERRORS: Record<string, ParseKeys> = {
   category_kind_mismatch: 'directories.errors.kindMismatch',
   month_shift_mismatch: 'directories.errors.monthShiftMismatch',
   preview_outdated: 'directories.errors.previewOutdated',
+  debt_in_use: 'directories.errors.debtInUse',
+  currency_mismatch: 'directories.errors.currencyMismatch',
 }
 
 /** Supabase/tarmoq xatosini AppError'ga aylantiradi. */

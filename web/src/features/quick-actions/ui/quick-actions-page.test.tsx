@@ -39,7 +39,7 @@ function renderPage(role: 'owner' | 'member' = 'owner') {
     ),
   )
   renderWithProviders(
-    <WithHousehold role={role}>
+    <WithHousehold memberRole={role}>
       <QuickActionsPage
         householdId={TEST_HOUSEHOLD_ID}
         categories={[category('c-food', 'Ovqat'), category('c-salary', 'Oylik', 'income')]}

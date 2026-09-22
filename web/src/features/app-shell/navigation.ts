@@ -3,9 +3,11 @@ import type { ParseKeys } from 'i18next'
 import {
   FolderTree,
   Gauge,
+  HandCoins,
   LayoutDashboard,
   Repeat,
   Tags,
+  Target,
   Wallet,
   Zap,
   type LucideIcon,
@@ -54,6 +56,8 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       { to: '/h/$householdId/limits', labelKey: 'nav.limits', icon: Gauge },
       { to: '/h/$householdId/quick-actions', labelKey: 'nav.quickActions', icon: Zap },
       { to: '/h/$householdId/tags', labelKey: 'nav.tags', icon: Tags },
+      { to: '/h/$householdId/debts', labelKey: 'nav.debts', icon: HandCoins },
+      { to: '/h/$householdId/goals', labelKey: 'nav.goals', icon: Target },
     ],
   },
 ]

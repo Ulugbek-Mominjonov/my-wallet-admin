@@ -62,7 +62,9 @@
     "recurringRules": "Recurring payments",
     "limits": "Limits",
     "quickActions": "Quick actions",
-    "tags": "Tags"
+    "tags": "Tags",
+    "debts": "Debts",
+    "goals": "Goals"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -221,7 +223,9 @@
       "kindMismatch": "Category kind doesn't match",
       "monthShiftMismatch": "Income types with different month shifts can't be merged — align the shift first",
       "previewOutdated": "Data has changed — review the move again",
-      "amountPositive": "The amount must be greater than zero"
+      "amountPositive": "The amount must be greater than zero",
+      "debtInUse": "Transactions, plans or recurring payments are linked to this debt — archive it",
+      "currencyMismatch": "Currencies don't match (the linked account must be in the goal's currency)"
     }
   },
   "accounts": {
@@ -387,5 +391,81 @@
     "name": "Name",
     "emptyTitle": "No tags",
     "emptyText": "Add tags to group transactions."
+  },
+  "debts": {
+    "title": "Debts",
+    "description": "What I owe and what I'm owed; payments are linked via transactions",
+    "add": "Add debt",
+    "newTitle": "New debt",
+    "editTitle": "Edit debt",
+    "name": "Name",
+    "direction": "Direction",
+    "directions": {
+      "i_owe": "I owe",
+      "owed_to_me": "Owed to me"
+    },
+    "currency": "Currency",
+    "total": "Total",
+    "paidBefore": "Paid before",
+    "paidBeforeHint": "The part paid outside the app",
+    "monthlyPayment": "Monthly payment",
+    "dueDate": "Due date",
+    "note": "Note",
+    "remaining": "Remaining",
+    "progress": "Paid",
+    "finish": "Ends",
+    "finishValue": "{{months}} mo ({{month}})",
+    "noSchedule": "— no monthly payment",
+    "status": {
+      "unlinked": "Not linked",
+      "pending": "Pending",
+      "paying": "Paying",
+      "closed": "✅ Closed"
+    },
+    "pending": "pending: {{amount}}",
+    "summary": {
+      "iOwe": "I owe",
+      "owedToMe": "Owed to me",
+      "monthly": "Monthly obligations",
+      "net": "Net"
+    },
+    "errors": {
+      "total": "The total must be greater than zero",
+      "paidBefore": "Paid before can't exceed the total",
+      "amount": "Enter a valid amount"
+    },
+    "emptyTitle": "No debts",
+    "emptyText": "Add loans, debts or what you're owed — payments are counted from transactions.",
+    "statusLabel": "Status"
+  },
+  "goals": {
+    "title": "Goals",
+    "description": "Savings goals: saved, forecast and whether you'll make the deadline",
+    "add": "Add goal",
+    "newTitle": "New goal",
+    "editTitle": "Edit goal",
+    "name": "Name",
+    "currency": "Currency",
+    "target": "Target",
+    "saved": "Saved",
+    "savedManual": "Saved (manual)",
+    "account": "Link to account",
+    "noAccount": "Not linked (entered manually)",
+    "accountHint": "If linked — saved = the account balance",
+    "monthly": "Monthly contribution",
+    "deadline": "Deadline",
+    "progress": "Status",
+    "forecast": "Forecast",
+    "done": "✅ Reached",
+    "forecastValue": "{{months}} mo ({{month}})",
+    "noMonthly": "— no monthly contribution",
+    "onTrack": "On track",
+    "offTrack": "Behind",
+    "errors": {
+      "target": "The target must be greater than zero",
+      "amount": "Enter a valid amount"
+    },
+    "emptyTitle": "No goals",
+    "emptyText": "Add a savings goal: a home, a car, a vacation."
   }
 }

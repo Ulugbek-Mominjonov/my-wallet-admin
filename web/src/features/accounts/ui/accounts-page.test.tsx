@@ -48,7 +48,7 @@ function mockList(accounts = ACCOUNTS) {
 
 function renderPage(role: Role = 'owner') {
   renderWithProviders(
-    <WithHousehold role={role}>
+    <WithHousehold memberRole={role}>
       <AccountsPage
         householdId={HOUSEHOLD}
         currencies={[

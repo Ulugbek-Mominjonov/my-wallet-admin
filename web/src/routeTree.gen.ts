@@ -20,6 +20,8 @@ import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callba
 import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
 import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$householdId/accounts'
 import { Route as AppHHouseholdIdCategoriesRouteImport } from './routes/_app/h/$householdId/categories'
+import { Route as AppHHouseholdIdDebtsRouteImport } from './routes/_app/h/$householdId/debts'
+import { Route as AppHHouseholdIdGoalsRouteImport } from './routes/_app/h/$householdId/goals'
 import { Route as AppHHouseholdIdLimitsRouteImport } from './routes/_app/h/$householdId/limits'
 import { Route as AppHHouseholdIdProfileRouteImport } from './routes/_app/h/$householdId/profile'
 import { Route as AppHHouseholdIdQuickActionsRouteImport } from './routes/_app/h/$householdId/quick-actions'
@@ -80,6 +82,16 @@ const AppHHouseholdIdCategoriesRoute =
     path: '/categories',
     getParentRoute: () => AppHHouseholdIdRoute,
   } as any)
+const AppHHouseholdIdDebtsRoute = AppHHouseholdIdDebtsRouteImport.update({
+  id: '/debts',
+  path: '/debts',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
+const AppHHouseholdIdGoalsRoute = AppHHouseholdIdGoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
 const AppHHouseholdIdLimitsRoute = AppHHouseholdIdLimitsRouteImport.update({
   id: '/limits',
   path: '/limits',
@@ -117,6 +129,8 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
+  '/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
+  '/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
   '/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId/quick-actions': typeof AppHHouseholdIdQuickActionsRoute
@@ -132,6 +146,8 @@ export interface FileRoutesByTo {
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
+  '/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
+  '/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
   '/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId/quick-actions': typeof AppHHouseholdIdQuickActionsRoute
@@ -151,6 +167,8 @@ export interface FileRoutesById {
   '/_auth/auth/callback': typeof AuthAuthCallbackRoute
   '/_app/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/_app/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
+  '/_app/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
+  '/_app/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
   '/_app/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/_app/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/_app/h/$householdId/quick-actions': typeof AppHHouseholdIdQuickActionsRoute
@@ -169,6 +187,8 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/h/$householdId/accounts'
     | '/h/$householdId/categories'
+    | '/h/$householdId/debts'
+    | '/h/$householdId/goals'
     | '/h/$householdId/limits'
     | '/h/$householdId/profile'
     | '/h/$householdId/quick-actions'
@@ -184,6 +204,8 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/h/$householdId/accounts'
     | '/h/$householdId/categories'
+    | '/h/$householdId/debts'
+    | '/h/$householdId/goals'
     | '/h/$householdId/limits'
     | '/h/$householdId/profile'
     | '/h/$householdId/quick-actions'
@@ -202,6 +224,8 @@ export interface FileRouteTypes {
     | '/_auth/auth/callback'
     | '/_app/h/$householdId/accounts'
     | '/_app/h/$householdId/categories'
+    | '/_app/h/$householdId/debts'
+    | '/_app/h/$householdId/goals'
     | '/_app/h/$householdId/limits'
     | '/_app/h/$householdId/profile'
     | '/_app/h/$householdId/quick-actions'
@@ -294,6 +318,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdCategoriesRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
+    '/_app/h/$householdId/debts': {
+      id: '/_app/h/$householdId/debts'
+      path: '/debts'
+      fullPath: '/h/$householdId/debts'
+      preLoaderRoute: typeof AppHHouseholdIdDebtsRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
+    '/_app/h/$householdId/goals': {
+      id: '/_app/h/$householdId/goals'
+      path: '/goals'
+      fullPath: '/h/$householdId/goals'
+      preLoaderRoute: typeof AppHHouseholdIdGoalsRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
     '/_app/h/$householdId/limits': {
       id: '/_app/h/$householdId/limits'
       path: '/limits'
@@ -335,6 +373,8 @@ declare module '@tanstack/react-router' {
 interface AppHHouseholdIdRouteChildren {
   AppHHouseholdIdAccountsRoute: typeof AppHHouseholdIdAccountsRoute
   AppHHouseholdIdCategoriesRoute: typeof AppHHouseholdIdCategoriesRoute
+  AppHHouseholdIdDebtsRoute: typeof AppHHouseholdIdDebtsRoute
+  AppHHouseholdIdGoalsRoute: typeof AppHHouseholdIdGoalsRoute
   AppHHouseholdIdLimitsRoute: typeof AppHHouseholdIdLimitsRoute
   AppHHouseholdIdProfileRoute: typeof AppHHouseholdIdProfileRoute
   AppHHouseholdIdQuickActionsRoute: typeof AppHHouseholdIdQuickActionsRoute
@@ -346,6 +386,8 @@ interface AppHHouseholdIdRouteChildren {
 const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
   AppHHouseholdIdAccountsRoute: AppHHouseholdIdAccountsRoute,
   AppHHouseholdIdCategoriesRoute: AppHHouseholdIdCategoriesRoute,
+  AppHHouseholdIdDebtsRoute: AppHHouseholdIdDebtsRoute,
+  AppHHouseholdIdGoalsRoute: AppHHouseholdIdGoalsRoute,
   AppHHouseholdIdLimitsRoute: AppHHouseholdIdLimitsRoute,
   AppHHouseholdIdProfileRoute: AppHHouseholdIdProfileRoute,
   AppHHouseholdIdQuickActionsRoute: AppHHouseholdIdQuickActionsRoute,
