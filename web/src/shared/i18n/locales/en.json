@@ -82,6 +82,8 @@
     "codeLabel": "Invite code",
     "join": "Join",
     "back": "Back to budget",
+    "readOnly": "View only",
+    "readOnlyHint": "Viewer role: you can see the data but not change it",
     "roles": {
       "owner": "Owner",
       "admin": "Admin",

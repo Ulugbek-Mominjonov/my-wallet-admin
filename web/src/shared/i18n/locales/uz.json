@@ -82,6 +82,8 @@
     "codeLabel": "Taklif kodi",
     "join": "Qo'shilish",
     "back": "Byudjetga qaytish",
+    "readOnly": "Faqat ko'rish",
+    "readOnlyHint": "Kuzatuvchi roli: ma'lumotni ko'rasiz, o'zgartira olmaysiz",
     "roles": {
       "owner": "Egasi",
       "admin": "Admin",
