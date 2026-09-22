@@ -6,6 +6,7 @@ import {
   HandCoins,
   LayoutDashboard,
   Repeat,
+  Settings,
   Tags,
   Target,
   Wallet,
@@ -59,6 +60,11 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       { to: '/h/$householdId/debts', labelKey: 'nav.debts', icon: HandCoins },
       { to: '/h/$householdId/goals', labelKey: 'nav.goals', icon: Target },
     ],
+  },
+  {
+    id: 'budget',
+    titleKey: 'nav.budget',
+    items: [{ to: '/h/$householdId/settings', labelKey: 'nav.settings', icon: Settings }],
   },
 ]
 

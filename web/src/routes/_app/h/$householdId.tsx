@@ -26,8 +26,12 @@ export const Route = createFileRoute('/_app/h/$householdId')({
 })
 
 function HouseholdLayout() {
-  const { household, email } = Route.useRouteContext()
+  const context = Route.useRouteContext()
   const { data: boot } = useSuspenseQuery(bootstrapQuery)
+  // Jonli bootstrap'dan: nom yoki rol o'zgarsa (sozlamalar, egalik o'tkazish)
+  // darhol ko'rinadi; marshrut konteksti faqat navigatsiyada yangilanadi.
+  const household = boot.households.find((h) => h.id === context.household.id) ?? context.household
+  const { email } = context
   useRememberHousehold(boot.profile, household.id)
 
   return (

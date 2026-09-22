@@ -64,7 +64,9 @@
     "quickActions": "Quick actions",
     "tags": "Tags",
     "debts": "Debts",
-    "goals": "Goals"
+    "goals": "Goals",
+    "settings": "Budget settings",
+    "budget": "Budget"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -225,7 +227,13 @@
       "previewOutdated": "Data has changed — review the move again",
       "amountPositive": "The amount must be greater than zero",
       "debtInUse": "Transactions, plans or recurring payments are linked to this debt — archive it",
-      "currencyMismatch": "Currencies don't match (the linked account must be in the goal's currency)"
+      "currencyMismatch": "Currencies don't match (the linked account must be in the goal's currency)",
+      "lastOwner": "The last owner can't leave — transfer ownership first (or delete the budget)",
+      "useTransfer": "The owner role is given via “Transfer ownership”",
+      "useLeave": "To remove yourself use “Leave budget”",
+      "confirmMismatch": "The name doesn't match — type the budget name exactly",
+      "notMember": "This user isn't a member",
+      "invalidRole": "This role can't be assigned"
     }
   },
   "accounts": {
@@ -467,5 +475,87 @@
     },
     "emptyTitle": "No goals",
     "emptyText": "Add a savings goal: a home, a car, a vacation."
+  },
+  "settings": {
+    "title": "Budget settings",
+    "description": "Name, time zone, 👤 fund rule, month policy and members",
+    "save": "Save",
+    "saved": "Settings saved",
+    "general": {
+      "title": "General",
+      "name": "Budget name",
+      "nameError": "Name must be 1–80 characters",
+      "baseCurrency": "Base currency",
+      "baseCurrencyHint": "Reports use this currency; it can't be changed yet",
+      "timezone": "Time zone",
+      "timezoneHint": "“Today” and month boundaries follow this zone"
+    },
+    "fund": {
+      "title": "👤 Personal fund rule",
+      "description": "A monthly allocation from the budget to the personal fund",
+      "mode": "Mode",
+      "modes": {
+        "percent": "Percent of income",
+        "fixed": "Fixed amount"
+      },
+      "percent": "Percent",
+      "fixedAmount": "Monthly amount",
+      "day": "Allocation day",
+      "source": "Source account",
+      "noSource": "Not set",
+      "previewPercent": "This month's allocation: {{amount}} (income {{income}} × {{percent}}%)",
+      "previewFixed": "This month's allocation: {{amount}}",
+      "previewNone": "No allocation this month — no income yet",
+      "errors": {
+        "percent": "0 to 100, up to 2 decimals",
+        "amount": "Enter a valid amount",
+        "day": "Day from 1 to 31"
+      }
+    },
+    "month": {
+      "title": "Month policy",
+      "autoOpen": "Open months automatically",
+      "autoOpenHint": "Recurring plans are created at the start of the month",
+      "strictLock": "Strict lock",
+      "strictLockHint": "Closed-month records can't change (otherwise — with confirmation)"
+    },
+    "members": {
+      "title": "Members",
+      "name": "Name",
+      "role": "Role",
+      "joined": "Joined",
+      "you": "you",
+      "unnamed": "Unnamed member",
+      "invite": "Create invite",
+      "inviteRole": "Invite role",
+      "inviteTitle": "Invite code",
+      "inviteText": "Send the code — valid for 7 days, single use.",
+      "copy": "Copy",
+      "copied": "Copied",
+      "activeInvites": "Active invites",
+      "expires": "until {{date}}",
+      "changeRole": "{{name}}: role",
+      "remove": "Remove",
+      "removeTitle": "Remove “{{name}}” from the budget?",
+      "removeText": "They won't see this budget anymore; their transactions stay.",
+      "transfer": "Transfer ownership",
+      "transferTitle": "Transfer ownership to “{{name}}”?",
+      "transferText": "You'll become an admin.",
+      "leave": "Leave budget",
+      "leaveTitle": "Leave the budget?",
+      "leaveText": "The budget disappears for you; you'll need a new invite to return.",
+      "roleChanged": "Role changed",
+      "removed": "Member removed",
+      "transferred": "Ownership transferred",
+      "left": "You left the budget"
+    },
+    "danger": {
+      "title": "Danger zone",
+      "deleteTitle": "Delete budget",
+      "deleteText": "All transactions, plans, directories and receipts are deleted permanently.",
+      "confirmLabel": "To confirm, type the budget name: {{name}}",
+      "delete": "Delete budget",
+      "deleted": "Budget deleted"
+    }
   }
 }

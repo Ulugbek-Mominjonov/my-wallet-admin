@@ -64,7 +64,9 @@
     "quickActions": "Tez tugmalar",
     "tags": "Teglar",
     "debts": "Qarzlar",
-    "goals": "Maqsadlar"
+    "goals": "Maqsadlar",
+    "settings": "Byudjet sozlamalari",
+    "budget": "Byudjet"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -225,7 +227,13 @@
       "previewOutdated": "Ma'lumot o'zgargan — ko'chirishni qaytadan ko'ring",
       "amountPositive": "Summa noldan katta bo'lsin",
       "debtInUse": "Qarzga amal, reja yoki doimiy reja bog'langan — arxivlang",
-      "currencyMismatch": "Valyutalar mos emas (bog'langan hisob maqsad valyutasida bo'lsin)"
+      "currencyMismatch": "Valyutalar mos emas (bog'langan hisob maqsad valyutasida bo'lsin)",
+      "lastOwner": "Oxirgi owner chiqa olmaydi — avval egalikni o'tkazing (yoki byudjetni o'chiring)",
+      "useTransfer": "Owner rolini egalikni o'tkazish orqali bering",
+      "useLeave": "O'zingizni chiqarish uchun \"Byudjetdan chiqish\"",
+      "confirmMismatch": "Nom mos emas — byudjet nomini aynan yozing",
+      "notMember": "Bu foydalanuvchi a'zo emas",
+      "invalidRole": "Bu rolni berib bo'lmaydi"
     }
   },
   "accounts": {
@@ -467,5 +475,87 @@
     },
     "emptyTitle": "Maqsad yo'q",
     "emptyText": "Uy, mashina yoki ta'til uchun jamg'arma maqsadini qo'shing."
+  },
+  "settings": {
+    "title": "Byudjet sozlamalari",
+    "description": "Nomi, vaqt zonasi, 👤 fond qoidasi, oy siyosati va a'zolar",
+    "save": "Saqlash",
+    "saved": "Sozlamalar saqlandi",
+    "general": {
+      "title": "Asosiy",
+      "name": "Byudjet nomi",
+      "nameError": "Nom 1–80 belgi bo'lsin",
+      "baseCurrency": "Asosiy valyuta",
+      "baseCurrencyHint": "Hisobotlar shu valyutada; hozircha o'zgartirilmaydi",
+      "timezone": "Vaqt zonasi",
+      "timezoneHint": "\"Bugun\" va oy chegarasi shu zona bo'yicha"
+    },
+    "fund": {
+      "title": "👤 Shaxsiy fond qoidasi",
+      "description": "Har oy byudjetdan shaxsiy fondga ajratma",
+      "mode": "Rejim",
+      "modes": {
+        "percent": "Daromaddan foiz",
+        "fixed": "Qat'iy summa"
+      },
+      "percent": "Foiz",
+      "fixedAmount": "Oylik summa",
+      "day": "Ajratma kuni",
+      "source": "Manba hisob",
+      "noSource": "Tanlanmagan",
+      "previewPercent": "Joriy oy ajratmasi: {{amount}} (daromad {{income}} × {{percent}}%)",
+      "previewFixed": "Joriy oy ajratmasi: {{amount}}",
+      "previewNone": "Joriy oyda ajratma yo'q — daromad hali kelmagan",
+      "errors": {
+        "percent": "0 dan 100 gacha, 2 xonagacha",
+        "amount": "Summani to'g'ri kiriting",
+        "day": "Kun 1 dan 31 gacha"
+      }
+    },
+    "month": {
+      "title": "Oy siyosati",
+      "autoOpen": "Oyni avtomatik ochish",
+      "autoOpenHint": "Oy boshida doimiy rejalar o'zi yaratiladi",
+      "strictLock": "Qattiq qulf",
+      "strictLockHint": "Yopilgan oy yozuvlari o'zgarmaydi (aks holda — tasdiq bilan)"
+    },
+    "members": {
+      "title": "A'zolar",
+      "name": "Ism",
+      "role": "Rol",
+      "joined": "Qo'shilgan",
+      "you": "siz",
+      "unnamed": "Ismsiz a'zo",
+      "invite": "Taklif yaratish",
+      "inviteRole": "Taklif roli",
+      "inviteTitle": "Taklif kodi",
+      "inviteText": "Kodni yuboring — 7 kun amal qiladi, bir marta ishlatiladi.",
+      "copy": "Nusxa olish",
+      "copied": "Nusxa olindi",
+      "activeInvites": "Faol takliflar",
+      "expires": "{{date}} gacha",
+      "changeRole": "{{name}}: rol",
+      "remove": "Chiqarish",
+      "removeTitle": "«{{name}}» byudjetdan chiqarilsinmi?",
+      "removeText": "U endi bu byudjetni ko'rmaydi; yozgan amallari qoladi.",
+      "transfer": "Egalikni o'tkazish",
+      "transferTitle": "Egalik «{{name}}» ga o'tkazilsinmi?",
+      "transferText": "Siz admin bo'lib qolasiz.",
+      "leave": "Byudjetdan chiqish",
+      "leaveTitle": "Byudjetdan chiqilsinmi?",
+      "leaveText": "Byudjet sizda ko'rinmaydi; qaytish uchun yangi taklif kerak.",
+      "roleChanged": "Rol o'zgartirildi",
+      "removed": "A'zo chiqarildi",
+      "transferred": "Egalik o'tkazildi",
+      "left": "Byudjetdan chiqdingiz"
+    },
+    "danger": {
+      "title": "Xavfli zona",
+      "deleteTitle": "Byudjetni o'chirish",
+      "deleteText": "Barcha amallar, rejalar, spravochniklar va cheklar butunlay o'chadi. Qaytarib bo'lmaydi.",
+      "confirmLabel": "Tasdiqlash uchun byudjet nomini yozing: {{name}}",
+      "delete": "Byudjetni o'chirish",
+      "deleted": "Byudjet o'chirildi"
+    }
   }
 }

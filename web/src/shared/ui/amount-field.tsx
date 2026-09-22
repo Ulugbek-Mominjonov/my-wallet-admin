@@ -13,12 +13,14 @@ export function AmountField({
   hint,
   error,
   registration,
+  disabled = false,
 }: {
   id: string
   label: string
   hint?: string
   error?: string
   registration: UseFormRegisterReturn
+  disabled?: boolean
 }) {
   const note = error ?? hint
   return (
@@ -31,6 +33,7 @@ export function AmountField({
         aria-invalid={error ? true : undefined}
         aria-describedby={note ? `${id}-note` : undefined}
         {...registration}
+        disabled={disabled}
       />
       {note && (
         <p
