@@ -9,7 +9,10 @@
     "comingSoon": "Coming soon",
     "cancel": "Cancel",
     "save": "Save",
-    "close": "Close"
+    "close": "Close",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "currentMonth": "Current month"
   },
   "errors": {
     "notFoundTitle": "Page not found",
@@ -67,7 +70,8 @@
     "goals": "Goals",
     "settings": "Budget settings",
     "budget": "Budget",
-    "transactions": "Transactions"
+    "transactions": "Transactions",
+    "plans": "Plans"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -575,9 +579,7 @@
       "all": "All time",
       "range": "Date range",
       "from": "From",
-      "to": "To",
-      "prev": "Previous month",
-      "next": "Next month"
+      "to": "To"
     },
     "kinds": {
       "expense": "Expense",
@@ -699,6 +701,92 @@
       "deleteText": "Transactions to delete: {{count}}; balances and reports will be recalculated.",
       "done": "Done: {{count}} transactions",
       "partial": "Done: {{done}}, skipped: {{skipped}}"
+    }
+  },
+  "plans": {
+    "title": "Plans",
+    "description": "This month's payments and expected income — pay, skip",
+    "tabs": {
+      "expense": "Payments",
+      "income": "Income"
+    },
+    "summary": {
+      "expense": "Unpaid",
+      "income": "Expected",
+      "unknown": "+ {{count}} ?"
+    },
+    "sections": {
+      "overdue": "Overdue",
+      "today": "Today",
+      "soon": "In the next {{days}} days",
+      "later": "Later",
+      "paid": "Paid",
+      "skipped": "Skipped"
+    },
+    "status": {
+      "paid": "Paid",
+      "partial": "Partial",
+      "pending": "Pending",
+      "overdue": "Overdue",
+      "skipped": "Skipped"
+    },
+    "columns": {
+      "name": "Plan",
+      "due": "Due",
+      "amount": "Amount",
+      "paid": "Paid",
+      "status": "Status"
+    },
+    "pay": "Paid",
+    "received": "Received",
+    "skip": "Skip",
+    "unskip": "Restore",
+    "autoPay": "Auto-pay",
+    "payTitle": "“{{name}}” — payment",
+    "receiveTitle": "“{{name}}” — income received",
+    "payForm": {
+      "amount": "Amount ({{currency}})",
+      "remaining": "Left: {{amount}}",
+      "unknownHint": "This payment has no set amount — enter how much you paid",
+      "otherCurrency": "The account is in another currency — enter the amount in it",
+      "account": "Account",
+      "date": "Date",
+      "partialTitle": "Amount is below what is left",
+      "partial": "Partial — I will pay the rest later",
+      "settle": "Close — mark the plan as paid"
+    },
+    "paid": "Paid: “{{name}}”",
+    "skippedToast": "Skipped: “{{name}}”",
+    "restored": "Restored: “{{name}}”",
+    "bulk": {
+      "selected": "Selected: {{count}}",
+      "pay": "Pay selected",
+      "payTitle": "Pay the selected plans",
+      "payText": "Each plan is paid for what is left; plans without an amount are skipped (BR-074).",
+      "account": "Account",
+      "ownAccount": "Plan's own account",
+      "date": "Date",
+      "done": "Paid plans: {{count}}",
+      "partial": "Paid: {{done}}, skipped: {{skipped}}",
+      "select": "Select: {{name}}",
+      "selectAll": "“{{section}}” — select all",
+      "clear": "Clear selection"
+    },
+    "empty": "No plans this month",
+    "emptyHint": "Open the month — plans are created from recurring rules.",
+    "errors": {
+      "notFound": "Plan not found",
+      "alreadyPaid": "The plan is already paid",
+      "skipped": "The plan was skipped",
+      "amountRequired": "No amount set — enter it",
+      "amountUnknown": "Unknown amount — pay it separately",
+      "invalidAmount": "The amount must be above 0",
+      "accountRequired": "No account chosen",
+      "accountNotFound": "Account not found",
+      "currencyMismatch": "The account is in another currency — pay it separately",
+      "amount": "Enter an amount above 0",
+      "account": "Choose an account",
+      "date": "Enter a date"
     }
   }
 }

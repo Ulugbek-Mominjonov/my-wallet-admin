@@ -9,7 +9,10 @@
     "comingSoon": "Tez orada",
     "cancel": "Bekor qilish",
     "save": "Saqlash",
-    "close": "Yopish"
+    "close": "Yopish",
+    "prevMonth": "Oldingi oy",
+    "nextMonth": "Keyingi oy",
+    "currentMonth": "Joriy oy"
   },
   "errors": {
     "notFoundTitle": "Sahifa topilmadi",
@@ -67,7 +70,8 @@
     "goals": "Maqsadlar",
     "settings": "Byudjet sozlamalari",
     "budget": "Byudjet",
-    "transactions": "Amallar"
+    "transactions": "Amallar",
+    "plans": "Rejalar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -575,9 +579,7 @@
       "all": "Butun tarix",
       "range": "Sana oralig'i",
       "from": "Dan",
-      "to": "Gacha",
-      "prev": "Oldingi oy",
-      "next": "Keyingi oy"
+      "to": "Gacha"
     },
     "kinds": {
       "expense": "Xarajat",
@@ -699,6 +701,92 @@
       "deleteText": "{{count}} ta amal o'chiriladi; hisob qoldiqlari va hisobotlar qayta hisoblanadi.",
       "done": "Bajarildi: {{count}} ta amal",
       "partial": "Bajarildi: {{done}}, o'tkazib yuborildi: {{skipped}}"
+    }
+  },
+  "plans": {
+    "title": "Rejalar",
+    "description": "Oy to'lovlari va kutilayotgan daromadlar — to'lash, o'tkazib yuborish",
+    "tabs": {
+      "expense": "To'lovlar",
+      "income": "Daromadlar"
+    },
+    "summary": {
+      "expense": "To'lanmagan",
+      "income": "Kutilmoqda",
+      "unknown": "+ {{count}} ta ?"
+    },
+    "sections": {
+      "overdue": "Muddati o'tgan",
+      "today": "Bugun",
+      "soon": "Yaqin {{days}} kunda",
+      "later": "Keyinroq",
+      "paid": "To'langan",
+      "skipped": "O'tkazib yuborilgan"
+    },
+    "status": {
+      "paid": "To'langan",
+      "partial": "Qisman",
+      "pending": "Kutilmoqda",
+      "overdue": "Kechikkan",
+      "skipped": "O'tkazilgan"
+    },
+    "columns": {
+      "name": "Reja",
+      "due": "Muddat",
+      "amount": "Summa",
+      "paid": "To'langan",
+      "status": "Holat"
+    },
+    "pay": "To'landi",
+    "received": "Keldi",
+    "skip": "O'tkazib yuborish",
+    "unskip": "Qaytarish",
+    "autoPay": "Avto to'lov",
+    "payTitle": "«{{name}}» — to'lov",
+    "receiveTitle": "«{{name}}» — daromad keldi",
+    "payForm": {
+      "amount": "Summa ({{currency}})",
+      "remaining": "Qolgan: {{amount}}",
+      "unknownHint": "Bu to'lovning summasi belgilanmagan — qancha to'laganingizni kiriting",
+      "otherCurrency": "Hisob boshqa valyutada — summani shu valyutada kiriting",
+      "account": "Hisob",
+      "date": "Sana",
+      "partialTitle": "Summa qolgandan kam",
+      "partial": "Qisman — qolganini keyin to'layman",
+      "settle": "Yopish — reja to'landi deb belgilansin"
+    },
+    "paid": "To'landi: «{{name}}»",
+    "skippedToast": "O'tkazib yuborildi: «{{name}}»",
+    "restored": "Qaytarildi: «{{name}}»",
+    "bulk": {
+      "selected": "Tanlangan: {{count}}",
+      "pay": "Tanlanganlarni to'lash",
+      "payTitle": "Tanlangan rejalarni to'lash",
+      "payText": "Har reja qolgan summasiga to'lanadi; summasi noma'lumlari o'tkaziladi (BR-074).",
+      "account": "Hisob",
+      "ownAccount": "Rejaning o'z hisobi",
+      "date": "Sana",
+      "done": "To'landi: {{count}} ta reja",
+      "partial": "To'landi: {{done}}, o'tkazildi: {{skipped}}",
+      "select": "Tanlash: {{name}}",
+      "selectAll": "«{{section}}» — hammasini tanlash",
+      "clear": "Tanlovni bekor qilish"
+    },
+    "empty": "Bu oyda reja yo'q",
+    "emptyHint": "Oyni oching — doimiy rejalardan shu oy rejalari yaratiladi.",
+    "errors": {
+      "notFound": "Reja topilmadi",
+      "alreadyPaid": "Reja allaqachon to'langan",
+      "skipped": "Reja o'tkazib yuborilgan",
+      "amountRequired": "Summa belgilanmagan — kiriting",
+      "amountUnknown": "Summasi noma'lum — alohida to'lang",
+      "invalidAmount": "Summa 0 dan katta bo'lsin",
+      "accountRequired": "Hisob tanlanmagan",
+      "accountNotFound": "Hisob topilmadi",
+      "currencyMismatch": "Hisob boshqa valyutada — alohida to'lang",
+      "amount": "Summani kiriting (0 dan katta)",
+      "account": "Hisobni tanlang",
+      "date": "Sanani kiriting"
     }
   }
 }

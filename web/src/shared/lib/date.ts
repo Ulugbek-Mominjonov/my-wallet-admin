@@ -32,3 +32,10 @@ export function todayIso(timeZone: string, now = new Date()): string {
   // en-CA — ISO tartibidagi sana (YYYY-MM-DD).
   return new Intl.DateTimeFormat('en-CA', { timeZone }).format(now)
 }
+
+/** Sana-kalitga kun qo'shish (manfiy ham): addDays('2026-09-30', 1) → '2026-10-01'. */
+export function addDays(isoDate: string, days: number): string {
+  const date = new Date(`${isoDate}T00:00:00Z`)
+  date.setUTCDate(date.getUTCDate() + days)
+  return date.toISOString().slice(0, 10)
+}

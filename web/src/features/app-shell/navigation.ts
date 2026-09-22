@@ -2,6 +2,7 @@ import type { LinkProps } from '@tanstack/react-router'
 import type { ParseKeys } from 'i18next'
 import {
   ArrowLeftRight,
+  CalendarCheck,
   FolderTree,
   Gauge,
   HandCoins,
@@ -67,6 +68,7 @@ export const NAV_SECTIONS: readonly NavSection[] = [
     titleKey: 'nav.budget',
     items: [
       { to: '/h/$householdId/transactions', labelKey: 'nav.transactions', icon: ArrowLeftRight },
+      { to: '/h/$householdId/plans', labelKey: 'nav.plans', icon: CalendarCheck },
       { to: '/h/$householdId/settings', labelKey: 'nav.settings', icon: Settings },
     ],
   },

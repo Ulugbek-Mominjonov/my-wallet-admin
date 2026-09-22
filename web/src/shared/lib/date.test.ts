@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { formatDate, formatDateTime, todayIso } from '@/shared/lib/date'
+import { addDays, formatDate, formatDateTime, todayIso } from '@/shared/lib/date'
 
 describe('formatDateTime', () => {
   const value = '2026-09-22T09:05:00Z'
@@ -34,5 +34,13 @@ describe('formatDate', () => {
       expect(text).toMatch(/03/)
       expect(text).toMatch(/09/)
     }
+  })
+})
+
+describe('addDays', () => {
+  it('oy va yil chegarasidan o‘tadi, manfiy ham', () => {
+    expect(addDays('2026-09-30', 1)).toBe('2026-10-01')
+    expect(addDays('2026-12-30', 3)).toBe('2027-01-02')
+    expect(addDays('2026-03-01', -1)).toBe('2026-02-28')
   })
 })

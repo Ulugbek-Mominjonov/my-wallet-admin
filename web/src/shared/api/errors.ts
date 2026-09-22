@@ -83,11 +83,30 @@ const BUSINESS_ERRORS: Record<string, ParseKeys> = {
   transaction_not_found: 'transactions.errors.notFound',
   // Ommaviy amal natijasi: qator topilmadi (boshqa byudjet yoki o'chirilgan).
   not_found: 'transactions.errors.notFound',
+  planned_not_found: 'plans.errors.notFound',
+  planned_already_paid: 'plans.errors.alreadyPaid',
+  amount_required: 'plans.errors.amountRequired',
+  invalid_amount: 'plans.errors.invalidAmount',
+  account_required: 'plans.errors.accountRequired',
+  account_not_found: 'plans.errors.accountNotFound',
 }
 
 /** Biznes kod (xato yoki ommaviy amal natijasidagi `reason`) → foydalanuvchi matni. */
 export const businessErrorMessage = (code: string): string =>
   i18n.t(BUSINESS_ERRORS[code] ?? 'errors.unknown')
+
+/**
+ * Ommaviy amalda o'tkazib yuborilganlar — sabab bo'yicha soni bilan:
+ * "Oy yopilgan… (2); Amal topilmadi… (1)". Sahifa o'z sabab kodlarini beradi.
+ */
+export function skippedSummary(
+  skipped: readonly { reason: string }[],
+  messageOf: (reason: string) => string = businessErrorMessage,
+): string {
+  const counts = new Map<string, number>()
+  for (const { reason } of skipped) counts.set(reason, (counts.get(reason) ?? 0) + 1)
+  return [...counts].map(([reason, n]) => `${messageOf(reason)} (${String(n)})`).join('; ')
+}
 
 /** Supabase/tarmoq xatosini AppError'ga aylantiradi. */
 export function toAppError(error: unknown): AppError {

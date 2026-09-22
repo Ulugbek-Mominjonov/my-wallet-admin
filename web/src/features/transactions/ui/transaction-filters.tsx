@@ -147,7 +147,7 @@ function PeriodFilter({
         <Button
           variant="outline"
           size="icon"
-          aria-label={t('transactions.period.prev')}
+          aria-label={t('common.prevMonth')}
           onClick={() => {
             toMonth(shiftMonth(period.month, -1))
           }}
@@ -177,7 +177,7 @@ function PeriodFilter({
         <Button
           variant="outline"
           size="icon"
-          aria-label={t('transactions.period.next')}
+          aria-label={t('common.nextMonth')}
           onClick={() => {
             toMonth(shiftMonth(period.month, 1))
           }}

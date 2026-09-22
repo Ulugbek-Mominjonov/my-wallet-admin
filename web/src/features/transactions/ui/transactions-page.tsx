@@ -24,7 +24,6 @@ import {
   transactionsQuery,
   transactionsSummaryQuery,
   type BulkAction,
-  type BulkResult,
   type TransactionsSummary,
 } from '@/features/transactions/api/transactions-api'
 import { exportFileName, transactionsCsv } from '@/features/transactions/model/export'
@@ -41,7 +40,7 @@ import { BulkActions } from '@/features/transactions/ui/bulk-actions'
 import { TransactionFiltersBar } from '@/features/transactions/ui/transaction-filters'
 import { TransactionForm, type DebtOption } from '@/features/transactions/ui/transaction-form'
 import { TransactionsTable } from '@/features/transactions/ui/transactions-table'
-import { businessErrorMessage } from '@/shared/api/errors'
+import { skippedSummary } from '@/shared/api/errors'
 import { qk } from '@/shared/api/query-keys'
 import { downloadFile } from '@/shared/lib/download'
 import type { MonthKey } from '@/shared/lib/month'
@@ -56,15 +55,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/shared/ui/sheet'
 import { TableSkeleton } from '@/shared/ui/table-skeleton'
 
 const NO_SELECTION: ReadonlySet<string> = new Set()
-
-/** O'tkazib yuborilganlar sababi bo'yicha: "Oy yopilgan… (2); Amal topilmadi… (1)". */
-function skippedSummary(skipped: BulkResult['skipped']): string {
-  const counts = new Map<string, number>()
-  for (const { reason } of skipped) counts.set(reason, (counts.get(reason) ?? 0) + 1)
-  return [...counts]
-    .map(([reason, n]) => `${businessErrorMessage(reason)} (${String(n)})`)
-    .join('; ')
-}
 
 /**
  * E23-T01, T02: amallar — filtrlar URL'da, keyset sahifalar ("Yana yuklash"),
