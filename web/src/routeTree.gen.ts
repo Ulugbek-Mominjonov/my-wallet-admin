@@ -19,6 +19,7 @@ import { Route as AppHHouseholdIdRouteImport } from './routes/_app/h/$householdI
 import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callback'
 import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
 import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$householdId/accounts'
+import { Route as AppHHouseholdIdCategoriesRouteImport } from './routes/_app/h/$householdId/categories'
 import { Route as AppHHouseholdIdProfileRouteImport } from './routes/_app/h/$householdId/profile'
 
 const AppRoute = AppRouteImport.update({
@@ -69,6 +70,12 @@ const AppHHouseholdIdAccountsRoute = AppHHouseholdIdAccountsRouteImport.update({
   path: '/accounts',
   getParentRoute: () => AppHHouseholdIdRoute,
 } as any)
+const AppHHouseholdIdCategoriesRoute =
+  AppHHouseholdIdCategoriesRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => AppHHouseholdIdRoute,
+  } as any)
 const AppHHouseholdIdProfileRoute = AppHHouseholdIdProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -83,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
+  '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
@@ -93,6 +101,7 @@ export interface FileRoutesByTo {
   '/mfa': typeof AuthMfaRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
+  '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId': typeof AppHHouseholdIdIndexRoute
 }
@@ -107,6 +116,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/_auth/auth/callback': typeof AuthAuthCallbackRoute
   '/_app/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
+  '/_app/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/_app/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/_app/h/$householdId/': typeof AppHHouseholdIdIndexRoute
 }
@@ -120,6 +130,7 @@ export interface FileRouteTypes {
     | '/h/$householdId'
     | '/auth/callback'
     | '/h/$householdId/accounts'
+    | '/h/$householdId/categories'
     | '/h/$householdId/profile'
     | '/h/$householdId/'
   fileRoutesByTo: FileRoutesByTo
@@ -130,6 +141,7 @@ export interface FileRouteTypes {
     | '/mfa'
     | '/auth/callback'
     | '/h/$householdId/accounts'
+    | '/h/$householdId/categories'
     | '/h/$householdId/profile'
     | '/h/$householdId'
   id:
@@ -143,6 +155,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId'
     | '/_auth/auth/callback'
     | '/_app/h/$householdId/accounts'
+    | '/_app/h/$householdId/categories'
     | '/_app/h/$householdId/profile'
     | '/_app/h/$householdId/'
   fileRoutesById: FileRoutesById
@@ -224,6 +237,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdAccountsRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
+    '/_app/h/$householdId/categories': {
+      id: '/_app/h/$householdId/categories'
+      path: '/categories'
+      fullPath: '/h/$householdId/categories'
+      preLoaderRoute: typeof AppHHouseholdIdCategoriesRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
     '/_app/h/$householdId/profile': {
       id: '/_app/h/$householdId/profile'
       path: '/profile'
@@ -236,12 +256,14 @@ declare module '@tanstack/react-router' {
 
 interface AppHHouseholdIdRouteChildren {
   AppHHouseholdIdAccountsRoute: typeof AppHHouseholdIdAccountsRoute
+  AppHHouseholdIdCategoriesRoute: typeof AppHHouseholdIdCategoriesRoute
   AppHHouseholdIdProfileRoute: typeof AppHHouseholdIdProfileRoute
   AppHHouseholdIdIndexRoute: typeof AppHHouseholdIdIndexRoute
 }
 
 const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
   AppHHouseholdIdAccountsRoute: AppHHouseholdIdAccountsRoute,
+  AppHHouseholdIdCategoriesRoute: AppHHouseholdIdCategoriesRoute,
   AppHHouseholdIdProfileRoute: AppHHouseholdIdProfileRoute,
   AppHHouseholdIdIndexRoute: AppHHouseholdIdIndexRoute,
 }

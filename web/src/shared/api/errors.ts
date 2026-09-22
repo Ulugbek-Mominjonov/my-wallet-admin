@@ -54,6 +54,12 @@ const BUSINESS_ERRORS: Record<string, ParseKeys> = {
   account_in_use: 'directories.errors.accountInUse',
   system_account: 'directories.errors.systemAccount',
   account_currency_locked: 'directories.errors.currencyLocked',
+  system_category: 'directories.errors.systemCategory',
+  category_in_use: 'directories.errors.categoryInUse',
+  invalid_parent: 'directories.errors.invalidParent',
+  category_kind_mismatch: 'directories.errors.kindMismatch',
+  month_shift_mismatch: 'directories.errors.monthShiftMismatch',
+  preview_outdated: 'directories.errors.previewOutdated',
 }
 
 /** Supabase/tarmoq xatosini AppError'ga aylantiradi. */

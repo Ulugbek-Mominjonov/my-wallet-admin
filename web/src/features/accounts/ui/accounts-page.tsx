@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { Archive, ArchiveRestore, MoreHorizontal, Pencil, Plus, Trash2, Wallet } from 'lucide-react'
+import { Plus, Wallet } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
@@ -17,20 +17,14 @@ import {
   type AccountInput,
 } from '@/features/accounts/api/accounts-api'
 import { AccountForm, type CurrencyOption } from '@/features/accounts/ui/account-form'
-import { optimisticList } from '@/shared/api/optimistic'
+import { useDirectoryMutations } from '@/shared/api/use-directory-mutations'
 import { todayIso } from '@/shared/lib/date'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
 import { DataTable } from '@/shared/ui/data-table/data-table'
 import { createDataTableColumns } from '@/shared/ui/data-table/features'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu'
+import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { EmptyState } from '@/shared/ui/empty-state'
 import { EntityIcon } from '@/shared/ui/entity-icon'
 import { MoneyText } from '@/shared/ui/money-text'
@@ -91,43 +85,13 @@ export function AccountsPage({
     meta: { silent: true },
   })
 
-  const archive = useMutation({
-    mutationFn: ({ id, value }: { id: string; value: boolean }) => setAccountArchived(id, value),
-    ...optimisticList<Account, { id: string; value: boolean }>(
-      queryClient,
-      list.queryKey,
-      (items, { id, value }) =>
-        archived
-          ? items.map((a) =>
-              a.id === id ? { ...a, archivedAt: value ? new Date().toISOString() : null } : a,
-            )
-          : items.filter((a) => a.id !== id),
-      allAccounts,
-    ),
-    onSuccess: (_, { value }) => {
-      toast.success(value ? t('directories.archivedToast') : t('directories.restoredToast'))
-    },
-  })
-
-  const remove = useMutation({
-    mutationFn: (id: string) => deleteAccount(id),
-    ...optimisticList<Account, string>(
-      queryClient,
-      list.queryKey,
-      (items, id) => items.filter((a) => a.id !== id),
-      allAccounts,
-    ),
-    onSuccess: () => {
-      setDeleting(null)
-      toast.success(t('directories.deleted'))
-    },
-  })
-
-  const reorder = useMutation({
-    mutationFn: (ids: string[]) => reorderAccounts(householdId, ids),
-    ...optimisticList<Account, string[]>(queryClient, list.queryKey, (items, ids) =>
-      ids.flatMap((id) => items.filter((a) => a.id === id)),
-    ),
+  const { archive, remove, reorder } = useDirectoryMutations<Account>({
+    listKey: list.queryKey,
+    allKey: allAccounts,
+    showingArchived: archived,
+    archive: setAccountArchived,
+    remove: deleteAccount,
+    reorder: (ids) => reorderAccounts(householdId, ids),
   })
 
   // Barqaror havolalar — ustunlar har renderda qayta qurilmaydi (jadval modeli).
@@ -245,7 +209,14 @@ export function AccountsPage({
         destructive
         pending={remove.isPending}
         onConfirm={() => {
-          if (deleting) remove.mutate(deleting.id)
+          if (deleting) {
+            // Xatoda ham yopiladi: sabab toast'da, qayta urinish foyda bermaydi.
+            remove.mutate(deleting.id, {
+              onSettled: () => {
+                setDeleting(null)
+              },
+            })
+          }
         }}
       />
     </>
@@ -361,55 +332,28 @@ function AccountRowActions({
   onArchive,
   onDelete,
 }: { account: Account } & AccountActions) {
-  const { t } = useTranslation()
   const system = isSystemAccount(account)
   return (
-    <div className="flex justify-end">
-      <DropdownMenu>
-        <DropdownMenuTrigger
-          render={
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label={t('directories.moreActions', { name: account.name })}
-            />
-          }
-        >
-          <MoreHorizontal aria-hidden />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="min-w-44">
-          <DropdownMenuItem
-            onClick={() => {
-              onEdit(account)
-            }}
-          >
-            <Pencil aria-hidden />
-            {t('directories.edit')}
-          </DropdownMenuItem>
-          {!system && (
-            <>
-              <DropdownMenuItem
-                onClick={() => {
-                  onArchive(account)
-                }}
-              >
-                {account.archivedAt ? <ArchiveRestore aria-hidden /> : <Archive aria-hidden />}
-                {account.archivedAt ? t('directories.unarchive') : t('directories.archive')}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() => {
-                  onDelete(account)
-                }}
-              >
-                <Trash2 aria-hidden />
-                {t('directories.delete')}
-              </DropdownMenuItem>
-            </>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <DirectoryRowActions
+      name={account.name}
+      archived={account.archivedAt !== null}
+      onEdit={() => {
+        onEdit(account)
+      }}
+      onArchive={
+        system
+          ? undefined
+          : () => {
+              onArchive(account)
+            }
+      }
+      onDelete={
+        system
+          ? undefined
+          : () => {
+              onDelete(account)
+            }
+      }
+    />
   )
 }

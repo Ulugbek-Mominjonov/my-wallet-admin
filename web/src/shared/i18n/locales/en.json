@@ -8,7 +8,8 @@
     "toHome": "Go home",
     "comingSoon": "Coming soon",
     "cancel": "Cancel",
-    "save": "Save"
+    "save": "Save",
+    "close": "Close"
   },
   "errors": {
     "notFoundTitle": "Page not found",
@@ -56,7 +57,8 @@
     "overview": "Overview",
     "dashboard": "Dashboard",
     "directories": "Directories",
-    "accounts": "Accounts"
+    "accounts": "Accounts",
+    "categories": "Categories"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -208,7 +210,13 @@
       "currencyLocked": "An account with transactions can't change currency",
       "name": "Name must be 1–60 characters",
       "amount": "Enter a valid amount (e.g. 1 500 000)",
-      "date": "Enter a date"
+      "date": "Enter a date",
+      "systemCategory": "The system category “For myself” can't be deleted, archived or nested",
+      "categoryInUse": "The category is in use (subcategories, recurring payments, limits or quick actions) — archive or merge it",
+      "invalidParent": "A subcategory must be one level deep and of the same kind as its parent",
+      "kindMismatch": "Category kind doesn't match",
+      "monthShiftMismatch": "Income types with different month shifts can't be merged — align the shift first",
+      "previewOutdated": "Data has changed — review the move again"
     }
   },
   "accounts": {
@@ -235,5 +243,39 @@
       "personal_fund": "👤 Personal fund",
       "other": "Other"
     }
+  },
+  "categories": {
+    "title": "Categories",
+    "description": "Expense categories and income types; subcategories are one level deep",
+    "expense": "Expenses",
+    "income": "Income",
+    "add": "Add category",
+    "addIncome": "Add income type",
+    "addChild": "Add subcategory",
+    "newTitle": "New category",
+    "newIncomeTitle": "New income type",
+    "editTitle": "Edit category",
+    "name": "Name",
+    "parent": "Parent category",
+    "noParent": "None (top level)",
+    "parentLocked": "A category with subcategories can't be nested",
+    "monthShift": "Which month it belongs to",
+    "shift0": "Current month (month received)",
+    "shift-1": "Previous month",
+    "monthShiftHint": "E.g. a salary received on 2 October belongs to September (previous month)",
+    "emptyTitle": "No categories",
+    "emptyText": "Add a category — transactions are grouped by them.",
+    "merge": "Merge",
+    "mergeTitle": "Merge “{{name}}”",
+    "mergeText": "All transactions, plans, recurring payments, quick actions and subcategories of “{{name}}” move to the selected category, and “{{name}}” is deleted. This runs in one transaction.",
+    "mergeTarget": "Into category",
+    "merged": "Merged: {{transactions}} transactions, {{plans}} plans, {{rules}} recurring",
+    "recalcTitle": "Move transactions",
+    "recalcText": "The month shift changed. {{count}} transactions with an automatic month will move (manual choices are kept):",
+    "recalcNone": "Nothing to move — everything is in place.",
+    "recalcApply": "Move",
+    "recalcLater": "Later",
+    "recalcMove": "{{from}} → {{to}}: {{count}}, {{amount}}",
+    "recalcDone": "Moved {{count}} transactions"
   }
 }

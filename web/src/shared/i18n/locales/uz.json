@@ -8,7 +8,8 @@
     "toHome": "Bosh sahifaga",
     "comingSoon": "Tez orada",
     "cancel": "Bekor qilish",
-    "save": "Saqlash"
+    "save": "Saqlash",
+    "close": "Yopish"
   },
   "errors": {
     "notFoundTitle": "Sahifa topilmadi",
@@ -56,7 +57,8 @@
     "overview": "Umumiy",
     "dashboard": "Xulosa",
     "directories": "Spravochniklar",
-    "accounts": "Hisoblar"
+    "accounts": "Hisoblar",
+    "categories": "Kategoriyalar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -208,7 +210,13 @@
       "currencyLocked": "Amali bor hisobning valyutasi o'zgarmaydi",
       "name": "Nom 1–60 belgi bo'lsin",
       "amount": "Summani to'g'ri kiriting (masalan 1 500 000)",
-      "date": "Sanani kiriting"
+      "date": "Sanani kiriting",
+      "systemCategory": "«O'zim uchun» tizim kategoriyasi: o'chirilmaydi, arxivlanmaydi, subkategoriya bo'lmaydi",
+      "categoryInUse": "Kategoriya ishlatilmoqda (subkategoriya, doimiy reja, limit yoki tez tugma) — arxivlang yoki birlashtiring",
+      "invalidParent": "Subkategoriya faqat bir daraja va ota bilan bir turda bo'ladi",
+      "kindMismatch": "Kategoriya turi mos emas",
+      "monthShiftMismatch": "Oy siljishi farqli daromad turlari birlashtirilmaydi — avval siljishni tenglang",
+      "previewOutdated": "Ma'lumot o'zgargan — ko'chirishni qaytadan ko'ring"
     }
   },
   "accounts": {
@@ -235,5 +243,39 @@
       "personal_fund": "👤 Shaxsiy fond",
       "other": "Boshqa"
     }
+  },
+  "categories": {
+    "title": "Kategoriyalar",
+    "description": "Xarajat kategoriyalari va daromad turlari; subkategoriya — bir daraja",
+    "expense": "Xarajat",
+    "income": "Daromad",
+    "add": "Kategoriya qo'shish",
+    "addIncome": "Daromad turi qo'shish",
+    "addChild": "Subkategoriya qo'shish",
+    "newTitle": "Yangi kategoriya",
+    "newIncomeTitle": "Yangi daromad turi",
+    "editTitle": "Kategoriyani tahrirlash",
+    "name": "Nomi",
+    "parent": "Ota kategoriya",
+    "noParent": "Yo'q (asosiy)",
+    "parentLocked": "Subkategoriyalari bor kategoriya boshqasining ichiga kira olmaydi",
+    "monthShift": "Qaysi oyga tegishli",
+    "shift0": "Joriy oy (kelgan oyi)",
+    "shift-1": "Oldingi oy",
+    "monthShiftHint": "Masalan 2-oktabrda kelgan oylik — sentabrniki (oldingi oy)",
+    "emptyTitle": "Kategoriya yo'q",
+    "emptyText": "Kategoriya qo'shing — amallar shu bo'yicha guruhlanadi.",
+    "merge": "Birlashtirish",
+    "mergeTitle": "«{{name}}» ni birlashtirish",
+    "mergeText": "«{{name}}» dagi barcha amallar, rejalar, doimiy rejalar, tez tugmalar va subkategoriyalar tanlangan kategoriyaga ko'chadi, «{{name}}» esa o'chiriladi. Bu bitta tranzaksiyada bajariladi.",
+    "mergeTarget": "Qaysi kategoriyaga",
+    "merged": "Birlashtirildi: {{transactions}} amal, {{plans}} reja, {{rules}} doimiy reja",
+    "recalcTitle": "Amallarni qayta joylash",
+    "recalcText": "Oy siljishi o'zgardi. Avtomatik oyga yozilgan {{count}} ta amal boshqa oyga ko'chadi (qo'lda tanlanganlarga tegilmaydi):",
+    "recalcNone": "Ko'chadigan amal yo'q — hammasi joyida.",
+    "recalcApply": "Qayta joylash",
+    "recalcLater": "Keyinroq",
+    "recalcMove": "{{from}} → {{to}}: {{count}} ta, {{amount}}",
+    "recalcDone": "{{count}} ta amal qayta joylandi"
   }
 }
