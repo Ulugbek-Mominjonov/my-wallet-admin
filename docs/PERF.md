@@ -39,6 +39,7 @@ E23 amallar jadvali (2026-09-22, shu yukda; o'lchanadigan byudjet 25 000 amal):
 | `transactions_list` — chuqur sahifa (keyset, 2019) | < 20 ms | 2 ms | yo'q |
 | `transactions_list` — mos kelmaydigan qidiruv (eng yomon) | < 50 ms | 1 ms | yo'q |
 | `transactions_summary` — oy | < 30 ms | 1 ms | yo'q |
+| `payee_suggestions` — "kor" (10% qator mos) | < 30 ms | 5 ms | yo'q |
 
 Qo'lda: keng tarqalgan qidiruv ("karzinka" — xato bilan, 10% qator) ro'yxat
 va jami ≈ 12 ms; 2 harfli qidiruv ≈ 2 ms.

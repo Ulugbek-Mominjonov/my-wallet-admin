@@ -17,7 +17,7 @@ ADMIN_URL="${ADMIN_URL:-postgresql://supabase_admin:postgres@127.0.0.1:54322/pos
 RUNS=5
 # Hisobot → maqsad (ms): docs/PERF.md
 declare -A TARGET_MS=([report_month]=50 [report_year]=150 [report_savings]=150 [health_check]=100
-  [tx_first_page]=20 [tx_deep_page]=20 [tx_search]=50 [tx_summary]=30)
+  [tx_first_page]=20 [tx_deep_page]=20 [tx_search]=50 [tx_summary]=30 [payee_suggest]=30)
 
 out="$(psql "$ADMIN_URL" --no-psqlrc --quiet --file scripts/gen-load.sql)"
 household="$(sed -n 's/^perf_household=//p' <<< "$out")"
@@ -56,12 +56,14 @@ declare -A CALLS=(
   [tx_deep_page]="(select count(*) from public.transactions_list('$household', '{}', '2019-06-15', null, 50))"
   [tx_search]="(select count(*) from public.transactions_list('$household', '{\"q\": \"qwxzv\"}'))"
   [tx_summary]="public.transactions_summary('$household', '{\"month\": \"2026-09-01\"}')"
+  # BR-056: joy nomi takliflari (10% qator mos keladi — eng og'ir holat).
+  [payee_suggest]="(select count(*) from public.payee_suggestions('$household', 'kor'))"
 )
 
 failed=0
 printf '%-16s %10s %10s\n' "hisobot" "mediana" "maqsad"
 for report in report_month report_year report_savings health_check \
-  tx_first_page tx_deep_page tx_search tx_summary; do
+  tx_first_page tx_deep_page tx_search tx_summary payee_suggest; do
   # Rejalar: auto_explain NOTICE sifatida mijozga chiqaradi.
   plans="$(psql "$ADMIN_URL" --no-psqlrc --quiet 2>&1 <<SQL
 load 'auto_explain';

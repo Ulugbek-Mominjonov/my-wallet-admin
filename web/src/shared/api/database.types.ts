@@ -1814,6 +1814,20 @@ export type Database = {
         }
         Returns: Json
       }
+      payee_suggestions: {
+        Args: {
+          p_household: string
+          p_kind?: Database["public"]["Enums"]["transaction_kind"]
+          p_limit?: number
+          p_query: string
+        }
+        Returns: {
+          account_id: string
+          category_id: string
+          last_used: string
+          payee: string
+        }[]
+      }
       prepare_account_deletion: { Args: never; Returns: Json }
       recalc_income_months_apply: {
         Args: { p_expected_count: number; p_household: string }
@@ -1858,6 +1872,27 @@ export type Database = {
       report_year: {
         Args: { p_household: string; p_year: number }
         Returns: Json
+      }
+      save_transaction: {
+        Args: {
+          p_account_id: string
+          p_amount: number
+          p_budget_month?: string
+          p_category_id?: string
+          p_debt_id?: string
+          p_fx_rate?: number
+          p_household: string
+          p_id?: string
+          p_kind: Database["public"]["Enums"]["transaction_kind"]
+          p_note?: string
+          p_occurred_on: string
+          p_payee?: string
+          p_planned_item_id?: string
+          p_tag_ids?: string[]
+          p_to_account_id?: string
+          p_to_amount?: number
+        }
+        Returns: string
       }
       send_monthly_report_now: {
         Args: { p_household: string; p_month: unknown }

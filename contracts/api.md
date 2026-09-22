@@ -65,6 +65,7 @@ Keep-alive va smoke testlar.
 | `invalid_table` | `set_sort_order` ga tartibli spravochnik bo'lmagan jadval |
 | `invalid_action` | `bulk_transactions` ga noma'lum amal yoki qiymatsiz `set_category`/`add_tag` |
 | `confirm_mismatch` | `delete_household` tasdiq nomi byudjet nomiga mos emas |
+| `transaction_not_found` | `save_transaction`: tahrirlanayotgan amal yo'q (o'chirilgan yoki boshqa byudjetniki) |
 
 Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masalan
 `accounts_name_key`), `23514` — qiymat cheklovi (masalan bo'sh nom, summa ≤ 0),
@@ -221,6 +222,20 @@ xil filtrdan; a'zo bo'lmagan — `forbidden`.
   (`month_closed`, `category_kind_mismatch`, ...), `not_found` (boshqa byudjet
   yoki o'chirilgan) yoki SQLSTATE. Xatolar: `forbidden`, `invalid_action`,
   `invalid_batch` (> 500 ID).
+
+### Amal formasi (E23-T02)
+
+- `save_transaction(p_household, p_kind, p_account_id, p_amount, p_occurred_on,
+  p_to_account_id, p_to_amount, p_fx_rate, p_category_id, p_payee, p_budget_month,
+  p_planned_item_id, p_debt_id, p_note, p_tag_ids, p_id)` → amal `id`. `p_id` yo'q —
+  yaratish (`source = manual`), bor — to'liq tahrirlash. Amal va teglari bitta
+  tranzaksiyada: ro'yxatda yo'q teglar o'chiriladi (tombstone). `p_budget_month`
+  berilsa — qo'lda (BR-042), aks holda avto; avto tahrirda saqlangan oy faqat
+  kirishlar o'zgarsa qayta hisoblanadi (BR-043). Qolgan tekshiruvlar — amal
+  triggeri (yuqoridagi xato kodlari). Owner/admin/member.
+- `payee_suggestions(p_household, p_query, p_kind = 'expense', p_limit = 8)` —
+  BR-056: `{payee, category_id, account_id, last_used}`, har nom bir marta
+  (oxirgi kategoriya/hisob bilan), boshidan mos kelganlari oldin. A'zolar.
 
 ### Chek rasmlari (Storage)
 
