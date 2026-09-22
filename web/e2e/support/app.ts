@@ -40,3 +40,16 @@ export async function openAccountMenuItem(page: Page, item: string): Promise<voi
   await page.getByRole('button', { name: 'Hisob' }).click()
   await page.getByRole('menuitem', { name: item }).click()
 }
+
+/** Brauzerdagi Supabase sessiyasi tokeni — shu foydalanuvchi nomidan ma'lumot tayyorlash uchun. */
+export async function accessToken(page: Page): Promise<string> {
+  const token = await page.evaluate(() => {
+    const key = Object.keys(localStorage).find(
+      (k) => k.startsWith('sb-') && k.endsWith('-auth-token'),
+    )
+    const raw = key === undefined ? null : localStorage.getItem(key)
+    return raw === null ? null : (JSON.parse(raw) as { access_token?: string }).access_token
+  })
+  if (!token) throw new Error('Brauzerda Supabase sessiyasi topilmadi')
+  return token
+}

@@ -26,7 +26,7 @@ import { createDataTableColumns } from '@/shared/ui/data-table/features'
 import { DirectoryPage } from '@/shared/ui/directory-page'
 import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { EmptyState } from '@/shared/ui/empty-state'
-import { EntityIcon } from '@/shared/ui/entity-icon'
+import { EntityIconTile } from '@/shared/ui/entity-icon'
 import { MoneyText } from '@/shared/ui/money-text'
 import { Switch } from '@/shared/ui/switch'
 
@@ -269,16 +269,10 @@ function AccountName({
   const { t } = useTranslation()
   const label = (
     <>
-      <span
-        className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted"
-        style={
-          account.color
-            ? { backgroundColor: `${account.color}26`, color: account.color }
-            : undefined
-        }
-      >
-        <EntityIcon name={account.icon ?? ACCOUNT_TYPE_ICON[account.type]} className="size-4" />
-      </span>
+      <EntityIconTile
+        name={account.icon ?? ACCOUNT_TYPE_ICON[account.type]}
+        color={account.color}
+      />
       <span className="truncate font-medium">{account.name}</span>
     </>
   )

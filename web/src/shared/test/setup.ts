@@ -22,6 +22,20 @@ Object.defineProperty(window, 'matchMedia', {
     }) as MediaQueryList,
 })
 
+// jsdom'da yo'q — cmdk ro'yxati balandligini kuzatadi, tanlangan bandni ko'rinishga suradi.
+Object.defineProperty(window, 'ResizeObserver', {
+  writable: true,
+  value: class {
+    observe = () => undefined
+    unobserve = () => undefined
+    disconnect = () => undefined
+  },
+})
+Object.defineProperty(Element.prototype, 'scrollIntoView', {
+  writable: true,
+  value: () => undefined,
+})
+
 // Kutilmagan tarmoq so'rovi — test xatosi (har so'rov aniq handler bilan).
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'error' })

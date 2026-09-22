@@ -66,7 +66,8 @@
     "debts": "Долги",
     "goals": "Цели",
     "settings": "Настройки бюджета",
-    "budget": "Бюджет"
+    "budget": "Бюджет",
+    "transactions": "Операции"
   },
   "shell": {
     "toggleSidebar": "Свернуть/развернуть меню",
@@ -181,7 +182,10 @@
       "over": "{{name}} — на месте {{over}}",
       "dropped": "{{name}}: перемещено",
       "cancelled": "{{name}}: перемещение отменено"
-    }
+    },
+    "selectedCount": "Выбрано: {{count}}",
+    "filterSearch": "{{name}}: поиск",
+    "clearFilter": "Сбросить выбор"
   },
   "directories": {
     "add": "Добавить",
@@ -557,5 +561,62 @@
       "delete": "Удалить бюджет",
       "deleted": "Бюджет удалён"
     }
+  },
+  "transactions": {
+    "title": "Операции",
+    "description": "Доходы, расходы и переводы — фильтры, поиск и итоги",
+    "empty": "За этот период операций нет",
+    "emptyHint": "Операции вводятся в мобильном приложении или быстрыми кнопками.",
+    "emptyFiltered": "По фильтру операций не найдено",
+    "resetFilters": "Сбросить фильтры",
+    "search": "Поиск по месту или заметке",
+    "period": {
+      "label": "Период",
+      "all": "Вся история",
+      "range": "Диапазон дат",
+      "from": "С",
+      "to": "По",
+      "prev": "Предыдущий месяц",
+      "next": "Следующий месяц"
+    },
+    "kinds": {
+      "expense": "Расход",
+      "income": "Доход",
+      "transfer": "Перевод"
+    },
+    "filters": {
+      "kinds": "Тип",
+      "accounts": "Счёт",
+      "categories": "Категория",
+      "members": "Участник",
+      "tags": "Тег",
+      "amount": "Сумма",
+      "min": "От",
+      "max": "До",
+      "apply": "Применить",
+      "clear": "Сбросить",
+      "amountInvalid": "Введите корректную сумму"
+    },
+    "columns": {
+      "date": "Дата",
+      "category": "Категория",
+      "description": "Описание",
+      "account": "Счёт",
+      "member": "Кто",
+      "amount": "Сумма"
+    },
+    "summary": {
+      "label": "Итого по фильтру",
+      "count": "Операций",
+      "income": "Доходы",
+      "expense": "Расходы",
+      "transfer": "Переводы"
+    },
+    "loadMore": "Загрузить ещё",
+    "shown": "Показано: {{shown}} из {{total}}",
+    "receipt": "Прикреплён чек",
+    "budgetMonth": "Месяц бюджета: {{month}}",
+    "transfer": "Перевод",
+    "noCategory": "Без категории"
   }
 }

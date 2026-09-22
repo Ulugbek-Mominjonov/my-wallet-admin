@@ -66,7 +66,8 @@
     "debts": "Debts",
     "goals": "Goals",
     "settings": "Budget settings",
-    "budget": "Budget"
+    "budget": "Budget",
+    "transactions": "Transactions"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -181,7 +182,10 @@
       "over": "{{name}} is over {{over}}",
       "dropped": "Dropped {{name}}",
       "cancelled": "Reordering {{name}} cancelled"
-    }
+    },
+    "selectedCount": "Selected: {{count}}",
+    "filterSearch": "{{name}}: search",
+    "clearFilter": "Clear selection"
   },
   "directories": {
     "add": "Add",
@@ -557,5 +561,62 @@
       "delete": "Delete budget",
       "deleted": "Budget deleted"
     }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "description": "Income, expenses and transfers — with filters, search and totals",
+    "empty": "No transactions in this period",
+    "emptyHint": "Transactions are entered in the mobile app or with quick actions.",
+    "emptyFiltered": "No transactions match the filters",
+    "resetFilters": "Reset filters",
+    "search": "Search by payee or note",
+    "period": {
+      "label": "Period",
+      "all": "All time",
+      "range": "Date range",
+      "from": "From",
+      "to": "To",
+      "prev": "Previous month",
+      "next": "Next month"
+    },
+    "kinds": {
+      "expense": "Expense",
+      "income": "Income",
+      "transfer": "Transfer"
+    },
+    "filters": {
+      "kinds": "Type",
+      "accounts": "Account",
+      "categories": "Category",
+      "members": "Member",
+      "tags": "Tag",
+      "amount": "Amount",
+      "min": "At least",
+      "max": "At most",
+      "apply": "Apply",
+      "clear": "Clear",
+      "amountInvalid": "Enter a valid amount"
+    },
+    "columns": {
+      "date": "Date",
+      "category": "Category",
+      "description": "Description",
+      "account": "Account",
+      "member": "Who",
+      "amount": "Amount"
+    },
+    "summary": {
+      "label": "Totals for the filter",
+      "count": "Transactions",
+      "income": "Income",
+      "expense": "Expenses",
+      "transfer": "Transfers"
+    },
+    "loadMore": "Load more",
+    "shown": "Showing {{shown}} of {{total}}",
+    "receipt": "Receipt attached",
+    "budgetMonth": "Budget month: {{month}}",
+    "transfer": "Transfer",
+    "noCategory": "Uncategorized"
   }
 }

@@ -642,7 +642,7 @@ E21–E26 (admin) M2 bilan.
 > **DoD:** katta jadvalda tez ishlash (keyset), ommaviy amallar bitta
 > so'rovda, oy ochish/yopish ishlaydi.
 
-- [ ] **E23-T01** **Amallar** jadvali: keyset sahifalash (`occurred_on, id`),
+- [x] **E23-T01** **Amallar** jadvali: keyset sahifalash (`occurred_on, id`),
   filtrlar (oy, davr, turi, kategoriya, hisob, a'zo, teg, summa oralig'i),
   qidiruv (payee/izoh, trgm), filtrlar URL'da (ulashiladigan havola),
   jami qatori (filtr bo'yicha — alohida yengil RPC).
@@ -950,6 +950,11 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-22 | Asosiy valyuta UI'da faqat ko'rinadi | serverda himoya yo'q, lekin `amount_base` va hisobotlar unga bog'liq — o'zgartirish ko'p valyuta (E29) bilan | E22-T07 |
 | 2026-09-22 | Byudjetni o'chirish — `delete_household` (owner, nomni yozib tasdiq), ma'lumotlar kaskadda, fayllar `purge-files` bilan | BR-014; tasodifiy bosishdan himoya; storage alohida tozalanadi | E22-T07 |
 | 2026-09-22 | Lokal auth cheklovlari yuqori (email 300/soat) | E2E ketma-ket ishga tushirishda 429; `config push` ishlatilmaydi — remote qiymatlari dashboard'da | E22-T08 |
+| 2026-09-22 | Amallar filtri — dinamik SQL: faqat faol shartlar (o'zgarmas matn bo'laklari, qiymatlar `using`), keyset kursori doim qator taqqoslash | "(filtr yo'q yoki shart)" statik so'rovda umumiy reja indeksni tanlay olmaydi — har sahifa byudjetning barcha amallarini aylanardi | E23-T01, PERF.md |
+| 2026-09-22 | `transactions_list` / `transactions_summary` — security definer + aniq a'zolik tekshiruvi (`household_id = $1` har so'rovda) | RLS ostida trgm operatorlari (leakproof emas) indeks sharti bo'lmaydi: mos kelmaydigan qidiruv 36 ms → 1 ms | E23-T01 |
+| 2026-09-22 | Qidiruv (BR-202): joy+izoh ifodasi bo'yicha bitta GIN; 3+ belgida xatoga chidamli (`word_similarity` ≥ 0,5) | bitta harf xatosi (8 harfli so'zda ≈ 0,55) standart 0,6 dan o'tmasdi; ikki ustun o'rniga bitta shart | E23-T01 |
+| 2026-09-22 | Ommaviy amallar — bitta RPC, har qator o'z savepoint'ida, javob `{done, skipped: [{id, reason}]}` | BR-183 (bitta so'rov); yopilgan oy yoki tur mos kelmasligi butun to'plamni bekor qilmasin — foydalanuvchi nima o'tkazilganini ko'radi | E23-T03 |
+| 2026-09-22 | Amallar filtri URL'da (zod; yaroqsiz maydon tashlanadi, sahifa yiqilmaydi), sahifalar — "Yana yuklash" tugmasi | ulashiladigan havola; eski/buzilgan havola ham ochiladi; tugma klaviatura va ekran o'quvchi uchun oddiy | E23-T01 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

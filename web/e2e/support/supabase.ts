@@ -67,6 +67,30 @@ export function rpc<T>(accessToken: string, name: string, args: Record<string, u
   return postJson<T>(`/rest/v1/rpc/${name}`, args, accessToken)
 }
 
+const authHeaders = (accessToken: string) => ({
+  apikey: PUBLISHABLE_KEY,
+  Authorization: `Bearer ${accessToken}`,
+})
+
+/** PostgREST o'qish foydalanuvchi nomidan (RLS amal qiladi): `select(token, 'accounts?select=id')`. */
+export async function select<T>(accessToken: string, query: string): Promise<T> {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${query}`, {
+    headers: authHeaders(accessToken),
+  })
+  if (!response.ok) throw new Error(`${query}: ${String(response.status)} ${await response.text()}`)
+  return (await response.json()) as T
+}
+
+/** PostgREST yozish (bitta so'rovda bir nechta qator) — UI'si hali yo'q ma'lumotni tayyorlash. */
+export async function insert(accessToken: string, table: string, rows: object[]): Promise<void> {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+    method: 'POST',
+    headers: { ...authHeaders(accessToken), 'Content-Type': 'application/json' },
+    body: JSON.stringify(rows),
+  })
+  if (!response.ok) throw new Error(`${table}: ${String(response.status)} ${await response.text()}`)
+}
+
 async function postJson<T = unknown>(path: string, body: unknown, accessToken?: string) {
   const response = await fetch(`${SUPABASE_URL}${path}`, {
     method: 'POST',

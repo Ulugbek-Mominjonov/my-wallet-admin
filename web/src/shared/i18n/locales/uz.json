@@ -66,7 +66,8 @@
     "debts": "Qarzlar",
     "goals": "Maqsadlar",
     "settings": "Byudjet sozlamalari",
-    "budget": "Byudjet"
+    "budget": "Byudjet",
+    "transactions": "Amallar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -181,7 +182,10 @@
       "over": "{{name}} — {{over}} o'rnida",
       "dropped": "{{name}} qo'yildi",
       "cancelled": "{{name}}: tartiblash bekor qilindi"
-    }
+    },
+    "selectedCount": "Tanlangan: {{count}}",
+    "filterSearch": "{{name}}: qidirish",
+    "clearFilter": "Tanlovni tozalash"
   },
   "directories": {
     "add": "Qo'shish",
@@ -557,5 +561,62 @@
       "delete": "Byudjetni o'chirish",
       "deleted": "Byudjet o'chirildi"
     }
+  },
+  "transactions": {
+    "title": "Amallar",
+    "description": "Daromad, xarajat va o'tkazmalar — filtr, qidiruv va jami bilan",
+    "empty": "Bu davrda amal yo'q",
+    "emptyHint": "Amallar mobil ilovadan yoki tez tugmalar orqali kiritiladi.",
+    "emptyFiltered": "Filtr bo'yicha amal topilmadi",
+    "resetFilters": "Filtrlarni tozalash",
+    "search": "Joy yoki izoh bo'yicha qidirish",
+    "period": {
+      "label": "Davr",
+      "all": "Butun tarix",
+      "range": "Sana oralig'i",
+      "from": "Dan",
+      "to": "Gacha",
+      "prev": "Oldingi oy",
+      "next": "Keyingi oy"
+    },
+    "kinds": {
+      "expense": "Xarajat",
+      "income": "Daromad",
+      "transfer": "O'tkazma"
+    },
+    "filters": {
+      "kinds": "Turi",
+      "accounts": "Hisob",
+      "categories": "Kategoriya",
+      "members": "A'zo",
+      "tags": "Teg",
+      "amount": "Summa",
+      "min": "Kamida",
+      "max": "Ko'pi bilan",
+      "apply": "Qo'llash",
+      "clear": "Tozalash",
+      "amountInvalid": "Summani to'g'ri kiriting"
+    },
+    "columns": {
+      "date": "Sana",
+      "category": "Kategoriya",
+      "description": "Tavsif",
+      "account": "Hisob",
+      "member": "Kim",
+      "amount": "Summa"
+    },
+    "summary": {
+      "label": "Filtr bo'yicha jami",
+      "count": "Amallar",
+      "income": "Daromad",
+      "expense": "Xarajat",
+      "transfer": "O'tkazmalar"
+    },
+    "loadMore": "Yana yuklash",
+    "shown": "Ko'rsatilgan: {{shown}} / {{total}}",
+    "receipt": "Chek biriktirilgan",
+    "budgetMonth": "Tegishli oy: {{month}}",
+    "transfer": "O'tkazma",
+    "noCategory": "Kategoriyasiz"
   }
 }

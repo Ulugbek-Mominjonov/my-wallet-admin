@@ -38,7 +38,7 @@ import { DirectoryPage } from '@/shared/ui/directory-page'
 import { DirectoryRowActions } from '@/shared/ui/directory-row-actions'
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu'
 import { EmptyState } from '@/shared/ui/empty-state'
-import { EntityIcon } from '@/shared/ui/entity-icon'
+import { EntityIconTile } from '@/shared/ui/entity-icon'
 import { Switch } from '@/shared/ui/switch'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui/tabs'
 
@@ -354,16 +354,7 @@ function CategoryName({
   const { t } = useTranslation()
   const label = (
     <>
-      <span
-        className="flex size-7 shrink-0 items-center justify-center rounded-md bg-muted"
-        style={
-          category.color
-            ? { backgroundColor: `${category.color}26`, color: category.color }
-            : undefined
-        }
-      >
-        <EntityIcon name={category.icon ?? DEFAULT_ICON} className="size-4" />
-      </span>
+      <EntityIconTile name={category.icon ?? DEFAULT_ICON} color={category.color} />
       <span className="truncate font-medium">{category.name}</span>
     </>
   )
