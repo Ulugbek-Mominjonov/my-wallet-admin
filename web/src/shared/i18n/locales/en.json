@@ -117,7 +117,8 @@
     "health": "Checks",
     "export": "Export",
     "import": "Import",
-    "recalc": "Recalculate months"
+    "recalc": "Recalculate months",
+    "audit": "Audit log"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -1174,5 +1175,46 @@
     "row": "Row",
     "reason": "Reason",
     "duplicateOf": "Same as an existing transaction"
+  },
+  "audit": {
+    "title": "Audit log",
+    "description": "Who changed what and when (BR-008; kept for 180 days)",
+    "filters": {
+      "tables": "Table",
+      "actors": "Member"
+    },
+    "columns": {
+      "at": "Time",
+      "actor": "Who",
+      "table": "What",
+      "action": "Action"
+    },
+    "actions": {
+      "insert": "Added",
+      "update": "Changed",
+      "delete": "Deleted"
+    },
+    "diff": "Show the diff",
+    "noDiff": "No changed fields",
+    "system": "System",
+    "empty": "The log is empty",
+    "emptyFiltered": "No entries match the filter",
+    "tables": {
+      "transactions": "Transactions",
+      "planned_items": "Plans",
+      "months": "Months",
+      "accounts": "Accounts",
+      "categories": "Categories",
+      "recurring_rules": "Recurring plans",
+      "category_limits": "Limits",
+      "quick_actions": "Quick actions",
+      "tags": "Tags",
+      "transaction_tags": "Transaction tags",
+      "debts": "Debts",
+      "goals": "Goals",
+      "attachments": "Receipts",
+      "households": "Budget",
+      "household_members": "Members"
+    }
   }
 }

@@ -44,6 +44,20 @@ E23 amallar jadvali (2026-09-22, shu yukda; o'lchanadigan byudjet 25 000 amal):
 Qo'lda: keng tarqalgan qidiruv ("karzinka" — xato bilan, 10% qator) ro'yxat
 va jami ≈ 12 ms; 2 harfli qidiruv ≈ 2 ms.
 
+E25 audit jurnali (2026-09-23, shu yukda; byudjetda ~25 000 audit yozuvi —
+sintetik yukda hammasining vaqti bir xil, ya'ni kursor faqat `id` bilan
+ajratadi — eng og'ir holat):
+
+| So'rov | Maqsad | Mediana | Seq Scan |
+|---|---|---|---|
+| `audit_list` — birinchi sahifa | < 20 ms | 1 ms | — |
+| `audit_list` — chuqur sahifa (keyset, 12 000-yozuvdan keyin) | < 30 ms | 2 ms | — |
+
+`audit_log` da Seq Scan tekshirilmaydi: shovqin byudjetlari triggersiz
+yoziladi, shuning uchun jadvalning deyarli hammasi o'lchanadigan byudjetniki —
+bunda Seq Scan rejalovchining to'g'ri tanlovi. Haqiqiy bazada yozuvlar vaqt
+bo'yicha tarqaladi va `audit_log_household_at_idx` ishlaydi.
+
 ## Topilgan va tuzatilgan muammolar
 
 | Muammo | Sabab | Yechim |

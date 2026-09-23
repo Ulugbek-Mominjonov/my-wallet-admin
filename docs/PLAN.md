@@ -715,7 +715,7 @@ E21–E26 (admin) M2 bilan.
   summa + nom) → tasdiq → bitta RPC paket. BR-182.
 - [x] **E25-T04** **Daromad qoidasini qayta qo'llash**: preview jadvali
   (yozuv, turi, eski oy → yangi oy), tasdiq → `recalc_income_months_apply`.
-- [ ] **E25-T05** **Audit jurnali**: filtr (jadval, a'zo, davr), eski/yangi
+- [x] **E25-T05** **Audit jurnali**: filtr (jadval, a'zo, davr), eski/yangi
   farqi (diff ko'rinishi), keyset sahifalash.
 - [ ] **E25-T06** **Bildirishnomalar**: shaxsiy sozlamalar (kanallar, soat,
   kun, oylik hisobot kuni), Telegram'ni ulash (QR + havola), "Test xabar" va
@@ -972,6 +972,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Pul harakatidan keyin faqat pulga bog'liq keshlar eskiradi (amal, reja, oy, hisob, hisobot, limit, qarz, maqsad); kalit bo'laklari `shared/api/query-keys` da | avval butun byudjet prefiksi eskirardi — spravochniklar (kategoriya, teg, a'zo) ham qayta so'ralardi; feature'lar bir-birining kalitini import qila olmaydi | E24-T07 |
 | 2026-09-23 | Import — bitta RPC ikki rejimda (`p_dry_run`): tekshiruv ham, yozuv ham bir xil yo'ldan o'tadi; hisob va kategoriya nomi bo'yicha (registrsiz), dublikat — sana + summa + joy | preview ko'rsatgani aynan yoziladi (ikkinchi, boshqacha tekshiruv kodi yo'q); bank ko'chirmasida ID yo'q, faqat nom; qator xatosi butun paketni to'xtatmaydi | E25-T03, BR-182 |
 | 2026-09-23 | Qayta joylash sahifasi (E25-T04) — kategoriyalar feature'ida, yangi `recalc_income_months_rows` RPC bilan; kategoriya formasidagi dialog jamlangan preview bilan qoladi | sahifa ham, dialog ham bitta API modulidan foydalanadi (feature'lar bir-birini import qila olmaydi); dialog darhol taklif qiladi, sahifa esa har yozuvni ko'rsatadi — dialogga qo'shimcha ustunlar yuklash shart emas | E25-T04, BR-043 |
+| 2026-09-23 | Audit jurnali — `audit_list` RPC (tipli filtr parametrlari, keyset `(at, id)`), farq klientda hisoblanadi: texnik maydonlar (`id`, `household_id`, `created_*`, `row_version`) yashiriladi | filtr va sahifalash serverda — 180 kunlik jurnal to'liq yuklanmaydi (`audit_log_household_at_idx`); farq — sof funksiya, testi arzon; ustun nomlari xom ko'rsatiladi (15 jadval uchun tarjima ortiqcha) | E25-T05, BR-008 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

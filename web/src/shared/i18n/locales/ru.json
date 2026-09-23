@@ -117,7 +117,8 @@
     "health": "Проверка",
     "export": "Экспорт",
     "import": "Импорт",
-    "recalc": "Пересчёт месяцев"
+    "recalc": "Пересчёт месяцев",
+    "audit": "Журнал изменений"
   },
   "shell": {
     "toggleSidebar": "Свернуть/развернуть меню",
@@ -1174,5 +1175,46 @@
     "row": "Строка",
     "reason": "Причина",
     "duplicateOf": "Совпадает с существующей операцией"
+  },
+  "audit": {
+    "title": "Журнал изменений",
+    "description": "Кто, когда и что изменил (BR-008; хранится 180 дней)",
+    "filters": {
+      "tables": "Таблица",
+      "actors": "Участник"
+    },
+    "columns": {
+      "at": "Время",
+      "actor": "Кто",
+      "table": "Что",
+      "action": "Действие"
+    },
+    "actions": {
+      "insert": "Добавлено",
+      "update": "Изменено",
+      "delete": "Удалено"
+    },
+    "diff": "Показать изменения",
+    "noDiff": "Изменённых полей нет",
+    "system": "Система",
+    "empty": "Журнал пуст",
+    "emptyFiltered": "По фильтру записей нет",
+    "tables": {
+      "transactions": "Операции",
+      "planned_items": "Планы",
+      "months": "Месяцы",
+      "accounts": "Счета",
+      "categories": "Категории",
+      "recurring_rules": "Постоянные планы",
+      "category_limits": "Лимиты",
+      "quick_actions": "Быстрые кнопки",
+      "tags": "Теги",
+      "transaction_tags": "Теги операций",
+      "debts": "Долги",
+      "goals": "Цели",
+      "attachments": "Чеки",
+      "households": "Бюджет",
+      "household_members": "Участники"
+    }
   }
 }

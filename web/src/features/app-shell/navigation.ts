@@ -8,6 +8,7 @@ import {
   Stethoscope,
   Upload,
   FileUp,
+  ScrollText,
   FolderTree,
   Gauge,
   HandCoins,
@@ -82,6 +83,12 @@ export const NAV_SECTIONS: readonly NavSection[] = [
         labelKey: 'nav.import',
         icon: FileUp,
         permission: 'write',
+      },
+      {
+        to: '/h/$householdId/audit',
+        labelKey: 'nav.audit',
+        icon: ScrollText,
+        permission: 'manage',
       },
       {
         to: '/h/$householdId/recalc',

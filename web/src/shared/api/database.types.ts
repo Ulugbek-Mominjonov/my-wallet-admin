@@ -1747,6 +1747,28 @@ export type Database = {
     Functions: {
       accept_invite: { Args: { p_code: string }; Returns: string }
       app_bootstrap: { Args: never; Returns: Json }
+      audit_list: {
+        Args: {
+          p_actors?: string[]
+          p_after_at?: string
+          p_after_id?: number
+          p_from?: string
+          p_household: string
+          p_limit?: number
+          p_tables?: string[]
+          p_to?: string
+        }
+        Returns: {
+          action: string
+          actor_id: string
+          at: string
+          id: number
+          new_values: Json
+          old_values: Json
+          record_id: string
+          table_name: string
+        }[]
+      }
       bulk_pay_planned: {
         Args: { p_account?: string; p_date?: string; p_items: string[] }
         Returns: Json

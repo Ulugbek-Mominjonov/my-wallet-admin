@@ -149,4 +149,27 @@ test.describe('E25: vositalar', () => {
     await expect(page.getByText('1 ta amal qayta joylandi')).toBeVisible()
     await expect(page.getByText("Ko'chadigan amal yo'q — hammasi joyida.")).toBeVisible()
   })
+
+  test('E25-T05: audit jurnali — farq va jadval filtri', async ({ page }) => {
+    await page.goto('/login')
+    await signIn(page, uniqueEmail('audit'))
+    await expect(page).toHaveURL(HOUSEHOLD_URL)
+    const householdId = new URL(page.url()).pathname.split('/').at(-1) ?? ''
+    await insert(await accessToken(page), 'tags', [
+      { household_id: householdId, name: 'E2E audit' },
+    ])
+
+    await page.goto(`/h/${householdId}/audit`)
+    const row = page.getByRole('row', { name: /Teglar/ }).first()
+    await expect(row).toContainText("Qo'shildi")
+    await row.getByRole('button', { name: 'Farqini ochish' }).click()
+    await expect(page.getByText('E2E audit')).toBeVisible()
+
+    // Jadval filtri serverda: faqat teg yozuvlari qoladi.
+    await page.getByRole('button', { name: /Jadval/ }).click()
+    await page.getByRole('option', { name: 'Teglar', exact: true }).click()
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('cell', { name: 'Teglar' })).toHaveCount(1)
+    await expect(page.getByRole('cell', { name: 'Hisoblar' })).toHaveCount(0)
+  })
 })

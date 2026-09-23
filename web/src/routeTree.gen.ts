@@ -19,6 +19,7 @@ import { Route as AppHHouseholdIdRouteImport } from './routes/_app/h/$householdI
 import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callback'
 import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
 import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$householdId/accounts'
+import { Route as AppHHouseholdIdAuditRouteImport } from './routes/_app/h/$householdId/audit'
 import { Route as AppHHouseholdIdCategoriesRouteImport } from './routes/_app/h/$householdId/categories'
 import { Route as AppHHouseholdIdDebtsRouteImport } from './routes/_app/h/$householdId/debts'
 import { Route as AppHHouseholdIdExportRouteImport } from './routes/_app/h/$householdId/export'
@@ -87,6 +88,11 @@ const AppHHouseholdIdIndexRoute = AppHHouseholdIdIndexRouteImport.update({
 const AppHHouseholdIdAccountsRoute = AppHHouseholdIdAccountsRouteImport.update({
   id: '/accounts',
   path: '/accounts',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
+const AppHHouseholdIdAuditRoute = AppHHouseholdIdAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
   getParentRoute: () => AppHHouseholdIdRoute,
 } as any)
 const AppHHouseholdIdCategoriesRoute =
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
+  '/h/$householdId/audit': typeof AppHHouseholdIdAuditRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
   '/h/$householdId/export': typeof AppHHouseholdIdExportRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/mfa': typeof AuthMfaRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
+  '/h/$householdId/audit': typeof AppHHouseholdIdAuditRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
   '/h/$householdId/export': typeof AppHHouseholdIdExportRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/_auth/auth/callback': typeof AuthAuthCallbackRoute
   '/_app/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
+  '/_app/h/$householdId/audit': typeof AppHHouseholdIdAuditRoute
   '/_app/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/_app/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
   '/_app/h/$householdId/export': typeof AppHHouseholdIdExportRoute
@@ -308,6 +317,7 @@ export interface FileRouteTypes {
     | '/h/$householdId'
     | '/auth/callback'
     | '/h/$householdId/accounts'
+    | '/h/$householdId/audit'
     | '/h/$householdId/categories'
     | '/h/$householdId/debts'
     | '/h/$householdId/export'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/mfa'
     | '/auth/callback'
     | '/h/$householdId/accounts'
+    | '/h/$householdId/audit'
     | '/h/$householdId/categories'
     | '/h/$householdId/debts'
     | '/h/$householdId/export'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId'
     | '/_auth/auth/callback'
     | '/_app/h/$householdId/accounts'
+    | '/_app/h/$householdId/audit'
     | '/_app/h/$householdId/categories'
     | '/_app/h/$householdId/debts'
     | '/_app/h/$householdId/export'
@@ -469,6 +481,13 @@ declare module '@tanstack/react-router' {
       path: '/accounts'
       fullPath: '/h/$householdId/accounts'
       preLoaderRoute: typeof AppHHouseholdIdAccountsRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
+    '/_app/h/$householdId/audit': {
+      id: '/_app/h/$householdId/audit'
+      path: '/audit'
+      fullPath: '/h/$householdId/audit'
+      preLoaderRoute: typeof AppHHouseholdIdAuditRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
     '/_app/h/$householdId/categories': {
@@ -644,6 +663,7 @@ const AppHHouseholdIdReportRouteWithChildren =
 
 interface AppHHouseholdIdRouteChildren {
   AppHHouseholdIdAccountsRoute: typeof AppHHouseholdIdAccountsRoute
+  AppHHouseholdIdAuditRoute: typeof AppHHouseholdIdAuditRoute
   AppHHouseholdIdCategoriesRoute: typeof AppHHouseholdIdCategoriesRoute
   AppHHouseholdIdDebtsRoute: typeof AppHHouseholdIdDebtsRoute
   AppHHouseholdIdExportRoute: typeof AppHHouseholdIdExportRoute
@@ -665,6 +685,7 @@ interface AppHHouseholdIdRouteChildren {
 
 const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
   AppHHouseholdIdAccountsRoute: AppHHouseholdIdAccountsRoute,
+  AppHHouseholdIdAuditRoute: AppHHouseholdIdAuditRoute,
   AppHHouseholdIdCategoriesRoute: AppHHouseholdIdCategoriesRoute,
   AppHHouseholdIdDebtsRoute: AppHHouseholdIdDebtsRoute,
   AppHHouseholdIdExportRoute: AppHHouseholdIdExportRoute,

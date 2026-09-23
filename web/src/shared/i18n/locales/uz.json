@@ -117,7 +117,8 @@
     "health": "Tekshiruv",
     "export": "Eksport",
     "import": "Import",
-    "recalc": "Qayta joylash"
+    "recalc": "Qayta joylash",
+    "audit": "Audit jurnali"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1174,5 +1175,46 @@
     "row": "Qator",
     "reason": "Sabab",
     "duplicateOf": "Mavjud amal bilan bir xil"
+  },
+  "audit": {
+    "title": "Audit jurnali",
+    "description": "Kim, qachon va nimani o'zgartirgan (BR-008; 180 kun saqlanadi)",
+    "filters": {
+      "tables": "Jadval",
+      "actors": "A'zo"
+    },
+    "columns": {
+      "at": "Vaqt",
+      "actor": "Kim",
+      "table": "Nima",
+      "action": "Amal"
+    },
+    "actions": {
+      "insert": "Qo'shildi",
+      "update": "O'zgardi",
+      "delete": "O'chirildi"
+    },
+    "diff": "Farqini ochish",
+    "noDiff": "O'zgargan maydon yo'q",
+    "system": "Tizim",
+    "empty": "Jurnal bo‘sh",
+    "emptyFiltered": "Filtr bo'yicha yozuv topilmadi",
+    "tables": {
+      "transactions": "Amallar",
+      "planned_items": "Rejalar",
+      "months": "Oylar",
+      "accounts": "Hisoblar",
+      "categories": "Kategoriyalar",
+      "recurring_rules": "Doimiy rejalar",
+      "category_limits": "Limitlar",
+      "quick_actions": "Tez tugmalar",
+      "tags": "Teglar",
+      "transaction_tags": "Amal teglari",
+      "debts": "Qarzlar",
+      "goals": "Maqsadlar",
+      "attachments": "Cheklar",
+      "households": "Byudjet",
+      "household_members": "A'zolar"
+    }
   }
 }

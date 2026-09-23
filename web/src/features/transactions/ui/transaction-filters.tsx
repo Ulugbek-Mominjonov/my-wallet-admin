@@ -15,6 +15,7 @@ import { useAppLocale } from '@/shared/i18n'
 import { formatMoney, formatMoneyInput, parseMoney } from '@/shared/lib/money'
 import { formatMonth, isMonthKey, shiftMonth, type MonthKey } from '@/shared/lib/month'
 import { Button } from '@/shared/ui/button'
+import { DateInput } from '@/shared/ui/date-input'
 import { FilterMultiSelect, type FilterOption } from '@/shared/ui/filter-multi-select'
 import { Input } from '@/shared/ui/input'
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/shared/ui/input-group'
@@ -203,34 +204,6 @@ function PeriodFilter({
           />
         </>
       )}
-    </div>
-  )
-}
-
-function DateInput({
-  label,
-  value,
-  onChange,
-}: {
-  label: string
-  value: string | undefined
-  onChange: (value: string | undefined) => void
-}) {
-  const id = useId()
-  return (
-    <div className="flex items-center gap-1.5">
-      <Label htmlFor={id} className="text-muted-foreground">
-        {label}
-      </Label>
-      <Input
-        id={id}
-        type="date"
-        className="w-40"
-        value={value ?? ''}
-        onChange={(event) => {
-          onChange(event.target.value === '' ? undefined : event.target.value)
-        }}
-      />
     </div>
   )
 }

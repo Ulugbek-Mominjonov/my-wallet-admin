@@ -282,6 +282,7 @@ Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi
 | `recalc_income_months_rows(p_household, p_limit = 200)` | `{total, rows[{id, occurred_on, payee, category, amount_base, from_month, to_month}]}` — ko'chadigan yozuvlar (yangisidan boshlab, `p_limit` ≤ 1000); `total` — hammasi, tasdiqda shu son beriladi | owner/admin |
 | `month_close_check(p_household, p_month)` | `{month, unpaid_count, unpaid_amount, unknown_count}` (BR-153) | a'zolar |
 | `set_month_closed(p_household, p_month, p_closed)` | `{month, closed}` — yopish faqat tugagan oy uchun (BR-150) | owner/admin |
+| `audit_list(p_household, p_tables[]?, p_actors[]?, p_from?, p_to?, p_after_at?, p_after_id?, p_limit = 50)` | qator: `{id, at, actor_id, table_name, record_id, action, old_values, new_values}` — eng yangisi birinchi, kursor `(at, id)` kamayishi; davr chegarasi byudjet vaqt zonasida, `p_to` kuni ham kiradi; `p_limit` ≤ 200 (BR-008) | owner/admin |
 | `merge_categories(p_from, p_to)` | `{children, transactions, plans, recurring_rules, quick_actions}` — manba o'chiriladi, maqsad limiti ustun (BR-036) | owner/admin |
 | `onboarding_apply(p_household, p_payload)` | `{applied: true, accounts, income_types, recurring_rules}` yoki qayta chaqirilsa `{applied: false}` | owner/admin |
 
