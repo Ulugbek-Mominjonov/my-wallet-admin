@@ -121,7 +121,8 @@
     "recalc": "Recalculate months",
     "audit": "Audit log",
     "notifications": "Notifications",
-    "devices": "Devices"
+    "devices": "Devices",
+    "platform": "Platform"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -1356,6 +1357,70 @@
       "not_found": "Row not found",
       "month_closed": "The month is closed",
       "forbidden": "Not allowed"
+    }
+  },
+  "platform": {
+    "title": "Platform",
+    "description": "System settings and monitoring (super admin only, with 2FA)",
+    "back": "Back to the budget",
+    "yes": "Yes",
+    "no": "No",
+    "directories": {
+      "title": "System directories",
+      "description": "Currencies, category templates and card message templates",
+      "add": "Add",
+      "currencies": "Currencies",
+      "templates": "Category templates",
+      "cards": "Card templates",
+      "form": {
+        "currencies": "Currency",
+        "templates": "Category template",
+        "cards": "Card message template"
+      }
+    },
+    "fields": {
+      "code": "Code",
+      "name": "Name",
+      "name_uz": "Name (Uzbek)",
+      "name_ru": "Name (Russian)",
+      "name_en": "Name (English)",
+      "symbol": "Symbol",
+      "exponent": "Decimal places",
+      "active": "Active",
+      "order": "Order",
+      "kind": "Kind",
+      "monthShift": "Month shift",
+      "bank": "Bank",
+      "pattern": "Pattern (regex)",
+      "sample": "Sample message",
+      "amountUnit": "Amount unit",
+      "currency": "Currency"
+    },
+    "kinds": {
+      "income": "Income",
+      "expense": "Expense"
+    },
+    "units": {
+      "major": "Major (som)",
+      "minor": "Minor (tiyin)"
+    },
+    "errors": {
+      "code": "The code is 3 letters (ISO 4217)",
+      "name": "The name is 1–60 characters",
+      "symbol": "The symbol is 1–5 characters",
+      "exponent": "Decimal places must be 0–4",
+      "order": "Order must be a whole number",
+      "pattern": "Invalid pattern: it needs an `(?<amount>...)` group and valid regex syntax"
+    },
+    "hints": {
+      "code": "ISO 4217 (UZS, USD); cannot change after saving",
+      "exponent": "Amounts are stored in the minor unit (BR-001)",
+      "pattern": "Named groups: amount (required), date, payee, card",
+      "sample": "An anonymized example — you see what the pattern extracts",
+      "amountUnit": "Whether the message amount is in som or tiyin"
+    },
+    "preview": {
+      "noMatch": "The pattern did not match the sample"
     }
   }
 }

@@ -121,7 +121,8 @@
     "recalc": "Qayta joylash",
     "audit": "Audit jurnali",
     "notifications": "Bildirishnomalar",
-    "devices": "Qurilmalar"
+    "devices": "Qurilmalar",
+    "platform": "Platforma"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1356,6 +1357,70 @@
       "not_found": "Yozuv topilmadi",
       "month_closed": "Oy yopilgan",
       "forbidden": "Huquq yo'q"
+    }
+  },
+  "platform": {
+    "title": "Platforma",
+    "description": "Tizim sozlamalari va monitoring (faqat super-admin, 2FA bilan)",
+    "back": "Byudjetga qaytish",
+    "yes": "Ha",
+    "no": "Yo'q",
+    "directories": {
+      "title": "Tizim spravochniklari",
+      "description": "Valyutalar, kategoriya shablonlari va karta xabar shablonlari",
+      "add": "Qo'shish",
+      "currencies": "Valyutalar",
+      "templates": "Kategoriya shablonlari",
+      "cards": "Karta shablonlari",
+      "form": {
+        "currencies": "Valyuta",
+        "templates": "Kategoriya shabloni",
+        "cards": "Karta xabar shabloni"
+      }
+    },
+    "fields": {
+      "code": "Kod",
+      "name": "Nomi",
+      "name_uz": "Nomi (o'zbekcha)",
+      "name_ru": "Nomi (ruscha)",
+      "name_en": "Nomi (inglizcha)",
+      "symbol": "Belgi",
+      "exponent": "Kasr xonalari",
+      "active": "Faol",
+      "order": "Tartib",
+      "kind": "Turi",
+      "monthShift": "Oy siljishi",
+      "bank": "Bank",
+      "pattern": "Naqsh (regex)",
+      "sample": "Namunaviy xabar",
+      "amountUnit": "Summa birligi",
+      "currency": "Valyuta"
+    },
+    "kinds": {
+      "income": "Daromad",
+      "expense": "Xarajat"
+    },
+    "units": {
+      "major": "Butun (so'm)",
+      "minor": "Eng kichik (tiyin)"
+    },
+    "errors": {
+      "code": "Kod 3 harf (ISO 4217)",
+      "name": "Nom 1–60 belgi",
+      "symbol": "Belgi 1–5 belgi",
+      "exponent": "Kasr xonalari 0–4",
+      "order": "Tartib — butun son",
+      "pattern": "Naqsh noto'g'ri: `(?<amount>...)` guruhi bo'lishi va regex to'g'ri yozilishi kerak"
+    },
+    "hints": {
+      "code": "ISO 4217 (UZS, USD); saqlangandan keyin o‘zgarmaydi",
+      "exponent": "Summalar shu darajadagi eng kichik birlikda (BR-001)",
+      "pattern": "Nomlangan guruhlar: amount (majburiy), date, payee, card",
+      "sample": "Anonimlashtirilgan misol — naqsh nimani ajratishini shu yerda ko'rasiz",
+      "amountUnit": "Xabardagi summa so'mda yoki tiyinda"
+    },
+    "preview": {
+      "noMatch": "Naqsh namunaga mos kelmadi"
     }
   }
 }

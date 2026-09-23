@@ -112,6 +112,7 @@ Umumiy qoidalar (barcha sinxron jadvallar):
 | Jadval | O'qish | Yozish | Klient yozadigan ustunlar (insert → update) |
 |---|---|---|---|
 | `currencies`, `category_templates`, `exchange_rates` | har kim | platforma admini (aal2) | — |
+| `card_message_templates` | platforma admini (aal2) | platforma admini (aal2) | `bank, pattern, kind, amount_unit, currency, sample, active, sort_order` (BR-222; naqshda `(?<amount>…)` guruhi majburiy — `date`, `payee`, `card` ixtiyoriy) |
 | `accounts` | a'zolar | owner/admin | `id, household_id, name, type, currency, opening_balance, opening_date, icon, color, sort_order` → `name, type, currency, opening_balance, opening_date, icon, color, sort_order, archived_at, deleted_at` |
 | `categories` | a'zolar | owner/admin | `id, household_id, kind, name, parent_id, month_shift, icon, color, sort_order` → `name, parent_id, month_shift, icon, color, sort_order, archived_at, deleted_at` (`kind` o'zgarmaydi) |
 | `recurring_rules` | a'zolar | owner/admin | `id, household_id, kind, name, category_id, account_id, amount, day_of_month, auto_pay, active, start_month, end_month, sort_order` → shular (`id, household_id` dan tashqari) + `deleted_at` |

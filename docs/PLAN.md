@@ -730,7 +730,7 @@ E21–E26 (admin) M2 bilan.
 > **Qoidalar:** BR-213, BR-214, ADR-10. **DoD:** faqat `platform_admins` +
 > AAL2; tizim spravochniklari va monitoring ishlaydi.
 
-- [ ] **E26-T01** Tizim spravochniklari: **valyutalar**, **kategoriya
+- [x] **E26-T01** Tizim spravochniklari: **valyutalar**, **kategoriya
   shablonlari** (3 tilda nom, ikon, rang, daromad qoidasi, tartib),
   **karta xabar shablonlari** (E31 uchun, hozircha CRUD).
 - [ ] **E26-T02** **Ilova konfiguratsiyasi**: min Android/iOS versiya
@@ -975,6 +975,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Audit jurnali — `audit_list` RPC (tipli filtr parametrlari, keyset `(at, id)`), farq klientda hisoblanadi: texnik maydonlar (`id`, `household_id`, `created_*`, `row_version`) yashiriladi | filtr va sahifalash serverda — 180 kunlik jurnal to'liq yuklanmaydi (`audit_log_household_at_idx`); farq — sof funksiya, testi arzon; ustun nomlari xom ko'rsatiladi (15 jadval uchun tarjima ortiqcha) | E25-T05, BR-008 |
 | 2026-09-23 | Telegram bot nomi — build vaqtidagi `VITE_TELEGRAM_BOT` (mobildagi `TELEGRAM_BOT_USERNAME` kabi), QR — `uqr` (0 bog'liqlik, MIT) bitta `<path>` bo'lib chiziladi | bot nomi sir emas, lekin muhitga bog'liq (staging/production botlari boshqa); bo'sh bo'lsa bo'lim "sozlanmagan" deydi; QR kodini qo'lda yozish (Reed-Solomon) ortiqcha, kutubxona 79 KB va bog'liqliksiz | E25-T06, BR-163 |
 | 2026-09-23 | Qurilmalar — `household_devices` RPC (security definer, tokensiz), to'qnashuv jurnali esa PostgREST'dan: faqat `result->>code` olinadi, keyset `(applied_at, mutation_id)` | `device_tokens` RLS'da o'ziniki (token shaxsiy), admin esa a'zolar qurilmalarini ko'rishi kerak; to'qnashuvdagi `result.row` butun qator — ro'yxatga tortilmaydi | E25-T07 |
+| 2026-09-23 | Platforma bo'limi — alohida marshrut (`/platform`) va o'z karkasi; kirish 2FA (aal2) talab qiladi va bootstrap qayta so'raladi; karta shablonlari faqat platforma adminiga ko'rinadi | byudjet menyusi byudjetga bog'liq (`$householdId`), platforma esa undan tashqarida; `is_platform_admin` aal2'siz `false` qaytadi — eski keshdan 403 bo'lmasligi uchun; naqshlar klientga kerak emas (bot service kalit bilan o'qiydi) | E26-T01, BR-213, BR-222 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

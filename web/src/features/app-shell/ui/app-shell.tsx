@@ -21,19 +21,27 @@ export function AppShell({
   role,
   switcher,
   userMenu,
+  platformAdmin = false,
   children,
 }: {
   householdId: string
   role: Role
   switcher: ReactNode
   userMenu: ReactNode
+  /** BR-213: menyu ostida platforma bo'limiga havola. */
+  platformAdmin?: boolean
   children: ReactNode
 }) {
   const { t } = useTranslation()
 
   return (
     <SidebarProvider>
-      <AppSidebar householdId={householdId} role={role} header={switcher} />
+      <AppSidebar
+        householdId={householdId}
+        role={role}
+        header={switcher}
+        platformAdmin={platformAdmin}
+      />
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur md:px-4 print:hidden">
           <SidebarTrigger aria-label={t('shell.toggleSidebar')} />

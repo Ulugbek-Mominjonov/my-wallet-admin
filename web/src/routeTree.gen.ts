@@ -12,10 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppPlatformRouteImport } from './routes/_app/platform'
 import { Route as AppWelcomeRouteImport } from './routes/_app/welcome'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthMfaRouteImport } from './routes/_auth/mfa'
 import { Route as AppHHouseholdIdRouteImport } from './routes/_app/h/$householdId'
+import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform/index'
 import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callback'
 import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
 import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$householdId/accounts'
@@ -57,6 +59,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPlatformRoute = AppPlatformRouteImport.update({
+  id: '/platform',
+  path: '/platform',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppWelcomeRoute = AppWelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
@@ -76,6 +83,11 @@ const AppHHouseholdIdRoute = AppHHouseholdIdRouteImport.update({
   id: '/h/$householdId',
   path: '/h/$householdId',
   getParentRoute: () => AppRoute,
+} as any)
+const AppPlatformIndexRoute = AppPlatformIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppPlatformRoute,
 } as any)
 const AuthAuthCallbackRoute = AuthAuthCallbackRouteImport.update({
   id: '/auth/callback',
@@ -225,11 +237,13 @@ const AppHHouseholdIdReportYearRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/platform': typeof AppPlatformRouteWithChildren
   '/welcome': typeof AppWelcomeRoute
   '/login': typeof AuthLoginRoute
   '/mfa': typeof AuthMfaRoute
   '/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/auth/callback': typeof AuthAuthCallbackRoute
+  '/platform/': typeof AppPlatformIndexRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/audit': typeof AppHHouseholdIdAuditRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
@@ -263,6 +277,7 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/mfa': typeof AuthMfaRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
+  '/platform': typeof AppPlatformIndexRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/h/$householdId/audit': typeof AppHHouseholdIdAuditRoute
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
@@ -293,12 +308,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_auth': typeof AuthRouteWithChildren
+  '/_app/platform': typeof AppPlatformRouteWithChildren
   '/_app/welcome': typeof AppWelcomeRoute
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/mfa': typeof AuthMfaRoute
   '/_app/': typeof AppIndexRoute
   '/_app/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/_auth/auth/callback': typeof AuthAuthCallbackRoute
+  '/_app/platform/': typeof AppPlatformIndexRoute
   '/_app/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
   '/_app/h/$householdId/audit': typeof AppHHouseholdIdAuditRoute
   '/_app/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
@@ -330,11 +347,13 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/platform'
     | '/welcome'
     | '/login'
     | '/mfa'
     | '/h/$householdId'
     | '/auth/callback'
+    | '/platform/'
     | '/h/$householdId/accounts'
     | '/h/$householdId/audit'
     | '/h/$householdId/categories'
@@ -368,6 +387,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/mfa'
     | '/auth/callback'
+    | '/platform'
     | '/h/$householdId/accounts'
     | '/h/$householdId/audit'
     | '/h/$householdId/categories'
@@ -397,12 +417,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_auth'
+    | '/_app/platform'
     | '/_app/welcome'
     | '/_auth/login'
     | '/_auth/mfa'
     | '/_app/'
     | '/_app/h/$householdId'
     | '/_auth/auth/callback'
+    | '/_app/platform/'
     | '/_app/h/$householdId/accounts'
     | '/_app/h/$householdId/audit'
     | '/_app/h/$householdId/categories'
@@ -459,6 +481,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/platform': {
+      id: '/_app/platform'
+      path: '/platform'
+      fullPath: '/platform'
+      preLoaderRoute: typeof AppPlatformRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/welcome': {
       id: '/_app/welcome'
       path: '/welcome'
@@ -486,6 +515,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/h/$householdId'
       preLoaderRoute: typeof AppHHouseholdIdRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/_app/platform/': {
+      id: '/_app/platform/'
+      path: '/'
+      fullPath: '/platform/'
+      preLoaderRoute: typeof AppPlatformIndexRouteImport
+      parentRoute: typeof AppPlatformRoute
     }
     '/_auth/auth/callback': {
       id: '/_auth/auth/callback'
@@ -679,6 +715,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AppPlatformRouteChildren {
+  AppPlatformIndexRoute: typeof AppPlatformIndexRoute
+}
+
+const AppPlatformRouteChildren: AppPlatformRouteChildren = {
+  AppPlatformIndexRoute: AppPlatformIndexRoute,
+}
+
+const AppPlatformRouteWithChildren = AppPlatformRoute._addFileChildren(
+  AppPlatformRouteChildren,
+)
+
 interface AppHHouseholdIdReportRouteChildren {
   AppHHouseholdIdReportCategoriesRoute: typeof AppHHouseholdIdReportCategoriesRoute
   AppHHouseholdIdReportObligationsRoute: typeof AppHHouseholdIdReportObligationsRoute
@@ -753,12 +801,14 @@ const AppHHouseholdIdRouteWithChildren = AppHHouseholdIdRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppPlatformRoute: typeof AppPlatformRouteWithChildren
   AppWelcomeRoute: typeof AppWelcomeRoute
   AppIndexRoute: typeof AppIndexRoute
   AppHHouseholdIdRoute: typeof AppHHouseholdIdRouteWithChildren
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppPlatformRoute: AppPlatformRouteWithChildren,
   AppWelcomeRoute: AppWelcomeRoute,
   AppIndexRoute: AppIndexRoute,
   AppHHouseholdIdRoute: AppHHouseholdIdRouteWithChildren,

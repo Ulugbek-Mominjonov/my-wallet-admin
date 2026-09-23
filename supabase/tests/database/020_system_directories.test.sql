@@ -1,7 +1,8 @@
 -- E06-T01: tizim spravochniklari — valyutalar, kategoriya shablonlari,
--- kurslar (BR-031..033, BR-190, BR-213).
+-- kurslar; E26-T01: karta xabar shablonlari.
+-- Qoidalar: BR-031..033, BR-190, BR-213, BR-222.
 begin;
-select plan(15);
+select plan(20);
 
 create temporary table u (name text primary key, id uuid) on commit drop;
 insert into u values
@@ -65,6 +66,16 @@ select throws_ok(
   $$ insert into public.exchange_rates (currency, rate_date, rate_to_base) values ('USD', '2026-09-18', 12650) $$,
   '42501', null, 'oddiy foydalanuvchi kurs yoza olmaydi'
 );
+-- BR-222: karta xabar shablonlari — faqat platforma admini (o'qish ham).
+select is_empty(
+  $$ select 1 from public.card_message_templates $$,
+  'BR-222: oddiy foydalanuvchi karta shablonlarini ko''rmaydi'
+);
+select throws_ok(
+  $$ insert into public.card_message_templates (bank, pattern)
+     values ('Bank', 'Xarajat (?<amount>[0-9]+) so''m') $$,
+  '42501', null, 'oddiy foydalanuvchi karta shabloni qo''sha olmaydi'
+);
 select throws_ok(
   $$ update public.households set base_currency = 'XYZ'
       where id = (select last_household_id from public.profiles where user_id = (select id from u where name = 'alice')) $$,
@@ -90,6 +101,22 @@ select tests.authenticate_as((select id from u where name = 'root'), 'aal2');
 select lives_ok(
   $$ insert into public.currencies (code, name_i18n, symbol) values ('KZT', '{"uz": "Tenge", "ru": "Тенге", "en": "Tenge"}', '₸') $$,
   'BR-213: platforma admini (aal2) valyuta qo''shadi'
+);
+select lives_ok(
+  $$ insert into public.card_message_templates (bank, pattern, sample)
+     values ('Kapitalbank', '(?<amount>[0-9 ]+) UZS (?<payee>.+) (?<card>[0-9]{4})',
+             '25 000 UZS KORZINKA 1234') $$,
+  'BR-222: platforma admini (aal2) karta shabloni qo''shadi'
+);
+select throws_ok(
+  $$ insert into public.card_message_templates (bank, pattern)
+     values ('Bank', 'summa (?<sum>[0-9]+)') $$,
+  '23514', null, 'naqshda `amount` guruhi majburiy'
+);
+select throws_ok(
+  $$ insert into public.card_message_templates (bank, pattern, kind)
+     values ('Bank', 'Xarajat (?<amount>[0-9]+)', 'transfer') $$,
+  '23514', null, 'karta xabari o''tkazma bo''lmaydi'
 );
 
 select * from finish();

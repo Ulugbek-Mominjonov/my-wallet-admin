@@ -40,6 +40,7 @@ function HouseholdLayout() {
         householdId={household.id}
         role={household.role}
         switcher={<HouseholdSwitcher households={boot.households} current={household} />}
+        platformAdmin={boot.is_platform_admin}
         userMenu={
           <UserMenu name={boot.profile.display_name} email={email} householdId={household.id} />
         }

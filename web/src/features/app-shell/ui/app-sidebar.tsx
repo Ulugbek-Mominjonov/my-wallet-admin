@@ -1,4 +1,5 @@
 import { Link, useMatchRoute } from '@tanstack/react-router'
+import { ShieldCheck } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -7,6 +8,7 @@ import { navSectionsFor } from '@/features/app-shell/navigation'
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -21,10 +23,13 @@ export function AppSidebar({
   householdId,
   role,
   header,
+  platformAdmin = false,
 }: {
   householdId: string
   role: Role
   header: ReactNode
+  /** BR-213: super-admin bo'limiga havola (faqat platforma adminida). */
+  platformAdmin?: boolean
 }) {
   const { t } = useTranslation()
   const matchRoute = useMatchRoute()
@@ -60,6 +65,18 @@ export function AppSidebar({
           </SidebarGroup>
         ))}
       </SidebarContent>
+      {platformAdmin && (
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip={t('nav.platform')} render={<Link to="/platform" />}>
+                <ShieldCheck aria-hidden />
+                <span>{t('nav.platform')}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      )}
       <SidebarRail />
     </Sidebar>
   )

@@ -192,6 +192,56 @@ export type Database = {
         }
         Relationships: []
       }
+      card_message_templates: {
+        Row: {
+          active: boolean
+          amount_unit: string
+          bank: string
+          created_at: string
+          currency: string
+          id: string
+          kind: Database["public"]["Enums"]["transaction_kind"]
+          pattern: string
+          sample: string | null
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          amount_unit?: string
+          bank: string
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["transaction_kind"]
+          pattern: string
+          sample?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          amount_unit?: string
+          bank?: string
+          created_at?: string
+          currency?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["transaction_kind"]
+          pattern?: string
+          sample?: string | null
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_message_templates_currency_fkey"
+            columns: ["currency"]
+            isOneToOne: false
+            referencedRelation: "currencies"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
       categories: {
         Row: {
           archived_at: string | null
