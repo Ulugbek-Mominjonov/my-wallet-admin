@@ -111,7 +111,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E20 | Sifat, sayqal, reliz konveyeri | mobile | E15–E19 | 🟨 (T08 🔑) |
 | **M3 Admin MVP** | E21 | Auth, byudjet konteksti, layout | admin | E05, E02 | ✅ |
 | | E22 | Spravochniklar | admin | E21, E06 | ✅ |
-| | E23 | Amallar va rejalar | admin | E22, E08 | ⬜ |
+| | E23 | Amallar va rejalar | admin | E22, E08 | ✅ |
 | | E24 | Hisobotlar va dashboard | admin | E23, E09 | ⬜ |
 | | E25 | Vositalar: tekshiruv, import/eksport, audit | admin | E24 | ⬜ |
 | | E26 | Platforma (super-admin) | admin | E21, E11 | ⬜ |
@@ -661,7 +661,7 @@ E21–E26 (admin) M2 bilan.
 - [x] **E23-T05** **Oyni ochish** dialogi (preview: yaratiladigan rejalar
   ro'yxati → tasdiq), **oyni yopish/qayta ochish** (`month_close_check`
   natijasi bilan dialog, BR-153).
-- [ ] **E23-T06** E2E: oy ochish → reja to'lash (to'liq/qisman) → hisobotda
+- [x] **E23-T06** E2E: oy ochish → reja to'lash (to'liq/qisman) → hisobotda
   aks etishi; ommaviy to'lash.
 
 ### E24 · Admin: hisobotlar va dashboard `[admin]`
@@ -1010,3 +1010,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-22 | E21-T01..T05 | admin: kirish (email kodi, Google PKCE, xatolar tarjimasi), `/h/$householdId` konteksti, almashtirgich (oxirgi byudjet eslab qolinadi), `/welcome` (yaratish/taklif kodi), rol himoyasi (menyu, 403, viewer belgisi), 2FA (QR, `/mfa`), profil (ism, til, mavzu, sessiyalar, hamma qurilmadan chiqish); 60 Vitest (MSW) + 25 Playwright (lokal Supabase, TOTP generatori bilan to'liq 2FA oqimi). Topilgan xatolar: login xatolari ikki marta (toast + forma), Mailpit'dan eski kod olinishi, AMR tartibi, brauzer ICU'sida uz sana formati. **E21 yakunlandi** |
 | 2026-09-22 | E20-T02, T04 | mobil: E2E (patrol) emulyatorda yashil, nightly workflow; E2E topgan sinxron xatosi (reja to'lovi → conflict) tuzatildi + integratsiya testlari; sovuq start ~1,5 s (emulyator, `docs/PERF.md` — parallel init yutuq bermadi, halol qayd); chek rasmlari keshi. E20-T08 🔑 (keystore, testerlar) |
 | 2026-09-22 | E22-T01..T08 | admin spravochniklar: DirectoryPage shabloni (DataTable v9, Sheet forma, optimistik arxiv/o'chirish/tartib, klaviatura bilan dnd), hisoblar (joriy qoldiq), kategoriyalar (daraxt, oy siljishi + qayta joylash, birlashtirish), doimiy rejalar (keyingi oy preview), limitlar (joriy oy holati), tez tugmalar, teglar, qarzlar (debt_balances, jami), maqsadlar (prognoz), byudjet sozlamalari (fond jonli preview, a'zolar, takliflar, o'chirish); 2 RPC (`set_sort_order`, `delete_household`), 15 pgTAP (jami 437); 170 Vitest (MSW) + 50 Playwright (lokal Supabase). Topilgan xatolar: optimistik tartibda daraxt sakrashi, o'chirish tasdig'i xatoda ochiq qolishi, sidebar'da eski byudjet nomi, disabled register bilan bekor bo'lishi, dnd e'lonlari inglizcha. **E22 yakunlandi** |
+| 2026-09-23 | E23-T01..T06 | admin amallar va rejalar: amallar jadvali (dinamik SQL filtri, keyset, jami, xatoga chidamli qidiruv — mos kelmaydigan qidiruv 36 → 1 ms), amal formasi (tegishli oy jonli, joy nomi tarixdan, reja/qarz/teg/chek, save_transaction — amal va teglar bitta tranzaksiyada), ommaviy amallar va CSV eksport, rejalar sahifasi (bo'limlar, To'landi/Keldi, qisman to'lov, ommaviy to'lash), oyni ochish/yopish/qayta ochish; 4 RPC + 2 ta yangi pgTAP fayl (jami 475), 228 Vitest, 60 Playwright, make perf'da 5 ta yangi o'lchov. Topilgan xatolar: RLS ostida trgm indeksi ishlamasligi, qidiruvda so'z oxiridagi probelning o'chib ketishi, o'tkazmaga kategoriya (CHECK o'rniga tushunarli sabab), BR-043 ni buzuvchi qayta hisoblash. **E23 yakunlandi** |
