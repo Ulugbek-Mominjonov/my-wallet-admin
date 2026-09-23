@@ -18,6 +18,8 @@ import {
 } from '@/features/limits/api/limits-api'
 import { LimitForm } from '@/features/limits/ui/limit-form'
 import { useOptimisticRemove } from '@/shared/api/use-directory-mutations'
+import { useAppLocale } from '@/shared/i18n'
+import { formatMoney } from '@/shared/lib/money'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
@@ -54,6 +56,7 @@ export function LimitsPage({
   baseCurrency: string
 }) {
   const { t } = useTranslation()
+  const locale = useAppLocale()
   const canManage = useCan('manage')
   const queryClient = useQueryClient()
   const list = limitsQuery(householdId, month)
@@ -116,7 +119,19 @@ export function LimitsPage({
         header: t('limits.amount'),
         meta: { label: t('limits.amount'), align: 'end' },
         enableGlobalFilter: false,
-        cell: ({ row }) => <MoneyText amount={row.original.amount} currency={baseCurrency} />,
+        // BR-134: rollover yoqilgan bo'lsa — amaldagi limit va o'tgan oy qoldig'i.
+        cell: ({ row }) => (
+          <span className="block">
+            <MoneyText amount={row.original.amount + row.original.carry} currency={baseCurrency} />
+            {row.original.carry !== 0 && (
+              <span className="block text-xs text-muted-foreground">
+                {t('limits.carry', {
+                  value: formatMoney(row.original.carry, { currency: baseCurrency, locale }),
+                })}
+              </span>
+            )}
+          </span>
+        ),
       }),
       helper.accessor('actual', {
         header: t('limits.thisMonth'),
@@ -138,6 +153,7 @@ export function LimitsPage({
           <span className="flex gap-1">
             {row.original.alert80 && <Badge variant="outline">80%</Badge>}
             {row.original.alert100 && <Badge variant="outline">100%</Badge>}
+            {row.original.rollover && <Badge variant="outline">{t('limits.rolloverShort')}</Badge>}
           </span>
         ),
       }),
@@ -163,7 +179,7 @@ export function LimitsPage({
         ),
       }),
     ]
-  }, [t, canManage, categoryName, baseCurrency])
+  }, [t, locale, canManage, categoryName, baseCurrency])
 
   const addButton = canManage && (
     <Button

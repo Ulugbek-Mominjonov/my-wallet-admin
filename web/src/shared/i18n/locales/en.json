@@ -437,7 +437,12 @@
     "categoryHint": "A parent category's limit includes its subcategories",
     "noCategories": "Every expense category already has a limit",
     "emptyTitle": "No limits",
-    "emptyText": "Set a monthly limit for a category — you'll be notified at 80% and 100%."
+    "emptyText": "Set a monthly limit for a category — you'll be notified at 80% and 100%.",
+    "rollover": "Carry the leftover to the next month",
+    "rolloverNegative": "Subtract the overspend",
+    "rolloverHint": "Last month's leftover (or overspend) is added to this month's limit. Only one previous month counts.",
+    "rolloverShort": "↻ carry",
+    "carry": "from last month {{value}}"
   },
   "quickActions": {
     "title": "Quick actions",

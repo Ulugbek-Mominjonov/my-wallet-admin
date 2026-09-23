@@ -70,9 +70,11 @@ begin
   end loop;
 
   for v_item in select * from jsonb_array_elements(coalesce(v_setup -> 'limits', '[]')) loop
-    insert into public.category_limits (household_id, category_id, amount)
+    insert into public.category_limits (household_id, category_id, amount, rollover, rollover_negative)
     values (v_household, (select k.id from fx_keys k where k.key = 'category:' || (v_item ->> 'category')),
-            (v_item ->> 'amount')::bigint);
+            (v_item ->> 'amount')::bigint,
+            coalesce((v_item ->> 'rollover')::boolean, false),
+            coalesce((v_item ->> 'rollover_negative')::boolean, false));
   end loop;
 
   for v_item in select * from jsonb_array_elements(coalesce(v_setup -> 'debts', '[]')) loop

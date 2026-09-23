@@ -15,6 +15,12 @@ export interface CategoryLimit {
   amount: number
   alert80: boolean
   alert100: boolean
+  /** BR-134: o'tgan oy qoldig'ini shu oyga qo'shish. */
+  rollover: boolean
+  /** BR-134: o'tgan oyda oshib ketgani shu oy limitidan ayirilsinmi. */
+  rolloverNegative: boolean
+  /** O'tgan oydan o'tgan qoldiq: amaldagi limit = `amount + carry` (0 dan kichik emas). */
+  carry: number
   /** Joriy oy holati (`report_month.by_category`) — fakt subkategoriyalar bilan (BR-132). */
   actual: number
   ratio: number
@@ -29,6 +35,7 @@ const reportSchema = z.object({
       category_id: z.string(),
       actual_total: z.number(),
       limit: z.number().nullable(),
+      limit_carry: z.number().nullable(),
       limit_ratio: z.number().nullable(),
       limit_status: z.enum(['ok', 'near', 'over']).nullable(),
     }),
@@ -46,7 +53,7 @@ export const limitsQuery = (householdId: string, month: string) =>
       const [limits, report] = await Promise.all([
         supabase
           .from('category_limits')
-          .select('id, category_id, amount, alert_80, alert_100')
+          .select('id, category_id, amount, alert_80, alert_100, rollover, rollover_negative')
           .eq('household_id', householdId)
           .is('deleted_at', null),
         supabase.rpc('report_month', { p_household: householdId, p_month: month }),
@@ -59,13 +66,17 @@ export const limitsQuery = (householdId: string, month: string) =>
       return limits.data.map((row) => {
         const line = byCategory.get(row.category_id)
         const actual = line?.actual_total ?? 0
-        const ratio = line?.limit_ratio ?? actual / row.amount
+        const carry = line?.limit_carry ?? 0
+        const ratio = line?.limit_ratio ?? actual / Math.max(row.amount + carry, 1)
         return {
           id: row.id,
           categoryId: row.category_id,
           amount: row.amount,
           alert80: row.alert_80,
           alert100: row.alert_100,
+          rollover: row.rollover,
+          rolloverNegative: row.rollover_negative,
+          carry,
           actual,
           ratio,
           status: line?.limit_status ?? (ratio > 1 ? 'over' : ratio >= 0.8 ? 'near' : 'ok'),
@@ -79,6 +90,8 @@ export interface LimitInput {
   amount: number
   alert80: boolean
   alert100: boolean
+  rollover: boolean
+  rolloverNegative: boolean
 }
 
 export async function createLimit(householdId: string, input: LimitInput): Promise<void> {
@@ -88,6 +101,8 @@ export async function createLimit(householdId: string, input: LimitInput): Promi
     amount: input.amount,
     alert_80: input.alert80,
     alert_100: input.alert100,
+    rollover: input.rollover,
+    rollover_negative: input.rolloverNegative,
   })
   if (error) throw toAppError(error)
 }
@@ -96,7 +111,13 @@ export async function createLimit(householdId: string, input: LimitInput): Promi
 export async function updateLimit(id: string, input: LimitInput): Promise<void> {
   const { error } = await supabase
     .from('category_limits')
-    .update({ amount: input.amount, alert_80: input.alert80, alert_100: input.alert100 })
+    .update({
+      amount: input.amount,
+      alert_80: input.alert80,
+      alert_100: input.alert100,
+      rollover: input.rollover,
+      rollover_negative: input.rolloverNegative,
+    })
     .eq('id', id)
   if (error) throw toAppError(error)
 }

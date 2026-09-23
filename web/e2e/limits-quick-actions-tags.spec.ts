@@ -20,11 +20,14 @@ test.describe('E22-T05', () => {
     await form.getByRole('combobox', { name: 'Kategoriya' }).click()
     await page.getByRole('option', { name: category, exact: true }).click()
     await form.getByLabel('Oylik limit').fill('500 000')
+    // E34-T02 (BR-134): qolganini keyingi oyga o'tkazish.
+    await form.getByRole('switch', { name: "Qolganini keyingi oyga o'tkazish" }).click()
     await form.getByRole('button', { name: 'Saqlash' }).click()
     await expect(form).toBeHidden()
 
     const row = page.getByRole('row', { name: new RegExp(category) })
     await expect(row.getByText("500 000 so'm")).toBeVisible()
+    await expect(row.getByText("↻ o'tkazish")).toBeVisible()
     await expect(row.getByRole('progressbar')).toHaveAttribute('aria-valuetext', "0% — Me'yorda")
   })
 

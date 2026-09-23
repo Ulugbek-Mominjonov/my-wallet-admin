@@ -11,6 +11,8 @@ export function limitFormSchema(currency: string) {
       amount: z.string(),
       alert80: z.boolean(),
       alert100: z.boolean(),
+      rollover: z.boolean(),
+      rolloverNegative: z.boolean(),
     })
     .refine((v) => (parseMoney(v.amount, currency) ?? 0) > 0, { path: ['amount'] })
     .transform((v): LimitInput => ({
@@ -18,6 +20,9 @@ export function limitFormSchema(currency: string) {
       amount: parseMoney(v.amount, currency) ?? 0,
       alert80: v.alert80,
       alert100: v.alert100,
+      rollover: v.rollover,
+      // BR-134: manfiy qoldiq faqat rollover yoqilganda ma'noga ega.
+      rolloverNegative: v.rollover && v.rolloverNegative,
     }))
 }
 
@@ -31,4 +36,6 @@ export const limitFormDefaults = (
   amount: limit ? formatMoneyInput(limit.amount, currency) : '',
   alert80: limit?.alert80 ?? true,
   alert100: limit?.alert100 ?? true,
+  rollover: limit?.rollover ?? false,
+  rolloverNegative: limit?.rolloverNegative ?? false,
 })

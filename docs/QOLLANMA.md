@@ -73,6 +73,10 @@ sentabrniki). Kerak bo'lsa amal formasida oyni qo'lda tanlash mumkin.
   kategoriyalar, yaqin to'lovlar va ogohlantirishlar.
 - **Oylik hisobot**: yakun, daromad turlari, limitlar, fond, qarz va
   maqsadlar. Har jadvalni CSV qilib olish yoki chop etish mumkin.
+- **Limitlar** (spravochniklarda): kategoriyaga oylik chegara; ota-kategoriya
+  limiti subkategoriyalar bilan hisoblanadi. «Qolganini keyingi oyga
+  o'tkazish» yoqilsa — o'tgan oydan qolgani shu oy limitiga qo'shiladi
+  (istasangiz, oshib ketgani ayiriladi).
 - **Yillik**, **Jamg'arma**, **Kategoriya tahlili** — alohida tablarda.
   Yillik sahifa tepasida **Yil xulosasi**: jamlar, oyiga o'rtacha xarajat va
   eng ko'p/eng kam orttirilgan oy.

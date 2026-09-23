@@ -1,5 +1,5 @@
 {
-  "description": "Oylik hisobot: BR-091 misoli, BR-040 jadvali, reja holatlari, limitlar, prognoz.",
+  "description": "Oylik hisobot: BR-091 misoli, BR-040 jadvali, reja holatlari, limitlar (rollover bilan), prognoz.",
   "cases": [
     {
       "name": "br091-misol: qoldiq 2 750 000, orttirgan 3 300 000 (57%)",
@@ -472,6 +472,136 @@
                 "actual": 101000000,
                 "limit_ratio": 1.01,
                 "limit_status": "over"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "rollover: sentabrdan qolgan 400 000 oktabr limitiga qo'shiladi",
+      "rules": [
+        "BR-130",
+        "BR-134"
+      ],
+      "today": "2026-10-31",
+      "setup": {
+        "limits": [
+          {
+            "category": "Oziq-ovqat",
+            "amount": 100000000,
+            "rollover": true
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 60000000,
+            "date": "2026-09-10",
+            "category": "Oziq-ovqat"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 100000000,
+            "date": "2026-10-05",
+            "category": "Oziq-ovqat"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-10-01"
+          },
+          "result": {
+            "by_category": {
+              "Oziq-ovqat": {
+                "actual": 100000000,
+                "limit": 140000000,
+                "limit_carry": 40000000,
+                "limit_ratio": 0.7143,
+                "limit_status": "ok"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "rollover: oshib ketgan oy — faqat rollover_negative bilan ayiriladi",
+      "rules": [
+        "BR-134"
+      ],
+      "today": "2026-10-31",
+      "setup": {
+        "limits": [
+          {
+            "category": "Kiyim",
+            "amount": 100000000,
+            "rollover": true
+          },
+          {
+            "category": "Sog'liq",
+            "amount": 100000000,
+            "rollover": true,
+            "rollover_negative": true
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 120000000,
+            "date": "2026-09-10",
+            "category": "Kiyim"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 120000000,
+            "date": "2026-09-11",
+            "category": "Sog'liq"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 50000000,
+            "date": "2026-10-05",
+            "category": "Kiyim"
+          },
+          {
+            "kind": "expense",
+            "account": "card",
+            "amount": 50000000,
+            "date": "2026-10-06",
+            "category": "Sog'liq"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-10-01"
+          },
+          "result": {
+            "by_category": {
+              "Kiyim": {
+                "actual": 50000000,
+                "limit": 100000000,
+                "limit_carry": 0,
+                "limit_ratio": 0.5,
+                "limit_status": "ok"
+              },
+              "Sog'liq": {
+                "actual": 50000000,
+                "limit": 80000000,
+                "limit_carry": -20000000,
+                "limit_ratio": 0.625,
+                "limit_status": "ok"
               }
             }
           }

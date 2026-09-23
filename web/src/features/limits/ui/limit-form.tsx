@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 import type { CategoryLimit, LimitInput } from '@/features/limits/api/limits-api'
@@ -35,6 +35,8 @@ export function LimitForm({
     defaultValues: limitFormDefaults(limit, currency),
   })
   const errors = form.formState.errors
+  // BR-134: manfiy qoldiq faqat rollover yoqilganda tanlanadi.
+  const rollover = useWatch({ control: form.control, name: 'rollover' })
 
   return (
     <form
@@ -81,7 +83,7 @@ export function LimitForm({
           </p>
         )}
       </div>
-      {(['alert80', 'alert100'] as const).map((name) => (
+      {(['alert80', 'alert100', 'rollover', 'rolloverNegative'] as const).map((name) => (
         <Controller
           key={name}
           control={form.control}
@@ -89,11 +91,20 @@ export function LimitForm({
           render={({ field }) => (
             <div className="flex items-center justify-between gap-3">
               <Label htmlFor={`limit-${name}`}>{t(`limits.${name}`)}</Label>
-              <Switch id={`limit-${name}`} checked={field.value} onCheckedChange={field.onChange} />
+              <Switch
+                id={`limit-${name}`}
+                checked={field.value}
+                aria-disabled={name === 'rolloverNegative' && !rollover}
+                onCheckedChange={(checked) => {
+                  if (name === 'rolloverNegative' && !rollover) return
+                  field.onChange(checked)
+                }}
+              />
             </div>
           )}
         />
       ))}
+      <p className="-mt-2 text-xs text-muted-foreground">{t('limits.rolloverHint')}</p>
       {error && (
         <p role="alert" className="text-sm text-destructive">
           {toAppError(error).message}

@@ -334,6 +334,8 @@ export type Database = {
           deleted_at: string | null
           household_id: string
           id: string
+          rollover: boolean
+          rollover_negative: boolean
           row_version: number
           updated_at: string
         }
@@ -347,6 +349,8 @@ export type Database = {
           deleted_at?: string | null
           household_id: string
           id?: string
+          rollover?: boolean
+          rollover_negative?: boolean
           row_version?: number
           updated_at?: string
         }
@@ -360,6 +364,8 @@ export type Database = {
           deleted_at?: string | null
           household_id?: string
           id?: string
+          rollover?: boolean
+          rollover_negative?: boolean
           row_version?: number
           updated_at?: string
         }

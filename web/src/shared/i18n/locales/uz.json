@@ -437,7 +437,12 @@
     "categoryHint": "Ota-kategoriya limiti subkategoriyalar bilan hisoblanadi",
     "noCategories": "Barcha xarajat kategoriyalarida limit bor",
     "emptyTitle": "Limit yo'q",
-    "emptyText": "Kategoriya uchun oylik chegara qo'ying — 80% va 100% da xabar keladi."
+    "emptyText": "Kategoriya uchun oylik chegara qo'ying — 80% va 100% da xabar keladi.",
+    "rollover": "Qolganini keyingi oyga o'tkazish",
+    "rolloverNegative": "Oshib ketganini ayirish",
+    "rolloverHint": "O'tgan oydan qolgan (yoki oshib ketgan) summa shu oy limitiga qo'shiladi. Faqat bitta oldingi oy hisobga olinadi.",
+    "rolloverShort": "↻ o'tkazish",
+    "carry": "o'tgan oydan {{value}}"
   },
   "quickActions": {
     "title": "Tez tugmalar",

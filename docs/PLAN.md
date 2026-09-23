@@ -122,7 +122,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E31 | Telegram bot: tez kiritish, karta xabarlari | admin | E28 | ✅ |
 | | E32 | Tahlillar (insights) | admin + mobile | E28 | 🟨 (mobil qismi keyin) |
 | | E33 | Android vidjet, chek QR skaneri | mobile | E28 | ⬜ |
-| | E34 | Limitlar v2 (rollover, ota-kategoriya) | admin + mobile | E28 | ⬜ |
+| | E34 | Limitlar v2 (rollover, ota-kategoriya) | admin + mobile | E28 | 🟨 (mobil qismi keyin) |
 
 **Kritik yo'l:** E00 → E01 → E05 → E06 → E07 → E10 → E13 → E14 → E15 → E20 → E28.
 Parallel olib borish mumkin: E02/E03 (admin skelet) E05–E09 bilan;
@@ -855,9 +855,9 @@ E21–E26 (admin) M2 bilan.
 
 ### E34 · Limitlar v2 `[admin + mobile]` — platforma qismi
 
-- [ ] **E34-T01** Ota-kategoriya limiti (BR-132) — `report_month` da
+- [x] **E34-T01** Ota-kategoriya limiti (BR-132) — `report_month` da
   subkategoriyalar yig'indisi.
-- [ ] **E34-T02** Rollover (BR-134): `category_limits.rollover` → mavjud
+- [x] **E34-T02** Rollover (BR-134): `category_limits.rollover` → mavjud
   limit = limit + o'tgan oy qoldig'i (manfiy bo'lsa sozlamaga ko'ra);
   fixture'lar.
 
@@ -993,6 +993,8 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | `accounts.card_last4` — byudjet ichida yagona (qisman unique indeks, `deleted_at is null`); admin formasida ixtiyoriy maydon | bir karta ikki hisobda bo'lsa xabarnoma tasodifiy hisobga tushardi (`limit 1`); o'sha indeks `(household_id, card_last4)` qidiruvini ham qoplaydi — seq scan yo'q; takror kiritilganda forma tushunarli xato beradi | E31-T02, BR-222 |
 | 2026-09-23 | Tahlillar — bitta RPC (`report_insights`) va bitta 6 oylik oyna: sakrash, obuna, eng katta xarajat va hafta kunlari shu oynadan hisoblanadi; chegaralar funksiya boshida nomlangan konstantalarda | to'rt kesim uchun to'rt marta o'qish o'rniga bitta oraliq skani (`transactions_month_idx`, 25 000 amalda 3 ms); chegarani o'zgartirish — bitta joyda, sehrli raqamsiz | E32-T01 |
 | 2026-09-23 | Obuna — `lower(payee)` va summa bo'yicha guruh, oxirgi 6 oyning kamida 3 tasida; "Yil xulosasi" esa yangi RPC'siz, `report_year` javobidan klientda | takrorlanuvchi to'lov nomi registri har xil yoziladi; yil yakuni uchun serverda yangi hisob-kitob kerak emas — mavjud javobda hamma qiymat bor | E32-T01, E32-T02 |
+| 2026-09-23 | Rollover — faqat bitta oldingi oy (zanjir emas), amaldagi limit noldan kichik bo'lmaydi; manfiy qoldiq alohida sozlama (`rollover_negative`) bilan | zanjir har oyni qayta hisoblashni talab qilardi (limit yaratilganidan beri) — bashorat qilish ham qiyin; oshib ketgani jimgina keyingi oyni "yeb qo'ymasin" | E34-T02, BR-134 |
+| 2026-09-23 | Amaldagi limit bitta yordamchida (`private.limit_carry`) — hisobot, oylik xabar va ogohlantirishlar shuni ishlatadi | uchta joyda uch xil hisob "80% keldi, lekin hisobotda 60%" holatini bergan bo'lardi | E34-T02, BR-131, BR-133 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
@@ -1049,3 +1051,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | E30-T01..T03 | oilaviy byudjet: taklif QR (`mywallet://invite/<kod>`, sxema muhit bo'yicha), `report_members` va "A'zolar kesimi" kartasi, katta xarajat xabari (har a'zoning o'z chegarasi, amal triggeridan). pgTAP 570, Vitest 339, Playwright 82 |
 | 2026-09-23 | E31-T01..T04 | Telegram bot: matndan tez kiritish (`taksi 20000`, `+5 000 000 oylik`, `kofe 25k` — kategoriya/hisob nom tarixidan, ✏️/❌ tugmalari), bank xabarnomasi forward'i (spravochnikdagi naqshlar, `accounts.card_last4` bo'yicha hisob), `/hisobot [oy]` va `/til`, bot menyusi; admin hisob formasida karta oxirgi 4 raqami. 7 RPC (faqat service kaliti) + qisman unique indeks; pgTAP 582, Deno 85 (37 anonim xabar namunasi jadvalda), Vitest 343, Playwright 82. **E31 yakunlandi** |
 | 2026-09-23 | E32-T01, T02 | tahlillar: `report_insights` (sakragan kategoriyalar — 3 oylik o'rtachadan 30%+, obunalar — 6 oyning 3 tasida bir xil nom va summa, eng katta 5 xarajat, hafta kunlari), "Tahlillar" sahifasi va oylik hisobotdagi "Diqqat" bloki, yillik ko'rinishdagi "Yil xulosasi". pgTAP 591 (yangi 054), Vitest 357, Playwright 82; `make perf` da 3 ms, Seq Scan yo'q. **E32 platforma qismi yakunlandi** |
+| 2026-09-23 | E34-T01, T02 | limitlar v2: ota-kategoriya limiti (BR-132 — hisobot, oylik xabar va ogohlantirishlarda `actual_total`), rollover (BR-134 — `category_limits.rollover`, `rollover_negative`, amaldagi limit `private.limit_carry` orqali bitta joyda), admin limit formasida ikki sozlama va jadvalda o'tgan oy qoldig'i. pgTAP 602 (yangi 055), golden 58 (2 ta rollover holati), Vitest 358, Playwright 82. **E34 platforma qismi yakunlandi** |

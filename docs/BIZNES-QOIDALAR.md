@@ -462,8 +462,11 @@ hisobidan tashqari hisoblardagi daromad/xarajatlar + fondga ajratmalar.
   qo'llanadi.
 - **BR-133 [YANGI]** 80% va 100% ga yetganda push-bildirishnoma — har oyda
   har chegara uchun **bir marta**.
-- **BR-134 [YANGI, keyinroq]** Ishlatilmagan limitni keyingi oyga o'tkazish
-  (rollover) opsiyasi.
+- **BR-134 [YANGI]** Ishlatilmagan limitni keyingi oyga o'tkazish (rollover)
+  opsiyasi: shu oy amaldagi limiti = limit + **o'tgan oy** qoldig'i
+  (`limit − fakt`, ota-kategoriyada subkategoriyalar bilan). Oshib ketgan
+  (manfiy) qoldiq faqat alohida sozlama yoqilganda ayiriladi; amaldagi limit
+  noldan kichik bo'lmaydi va zanjir yig'ilmaydi — faqat bitta oldingi oy.
 
 ---
 

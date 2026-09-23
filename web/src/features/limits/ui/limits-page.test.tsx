@@ -32,8 +32,24 @@ function renderPage() {
   server.use(
     http.get(supabasePath('/rest/v1/category_limits'), () =>
       HttpResponse.json([
-        { id: 'l-food', category_id: 'c-food', amount: 200000000, alert_80: true, alert_100: true },
-        { id: 'l-fun', category_id: 'c-fun', amount: 50000000, alert_80: false, alert_100: true },
+        {
+          id: 'l-food',
+          category_id: 'c-food',
+          amount: 200000000,
+          alert_80: true,
+          alert_100: true,
+          rollover: true,
+          rollover_negative: false,
+        },
+        {
+          id: 'l-fun',
+          category_id: 'c-fun',
+          amount: 50000000,
+          alert_80: false,
+          alert_100: true,
+          rollover: false,
+          rollover_negative: false,
+        },
       ]),
     ),
     http.post(supabasePath('/rest/v1/rpc/report_month'), () =>
@@ -42,14 +58,16 @@ function renderPage() {
           {
             category_id: 'c-food',
             actual_total: 170000000,
-            limit: 200000000,
-            limit_ratio: 0.85,
-            limit_status: 'near',
+            limit: 240000000,
+            limit_carry: 40000000,
+            limit_ratio: 0.7083,
+            limit_status: 'ok',
           },
           {
             category_id: 'c-fun',
             actual_total: 60000000,
             limit: 50000000,
+            limit_carry: 0,
             limit_ratio: 1.2,
             limit_status: 'over',
           },
@@ -80,11 +98,14 @@ describe('LimitsPage (E22-T05)', () => {
     const bars = await screen.findAllByRole('progressbar')
     expect(bars.map((b) => b.getAttribute('aria-valuetext'))).toEqual([
       '120% — Oshib ketdi',
-      '85% — Yaqinlashdi',
+      "71% — Me'yorda",
     ])
-    expect(
-      within(screen.getByRole('row', { name: /Oziq-ovqat/ })).getByText("1 700 000 so'm"),
-    ).toBeVisible()
+    const food = within(screen.getByRole('row', { name: /Oziq-ovqat/ }))
+    expect(food.getByText("1 700 000 so'm")).toBeVisible()
+    // BR-134: amaldagi limit — 2 000 000 + o'tgan oydan 400 000.
+    expect(food.getByText("2 400 000 so'm")).toBeVisible()
+    expect(food.getByText("o'tgan oydan 400 000 so'm")).toBeVisible()
+    expect(food.getByText("↻ o'tkazish")).toBeVisible()
   })
 
   it('yangi limit — faqat limitsiz xarajat kategoriyalari', async () => {
@@ -105,6 +126,9 @@ describe('LimitsPage (E22-T05)', () => {
     await user.click(await screen.findByRole('option', { name: 'Ijara' }))
     await user.type(within(form).getByLabelText('Oylik limit'), '3 000 000')
     await user.click(within(form).getByRole('switch', { name: '80% da xabar' }))
+    // BR-134: manfiy qoldiq rollover yoqilmaguncha tanlanmaydi.
+    await user.click(within(form).getByRole('switch', { name: 'Oshib ketganini ayirish' }))
+    await user.click(within(form).getByRole('switch', { name: "Qolganini keyingi oyga o'tkazish" }))
     await user.click(within(form).getByRole('button', { name: 'Saqlash' }))
 
     await waitFor(() => {
@@ -114,6 +138,8 @@ describe('LimitsPage (E22-T05)', () => {
         amount: 300000000,
         alert_80: false,
         alert_100: true,
+        rollover: true,
+        rollover_negative: false,
       })
     })
   })
