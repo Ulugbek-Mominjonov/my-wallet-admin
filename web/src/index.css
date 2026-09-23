@@ -162,3 +162,23 @@
     @apply font-sans;
   }
 }
+
+/* Hisobotni bosib chiqarish (E24-T02): faqat sahifa tarkibi, oq fon,
+   bo'limlar sahifa o'rtasida bo'linmaydi. */
+@media print {
+  [data-slot='sidebar-wrapper'] > [data-slot='sidebar'],
+  [data-slot='sidebar-gap'],
+  [data-slot='sidebar-container'] {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  [data-slot='card'],
+  figure,
+  section {
+    break-inside: avoid;
+  }
+}

@@ -674,7 +674,7 @@ E21–E26 (admin) M2 bilan.
   orttirgan %, kuniga sarflash mumkin), daromad vs xarajat (12 oy, ustun
   grafik), kategoriya donut, yaqin to'lovlar, ogohlantirishlar (limit,
   kechikkan, tekshiruv muammolari soni).
-- [ ] **E24-T02** **Oylik hisobot** (`report_month`): 1️⃣ daromad matritsasi
+- [x] **E24-T02** **Oylik hisobot** (`report_month`): 1️⃣ daromad matritsasi
   (tur × karta/naqd + JAMI, ro'yxatdan tashqari tur ogohlantirishi),
   2️⃣ yakun (daromad, xarajat, shundan ajratma, reja, to'lanmagan, qoldiq,
   prognoz, karta, naqd, sarflandi %), 3️⃣ orttirish (shu oy, %, umumiy qoldiq,

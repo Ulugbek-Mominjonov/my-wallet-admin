@@ -111,7 +111,8 @@
     "settings": "Byudjet sozlamalari",
     "budget": "Byudjet",
     "transactions": "Amallar",
-    "plans": "Rejalar"
+    "plans": "Rejalar",
+    "report": "Hisobot"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -865,5 +866,93 @@
     "month": "Oy",
     "value": "Qiymat",
     "empty": "Ma'lumot yo'q"
+  },
+  "report": {
+    "title": "Oylik hisobot",
+    "description": "Oy bo'yicha to'liq ko'rsatkichlar",
+    "print": "Chop etish",
+    "closed": "Yopilgan",
+    "summary": {
+      "title": "Yakun",
+      "income": "Daromad",
+      "expense": "Xarajat",
+      "allocated": "shundan ajratma",
+      "planned": "Reja",
+      "unpaid": "To'lanmagan",
+      "unknown": "+ {{count}} ta ?",
+      "balance": "Qoldiq",
+      "forecast": "Prognoz",
+      "card": "Karta",
+      "cash": "Naqd",
+      "spent": "Sarflandi",
+      "fundSpent": "Fonddan sarf"
+    },
+    "income": {
+      "title": "Daromad turlari",
+      "type": "Turi",
+      "card": "Karta",
+      "cash": "Naqd",
+      "total": "JAMI",
+      "other": "Ro'yxatdan tashqari daromad: {{amount}}",
+      "empty": "Bu oyda daromad yo'q"
+    },
+    "savings": {
+      "title": "Orttirish",
+      "thisMonth": "Shu oy",
+      "ratio": "Daromaddan",
+      "total": "Umumiy qoldiq",
+      "avg": "Oyiga o'rtacha",
+      "months": "Oylar soni",
+      "before": "Oldingi oylardan"
+    },
+    "projection": {
+      "title": "Prognoz",
+      "days": "O'tgan kunlar",
+      "daily": "Kunlik sarf",
+      "monthEndSpend": "Oy oxiri sarfi",
+      "incomeExpected": "Kutilayotgan daromad",
+      "incomeReceived": "hozircha kelgani: {{amount}}",
+      "monthEndBalance": "Oy oxiri qoldig‘i",
+      "avgExpense": "O'rtacha oylik xarajat"
+    },
+    "categories": {
+      "title": "Kategoriyalar va limitlar",
+      "category": "Kategoriya",
+      "planned": "Reja",
+      "actual": "Fakt",
+      "limit": "Limit",
+      "ratio": "%",
+      "empty": "Bu oyda kategoriya bo'yicha xarajat yo'q"
+    },
+    "fund": {
+      "title": "👤 Shaxsiy fond",
+      "allocated": "Ajratildi",
+      "spent": "Sarflandi",
+      "balance": "Qoldiq"
+    },
+    "debts": {
+      "title": "💳 Qarzlar",
+      "iOwe": "Men qarzdorman",
+      "owedToMe": "Menga qarzdor",
+      "monthly": "Oylik majburiyat",
+      "net": "Sof holat",
+      "paid": "Shu oy to'landi"
+    },
+    "goals": {
+      "title": "🎯 Maqsadlar",
+      "name": "Maqsad",
+      "saved": "Yig‘ildi",
+      "remaining": "Qoldi",
+      "progress": "Progress",
+      "empty": "Maqsad yo'q"
+    },
+    "unpaid": {
+      "title": "⏳ To'lanmagan rejalar",
+      "name": "Reja",
+      "due": "Muddat",
+      "remaining": "Qolgan",
+      "status": "Holat",
+      "empty": "To'lanmagan reja yo'q"
+    }
   }
 }

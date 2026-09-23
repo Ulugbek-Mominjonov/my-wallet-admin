@@ -35,7 +35,7 @@ export function AppShell({
     <SidebarProvider>
       <AppSidebar householdId={householdId} role={role} header={switcher} />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur md:px-4">
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-2 border-b bg-background/80 px-3 backdrop-blur md:px-4 print:hidden">
           <SidebarTrigger aria-label={t('shell.toggleSidebar')} />
           <Separator orientation="vertical" className="mx-1 h-5" />
           {!roleCan(role, 'write') && (

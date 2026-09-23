@@ -111,7 +111,8 @@
     "settings": "Budget settings",
     "budget": "Budget",
     "transactions": "Transactions",
-    "plans": "Plans"
+    "plans": "Plans",
+    "report": "Report"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -865,5 +866,93 @@
     "month": "Month",
     "value": "Value",
     "empty": "No data"
+  },
+  "report": {
+    "title": "Monthly report",
+    "description": "Full figures for the month",
+    "print": "Print",
+    "closed": "Closed",
+    "summary": {
+      "title": "Summary",
+      "income": "Income",
+      "expense": "Expenses",
+      "allocated": "of which allocation",
+      "planned": "Planned",
+      "unpaid": "Unpaid",
+      "unknown": "+ {{count}} ?",
+      "balance": "Balance",
+      "forecast": "Forecast",
+      "card": "Card",
+      "cash": "Cash",
+      "spent": "Spent",
+      "fundSpent": "Spent from fund"
+    },
+    "income": {
+      "title": "Income types",
+      "type": "Type",
+      "card": "Card",
+      "cash": "Cash",
+      "total": "TOTAL",
+      "other": "Income outside the list: {{amount}}",
+      "empty": "No income this month"
+    },
+    "savings": {
+      "title": "Savings",
+      "thisMonth": "This month",
+      "ratio": "Of income",
+      "total": "Total saved",
+      "avg": "Monthly average",
+      "months": "Months",
+      "before": "From earlier months"
+    },
+    "projection": {
+      "title": "Forecast",
+      "days": "Days elapsed",
+      "daily": "Daily spending",
+      "monthEndSpend": "Spending by month end",
+      "incomeExpected": "Expected income",
+      "incomeReceived": "received so far: {{amount}}",
+      "monthEndBalance": "Balance at month end",
+      "avgExpense": "Average monthly expense"
+    },
+    "categories": {
+      "title": "Categories and limits",
+      "category": "Category",
+      "planned": "Planned",
+      "actual": "Actual",
+      "limit": "Limit",
+      "ratio": "%",
+      "empty": "No category spending this month"
+    },
+    "fund": {
+      "title": "👤 Personal fund",
+      "allocated": "Allocated",
+      "spent": "Spent",
+      "balance": "Balance"
+    },
+    "debts": {
+      "title": "💳 Debts",
+      "iOwe": "I owe",
+      "owedToMe": "Owed to me",
+      "monthly": "Monthly obligation",
+      "net": "Net position",
+      "paid": "Paid this month"
+    },
+    "goals": {
+      "title": "🎯 Goals",
+      "name": "Goal",
+      "saved": "Saved",
+      "remaining": "Remaining",
+      "progress": "Progress",
+      "empty": "No goals"
+    },
+    "unpaid": {
+      "title": "⏳ Unpaid plans",
+      "name": "Plan",
+      "due": "Due",
+      "remaining": "Remaining",
+      "status": "Status",
+      "empty": "No unpaid plans"
+    }
   }
 }

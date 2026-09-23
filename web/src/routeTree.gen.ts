@@ -27,6 +27,7 @@ import { Route as AppHHouseholdIdPlansRouteImport } from './routes/_app/h/$house
 import { Route as AppHHouseholdIdProfileRouteImport } from './routes/_app/h/$householdId/profile'
 import { Route as AppHHouseholdIdQuickActionsRouteImport } from './routes/_app/h/$householdId/quick-actions'
 import { Route as AppHHouseholdIdRecurringRulesRouteImport } from './routes/_app/h/$householdId/recurring-rules'
+import { Route as AppHHouseholdIdReportRouteImport } from './routes/_app/h/$householdId/report'
 import { Route as AppHHouseholdIdSettingsRouteImport } from './routes/_app/h/$householdId/settings'
 import { Route as AppHHouseholdIdTagsRouteImport } from './routes/_app/h/$householdId/tags'
 import { Route as AppHHouseholdIdTransactionsRouteImport } from './routes/_app/h/$householdId/transactions'
@@ -122,6 +123,11 @@ const AppHHouseholdIdRecurringRulesRoute =
     path: '/recurring-rules',
     getParentRoute: () => AppHHouseholdIdRoute,
   } as any)
+const AppHHouseholdIdReportRoute = AppHHouseholdIdReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
 const AppHHouseholdIdSettingsRoute = AppHHouseholdIdSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -155,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId/quick-actions': typeof AppHHouseholdIdQuickActionsRoute
   '/h/$householdId/recurring-rules': typeof AppHHouseholdIdRecurringRulesRoute
+  '/h/$householdId/report': typeof AppHHouseholdIdReportRoute
   '/h/$householdId/settings': typeof AppHHouseholdIdSettingsRoute
   '/h/$householdId/tags': typeof AppHHouseholdIdTagsRoute
   '/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
@@ -175,6 +182,7 @@ export interface FileRoutesByTo {
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/h/$householdId/quick-actions': typeof AppHHouseholdIdQuickActionsRoute
   '/h/$householdId/recurring-rules': typeof AppHHouseholdIdRecurringRulesRoute
+  '/h/$householdId/report': typeof AppHHouseholdIdReportRoute
   '/h/$householdId/settings': typeof AppHHouseholdIdSettingsRoute
   '/h/$householdId/tags': typeof AppHHouseholdIdTagsRoute
   '/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
@@ -199,6 +207,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
   '/_app/h/$householdId/quick-actions': typeof AppHHouseholdIdQuickActionsRoute
   '/_app/h/$householdId/recurring-rules': typeof AppHHouseholdIdRecurringRulesRoute
+  '/_app/h/$householdId/report': typeof AppHHouseholdIdReportRoute
   '/_app/h/$householdId/settings': typeof AppHHouseholdIdSettingsRoute
   '/_app/h/$householdId/tags': typeof AppHHouseholdIdTagsRoute
   '/_app/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
@@ -222,6 +231,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/profile'
     | '/h/$householdId/quick-actions'
     | '/h/$householdId/recurring-rules'
+    | '/h/$householdId/report'
     | '/h/$householdId/settings'
     | '/h/$householdId/tags'
     | '/h/$householdId/transactions'
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/profile'
     | '/h/$householdId/quick-actions'
     | '/h/$householdId/recurring-rules'
+    | '/h/$householdId/report'
     | '/h/$householdId/settings'
     | '/h/$householdId/tags'
     | '/h/$householdId/transactions'
@@ -265,6 +276,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId/profile'
     | '/_app/h/$householdId/quick-actions'
     | '/_app/h/$householdId/recurring-rules'
+    | '/_app/h/$householdId/report'
     | '/_app/h/$householdId/settings'
     | '/_app/h/$householdId/tags'
     | '/_app/h/$householdId/transactions'
@@ -404,6 +416,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdRecurringRulesRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
+    '/_app/h/$householdId/report': {
+      id: '/_app/h/$householdId/report'
+      path: '/report'
+      fullPath: '/h/$householdId/report'
+      preLoaderRoute: typeof AppHHouseholdIdReportRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
     '/_app/h/$householdId/settings': {
       id: '/_app/h/$householdId/settings'
       path: '/settings'
@@ -438,6 +457,7 @@ interface AppHHouseholdIdRouteChildren {
   AppHHouseholdIdProfileRoute: typeof AppHHouseholdIdProfileRoute
   AppHHouseholdIdQuickActionsRoute: typeof AppHHouseholdIdQuickActionsRoute
   AppHHouseholdIdRecurringRulesRoute: typeof AppHHouseholdIdRecurringRulesRoute
+  AppHHouseholdIdReportRoute: typeof AppHHouseholdIdReportRoute
   AppHHouseholdIdSettingsRoute: typeof AppHHouseholdIdSettingsRoute
   AppHHouseholdIdTagsRoute: typeof AppHHouseholdIdTagsRoute
   AppHHouseholdIdTransactionsRoute: typeof AppHHouseholdIdTransactionsRoute
@@ -454,6 +474,7 @@ const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
   AppHHouseholdIdProfileRoute: AppHHouseholdIdProfileRoute,
   AppHHouseholdIdQuickActionsRoute: AppHHouseholdIdQuickActionsRoute,
   AppHHouseholdIdRecurringRulesRoute: AppHHouseholdIdRecurringRulesRoute,
+  AppHHouseholdIdReportRoute: AppHHouseholdIdReportRoute,
   AppHHouseholdIdSettingsRoute: AppHHouseholdIdSettingsRoute,
   AppHHouseholdIdTagsRoute: AppHHouseholdIdTagsRoute,
   AppHHouseholdIdTransactionsRoute: AppHHouseholdIdTransactionsRoute,

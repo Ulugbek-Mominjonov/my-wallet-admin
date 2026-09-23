@@ -103,4 +103,38 @@ test.describe('E24-T01: xulosa', () => {
       await page.screenshot({ path: testInfo.outputPath('dashboard.png'), fullPage: true })
     }
   })
+
+  test('E24-T02: oylik hisobot — yakun, daromad turlari, kategoriyalar; oy URL da', async ({
+    page,
+  }, testInfo) => {
+    const householdId = await ownerWithData(page)
+    await page.goto(`/h/${householdId}/report`)
+
+    const summary = page.getByRole('heading', { name: 'Yakun' })
+    await expect(summary).toBeVisible()
+    await expect(page.getByRole('table', { name: 'Daromad turlari' })).toContainText('JAMI')
+    await expect(page.getByRole('table', { name: 'Kategoriyalar va limitlar' })).toContainText(
+      'Oziq-ovqat',
+    )
+    await expect(page.getByRole('table', { name: "⏳ To'lanmagan rejalar" })).toContainText(
+      'Internet',
+    )
+
+    if (testInfo.project.name === 'desktop') {
+      await page.screenshot({ path: testInfo.outputPath('report.png'), fullPage: true })
+    }
+
+    // Chop etishda faqat hisobot qoladi (BR-180 uchun print uslublari).
+    await page.emulateMedia({ media: 'print' })
+    await expect(page.getByRole('link', { name: 'Hisoblar' })).toBeHidden()
+    await expect(page.getByRole('button', { name: 'Chop etish' })).toBeHidden()
+    await expect(page.getByRole('heading', { name: 'Yakun' })).toBeVisible()
+    await page.emulateMedia({ media: 'screen' })
+
+    // Oy almashtirish — URL da (ulashiladigan havola).
+    await page.getByRole('button', { name: 'Oldingi oy' }).click()
+    await expect(page).toHaveURL(/month=\d{4}-\d{2}/)
+    await page.reload()
+    await expect(page.getByRole('heading', { name: 'Yakun' })).toBeVisible()
+  })
 })
