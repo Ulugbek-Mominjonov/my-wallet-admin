@@ -3,12 +3,12 @@ import { z } from 'zod'
 
 import type { PlannedItem } from '@/entities/planned-item'
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 import type { MonthKey } from '@/shared/lib/month'
 
 /** Rejalar keshi (amal formasidagi bog'lanadigan rejalar ham shu prefiksda). */
-export const plansKey = (householdId: string) => [...qk.household(householdId), 'plans'] as const
+export const plansKey = (householdId: string) => part(householdId, 'plans')
 
 /** E23-T04: oy rejalari (o'chirilganlarsiz) — holat klientda bugungi sanadan (BR-071). */
 export const plansQuery = (householdId: string, month: MonthKey) =>

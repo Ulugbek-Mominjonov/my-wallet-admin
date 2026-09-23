@@ -2,12 +2,12 @@ import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part, qk } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 import type { MonthKey } from '@/shared/lib/month'
 
 /** Oy holati keshi (amal formasidagi "yopilgan oy" ogohlantirishi ham shu prefiksda). */
-export const monthsKey = (householdId: string) => [...qk.household(householdId), 'months'] as const
+export const monthsKey = (householdId: string) => part(householdId, 'months')
 
 /**
  * Dialog tekshiruvlari (preview, yopish tekshiruvi) — alohida kalitda: oy

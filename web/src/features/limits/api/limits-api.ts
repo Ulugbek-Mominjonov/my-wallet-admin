@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 
 /** BR-130: `ok` < 80%, `near` 80–100%, `over` > 100% (contracts/api.md). */
@@ -21,7 +21,7 @@ export interface CategoryLimit {
   status: LimitStatus
 }
 
-export const limitsKey = (householdId: string) => [...qk.household(householdId), 'limits'] as const
+export const limitsKey = (householdId: string) => part(householdId, 'limits')
 
 const reportSchema = z.object({
   by_category: z.array(

@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query'
 
 import { Constants } from '@/shared/api/database.types'
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 
 /** BR-110: `i_owe` — men qarzdorman, `owed_to_me` — menga qarzdor. */
@@ -33,7 +33,7 @@ export interface Debt {
   status: DebtStatus
 }
 
-export const debtsKey = (householdId: string) => [...qk.household(householdId), 'debts'] as const
+export const debtsKey = (householdId: string) => part(householdId, 'debts')
 
 const STATUSES: readonly string[] = ['unlinked', 'pending', 'paying', 'closed']
 const toStatus = (value: string | null): DebtStatus =>

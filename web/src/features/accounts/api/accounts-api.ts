@@ -2,7 +2,7 @@ import { queryOptions } from '@tanstack/react-query'
 
 import type { Account, AccountType } from '@/entities/account'
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 
 /** Faqat ro'yxat va forma uchun kerakli ustunlar. */
@@ -10,8 +10,7 @@ const ACCOUNT_COLUMNS =
   'id, name, type, currency, opening_balance, opening_date, icon, color, sort_order, archived_at'
 
 /** Byudjet hisoblari (arxiv filtridan qat'i nazar) — invalidatsiya prefiksi. */
-export const accountsKey = (householdId: string) =>
-  [...qk.household(householdId), 'accounts'] as const
+export const accountsKey = (householdId: string) => part(householdId, 'accounts')
 
 /**
  * E22-T02: hisoblar va joriy qoldiqlar — ikki parallel so'rov (ikkalasi

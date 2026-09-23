@@ -20,7 +20,6 @@ import {
   deleteTransaction,
   fetchAllTransactions,
   saveTransaction,
-  transactionsKey,
   transactionsQuery,
   transactionsSummaryQuery,
   type BulkAction,
@@ -40,8 +39,8 @@ import { BulkActions } from '@/features/transactions/ui/bulk-actions'
 import { TransactionFiltersBar } from '@/features/transactions/ui/transaction-filters'
 import { TransactionForm, type DebtOption } from '@/features/transactions/ui/transaction-form'
 import { TransactionsTable } from '@/features/transactions/ui/transactions-table'
+import { invalidateMoneyWrite } from '@/shared/api/cache'
 import { skippedSummary } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
 import { downloadFile } from '@/shared/lib/download'
 import type { MonthKey } from '@/shared/lib/month'
 import { Button } from '@/shared/ui/button'
@@ -115,13 +114,8 @@ export function TransactionsPage({
   )
   const [editing, setEditing] = useState<Transaction | 'new' | null>(null)
   const [deleting, setDeleting] = useState<Transaction | null>(null)
-  // Amal qoldiq, hisobot, limit, qarzlarga ta'sir qiladi: ro'yxat darhol
-  // yangilanadi, byudjetning qolgan keshlari — keyingi ochilishda.
-  const refresh = () =>
-    Promise.all([
-      queryClient.invalidateQueries({ queryKey: transactionsKey(householdId) }),
-      queryClient.invalidateQueries({ queryKey: qk.household(householdId), refetchType: 'none' }),
-    ])
+  // Amal qoldiq, hisobot, limit, qarzlarga ta'sir qiladi (E24-T07).
+  const refresh = () => invalidateMoneyWrite(queryClient, householdId)
   const save = useMutation({
     mutationFn: (input: TransactionInput) =>
       saveTransaction(

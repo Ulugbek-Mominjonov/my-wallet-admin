@@ -6,7 +6,7 @@ import { TRANSACTION_KINDS, type Transaction, type TransactionKind } from '@/ent
 import type { TransactionFilters } from '@/features/transactions/model/filters'
 import type { TransactionInput } from '@/features/transactions/model/transaction-form'
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part, qk } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 import { shiftMonth, type MonthKey } from '@/shared/lib/month'
 
@@ -16,8 +16,7 @@ const RECEIPTS_BUCKET = 'receipts'
 /** Bir sahifadagi amallar (RPC chegarasi — 200). */
 export const TRANSACTIONS_PAGE_SIZE = 50
 
-export const transactionsKey = (householdId: string) =>
-  [...qk.household(householdId), 'transactions'] as const
+export const transactionsKey = (householdId: string) => part(householdId, 'transactions')
 
 const rowSchema = z.object({
   id: z.string(),

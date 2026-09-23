@@ -2,13 +2,12 @@ import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 import type { MonthKey } from '@/shared/lib/month'
 
 /** Hisobot keshlari — amal yozilganda byudjet prefiksida eskiradi (E24-T07). */
-export const reportsKey = (householdId: string) =>
-  [...qk.household(householdId), 'reports'] as const
+export const reportsKey = (householdId: string) => part(householdId, 'reports')
 
 /** Hisobotlar sekin o'zgaradi: bir daqiqa ichida qayta so'ralmaydi (E24-T07). */
 const REPORT_STALE_MS = 60_000

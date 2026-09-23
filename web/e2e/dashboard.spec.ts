@@ -180,4 +180,35 @@ test.describe('E24-T01: xulosa', () => {
     await expect(page.getByText("Qarz yo'q")).toBeVisible()
     await expect(page.getByText("Maqsad yo'q")).toBeVisible()
   })
+
+  test('E24-T07: amal qo‘shilsa hisobot yangilanadi (kesh eskiradi)', async ({ page }) => {
+    const householdId = await ownerWithData(page)
+
+    // Hisobot bir marta o'qiladi (staleTime 60 s — kesh to'ladi).
+    await page.goto(`/h/${householdId}/report`)
+    // "Yakun" kartasi — shu summa prognozda ham uchraydi.
+    const summary = page.locator('[data-slot="card"]', {
+      has: page.getByRole('heading', { name: 'Yakun' }),
+    })
+    await expect(summary).toBeVisible()
+    await expect(summary.getByText("300 000 so'm")).toBeVisible()
+
+    // Yangi xarajat — amallar sahifasidan.
+    await page.goto(`/h/${householdId}/transactions`)
+    await page.getByRole('button', { name: "Amal qo'shish" }).click()
+    const dialog = page.getByRole('dialog', { name: 'Yangi amal' })
+    await dialog.getByLabel('Summa (UZS)').fill('50 000')
+    await dialog.getByRole('combobox', { name: 'Hisob' }).click()
+    await page.getByRole('option', { name: 'Naqd' }).click()
+    await dialog.getByRole('combobox', { name: 'Kategoriya' }).click()
+    await page.getByRole('option', { name: 'Oziq-ovqat' }).click()
+    await dialog.getByRole('button', { name: 'Saqlash' }).click()
+    await expect(dialog).toBeHidden()
+
+    // Hisobot yangi summani ko'rsatadi (eski kesh ishlatilmaydi).
+    await page.goto(`/h/${householdId}/report`)
+    await expect(summary).toBeVisible()
+    await expect(summary.getByText("350 000 so'm")).toBeVisible()
+    await expect(summary.getByText("300 000 so'm")).toBeHidden()
+  })
 })

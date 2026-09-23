@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query'
 
 import { toAppError } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
+import { part } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 
 export interface Goal {
@@ -25,7 +25,7 @@ export interface Goal {
   onTrack: boolean | null
 }
 
-export const goalsKey = (householdId: string) => [...qk.household(householdId), 'goals'] as const
+export const goalsKey = (householdId: string) => part(householdId, 'goals')
 
 /** E22-T06: maqsadlar va prognoz — ikki parallel so'rov. */
 export const goalsQuery = (householdId: string) =>

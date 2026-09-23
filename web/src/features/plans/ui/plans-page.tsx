@@ -21,8 +21,8 @@ import { BulkPayDialog } from '@/features/plans/ui/bulk-pay-dialog'
 import { MonthActions } from '@/features/plans/ui/month-actions'
 import { PayDialog } from '@/features/plans/ui/pay-dialog'
 import { PlanSection } from '@/features/plans/ui/plan-section'
+import { invalidateMoneyWrite } from '@/shared/api/cache'
 import { businessErrorMessage, skippedSummary } from '@/shared/api/errors'
-import { qk } from '@/shared/api/query-keys'
 import { useAppLocale } from '@/shared/i18n'
 import { formatMoney } from '@/shared/lib/money'
 import type { MonthKey } from '@/shared/lib/month'
@@ -100,11 +100,11 @@ export function PlansPage({
     setSelection({ key: selectionKey, ids })
   }
 
-  // To'lov amal yozadi: qoldiq, hisobot, amallar ro'yxati ham o'zgaradi.
+  // To'lov amal yozadi: qoldiq, hisobot, amallar ro'yxati ham o'zgaradi (E24-T07).
   const refresh = () =>
     Promise.all([
       queryClient.invalidateQueries({ queryKey: plansKey(householdId) }),
-      queryClient.invalidateQueries({ queryKey: qk.household(householdId), refetchType: 'none' }),
+      invalidateMoneyWrite(queryClient, householdId),
     ])
   const pay = useMutation({
     mutationFn: ({ plan, input }: { plan: PlannedItem; input: PayInput }) =>

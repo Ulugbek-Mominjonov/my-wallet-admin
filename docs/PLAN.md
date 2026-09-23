@@ -112,7 +112,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | **M3 Admin MVP** | E21 | Auth, byudjet konteksti, layout | admin | E05, E02 | ✅ |
 | | E22 | Spravochniklar | admin | E21, E06 | ✅ |
 | | E23 | Amallar va rejalar | admin | E22, E08 | ✅ |
-| | E24 | Hisobotlar va dashboard | admin | E23, E09 | ⬜ |
+| | E24 | Hisobotlar va dashboard | admin | E23, E09 | ✅ |
 | | E25 | Vositalar: tekshiruv, import/eksport, audit | admin | E24 | ⬜ |
 | | E26 | Platforma (super-admin) | admin | E21, E11 | ⬜ |
 | **M4 Ishga tushirish** | E27 | Eski ma'lumotni ko'chirish | admin | E25 | ⬜ |
@@ -695,7 +695,7 @@ E21–E26 (admin) M2 bilan.
   tushish (drill-down) → amallar ro'yxati (filtr bilan).
 - [x] **E24-T06** Eksport: har hisobot → CSV (XLSX o'rniga — qarorlar
   jurnaliga qarang), oylik hisobot → PDF (brauzer print). BR-180.
-- [ ] **E24-T07** Kesh siyosati: hisobotlar `staleTime` 60 s, amal
+- [x] **E24-T07** Kesh siyosati: hisobotlar `staleTime` 60 s, amal
   yozilganda faqat tegishli oy/yil kalitlari invalidatsiya; e2e: amal
   qo'shish → hisobot yangilanadi.
 
@@ -969,6 +969,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Ulush uchun donut emas — gorizontal ustunlar (bitta rang), har grafikda jadval ko'rinishi | uzun kategoriya nomlari bilan donut yomon o'qiladi; rang yolg'iz belgilovchi bo'lmasligi kerak (ekran o'quvchi, bosib chiqarish) | E24-T01 |
 | 2026-09-23 | Hisobot javoblari zod bilan tekshiriladi (`plan_ratio`, `per_day_available` — null, `income_pending` — mantiqiy) | uchala maydon hujjatda tип bilan ko'rsatilmagan edi; tekshiruv ularni sahifa buzilishidan oldin topdi | E24-T01 |
 | 2026-09-23 | Eksport — CSV (BOM bilan, Excel ochadi) va PDF — brauzer print orqali; XLSX (SheetJS) qo'shilmadi | npm'dagi `xlsx` eski (CVE-2023-30533), yangilari faqat sotuvchi CDN'idan keladi — ochiq repoda ta'minot zanjiri xavfi; CSV hamma hisobotda bir xil kod bilan ishlaydi | E24-T06, BR-180 |
+| 2026-09-23 | Pul harakatidan keyin faqat pulga bog'liq keshlar eskiradi (amal, reja, oy, hisob, hisobot, limit, qarz, maqsad); kalit bo'laklari `shared/api/query-keys` da | avval butun byudjet prefiksi eskirardi — spravochniklar (kategoriya, teg, a'zo) ham qayta so'ralardi; feature'lar bir-birining kalitini import qila olmaydi | E24-T07 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
@@ -1016,3 +1017,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-22 | E20-T02, T04 | mobil: E2E (patrol) emulyatorda yashil, nightly workflow; E2E topgan sinxron xatosi (reja to'lovi → conflict) tuzatildi + integratsiya testlari; sovuq start ~1,5 s (emulyator, `docs/PERF.md` — parallel init yutuq bermadi, halol qayd); chek rasmlari keshi. E20-T08 🔑 (keystore, testerlar) |
 | 2026-09-22 | E22-T01..T08 | admin spravochniklar: DirectoryPage shabloni (DataTable v9, Sheet forma, optimistik arxiv/o'chirish/tartib, klaviatura bilan dnd), hisoblar (joriy qoldiq), kategoriyalar (daraxt, oy siljishi + qayta joylash, birlashtirish), doimiy rejalar (keyingi oy preview), limitlar (joriy oy holati), tez tugmalar, teglar, qarzlar (debt_balances, jami), maqsadlar (prognoz), byudjet sozlamalari (fond jonli preview, a'zolar, takliflar, o'chirish); 2 RPC (`set_sort_order`, `delete_household`), 15 pgTAP (jami 437); 170 Vitest (MSW) + 50 Playwright (lokal Supabase). Topilgan xatolar: optimistik tartibda daraxt sakrashi, o'chirish tasdig'i xatoda ochiq qolishi, sidebar'da eski byudjet nomi, disabled register bilan bekor bo'lishi, dnd e'lonlari inglizcha. **E22 yakunlandi** |
 | 2026-09-23 | E23-T01..T06 | admin amallar va rejalar: amallar jadvali (dinamik SQL filtri, keyset, jami, xatoga chidamli qidiruv — mos kelmaydigan qidiruv 36 → 1 ms), amal formasi (tegishli oy jonli, joy nomi tarixdan, reja/qarz/teg/chek, save_transaction — amal va teglar bitta tranzaksiyada), ommaviy amallar va CSV eksport, rejalar sahifasi (bo'limlar, To'landi/Keldi, qisman to'lov, ommaviy to'lash), oyni ochish/yopish/qayta ochish; 4 RPC + 2 ta yangi pgTAP fayl (jami 475), 228 Vitest, 60 Playwright, make perf'da 5 ta yangi o'lchov. Topilgan xatolar: RLS ostida trgm indeksi ishlamasligi, qidiruvda so'z oxiridagi probelning o'chib ketishi, o'tkazmaga kategoriya (CHECK o'rniga tushunarli sabab), BR-043 ni buzuvchi qayta hisoblash. **E23 yakunlandi** |
+| 2026-09-23 | E24-T01..T07 | admin hisobotlar: xulosa (KPI, 12 oylik grafik, kategoriyalar, yaqin to'lovlar, ogohlantirishlar), oylik hisobot (yakun, daromad matritsasi, prognoz, limitlar, fond/qarz/maqsad/to'lanmaganlar, print), yillik ko'rinish, jamg'arma + 👤 fond + hisob qoldiqlari, qarz va maqsadlar, kategoriya tahlili (BR-095), CSV eksport va kesh siyosati; o'z SVG grafik kiti (ustun/chiziq/gorizontal) va tekshirilgan 8 rangli palitra. 266 Vitest, 66 Playwright. Topilgan xatolar: `income_pending` mantiqiy (hujjatda son deb tushunilardi), `plan_ratio` va `per_day_available` null bo'lishi, kam oyda ustunlar cho'zilib ketishi, yuklanayotganda sarlavha yo'qolishi. **E24 yakunlandi** |
