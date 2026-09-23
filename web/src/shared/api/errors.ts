@@ -89,6 +89,7 @@ const BUSINESS_ERRORS: Record<string, ParseKeys> = {
   invalid_amount: 'plans.errors.invalidAmount',
   account_required: 'plans.errors.accountRequired',
   account_not_found: 'plans.errors.accountNotFound',
+  month_not_finished: 'plans.errors.monthNotFinished',
 }
 
 /** Biznes kod (xato yoki ommaviy amal natijasidagi `reason`) → foydalanuvchi matni. */

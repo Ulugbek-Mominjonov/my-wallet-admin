@@ -786,7 +786,37 @@
       "currencyMismatch": "Hisob boshqa valyutada — alohida to'lang",
       "amount": "Summani kiriting (0 dan katta)",
       "account": "Hisobni tanlang",
-      "date": "Sanani kiriting"
+      "date": "Sanani kiriting",
+      "monthNotFinished": "Tugamagan oyni yopib bo'lmaydi"
+    },
+    "kinds": {
+      "expense": "Xarajat",
+      "income": "Daromad",
+      "allocation": "Ajratma"
+    },
+    "month": {
+      "open": "Oyni ochish",
+      "openTitle": "{{month}} — oyni ochish",
+      "openText": "Aktiv doimiy rejalardan shu oy rejalari yaratiladi; bor rejalar qayta yozilmaydi (BR-081, BR-082).",
+      "newCount": "Yangi: {{count}}",
+      "existingCount": "Allaqachon bor: {{count}}",
+      "exists": "bor",
+      "nothingNew": "Yangi reja yo'q — hammasi allaqachon yaratilgan",
+      "confirmOpen": "Ochish",
+      "opened": "{{created}} ta qo'shildi, {{skipped}} ta allaqachon bor edi",
+      "closedBadge": "Yopilgan",
+      "close": "Oyni yopish",
+      "closeTitle": "{{month}} — oyni yopish",
+      "closeText": "Yopilgan oy hisobotda 🔒 bilan ko'rinadi; qattiq qulf yoqilgan bo'lsa yozuvlar o'zgarmaydi.",
+      "closeUnpaid": "To'lanmagan rejalar: {{count}} ta ({{amount}})",
+      "closeUnknown": "Summasi noma'lum: {{count}} ta",
+      "closeAnyway": "Baribir yopish",
+      "closeClean": "Hamma rejalar yopilgan — oyni yopish mumkin.",
+      "closedToast": "{{month}} yopildi",
+      "reopen": "Qayta ochish",
+      "reopenTitle": "{{month}} qayta ochilsinmi?",
+      "reopenText": "Oy yozuvlari yana tahrirlanadi; hisobotdagi 🔒 belgisi olib tashlanadi.",
+      "reopenedToast": "{{month}} qayta ochildi"
     }
   }
 }

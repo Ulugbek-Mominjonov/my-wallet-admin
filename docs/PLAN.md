@@ -658,7 +658,7 @@ E21–E26 (admin) M2 bilan.
   xarajat va daromad rejalari tablari; "To'landi" (summa, hisob, sana,
   qisman/yopish), "O'tkazib yuborish", ommaviy "To'landi" (BR-074),
   noma'lum summalar `?` bilan, jami: `X so'm + N ta ?`.
-- [ ] **E23-T05** **Oyni ochish** dialogi (preview: yaratiladigan rejalar
+- [x] **E23-T05** **Oyni ochish** dialogi (preview: yaratiladigan rejalar
   ro'yxati → tasdiq), **oyni yopish/qayta ochish** (`month_close_check`
   natijasi bilan dialog, BR-153).
 - [ ] **E23-T06** E2E: oy ochish → reja to'lash (to'liq/qisman) → hisobotda
@@ -963,6 +963,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-22 | Ommaviy natijada o'tkazib yuborilgan amallar tanlangan qoladi, sabablar soni bilan toast'da; tanlov filtrga bog'langan | qaysi qator nima uchun o'tmagani darhol ko'rinadi; filtr o'zgarganda ko'rinmaydigan qatorlar ustida tasodifiy amal bo'lmaydi | E23-T03 |
 | 2026-09-22 | Admin rejalar: holat va bo'limlar klientda — `private.planned_status` tartibi, mobil `PlanBoard` bilan bir xil (yaqin — 3 kun), `planned-item` entity'si | holat saqlanmaydi (BR-071, bugungi sana); ikki klientda bir xil ko'rinish; so'rov — bitta oy rejalari | E23-T04 |
 | 2026-09-22 | "To'landi" formasida summa doim yuboriladi (standart — qolgani, hisob asosiy valyutada bo'lsa); qisman to'lovda "Yopish" tanlovi faqat qoldiq ma'lum va bir valyutada | foydalanuvchi ko'rgan summa aynan yoziladi; boshqa valyutadagi summani qoldiq bilan solishtirib bo'lmaydi | E23-T04, BR-073 |
+| 2026-09-23 | Oy dialoglari tekshiruvlari (ochish preview'i, yopish tekshiruvi) — oy holati keshidan alohida kalitda | ochish/yopishdan keyin oy holati invalidatsiya qilinadi; bir kalitda bo'lsa yopilgan dialogning so'rovi ham qayta ketardi | E23-T05 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

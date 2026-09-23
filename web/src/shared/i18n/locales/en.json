@@ -786,7 +786,37 @@
       "currencyMismatch": "The account is in another currency — pay it separately",
       "amount": "Enter an amount above 0",
       "account": "Choose an account",
-      "date": "Enter a date"
+      "date": "Enter a date",
+      "monthNotFinished": "An unfinished month cannot be closed"
+    },
+    "kinds": {
+      "expense": "Expense",
+      "income": "Income",
+      "allocation": "Allocation"
+    },
+    "month": {
+      "open": "Open month",
+      "openTitle": "{{month}} — open the month",
+      "openText": "This month's plans are created from active recurring rules; existing ones are not overwritten (BR-081, BR-082).",
+      "newCount": "New: {{count}}",
+      "existingCount": "Already there: {{count}}",
+      "exists": "exists",
+      "nothingNew": "Nothing new — everything is already created",
+      "confirmOpen": "Open",
+      "opened": "Added: {{created}}, already there: {{skipped}}",
+      "closedBadge": "Closed",
+      "close": "Close month",
+      "closeTitle": "{{month}} — close the month",
+      "closeText": "A closed month is marked 🔒 in reports; with strict lock its records cannot change.",
+      "closeUnpaid": "Unpaid plans: {{count}} ({{amount}})",
+      "closeUnknown": "Without amount: {{count}}",
+      "closeAnyway": "Close anyway",
+      "closeClean": "All plans are settled — the month can be closed.",
+      "closedToast": "{{month}} closed",
+      "reopen": "Reopen",
+      "reopenTitle": "Reopen {{month}}?",
+      "reopenText": "Records of the month become editable again; the 🔒 mark is removed from reports.",
+      "reopenedToast": "{{month}} reopened"
     }
   }
 }

@@ -18,6 +18,7 @@ import {
   type PayInput,
 } from '@/features/plans/api/plans-api'
 import { BulkPayDialog } from '@/features/plans/ui/bulk-pay-dialog'
+import { MonthActions } from '@/features/plans/ui/month-actions'
 import { PayDialog } from '@/features/plans/ui/pay-dialog'
 import { PlanSection } from '@/features/plans/ui/plan-section'
 import { businessErrorMessage, skippedSummary } from '@/shared/api/errors'
@@ -50,7 +51,7 @@ const BULK_PAY_REASONS: Record<string, ParseKeys> = {
 }
 
 /**
- * E23-T04: oy rejalari — to'lovlar (ajratma bilan) va kutilayotgan daromadlar
+ * E23-T04, T05: oy rejalari — to'lovlar (ajratma bilan) va kutilayotgan daromadlar
  * tablari, holat bo'limlari, jami `X + N ta ?` (BR-076), "To'landi"/"Keldi",
  * o'tkazib yuborish va ommaviy to'lash (BR-074).
  */
@@ -172,7 +173,18 @@ export function PlansPage({
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t('plans.title')} description={t('plans.description')} />
+      <PageHeader
+        title={t('plans.title')}
+        description={t('plans.description')}
+        actions={
+          <MonthActions
+            householdId={householdId}
+            month={month}
+            currentMonth={currentMonth}
+            baseCurrency={baseCurrency}
+          />
+        }
+      />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <MonthStepper value={month} current={currentMonth} onChange={onMonthChange} />
         <Tabs
