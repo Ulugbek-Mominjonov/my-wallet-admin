@@ -290,3 +290,42 @@ snapshot[`test — en 1`] = `
 Test message — notifications are working.",
 }
 `;
+
+snapshot[`announcement — uz 1`] = `
+{
+  push: {
+    body: "Yangi versiya chiqdi.
+Yangilashni unutmang.",
+    title: "📣 My Wallet",
+  },
+  telegram: "<b>📣 My Wallet</b>
+Yangi versiya chiqdi.
+Yangilashni unutmang.",
+}
+`;
+
+snapshot[`announcement — ru 1`] = `
+{
+  push: {
+    body: "Вышла новая версия.
+Не забудьте обновить.",
+    title: "📣 My Wallet",
+  },
+  telegram: "<b>📣 My Wallet</b>
+Вышла новая версия.
+Не забудьте обновить.",
+}
+`;
+
+snapshot[`announcement — en 1`] = `
+{
+  push: {
+    body: "A new version is out.
+Do not forget to update.",
+    title: "📣 My Wallet",
+  },
+  telegram: "<b>📣 My Wallet</b>
+A new version is out.
+Do not forget to update.",
+}
+`;

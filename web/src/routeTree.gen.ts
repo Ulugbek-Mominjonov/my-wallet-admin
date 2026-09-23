@@ -18,7 +18,9 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as AuthMfaRouteImport } from './routes/_auth/mfa'
 import { Route as AppHHouseholdIdRouteImport } from './routes/_app/h/$householdId'
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform/index'
+import { Route as AppPlatformAnnouncementsRouteImport } from './routes/_app/platform/announcements'
 import { Route as AppPlatformConfigRouteImport } from './routes/_app/platform/config'
+import { Route as AppPlatformUsersRouteImport } from './routes/_app/platform/users'
 import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callback'
 import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
 import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$householdId/accounts'
@@ -90,9 +92,20 @@ const AppPlatformIndexRoute = AppPlatformIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppPlatformRoute,
 } as any)
+const AppPlatformAnnouncementsRoute =
+  AppPlatformAnnouncementsRouteImport.update({
+    id: '/announcements',
+    path: '/announcements',
+    getParentRoute: () => AppPlatformRoute,
+  } as any)
 const AppPlatformConfigRoute = AppPlatformConfigRouteImport.update({
   id: '/config',
   path: '/config',
+  getParentRoute: () => AppPlatformRoute,
+} as any)
+const AppPlatformUsersRoute = AppPlatformUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => AppPlatformRoute,
 } as any)
 const AuthAuthCallbackRoute = AuthAuthCallbackRouteImport.update({
@@ -248,7 +261,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/mfa': typeof AuthMfaRoute
   '/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
+  '/platform/announcements': typeof AppPlatformAnnouncementsRoute
   '/platform/config': typeof AppPlatformConfigRoute
+  '/platform/users': typeof AppPlatformUsersRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/platform/': typeof AppPlatformIndexRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
@@ -283,7 +298,9 @@ export interface FileRoutesByTo {
   '/welcome': typeof AppWelcomeRoute
   '/login': typeof AuthLoginRoute
   '/mfa': typeof AuthMfaRoute
+  '/platform/announcements': typeof AppPlatformAnnouncementsRoute
   '/platform/config': typeof AppPlatformConfigRoute
+  '/platform/users': typeof AppPlatformUsersRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/platform': typeof AppPlatformIndexRoute
   '/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
@@ -322,7 +339,9 @@ export interface FileRoutesById {
   '/_auth/mfa': typeof AuthMfaRoute
   '/_app/': typeof AppIndexRoute
   '/_app/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
+  '/_app/platform/announcements': typeof AppPlatformAnnouncementsRoute
   '/_app/platform/config': typeof AppPlatformConfigRoute
+  '/_app/platform/users': typeof AppPlatformUsersRoute
   '/_auth/auth/callback': typeof AuthAuthCallbackRoute
   '/_app/platform/': typeof AppPlatformIndexRoute
   '/_app/h/$householdId/accounts': typeof AppHHouseholdIdAccountsRoute
@@ -361,7 +380,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/mfa'
     | '/h/$householdId'
+    | '/platform/announcements'
     | '/platform/config'
+    | '/platform/users'
     | '/auth/callback'
     | '/platform/'
     | '/h/$householdId/accounts'
@@ -396,7 +417,9 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/login'
     | '/mfa'
+    | '/platform/announcements'
     | '/platform/config'
+    | '/platform/users'
     | '/auth/callback'
     | '/platform'
     | '/h/$householdId/accounts'
@@ -434,7 +457,9 @@ export interface FileRouteTypes {
     | '/_auth/mfa'
     | '/_app/'
     | '/_app/h/$householdId'
+    | '/_app/platform/announcements'
     | '/_app/platform/config'
+    | '/_app/platform/users'
     | '/_auth/auth/callback'
     | '/_app/platform/'
     | '/_app/h/$householdId/accounts'
@@ -535,11 +560,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPlatformIndexRouteImport
       parentRoute: typeof AppPlatformRoute
     }
+    '/_app/platform/announcements': {
+      id: '/_app/platform/announcements'
+      path: '/announcements'
+      fullPath: '/platform/announcements'
+      preLoaderRoute: typeof AppPlatformAnnouncementsRouteImport
+      parentRoute: typeof AppPlatformRoute
+    }
     '/_app/platform/config': {
       id: '/_app/platform/config'
       path: '/config'
       fullPath: '/platform/config'
       preLoaderRoute: typeof AppPlatformConfigRouteImport
+      parentRoute: typeof AppPlatformRoute
+    }
+    '/_app/platform/users': {
+      id: '/_app/platform/users'
+      path: '/users'
+      fullPath: '/platform/users'
+      preLoaderRoute: typeof AppPlatformUsersRouteImport
       parentRoute: typeof AppPlatformRoute
     }
     '/_auth/auth/callback': {
@@ -735,12 +774,16 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppPlatformRouteChildren {
+  AppPlatformAnnouncementsRoute: typeof AppPlatformAnnouncementsRoute
   AppPlatformConfigRoute: typeof AppPlatformConfigRoute
+  AppPlatformUsersRoute: typeof AppPlatformUsersRoute
   AppPlatformIndexRoute: typeof AppPlatformIndexRoute
 }
 
 const AppPlatformRouteChildren: AppPlatformRouteChildren = {
+  AppPlatformAnnouncementsRoute: AppPlatformAnnouncementsRoute,
   AppPlatformConfigRoute: AppPlatformConfigRoute,
+  AppPlatformUsersRoute: AppPlatformUsersRoute,
   AppPlatformIndexRoute: AppPlatformIndexRoute,
 }
 

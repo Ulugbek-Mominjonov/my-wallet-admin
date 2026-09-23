@@ -189,3 +189,104 @@ export async function deleteConfig(key: string): Promise<void> {
   const { error } = await supabase.from('app_config').delete().eq('key', key)
   if (error) throw toAppError(error)
 }
+
+const platformUserSchema = z.object({
+  user_id: z.string(),
+  email: z.string().nullable(),
+  display_name: z.string(),
+  locale: z.string(),
+  created_at: z.string(),
+  last_sign_in_at: z.string().nullable(),
+  blocked: z.boolean(),
+  households: z.number(),
+  is_admin: z.boolean(),
+})
+
+export type PlatformUser = z.infer<typeof platformUserSchema>
+
+const usersSchema = z.object({ total: z.number(), users: z.array(platformUserSchema) })
+
+export type PlatformUsers = z.infer<typeof usersSchema>
+
+/** Bir sahifadagi foydalanuvchilar. */
+export const USERS_PAGE_SIZE = 50
+
+/** E26-T04: qo'llab-quvvatlash ro'yxati (agregat; byudjet ichi ko'rinmaydi). */
+export const usersQuery = (query: string, limit = USERS_PAGE_SIZE) =>
+  queryOptions({
+    queryKey: [...platformKey('users'), { query, limit }],
+    queryFn: async (): Promise<PlatformUsers> => {
+      const { data, error } = await supabase.rpc('platform_users', {
+        p_query: query === '' ? undefined : query,
+        p_limit: limit,
+      })
+      if (error) throw toAppError(error)
+      return usersSchema.parse(data)
+    },
+  })
+
+/** Bloklash — kirish to'xtaydi, ma'lumot o'chmaydi. */
+export async function setBlocked(userId: string, blocked: boolean): Promise<void> {
+  const { error } = await supabase.rpc('platform_set_blocked', {
+    p_user: userId,
+    p_blocked: blocked,
+  })
+  if (error) throw toAppError(error)
+}
+
+export const ANNOUNCEMENT_CHANNELS = ['push', 'telegram', 'email'] as const
+export type AnnouncementChannel = (typeof ANNOUNCEMENT_CHANNELS)[number]
+
+const announcementResultSchema = z.object({
+  batch: z.string(),
+  queued: z.number(),
+  users: z.number(),
+})
+
+export type AnnouncementResult = z.infer<typeof announcementResultSchema>
+
+export interface AnnouncementInput {
+  message: I18nName
+  title: I18nName | null
+  users: readonly string[] | null
+  channels: readonly AnnouncementChannel[]
+}
+
+/** E26-T03: e'lonni navbatga qo'yish (yuborish — notify-dispatch). */
+export async function sendAnnouncement(input: AnnouncementInput): Promise<AnnouncementResult> {
+  const { data, error } = await supabase.rpc('send_announcement', {
+    p_message: input.message,
+    p_title: input.title,
+    p_users: input.users === null ? undefined : [...input.users],
+    p_channels: [...input.channels],
+  })
+  if (error) throw toAppError(error)
+  return announcementResultSchema.parse(data)
+}
+
+const announcementLogSchema = z.object({
+  items: z.array(
+    z.object({
+      batch: z.string(),
+      created_at: z.string(),
+      users: z.number(),
+      total: z.number(),
+      sent: z.number(),
+      failed: z.number(),
+      pending: z.number(),
+      message: z.string().nullable(),
+    }),
+  ),
+})
+
+export type AnnouncementLog = z.infer<typeof announcementLogSchema>
+
+/** E'lonlar jurnali — paket bo'yicha holat. */
+export const announcementLogQuery = queryOptions({
+  queryKey: platformKey('announcements'),
+  queryFn: async (): Promise<AnnouncementLog> => {
+    const { data, error } = await supabase.rpc('announcement_log', {})
+    if (error) throw toAppError(error)
+    return announcementLogSchema.parse(data)
+  },
+})

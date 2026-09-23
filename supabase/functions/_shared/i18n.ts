@@ -1,10 +1,16 @@
 // E11-T06: bildirishnoma matnlari (uz/ru/en). Bitta xabar → sarlavha + qatorlar;
 // kanal formatlari: push — oddiy matn, Telegram — HTML (escape bilan).
 // Qoidalar: BR-160 (kunlik eslatma), BR-161/162 (oylik hisobot), BR-133
-// (limit), BR-165 (kechikkan daromad), BR-164 (test).
+// (limit), BR-165 (kechikkan daromad), BR-164 (test), E26-T03 (e'lon).
 import { formatMoney, type Locale } from './money.ts'
 
-export type MessageType = 'daily_reminder' | 'monthly_report' | 'limit_alert' | 'income_missing' | 'test'
+export type MessageType =
+  | 'daily_reminder'
+  | 'monthly_report'
+  | 'limit_alert'
+  | 'income_missing'
+  | 'test'
+  | 'announcement'
 
 export interface Rendered {
   title: string
@@ -75,6 +81,7 @@ const TEXT = {
     incomeMissing: (name: string, date: string) => `${name} hali kiritilmadi (kutilgan sana: ${date})`,
     testTitle: '✅ My Wallet',
     testBody: 'Test xabar — bildirishnomalar ishlayapti.',
+    announcementTitle: '📣 My Wallet',
   },
   ru: {
     reminderTitle: '💳 Напоминание о платежах',
@@ -101,6 +108,7 @@ const TEXT = {
     incomeMissing: (name: string, date: string) => `${name} ещё не внесён (ожидался ${date})`,
     testTitle: '✅ My Wallet',
     testBody: 'Тестовое сообщение — уведомления работают.',
+    announcementTitle: '📣 My Wallet',
   },
   en: {
     reminderTitle: '💳 Payment reminder',
@@ -127,6 +135,7 @@ const TEXT = {
     incomeMissing: (name: string, date: string) => `${name} has not been recorded yet (expected ${date})`,
     testTitle: '✅ My Wallet',
     testBody: 'Test message — notifications are working.',
+    announcementTitle: '📣 My Wallet',
   },
 } as const
 
@@ -203,6 +212,15 @@ export function render(type: MessageType, payload: Payload, locale: Locale): Ren
       return { title: t.incomeMissingTitle, lines: [t.incomeMissing(payload.name, shortDate(payload.due_date))] }
     case 'test':
       return { title: t.testTitle, lines: [t.testBody] }
+    case 'announcement': {
+      // E26-T03: matn admin panelda uch tilda yoziladi; tili topilmasa — uz.
+      const message: Record<string, string> = payload.message ?? {}
+      const title: Record<string, string> = payload.title ?? {}
+      return {
+        title: title[locale] ?? title.uz ?? t.announcementTitle,
+        lines: (message[locale] ?? message.uz ?? '').split('\n'),
+      }
+    }
   }
 }
 

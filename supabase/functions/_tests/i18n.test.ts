@@ -36,6 +36,15 @@ const PAYLOADS: Record<MessageType, Record<string, unknown>> = {
   limit_alert: { category: 'Kafe', limit: 800_000_00, actual: 656_000_00, threshold: 80, month: '2026-10-01' },
   income_missing: { name: 'Oylik', amount: 10_000_000_00, due_date: '2026-10-05' },
   test: {},
+  // E26-T03: matn admin panelda uch tilda yoziladi (sarlavha — ixtiyoriy).
+  announcement: {
+    batch: '0198f000-0000-7000-8000-0000000000f1',
+    message: {
+      uz: 'Yangi versiya chiqdi.\nYangilashni unutmang.',
+      ru: 'Вышла новая версия.\nНе забудьте обновить.',
+      en: 'A new version is out.\nDo not forget to update.',
+    },
+  },
 }
 
 for (const type of Object.keys(PAYLOADS) as MessageType[]) {

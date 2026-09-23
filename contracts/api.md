@@ -285,6 +285,10 @@ Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi
 | `set_month_closed(p_household, p_month, p_closed)` | `{month, closed}` — yopish faqat tugagan oy uchun (BR-150) | owner/admin |
 | `audit_list(p_household, p_tables[]?, p_actors[]?, p_from?, p_to?, p_after_at?, p_after_id?, p_limit = 50)` | qator: `{id, at, actor_id, table_name, record_id, action, old_values, new_values}` — eng yangisi birinchi, kursor `(at, id)` kamayishi; davr chegarasi byudjet vaqt zonasida, `p_to` kuni ham kiradi; `p_limit` ≤ 200 (BR-008) | owner/admin |
 | `household_devices(p_household)` | `{devices[{user_id, platform, app_version, last_seen_at}], sync[{user_id, device_id, last_sync_at, ok, conflicts, rejected}]}` — push tokeni qaytmaydi; `sync` — `sync_mutations` dan qurilma kesimida (30 kun) | owner/admin |
+| `platform_users(p_query?, p_limit = 50, p_offset = 0)` | `{total, users[{user_id, email, display_name, locale, created_at, last_sign_in_at, blocked, households, is_admin}]}` — faqat agregat (byudjet ichi ko'rinmaydi) | platforma admini (aal2) |
+| `platform_set_blocked(p_user, p_blocked)` | `{user_id, blocked}`; kirish to'xtaydi (`banned_until`), ma'lumot o'chmaydi. Xatolar: `self_block`, `admin_block`, `not_found` | platforma admini (aal2) |
+| `send_announcement(p_message{uz,ru,en}, p_title?, p_users[]?, p_channels[] = {push,telegram})` | `{batch, queued, users}` — navbatga qo'yiladi (yuborish: notify-dispatch); kanali o'chiq yoki qurilmasi yo'qqa yozilmaydi (BR-163). Xatolar: `invalid_message`, `invalid_channel` | platforma admini (aal2) |
+| `announcement_log(p_limit = 20)` | `{items[{batch, created_at, users, total, sent, failed, pending, message}]}` | platforma admini (aal2) |
 | `merge_categories(p_from, p_to)` | `{children, transactions, plans, recurring_rules, quick_actions}` — manba o'chiriladi, maqsad limiti ustun (BR-036) | owner/admin |
 | `onboarding_apply(p_household, p_payload)` | `{applied: true, accounts, income_types, recurring_rules}` yoki qayta chaqirilsa `{applied: false}` | owner/admin |
 

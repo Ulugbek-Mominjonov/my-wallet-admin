@@ -1796,6 +1796,7 @@ export type Database = {
     }
     Functions: {
       accept_invite: { Args: { p_code: string }; Returns: string }
+      announcement_log: { Args: { p_limit?: number }; Returns: Json }
       app_bootstrap: { Args: never; Returns: Json }
       audit_list: {
         Args: {
@@ -1906,6 +1907,14 @@ export type Database = {
           payee: string
         }[]
       }
+      platform_set_blocked: {
+        Args: { p_blocked: boolean; p_user: string }
+        Returns: Json
+      }
+      platform_users: {
+        Args: { p_limit?: number; p_offset?: number; p_query?: string }
+        Returns: Json
+      }
       prepare_account_deletion: { Args: never; Returns: Json }
       recalc_income_months_apply: {
         Args: { p_expected_count: number; p_household: string }
@@ -1975,6 +1984,15 @@ export type Database = {
           p_to_amount?: number
         }
         Returns: string
+      }
+      send_announcement: {
+        Args: {
+          p_channels?: string[]
+          p_message: Json
+          p_title?: Json
+          p_users?: string[]
+        }
+        Returns: Json
       }
       send_monthly_report_now: {
         Args: { p_household: string; p_month: unknown }
