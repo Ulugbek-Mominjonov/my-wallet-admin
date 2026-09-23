@@ -350,6 +350,7 @@ qoldig'i (`planned − paid`), `unknown_count` — summasi noma'lum to'lanmaganl
 | `report_goals(p_household)` | `{avg_monthly_saved, goals[{goal_id, name, currency, target, saved, remaining, progress, monthly, monthly_source (goal/average), months_left, end_month, deadline, on_track, account_id, achieved_at}]}` |
 | `report_category_trend(p_household, p_from, p_to, p_category?)` | `{series[{month, category_id, actual}], compare[{category_id, actual, prev, avg3, vs_prev, vs_avg3}]}` (BR-095) |
 | `report_insights(p_household, p_month)` | `{month, expense, spikes[{category_id, name, actual, average, delta_pct}], subscriptions[{payee, amount, months, last_on}], subscriptions_total, top_expenses[{id, occurred_on, payee, category, amount}], weekdays[7 × {dow (1 — dushanba), amount, count}]}` (E32-T01) |
+| `fx_rates(p_since)` | `[{currency, rate_date, rate_to_base}]` — `p_since` dan boshlab (mobil lokal kurslar jadvali, BR-191) |
 | `health_check(p_household)` | `{problems[{code, …}], warnings[{code, …}], info{transactions, planned_items, first_month, opened_months, closed_months, income_rules}}` |
 
 `report_insights` — byudjet xarajatlari bo'yicha (fond xarajati va o'tkazma

@@ -1,7 +1,7 @@
 -- E29-T02, T03: ko'p valyuta — amal asosiy valyutaga kurs bilan o'tadi,
 -- qoldiq va qarz jamlari ekvivalentda. Qoidalar: BR-190..194, ADR-08.
 begin;
-select plan(10);
+select plan(12);
 
 create temporary table u (name text primary key, id uuid) on commit drop;
 insert into u values ('alice', tests.create_user('alice@test.uz'));
@@ -121,6 +121,18 @@ select is_empty(
        join public.households h on h.id = t.household_id
       where a.currency = h.base_currency and t.amount_base <> t.amount $$,
   'E29-T06: asosiy valyutadagi hisobda amount_base = amount (qayta hisobdan keyin ham)'
+);
+
+-- ─── E29-T07 (mobil): kurslar RPC'si ───────────────────────────────────────
+select results_eq(
+  $$ select r ->> 'currency', r ->> 'rate_date', (r ->> 'rate_to_base')::numeric
+       from jsonb_array_elements(public.fx_rates('2026-09-15')) r $$,
+  $$ values ('USD', '2026-09-15', 12700::numeric) $$,
+  'BR-191: fx_rates — faqat berilgan sanadan keyingi kurslar'
+);
+select is(
+  public.fx_rates('2030-01-01'), '[]'::jsonb,
+  'kurs yo''q davr — bo''sh ro''yxat'
 );
 
 select * from finish();

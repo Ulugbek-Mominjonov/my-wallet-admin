@@ -1866,6 +1866,7 @@ export type Database = {
         Args: { p_currency: string; p_date: string; p_household: string }
         Returns: number
       }
+      fx_rates: { Args: { p_since: string }; Returns: Json }
       fx_upsert: { Args: { p_rates: Json }; Returns: number }
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }
