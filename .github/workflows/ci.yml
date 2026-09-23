@@ -18,6 +18,9 @@ env:
   VITE_SUPABASE_URL: http://127.0.0.1:54321
   VITE_SUPABASE_PUBLISHABLE_KEY: ci-build-placeholder
   VITE_APP_ENV: local
+  # Telegram bot nomi — sir emas; ulash havolasi va QR shundan quriladi
+  # (`make web-env` lokalda ham shu joy egallovchi nomni yozadi).
+  VITE_TELEGRAM_BOT: MyWalletLocalBot
 
 jobs:
   web:
