@@ -4,7 +4,7 @@ import { http, HttpResponse } from 'msw'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { TEST_HOUSEHOLD_ID, WithHousehold } from '@/entities/household/testing'
-import { MONTH_REPORT, SAVINGS_REPORT } from '@/features/reports/testing'
+import { INSIGHTS, MONTH_REPORT, SAVINGS_REPORT } from '@/features/reports/testing'
 import { MonthReportPage } from '@/features/reports/ui/month-report-page'
 import { server, signInTestUser, supabasePath } from '@/shared/test/msw'
 import { renderWithProviders } from '@/shared/test/render'
@@ -20,13 +20,18 @@ const MEMBERS = {
   members: [{ user_id: 'u1', name: 'Ali', expense: 300000000, income: 750000000, count: 7 }],
 }
 
-function mockReport(overrides: Record<string, unknown> = {}, members = MEMBERS) {
+function mockReport(
+  overrides: Record<string, unknown> = {},
+  members = MEMBERS,
+  insights = INSIGHTS,
+) {
   server.use(
     http.post(supabasePath('/rest/v1/rpc/report_month'), () =>
       HttpResponse.json({ ...MONTH_REPORT, by_type: INCOME_TYPES, ...overrides }),
     ),
     http.post(supabasePath('/rest/v1/rpc/report_savings'), () => HttpResponse.json(SAVINGS_REPORT)),
     http.post(supabasePath('/rest/v1/rpc/report_members'), () => HttpResponse.json(members)),
+    http.post(supabasePath('/rest/v1/rpc/report_insights'), () => HttpResponse.json(insights)),
   )
 }
 
@@ -107,6 +112,24 @@ describe('MonthReportPage (E24-T02)', () => {
     mockReport({ closed: true })
     renderPage()
     expect(await screen.findByText('Yopilgan')).toBeInTheDocument()
+  })
+
+  it('E32-T02: "Diqqat" — sakragan kategoriya; sakrash bo‘lmasa blok yo‘q', async () => {
+    mockReport()
+    renderPage()
+
+    const card = await cardOf('Diqqat')
+    expect(within(card).getByText('Oziq-ovqat')).toBeInTheDocument()
+    expect(within(card).getByText('+100%')).toBeInTheDocument()
+    expect(within(card).getByText("o'rtacha 100 000 so'm")).toBeInTheDocument()
+  })
+
+  it('sakrash bo‘lmasa "Diqqat" bloki ko‘rinmaydi', async () => {
+    mockReport({}, MEMBERS, { ...INSIGHTS, spikes: [] })
+    renderPage()
+
+    await cardOf('Yakun')
+    expect(screen.queryByRole('heading', { name: 'Diqqat' })).toBeNull()
   })
 
   it('oy almashtirish sarlavhadan', async () => {

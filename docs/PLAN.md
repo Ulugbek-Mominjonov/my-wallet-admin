@@ -120,7 +120,7 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | **M5 Kengaytmalar** | E29 | Ko'p valyuta (CBU) | admin + mobile | E28 | 🟨 (mobil: T07..T09) |
 | | E30 | Oilaviy byudjet (takliflar, rollar UI) | admin + mobile | E28 | 🟨 (mobil: T04..T06) |
 | | E31 | Telegram bot: tez kiritish, karta xabarlari | admin | E28 | ✅ |
-| | E32 | Tahlillar (insights) | admin + mobile | E28 | ⬜ |
+| | E32 | Tahlillar (insights) | admin + mobile | E28 | 🟨 (mobil qismi keyin) |
 | | E33 | Android vidjet, chek QR skaneri | mobile | E28 | ⬜ |
 | | E34 | Limitlar v2 (rollover, ota-kategoriya) | admin + mobile | E28 | ⬜ |
 
@@ -847,10 +847,10 @@ E21–E26 (admin) M2 bilan.
 
 ### E32 · Tahlillar `[admin + mobile]` — platforma qismi
 
-- [ ] **E32-T01** `report_insights(household, month)`: kategoriya sakrashi
+- [x] **E32-T01** `report_insights(household, month)`: kategoriya sakrashi
   (> 3 oylik o'rtachadan 30%+), obunalarni aniqlash (har oy bir xil payee
   va summa), eng katta xarajatlar, hafta kunlari bo'yicha sarf.
-- [ ] **E32-T02** Admin: "Tahlillar" sahifasi + oylik hisobotga "Diqqat"
+- [x] **E32-T02** Admin: "Tahlillar" sahifasi + oylik hisobotga "Diqqat"
   bloki; yillik yakun ("Yil xulosasi") sahifasi.
 
 ### E34 · Limitlar v2 `[admin + mobile]` — platforma qismi
@@ -991,6 +991,8 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Bot matnini tahlil qilish Edge Function'da (regex), yozish esa bitta RPC (`telegram_quick_add`); barcha bot RPC'lari faqat `service_role` uchun | matn qoidalari tez-tez o'zgaradi — migratsiyasiz deploy qilinadi; yozuv esa server tomonda bitta tranzaksiyada (oy yopilgani, RLS, kategoriya taxmini), bot kaliti klientga chiqmaydi | E31-T01, BR-220 |
 | 2026-09-23 | Forward qilingan yoki ko'p qatorli xabar — avval karta shablonlari bo'yicha; mos kelmasa tez kiritishga tushmaydi, "shablon topilmadi" deyiladi; buzuq naqsh keyingi shablonni to'xtatmaydi | bank SMS'ida bir nechta raqam bor (karta, sana, summa) — tez kiritish noto'g'ri summani olardi; spravochnikdagi bitta xato naqsh butun oqimni yiqitmasligi kerak | E31-T02, BR-222 |
 | 2026-09-23 | `accounts.card_last4` — byudjet ichida yagona (qisman unique indeks, `deleted_at is null`); admin formasida ixtiyoriy maydon | bir karta ikki hisobda bo'lsa xabarnoma tasodifiy hisobga tushardi (`limit 1`); o'sha indeks `(household_id, card_last4)` qidiruvini ham qoplaydi — seq scan yo'q; takror kiritilganda forma tushunarli xato beradi | E31-T02, BR-222 |
+| 2026-09-23 | Tahlillar — bitta RPC (`report_insights`) va bitta 6 oylik oyna: sakrash, obuna, eng katta xarajat va hafta kunlari shu oynadan hisoblanadi; chegaralar funksiya boshida nomlangan konstantalarda | to'rt kesim uchun to'rt marta o'qish o'rniga bitta oraliq skani (`transactions_month_idx`, 25 000 amalda 3 ms); chegarani o'zgartirish — bitta joyda, sehrli raqamsiz | E32-T01 |
+| 2026-09-23 | Obuna — `lower(payee)` va summa bo'yicha guruh, oxirgi 6 oyning kamida 3 tasida; "Yil xulosasi" esa yangi RPC'siz, `report_year` javobidan klientda | takrorlanuvchi to'lov nomi registri har xil yoziladi; yil yakuni uchun serverda yangi hisob-kitob kerak emas — mavjud javobda hamma qiymat bor | E32-T01, E32-T02 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
@@ -1046,3 +1048,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | E29-T01..T06 | ko'p valyuta: `fx-sync` tarixiy to'ldirish (kursor `private.fx_state`, vaqt budjeti), `amount_base` va qo'lda `fx_rate`, hisob/qarz qoldiqlarining asosiy valyutadagi ekvivalenti, amal formasida kurs va `/platform/rates` sahifasi, 56 golden fixture. pgTAP 566. Topilgan xato: `transactions_list` javobida `fx_rate` yo'qligi (CI E2E'da chiqdi) — funksiya qayta yaratildi |
 | 2026-09-23 | E30-T01..T03 | oilaviy byudjet: taklif QR (`mywallet://invite/<kod>`, sxema muhit bo'yicha), `report_members` va "A'zolar kesimi" kartasi, katta xarajat xabari (har a'zoning o'z chegarasi, amal triggeridan). pgTAP 570, Vitest 339, Playwright 82 |
 | 2026-09-23 | E31-T01..T04 | Telegram bot: matndan tez kiritish (`taksi 20000`, `+5 000 000 oylik`, `kofe 25k` — kategoriya/hisob nom tarixidan, ✏️/❌ tugmalari), bank xabarnomasi forward'i (spravochnikdagi naqshlar, `accounts.card_last4` bo'yicha hisob), `/hisobot [oy]` va `/til`, bot menyusi; admin hisob formasida karta oxirgi 4 raqami. 7 RPC (faqat service kaliti) + qisman unique indeks; pgTAP 582, Deno 85 (37 anonim xabar namunasi jadvalda), Vitest 343, Playwright 82. **E31 yakunlandi** |
+| 2026-09-23 | E32-T01, T02 | tahlillar: `report_insights` (sakragan kategoriyalar — 3 oylik o'rtachadan 30%+, obunalar — 6 oyning 3 tasida bir xil nom va summa, eng katta 5 xarajat, hafta kunlari), "Tahlillar" sahifasi va oylik hisobotdagi "Diqqat" bloki, yillik ko'rinishdagi "Yil xulosasi". pgTAP 591 (yangi 054), Vitest 357, Playwright 82; `make perf` da 3 ms, Seq Scan yo'q. **E32 platforma qismi yakunlandi** |

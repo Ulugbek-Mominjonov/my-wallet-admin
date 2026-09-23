@@ -387,3 +387,54 @@ export const membersReportQuery = (householdId: string, month: MonthKey) =>
       return membersSchema.parse(data)
     },
   })
+
+const insightsSchema = z.object({
+  month: z.iso.date(),
+  expense: money,
+  spikes: z.array(
+    z.object({
+      category_id: z.string(),
+      name: z.string(),
+      actual: money,
+      average: money,
+      delta_pct: z.number(),
+    }),
+  ),
+  subscriptions: z.array(
+    z.object({
+      payee: z.string(),
+      amount: money,
+      months: z.number(),
+      last_on: z.iso.date(),
+    }),
+  ),
+  subscriptions_total: money,
+  top_expenses: z.array(
+    z.object({
+      id: z.string(),
+      occurred_on: z.iso.date(),
+      payee: z.string().nullable(),
+      category: z.string(),
+      amount: money,
+    }),
+  ),
+  /** Dushanbadan yakshanbagacha (ISO), yozuvsiz kun ham — 7 qator. */
+  weekdays: z.array(z.object({ dow: z.number(), amount: money, count: z.number() })),
+})
+
+export type Insights = z.infer<typeof insightsSchema>
+
+/** E32-T01: oylik tahlillar — sakrash, obunalar, eng katta xarajatlar, hafta kunlari. */
+export const insightsQuery = (householdId: string, month: MonthKey) =>
+  queryOptions({
+    queryKey: [...reportsKey(householdId), 'insights', month],
+    staleTime: REPORT_STALE_MS,
+    queryFn: async (): Promise<Insights> => {
+      const { data, error } = await supabase.rpc('report_insights', {
+        p_household: householdId,
+        p_month: `${month}-01`,
+      })
+      if (error) throw toAppError(error)
+      return insightsSchema.parse(data)
+    },
+  })

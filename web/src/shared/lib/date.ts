@@ -39,3 +39,15 @@ export function addDays(isoDate: string, days: number): string {
   date.setUTCDate(date.getUTCDate() + days)
   return date.toISOString().slice(0, 10)
 }
+
+// Oy nomlari kabi ro'yxatdan: brauzer ICU'sida uz hafta kunlari to'liq emas.
+const WEEKDAY_NAMES: Record<AppLocale, readonly string[]> = {
+  uz: ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'],
+  ru: ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'],
+  en: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+}
+
+/** ISO hafta kuni (1 — dushanba … 7 — yakshanba) foydalanuvchi tilida. */
+export function weekdayName(isoDow: number, locale: AppLocale = DEFAULT_LOCALE): string {
+  return WEEKDAY_NAMES[locale][isoDow - 1] ?? String(isoDow)
+}

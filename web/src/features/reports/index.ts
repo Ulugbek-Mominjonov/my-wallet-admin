@@ -5,6 +5,7 @@ export {
 } from '@/features/reports/model/search'
 export { CategoryTrendPage } from '@/features/reports/ui/category-trend-page'
 export { DashboardPage } from '@/features/reports/ui/dashboard-page'
+export { InsightsPage } from '@/features/reports/ui/insights-page'
 export { MonthReportPage } from '@/features/reports/ui/month-report-page'
 export { ObligationsReportPage } from '@/features/reports/ui/obligations-report-page'
 export { SavingsReportPage } from '@/features/reports/ui/savings-report-page'

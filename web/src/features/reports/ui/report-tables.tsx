@@ -1,6 +1,7 @@
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import type { MembersReport, MonthReport } from '@/features/reports/api/reports-api'
+import type { Insights, MembersReport, MonthReport } from '@/features/reports/api/reports-api'
 import { useAppLocale } from '@/shared/i18n'
 import { formatDate } from '@/shared/lib/date'
 import { formatMoney } from '@/shared/lib/money'
@@ -9,6 +10,25 @@ import { Badge } from '@/shared/ui/badge'
 import { MoneyText } from '@/shared/ui/money-text'
 import { ProgressBar, type ProgressTone } from '@/shared/ui/progress-bar'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
+
+/** Ko'rsatkich: nomi, qiymati va ixtiyoriy izohi (`dl` ichida). */
+export function Figure({
+  label,
+  hint,
+  children,
+}: {
+  label: string
+  hint?: string
+  children: ReactNode
+}) {
+  return (
+    <div className="space-y-0.5">
+      <dt className="text-sm text-muted-foreground">{label}</dt>
+      <dd className="font-medium">{children}</dd>
+      {hint && <dd className="text-xs text-muted-foreground">{hint}</dd>}
+    </div>
+  )
+}
 
 /** BR-096: limit holati rangi — 80% gacha xotirjam, 100% gacha ogohlantirish. */
 const LIMIT_TONE: Record<string, ProgressTone> = {
@@ -226,5 +246,38 @@ export function MemberBreakdown({
         ))}
       </TableBody>
     </Table>
+  )
+}
+
+/**
+ * E32-T02 "Diqqat": 3 oylik o'rtachadan sezilarli oshgan kategoriyalar —
+ * oylik hisobotda ham, Tahlillar sahifasida ham shu ro'yxat.
+ */
+export function SpikeList({
+  rows,
+  baseCurrency,
+}: {
+  rows: Insights['spikes']
+  baseCurrency: string
+}) {
+  const { t } = useTranslation()
+  const locale = useAppLocale()
+  const money = (value: number) => formatMoney(value, { currency: baseCurrency, locale })
+
+  return (
+    <ul className="space-y-3">
+      {rows.map((row) => (
+        <li key={row.category_id} className="flex flex-wrap items-baseline justify-between gap-2">
+          <span className="min-w-0 truncate font-medium">{row.name}</span>
+          <span className="text-sm tabular-nums">
+            {money(row.actual)}
+            <span className="ml-2 text-expense">+{row.delta_pct}%</span>
+            <span className="ml-2 text-muted-foreground">
+              {t('report.insights.vsAverage', { value: money(row.average) })}
+            </span>
+          </span>
+        </li>
+      ))}
+    </ul>
   )
 }

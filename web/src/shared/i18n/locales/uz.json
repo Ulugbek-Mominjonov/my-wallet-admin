@@ -995,7 +995,8 @@
       "year": "Yillik",
       "savings": "Jamg‘arma",
       "obligations": "Qarz va maqsad",
-      "categories": "Kategoriyalar"
+      "categories": "Kategoriyalar",
+      "insights": "Tahlillar"
     },
     "year": {
       "title": "Yillik ko‘rinish",
@@ -1012,7 +1013,14 @@
       "savedRatio": "Orttirgan %",
       "total": "JAMI",
       "empty": "Bu yilda yozuv yo'q",
-      "closed": "Yopilgan"
+      "closed": "Yopilgan",
+      "summary": {
+        "title": "Yil xulosasi",
+        "hint": "Yozuvi bor {{count}} oy bo‘yicha",
+        "avgExpense": "Oyiga o‘rtacha xarajat",
+        "best": "Eng ko‘p orttirilgan oy",
+        "worst": "Eng kam orttirilgan oy"
+      }
     },
     "savingsPage": {
       "title": "Jamg‘arma",
@@ -1092,6 +1100,31 @@
       "empty": "Bu davrda xarajat yo'q",
       "unknown": "O'chirilgan kategoriya",
       "actualSeries": "Xarajat"
+    },
+    "insights": {
+      "title": "Tahlillar",
+      "description": "Sakragan kategoriyalar, obunalar, eng katta xarajatlar va hafta kunlari",
+      "attention": "Diqqat",
+      "spikes": "Sakragan kategoriyalar",
+      "spikesHint": "Oxirgi 3 oy o'rtachasidan 30%+ oshgan",
+      "spikesEmpty": "Sezilarli o'sish yo'q",
+      "vsAverage": "o'rtacha {{value}}",
+      "subscriptions": "Obunalar",
+      "subscriptionsHint": "Oxirgi 6 oyning kamida 3 tasida bir xil nom va summa",
+      "subscriptionsEmpty": "Takrorlanuvchi to‘lov topilmadi",
+      "subscriptionsTotal": "Oyiga {{monthly}} · yiliga {{yearly}}",
+      "payee": "Nomi",
+      "amount": "Summa",
+      "months": "Oylar",
+      "lastOn": "Oxirgi",
+      "date": "Sana",
+      "top": "Eng katta xarajatlar",
+      "topEmpty": "Bu oyda xarajat yo‘q",
+      "weekdays": "Hafta kunlari",
+      "weekdaysHint": "Qaysi kunlari ko‘p sarflanadi",
+      "emptyTitle": "Tahlil uchun yozuv yo‘q",
+      "emptyText": "Bir necha oy amal yozilgach, sakrash va obunalar ko‘rinadi.",
+      "busiest": "Eng ko‘p sarflanadigan kun — {{day}}"
     }
   },
   "health": {

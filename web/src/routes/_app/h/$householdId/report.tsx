@@ -62,6 +62,20 @@ function ReportLayout() {
           size="sm"
           render={
             <Link
+              to="/h/$householdId/report/insights"
+              params={{ householdId }}
+              activeProps={{ 'data-active': 'true' }}
+            />
+          }
+          className="data-active:bg-muted"
+        >
+          {t('report.tabs.insights')}
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          render={
+            <Link
               to="/h/$householdId/report/savings"
               params={{ householdId }}
               activeProps={{ 'data-active': 'true' }}

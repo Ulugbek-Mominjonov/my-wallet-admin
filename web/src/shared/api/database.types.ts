@@ -1967,6 +1967,10 @@ export type Database = {
       }
       report_debts: { Args: { p_household: string }; Returns: Json }
       report_goals: { Args: { p_household: string }; Returns: Json }
+      report_insights: {
+        Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
       report_members: {
         Args: { p_household: string; p_month: unknown }
         Returns: Json

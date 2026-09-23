@@ -1,6 +1,6 @@
 // Faqat testlar uchun — hisobot RPC javoblarining namunasi (E24). Turlari
 // sxemadan: namuna javob shaklidan chetga chiqsa, kompilyator aytadi.
-import type { MonthReport, SavingsReport } from '@/features/reports/api/reports-api'
+import type { Insights, MonthReport, SavingsReport } from '@/features/reports/api/reports-api'
 export const reportCategory = (
   id: string,
   name: string,
@@ -125,4 +125,36 @@ export const SAVINGS_REPORT: SavingsReport = {
     avg_monthly_saved: 705000000,
     avg_monthly_expense: 45000000,
   },
+}
+
+/** E32: tahlillar — bitta sakrash, bitta obuna va hafta kunlari. */
+export const INSIGHTS: Insights = {
+  month: '2026-09-01',
+  expense: 30000000,
+  spikes: [
+    {
+      category_id: 'c-food',
+      name: 'Oziq-ovqat',
+      actual: 20000000,
+      average: 10000000,
+      delta_pct: 100,
+    },
+  ],
+  subscriptions: [{ payee: 'Netflix', amount: 5000000, months: 3, last_on: '2026-09-03' }],
+  subscriptions_total: 5000000,
+  top_expenses: [
+    {
+      id: 't-1',
+      occurred_on: '2026-09-05',
+      payee: 'Korzinka',
+      category: 'Oziq-ovqat',
+      amount: 20000000,
+    },
+    { id: 't-2', occurred_on: '2026-09-03', payee: null, category: 'Kommunal', amount: 5000000 },
+  ],
+  weekdays: [1, 2, 3, 4, 5, 6, 7].map((dow) => ({
+    dow,
+    amount: dow === 6 ? 25000000 : dow === 4 ? 5000000 : 0,
+    count: dow === 6 ? 2 : dow === 4 ? 1 : 0,
+  })),
 }

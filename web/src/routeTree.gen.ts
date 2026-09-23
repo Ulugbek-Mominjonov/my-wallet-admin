@@ -48,6 +48,7 @@ import { Route as AppHHouseholdIdTagsRouteImport } from './routes/_app/h/$househ
 import { Route as AppHHouseholdIdTransactionsRouteImport } from './routes/_app/h/$householdId/transactions'
 import { Route as AppHHouseholdIdReportIndexRouteImport } from './routes/_app/h/$householdId/report.index'
 import { Route as AppHHouseholdIdReportCategoriesRouteImport } from './routes/_app/h/$householdId/report.categories'
+import { Route as AppHHouseholdIdReportInsightsRouteImport } from './routes/_app/h/$householdId/report.insights'
 import { Route as AppHHouseholdIdReportObligationsRouteImport } from './routes/_app/h/$householdId/report.obligations'
 import { Route as AppHHouseholdIdReportSavingsRouteImport } from './routes/_app/h/$householdId/report.savings'
 import { Route as AppHHouseholdIdReportYearRouteImport } from './routes/_app/h/$householdId/report.year'
@@ -253,6 +254,12 @@ const AppHHouseholdIdReportCategoriesRoute =
     path: '/categories',
     getParentRoute: () => AppHHouseholdIdReportRoute,
   } as any)
+const AppHHouseholdIdReportInsightsRoute =
+  AppHHouseholdIdReportInsightsRouteImport.update({
+    id: '/insights',
+    path: '/insights',
+    getParentRoute: () => AppHHouseholdIdReportRoute,
+  } as any)
 const AppHHouseholdIdReportObligationsRoute =
   AppHHouseholdIdReportObligationsRouteImport.update({
     id: '/obligations',
@@ -309,6 +316,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
   '/h/$householdId/': typeof AppHHouseholdIdIndexRoute
   '/h/$householdId/report/categories': typeof AppHHouseholdIdReportCategoriesRoute
+  '/h/$householdId/report/insights': typeof AppHHouseholdIdReportInsightsRoute
   '/h/$householdId/report/obligations': typeof AppHHouseholdIdReportObligationsRoute
   '/h/$householdId/report/savings': typeof AppHHouseholdIdReportSavingsRoute
   '/h/$householdId/report/year': typeof AppHHouseholdIdReportYearRoute
@@ -348,6 +356,7 @@ export interface FileRoutesByTo {
   '/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
   '/h/$householdId': typeof AppHHouseholdIdIndexRoute
   '/h/$householdId/report/categories': typeof AppHHouseholdIdReportCategoriesRoute
+  '/h/$householdId/report/insights': typeof AppHHouseholdIdReportInsightsRoute
   '/h/$householdId/report/obligations': typeof AppHHouseholdIdReportObligationsRoute
   '/h/$householdId/report/savings': typeof AppHHouseholdIdReportSavingsRoute
   '/h/$householdId/report/year': typeof AppHHouseholdIdReportYearRoute
@@ -393,6 +402,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
   '/_app/h/$householdId/': typeof AppHHouseholdIdIndexRoute
   '/_app/h/$householdId/report/categories': typeof AppHHouseholdIdReportCategoriesRoute
+  '/_app/h/$householdId/report/insights': typeof AppHHouseholdIdReportInsightsRoute
   '/_app/h/$householdId/report/obligations': typeof AppHHouseholdIdReportObligationsRoute
   '/_app/h/$householdId/report/savings': typeof AppHHouseholdIdReportSavingsRoute
   '/_app/h/$householdId/report/year': typeof AppHHouseholdIdReportYearRoute
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/transactions'
     | '/h/$householdId/'
     | '/h/$householdId/report/categories'
+    | '/h/$householdId/report/insights'
     | '/h/$householdId/report/obligations'
     | '/h/$householdId/report/savings'
     | '/h/$householdId/report/year'
@@ -476,6 +487,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/transactions'
     | '/h/$householdId'
     | '/h/$householdId/report/categories'
+    | '/h/$householdId/report/insights'
     | '/h/$householdId/report/obligations'
     | '/h/$householdId/report/savings'
     | '/h/$householdId/report/year'
@@ -520,6 +532,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId/transactions'
     | '/_app/h/$householdId/'
     | '/_app/h/$householdId/report/categories'
+    | '/_app/h/$householdId/report/insights'
     | '/_app/h/$householdId/report/obligations'
     | '/_app/h/$householdId/report/savings'
     | '/_app/h/$householdId/report/year'
@@ -806,6 +819,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdReportCategoriesRouteImport
       parentRoute: typeof AppHHouseholdIdReportRoute
     }
+    '/_app/h/$householdId/report/insights': {
+      id: '/_app/h/$householdId/report/insights'
+      path: '/insights'
+      fullPath: '/h/$householdId/report/insights'
+      preLoaderRoute: typeof AppHHouseholdIdReportInsightsRouteImport
+      parentRoute: typeof AppHHouseholdIdReportRoute
+    }
     '/_app/h/$householdId/report/obligations': {
       id: '/_app/h/$householdId/report/obligations'
       path: '/obligations'
@@ -854,6 +874,7 @@ const AppPlatformRouteWithChildren = AppPlatformRoute._addFileChildren(
 
 interface AppHHouseholdIdReportRouteChildren {
   AppHHouseholdIdReportCategoriesRoute: typeof AppHHouseholdIdReportCategoriesRoute
+  AppHHouseholdIdReportInsightsRoute: typeof AppHHouseholdIdReportInsightsRoute
   AppHHouseholdIdReportObligationsRoute: typeof AppHHouseholdIdReportObligationsRoute
   AppHHouseholdIdReportSavingsRoute: typeof AppHHouseholdIdReportSavingsRoute
   AppHHouseholdIdReportYearRoute: typeof AppHHouseholdIdReportYearRoute
@@ -862,6 +883,7 @@ interface AppHHouseholdIdReportRouteChildren {
 
 const AppHHouseholdIdReportRouteChildren: AppHHouseholdIdReportRouteChildren = {
   AppHHouseholdIdReportCategoriesRoute: AppHHouseholdIdReportCategoriesRoute,
+  AppHHouseholdIdReportInsightsRoute: AppHHouseholdIdReportInsightsRoute,
   AppHHouseholdIdReportObligationsRoute: AppHHouseholdIdReportObligationsRoute,
   AppHHouseholdIdReportSavingsRoute: AppHHouseholdIdReportSavingsRoute,
   AppHHouseholdIdReportYearRoute: AppHHouseholdIdReportYearRoute,

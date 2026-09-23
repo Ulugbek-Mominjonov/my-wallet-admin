@@ -30,6 +30,7 @@ Lokal (16 yadro, Docker'dagi Postgres 17), 2026-09-18:
 | `report_year` | < 150 ms | 6 ms | yo'q |
 | `report_savings` | < 150 ms | 53 ms | yo'q |
 | `health_check` | < 100 ms | 23 ms | yo'q |
+| `report_insights` (E32-T01, 2026-09-23) | < 80 ms | 3 ms | yo'q |
 
 E23 amallar jadvali (2026-09-22, shu yukda; o'lchanadigan byudjet 25 000 amal):
 

@@ -17,6 +17,7 @@ ADMIN_URL="${ADMIN_URL:-postgresql://supabase_admin:postgres@127.0.0.1:54322/pos
 RUNS=5
 # Hisobot → maqsad (ms): docs/PERF.md
 declare -A TARGET_MS=([report_month]=50 [report_year]=150 [report_savings]=150 [health_check]=100
+  [report_insights]=80
   [tx_first_page]=20 [tx_deep_page]=20 [tx_search]=50 [tx_summary]=30 [payee_suggest]=30
   [audit_first_page]=20 [audit_deep_page]=30
   [sync_first_page]=50 [sync_idle]=10)
@@ -51,6 +52,8 @@ declare -A CALLS=(
   [report_month]="public.report_month('$household', '2026-09-01')"
   [report_year]="public.report_year('$household', 2025)"
   [report_savings]="public.report_savings('$household')"
+  # E32-T01: tahlillar — oxirgi 6 oy oynasi (sakrash, obuna, top, hafta kuni).
+  [report_insights]="public.report_insights('$household', '2026-09-01')"
   [health_check]="public.health_check('$household')"
   # E23: birinchi va chuqur (keyset) sahifa, mos kelmaydigan qidiruv (eng
   # yomon holat — sahifa to'lmaydi), oy jami.
@@ -74,7 +77,7 @@ declare -A CALLS=(
 
 failed=0
 printf '%-16s %10s %10s\n' "hisobot" "mediana" "maqsad"
-for report in report_month report_year report_savings health_check \
+for report in report_month report_year report_savings report_insights health_check \
   tx_first_page tx_deep_page tx_search tx_summary payee_suggest \
   audit_first_page audit_deep_page sync_first_page sync_idle; do
   # Rejalar: auto_explain NOTICE sifatida mijozga chiqaradi.

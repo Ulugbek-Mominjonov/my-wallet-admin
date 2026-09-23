@@ -995,7 +995,8 @@
       "year": "Yearly",
       "savings": "Savings",
       "obligations": "Debts & goals",
-      "categories": "Categories"
+      "categories": "Categories",
+      "insights": "Insights"
     },
     "year": {
       "title": "Yearly overview",
@@ -1012,7 +1013,14 @@
       "savedRatio": "Saved %",
       "total": "TOTAL",
       "empty": "No records this year",
-      "closed": "Closed"
+      "closed": "Closed",
+      "summary": {
+        "title": "Year summary",
+        "hint": "Across {{count}} months with records",
+        "avgExpense": "Average monthly expense",
+        "best": "Best month",
+        "worst": "Weakest month"
+      }
     },
     "savingsPage": {
       "title": "Savings",
@@ -1092,6 +1100,31 @@
       "empty": "No spending in this period",
       "unknown": "Deleted category",
       "actualSeries": "Spending"
+    },
+    "insights": {
+      "title": "Insights",
+      "description": "Category spikes, subscriptions, largest expenses and weekdays",
+      "attention": "Worth a look",
+      "spikes": "Category spikes",
+      "spikesHint": "30%+ above the 3-month average",
+      "spikesEmpty": "No notable increase",
+      "vsAverage": "average {{value}}",
+      "subscriptions": "Subscriptions",
+      "subscriptionsHint": "Same name and amount in at least 3 of the last 6 months",
+      "subscriptionsEmpty": "No recurring payments found",
+      "subscriptionsTotal": "Monthly {{monthly}} · yearly {{yearly}}",
+      "payee": "Name",
+      "amount": "Amount",
+      "months": "Months",
+      "lastOn": "Last",
+      "date": "Date",
+      "top": "Largest expenses",
+      "topEmpty": "No expenses this month",
+      "weekdays": "Weekdays",
+      "weekdaysHint": "Which days cost the most",
+      "emptyTitle": "Nothing to analyse yet",
+      "emptyText": "After a few months of records, spikes and subscriptions appear.",
+      "busiest": "The biggest spending day is {{day}}"
     }
   },
   "health": {

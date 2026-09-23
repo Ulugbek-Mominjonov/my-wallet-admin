@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import { yearReportQuery, type YearReport } from '@/features/reports/api/reports-api'
 import { yearReportRows } from '@/features/reports/model/export-rows'
+import { yearSummary } from '@/features/reports/model/insights'
 import { yearChartPoints } from '@/features/reports/model/year-report'
 import { useAppLocale } from '@/shared/i18n'
 import { formatMoney } from '@/shared/lib/money'
@@ -14,8 +15,10 @@ import { ChartFigure, ChartLegend } from '@/shared/ui/chart/chart-figure'
 import { ColumnChart } from '@/shared/ui/chart/column-chart'
 import { ExportCsvButton } from '@/shared/ui/export-csv-button'
 import { MoneyText } from '@/shared/ui/money-text'
+import { Figure } from '@/features/reports/ui/report-tables'
 import { PageHeader } from '@/shared/ui/page-header'
 import { QueryError } from '@/shared/ui/query-error'
+import { SectionCard } from '@/shared/ui/section-card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { TableSkeleton } from '@/shared/ui/table-skeleton'
 
@@ -128,6 +131,7 @@ export function YearReportPage({
       {header}
       {hasRecords ? (
         <>
+          <YearSummaryCard data={data} baseCurrency={baseCurrency} />
           <ChartFigure
             title={t('report.year.chart')}
             legend={
@@ -157,6 +161,49 @@ export function YearReportPage({
         <p className="text-sm text-muted-foreground">{t('report.year.empty')}</p>
       )}
     </div>
+  )
+}
+
+/** E32-T02: "Yil xulosasi" — jamlar, oylik o'rtacha va eng yaxshi/og'ir oy. */
+function YearSummaryCard({ data, baseCurrency }: { data: YearReport; baseCurrency: string }) {
+  const { t } = useTranslation()
+  const locale = useAppLocale()
+  const money = (value: number) => formatMoney(value, { currency: baseCurrency, locale })
+  const summary = yearSummary(data)
+  const monthLabel = (month: YearReport['months'][number]) =>
+    `${formatMonth(month.month.slice(0, 7), locale)} · ${money(month.saved)}`
+
+  return (
+    <SectionCard
+      title={t('report.year.summary.title')}
+      description={t('report.year.summary.hint', { count: summary.monthsCount })}
+    >
+      <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Figure label={t('report.year.income')}>
+          <MoneyText amount={summary.income} currency={baseCurrency} tone="income" />
+        </Figure>
+        <Figure label={t('report.year.expense')}>
+          <MoneyText amount={summary.expense} currency={baseCurrency} tone="expense" />
+        </Figure>
+        <Figure
+          label={t('report.year.saved')}
+          hint={`${String(Math.round(summary.savedRatio * 100))}%`}
+        >
+          <MoneyText amount={summary.saved} currency={baseCurrency} tone="auto" />
+        </Figure>
+        <Figure label={t('report.year.summary.avgExpense')}>{money(summary.avgExpense)}</Figure>
+        {summary.best && (
+          <Figure label={t('report.year.summary.best')}>
+            <span className="text-base font-medium">{monthLabel(summary.best)}</span>
+          </Figure>
+        )}
+        {summary.worst && (
+          <Figure label={t('report.year.summary.worst')}>
+            <span className="text-base font-medium">{monthLabel(summary.worst)}</span>
+          </Figure>
+        )}
+      </dl>
+    </SectionCard>
   )
 }
 

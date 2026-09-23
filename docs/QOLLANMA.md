@@ -74,6 +74,12 @@ sentabrniki). Kerak bo'lsa amal formasida oyni qo'lda tanlash mumkin.
 - **Oylik hisobot**: yakun, daromad turlari, limitlar, fond, qarz va
   maqsadlar. Har jadvalni CSV qilib olish yoki chop etish mumkin.
 - **Yillik**, **Jamg'arma**, **Kategoriya tahlili** — alohida tablarda.
+  Yillik sahifa tepasida **Yil xulosasi**: jamlar, oyiga o'rtacha xarajat va
+  eng ko'p/eng kam orttirilgan oy.
+- **Tahlillar**: oxirgi 3 oy o'rtachasidan sezilarli oshgan kategoriyalar
+  (oylik hisobotda ham "Diqqat" bloki), takrorlanuvchi to'lovlar (obunalar —
+  oyiga va yiliga qancha), oyning eng katta xarajatlari va hafta kunlari
+  kesimi.
 
 ![Xulosa](img/admin-xulosa.png)
 

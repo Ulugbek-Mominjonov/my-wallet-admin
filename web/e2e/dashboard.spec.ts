@@ -174,6 +174,15 @@ test.describe('E24-T01: xulosa', () => {
     await expect(page).toHaveURL(/category=/)
     await expect(page.getByRole('link', { name: 'Amallarni ko‘rish' })).toBeVisible()
 
+    // E32-T02: tahlillar — bu byudjetda obuna/sakrash yo'q, lekin oy xarajati bor.
+    await tabs.getByRole('link', { name: 'Tahlillar' }).click()
+    await expect(page).toHaveURL(/\/report\/insights/)
+    await expect(page.getByRole('heading', { name: 'Hafta kunlari' })).toBeVisible()
+    await expect(page.getByRole('table', { name: 'Eng katta xarajatlar' })).toContainText(
+      'Oziq-ovqat',
+    )
+    await expect(page.getByText('Takrorlanuvchi to‘lov topilmadi')).toBeVisible()
+
     // E24-T04: qarz va maqsadlar (bu byudjetda — bo'sh holatlar).
     await tabs.getByRole('link', { name: 'Qarz va maqsad' }).click()
     await expect(page).toHaveURL(/\/report\/obligations/)

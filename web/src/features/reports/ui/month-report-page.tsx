@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { Lock, Printer } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
+  insightsQuery,
   membersReportQuery,
   monthReportQuery,
   savingsReportQuery,
@@ -14,8 +14,10 @@ import { monthReportRows } from '@/features/reports/model/export-rows'
 import { incomeOutsideTypes } from '@/features/reports/model/month-report'
 import {
   CategoryLimits,
+  Figure,
   IncomeMatrix,
   MemberBreakdown,
+  SpikeList,
   UnpaidPlans,
 } from '@/features/reports/ui/report-tables'
 import { useAppLocale } from '@/shared/i18n'
@@ -57,6 +59,8 @@ export function MonthReportPage({
   const savings = useQuery(savingsReportQuery(householdId))
   // E30-T02: a'zolar kesimi — faqat bir nechta a'zo bo'lganda ko'rsatiladi.
   const members = useQuery(membersReportQuery(householdId, month))
+  // E32-T02: "Diqqat" — sakragan kategoriyalar (bo'lmasa blok ko'rinmaydi).
+  const insights = useQuery(insightsQuery(householdId, month))
   const money = (value: number) => formatMoney(value, { currency: baseCurrency, locale })
 
   const header = (
@@ -171,6 +175,15 @@ export function MonthReportPage({
           <Figure label={t('report.summary.fundSpent')}>{money(totals.fund_spent)}</Figure>
         </dl>
       </SectionCard>
+
+      {insights.data && insights.data.spikes.length > 0 && (
+        <SectionCard
+          title={t('report.insights.attention')}
+          description={t('report.insights.spikesHint')}
+        >
+          <SpikeList rows={insights.data.spikes} baseCurrency={baseCurrency} />
+        </SectionCard>
+      )}
 
       {members.data && members.data.members.length > 1 && (
         <SectionCard title={t('report.members.title')} description={t('report.members.hint')}>
@@ -326,15 +339,5 @@ function SavingsFigures({
 }
 
 /** Hisobotdagi bitta ko'rsatkich: yorliq, qiymat va ixtiyoriy izoh. */
-function Figure({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
-  return (
-    <div className="space-y-0.5">
-      <dt className="text-sm text-muted-foreground">{label}</dt>
-      <dd className="font-medium">{children}</dd>
-      {hint && <dd className="text-xs text-muted-foreground">{hint}</dd>}
-    </div>
-  )
-}
-
 const percent = (ratio: number | null) =>
   ratio === null ? '—' : `${String(Math.round(ratio * 100))}%`

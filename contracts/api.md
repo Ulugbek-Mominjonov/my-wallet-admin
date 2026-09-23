@@ -349,7 +349,13 @@ qoldig'i (`planned − paid`), `unknown_count` — summasi noma'lum to'lanmaganl
 | `report_debts(p_household)` | `{debts[{debt_id, name, direction, currency, total, paid_before, monthly_payment, due_date, archived, paid_in_app, pending_amount, pending_count, remaining, progress, months_left, end_month, status}], totals{i_owe, owed_to_me, monthly_obligation, net, paid_this_month}}` |
 | `report_goals(p_household)` | `{avg_monthly_saved, goals[{goal_id, name, currency, target, saved, remaining, progress, monthly, monthly_source (goal/average), months_left, end_month, deadline, on_track, account_id, achieved_at}]}` |
 | `report_category_trend(p_household, p_from, p_to, p_category?)` | `{series[{month, category_id, actual}], compare[{category_id, actual, prev, avg3, vs_prev, vs_avg3}]}` (BR-095) |
+| `report_insights(p_household, p_month)` | `{month, expense, spikes[{category_id, name, actual, average, delta_pct}], subscriptions[{payee, amount, months, last_on}], subscriptions_total, top_expenses[{id, occurred_on, payee, category, amount}], weekdays[7 × {dow (1 — dushanba), amount, count}]}` (E32-T01) |
 | `health_check(p_household)` | `{problems[{code, …}], warnings[{code, …}], info{transactions, planned_items, first_month, opened_months, closed_months, income_rules}}` |
+
+`report_insights` — byudjet xarajatlari bo'yicha (fond xarajati va o'tkazma
+kirmaydi): `spikes` — oxirgi 3 oy o'rtachasidan 30%+ oshgan kategoriyalar (5
+tagacha), `subscriptions` — oxirgi 6 oyning kamida 3 tasida takrorlangan bir
+xil nom va summa (10 tagacha), `top_expenses` — oyning eng katta 5 xarajati.
 
 Formulalar: BR-090..095 (`BIZNES-QOIDALAR.md` 10-bo'lim). `limit_status`:
 `ok` < 80%, `near` 80–100%, `over` > 100% (ota-kategoriya — subkategoriyalar
