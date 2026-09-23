@@ -54,7 +54,47 @@
     "title": "Xulosa",
     "description": "Joriy oy bo'yicha asosiy ko'rsatkichlar",
     "emptyTitle": "Hozircha ma'lumot yo'q",
-    "emptyText": "Ko'rsatkichlar amallar kiritilgandan keyin shu yerda paydo bo'ladi."
+    "emptyText": "Ko'rsatkichlar amallar kiritilgandan keyin shu yerda paydo bo'ladi.",
+    "kpi": {
+      "balance": "Qoldiq",
+      "balanceHint": "Daromad − xarajat (shu oy)",
+      "forecast": "Oy oxiri prognozi",
+      "forecastHint": "Kutilayotgan daromad va sarf bilan",
+      "saved": "Orttirgan",
+      "savedHint": "Daromadning {{percent}}%",
+      "perDay": "Kuniga sarflash mumkin",
+      "perDayHint": "{{days}} kun qoldi"
+    },
+    "flow": {
+      "title": "Daromad va xarajat",
+      "description": "So'nggi {{count}} oy",
+      "income": "Daromad",
+      "expense": "Xarajat",
+      "saved": "Orttirgan"
+    },
+    "top": {
+      "title": "Ko‘p sarflangan kategoriyalar",
+      "description": "{{month}} · xarajatlar",
+      "other": "Boshqalar",
+      "empty": "Bu oyda xarajat yo'q"
+    },
+    "upcoming": {
+      "title": "Yaqin to'lovlar",
+      "description": "To'lanmagan rejalar",
+      "all": "Hammasi",
+      "empty": "To'lanmagan reja yo'q",
+      "unknown": "?"
+    },
+    "alerts": {
+      "title": "Ogohlantirishlar",
+      "limits": "Limitdan oshgan: {{count}}",
+      "limitsNear": "Limitga yaqin: {{count}}",
+      "overdue": "Muddati o'tgan rejalar: {{count}}",
+      "problems": "Tekshiruv muammolari: {{count}}",
+      "warnings": "Tekshiruv ogohlantirishlari: {{count}}",
+      "none": "Muammo topilmadi",
+      "toChecks": "Tekshiruv"
+    }
   },
   "nav": {
     "overview": "Umumiy",
@@ -818,5 +858,12 @@
       "reopenText": "Oy yozuvlari yana tahrirlanadi; hisobotdagi 🔒 belgisi olib tashlanadi.",
       "reopenedToast": "{{month}} qayta ochildi"
     }
+  },
+  "chart": {
+    "asTable": "Jadval",
+    "asChart": "Grafik",
+    "month": "Oy",
+    "value": "Qiymat",
+    "empty": "Ma'lumot yo'q"
   }
 }

@@ -670,7 +670,7 @@ E21–E26 (admin) M2 bilan.
 > **DoD:** eski `Hisobot` va `Yillik` sheetlaridagi **har bir ko'rsatkich**
 > admin'da bor (izchillik jadvali — BR 24-bo'lim); eksport ishlaydi.
 
-- [ ] **E24-T01** **Dashboard**: joriy oy KPI kartalari (qoldiq, prognoz,
+- [x] **E24-T01** **Dashboard**: joriy oy KPI kartalari (qoldiq, prognoz,
   orttirgan %, kuniga sarflash mumkin), daromad vs xarajat (12 oy, ustun
   grafik), kategoriya donut, yaqin to'lovlar, ogohlantirishlar (limit,
   kechikkan, tekshiruv muammolari soni).
@@ -964,6 +964,10 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-22 | Admin rejalar: holat va bo'limlar klientda — `private.planned_status` tartibi, mobil `PlanBoard` bilan bir xil (yaqin — 3 kun), `planned-item` entity'si | holat saqlanmaydi (BR-071, bugungi sana); ikki klientda bir xil ko'rinish; so'rov — bitta oy rejalari | E23-T04 |
 | 2026-09-22 | "To'landi" formasida summa doim yuboriladi (standart — qolgani, hisob asosiy valyutada bo'lsa); qisman to'lovda "Yopish" tanlovi faqat qoldiq ma'lum va bir valyutada | foydalanuvchi ko'rgan summa aynan yoziladi; boshqa valyutadagi summani qoldiq bilan solishtirib bo'lmaydi | E23-T04, BR-073 |
 | 2026-09-23 | Oy dialoglari tekshiruvlari (ochish preview'i, yopish tekshiruvi) — oy holati keshidan alohida kalitda | ochish/yopishdan keyin oy holati invalidatsiya qilinadi; bir kalitda bo'lsa yopilgan dialogning so'rovi ham qayta ketardi | E23-T05 |
+| 2026-09-23 | Grafiklar — o'z SVG kitimiz (ustun, gorizontal ustun, chiziq), kutubxonasiz | kerakli shakllar oddiy; Recharts ≈ 100 KB gz bo'lardi, jadval ko'rinishi va mavzu tokenlari baribir qo'lda bo'lardi | E24-T01 |
+| 2026-09-23 | Grafik ranglari — tekshirilgan 8 ta kategorik palitra (`--chart-1..8`); daromad/xarajat grafikda ko'k/to'q sariq, matnda esa yashil/qizil qoladi | yashil-qizil juftligi rang ko'rmaslikda ajralmaydi (ΔE 5,9 yorug'/2,9 qorong'i — talab ≥ 8); matnda ishora bor (+/−), grafikda esa faqat rang | E24-T01 |
+| 2026-09-23 | Ulush uchun donut emas — gorizontal ustunlar (bitta rang), har grafikda jadval ko'rinishi | uzun kategoriya nomlari bilan donut yomon o'qiladi; rang yolg'iz belgilovchi bo'lmasligi kerak (ekran o'quvchi, bosib chiqarish) | E24-T01 |
+| 2026-09-23 | Hisobot javoblari zod bilan tekshiriladi (`plan_ratio`, `per_day_available` — null, `income_pending` — mantiqiy) | uchala maydon hujjatda tип bilan ko'rsatilmagan edi; tekshiruv ularni sahifa buzilishidan oldin topdi | E24-T01 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

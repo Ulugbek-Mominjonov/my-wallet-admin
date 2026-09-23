@@ -22,7 +22,9 @@ test.describe('admin panel karkasi', () => {
     await page.goto('/')
     await expect(page).toHaveURL(HOUSEHOLD_URL)
     await expect(page.getByRole('heading', { level: 1, name: 'Xulosa' })).toBeVisible()
-    await expect(page.getByText("Hozircha ma'lumot yo'q")).toBeVisible()
+    // Ma'lumotsiz byudjetda ham ko'rsatkichlar (nol bilan) chiqadi (E24-T01).
+    await expect(page.getByText('Qoldiq')).toBeVisible()
+    await expect(page.getByText('Kuniga sarflash mumkin')).toBeVisible()
   })
 
   test("noma'lum manzil — 404 sahifasi va bosh sahifaga qaytish", async ({ page }) => {

@@ -54,7 +54,47 @@
     "title": "Overview",
     "description": "Key figures for the current month",
     "emptyTitle": "No data yet",
-    "emptyText": "Figures will appear here once transactions are added."
+    "emptyText": "Figures will appear here once transactions are added.",
+    "kpi": {
+      "balance": "Balance",
+      "balanceHint": "Income − expenses (this month)",
+      "forecast": "End-of-month forecast",
+      "forecastHint": "With expected income and spending",
+      "saved": "Saved",
+      "savedHint": "{{percent}}% of income",
+      "perDay": "Can spend per day",
+      "perDayHint": "{{days}} days left"
+    },
+    "flow": {
+      "title": "Income and expenses",
+      "description": "Last {{count}} months",
+      "income": "Income",
+      "expense": "Expenses",
+      "saved": "Saved"
+    },
+    "top": {
+      "title": "Top spending categories",
+      "description": "{{month}} · expenses",
+      "other": "Other",
+      "empty": "No expenses this month"
+    },
+    "upcoming": {
+      "title": "Upcoming payments",
+      "description": "Unpaid plans",
+      "all": "All",
+      "empty": "No unpaid plans",
+      "unknown": "?"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "limits": "Over the limit: {{count}}",
+      "limitsNear": "Near the limit: {{count}}",
+      "overdue": "Overdue plans: {{count}}",
+      "problems": "Check problems: {{count}}",
+      "warnings": "Check warnings: {{count}}",
+      "none": "No problems found",
+      "toChecks": "Checks"
+    }
   },
   "nav": {
     "overview": "Overview",
@@ -818,5 +858,12 @@
       "reopenText": "Records of the month become editable again; the 🔒 mark is removed from reports.",
       "reopenedToast": "{{month}} reopened"
     }
+  },
+  "chart": {
+    "asTable": "Table",
+    "asChart": "Chart",
+    "month": "Month",
+    "value": "Value",
+    "empty": "No data"
   }
 }

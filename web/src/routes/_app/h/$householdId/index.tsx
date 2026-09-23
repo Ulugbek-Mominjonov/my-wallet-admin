@@ -1,24 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { LayoutDashboard } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
-import { EmptyState } from '@/shared/ui/empty-state'
-import { PageHeader } from '@/shared/ui/page-header'
+import { DashboardPage } from '@/features/reports'
+import { currentMonthKey } from '@/shared/lib/month'
 
+/** E24-T01: byudjet xulosasi — joriy oy ko'rsatkichlari va grafiklar. */
 export const Route = createFileRoute('/_app/h/$householdId/')({
-  component: DashboardPage,
+  component: DashboardRoute,
 })
 
-function DashboardPage() {
-  const { t } = useTranslation()
+function DashboardRoute() {
+  const { household } = Route.useRouteContext()
   return (
-    <>
-      <PageHeader title={t('dashboard.title')} description={t('dashboard.description')} />
-      <EmptyState
-        icon={LayoutDashboard}
-        title={t('dashboard.emptyTitle')}
-        description={t('dashboard.emptyText')}
-      />
-    </>
+    <DashboardPage
+      householdId={household.id}
+      month={currentMonthKey(new Date(), household.timezone)}
+      baseCurrency={household.base_currency}
+    />
   )
 }

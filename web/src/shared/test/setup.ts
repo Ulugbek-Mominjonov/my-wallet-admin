@@ -22,11 +22,30 @@ Object.defineProperty(window, 'matchMedia', {
     }) as MediaQueryList,
 })
 
-// jsdom'da yo'q — cmdk ro'yxati balandligini kuzatadi, tanlangan bandni ko'rinishga suradi.
+// jsdom'da yo'q — cmdk ro'yxati balandligini kuzatadi, grafiklar konteyner
+// kengligini o'lchaydi. jsdom hamma o'lchamni 0 qaytargani uchun kuzatuvchi
+// bir marta shu kenglikni beradi — aks holda grafik umuman chizilmaydi.
+const TEST_ELEMENT_WIDTH = 640
 Object.defineProperty(window, 'ResizeObserver', {
   writable: true,
   value: class {
-    observe = () => undefined
+    readonly callback: ResizeObserverCallback
+
+    constructor(callback: ResizeObserverCallback) {
+      this.callback = callback
+    }
+
+    observe(target: Element) {
+      this.callback(
+        [
+          {
+            target,
+            contentRect: { width: TEST_ELEMENT_WIDTH, height: 240 },
+          } as ResizeObserverEntry,
+        ],
+        this,
+      )
+    }
     unobserve = () => undefined
     disconnect = () => undefined
   },
