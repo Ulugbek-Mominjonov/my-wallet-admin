@@ -58,6 +58,22 @@ yoziladi, shuning uchun jadvalning deyarli hammasi o'lchanadigan byudjetniki —
 bunda Seq Scan rejalovchining to'g'ri tanlovi. Haqiqiy bazada yozuvlar vaqt
 bo'yicha tarqaladi va `audit_log_household_at_idx` ishlaydi.
 
+
+E28-T03 sinxron (2026-09-23, shu yukda; 25 000 amal, 14 jadval):
+
+| So'rov | Maqsad | Mediana | Izoh |
+|---|---|---|---|
+| `sync_pull` — birinchi sahifa (500 qator) | < 50 ms | 32 ms | to'liq yuklashda takrorlanadi |
+| `sync_pull` — kursor oxirida (0 qator) | < 10 ms | 3 ms | eng tez-tez chaqiruv (har qurilma, har sikl) |
+
+Kundalik yuk aynan shu ikkinchi qator: qurilma sinxronni 6 soatda bir
+(WorkManager) va yozuvdan keyin chaqiradi — bo'sh javob 3 ms turadi.
+`sync_push` o'lchanmaydi: paket ≤ 100 mutatsiya va har biri o'z
+savepoint'ida yoziladi — vaqt yozuv triggerlariga teng (amal yozish bilan
+bir xil yo'l).
+
+Mobil sovuq start (E20-T04, emulyator): ~1,5 s — maqsad < 2 s ✅.
+
 ## Topilgan va tuzatilgan muammolar
 
 | Muammo | Sabab | Yechim |

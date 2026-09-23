@@ -18,7 +18,8 @@ RUNS=5
 # Hisobot → maqsad (ms): docs/PERF.md
 declare -A TARGET_MS=([report_month]=50 [report_year]=150 [report_savings]=150 [health_check]=100
   [tx_first_page]=20 [tx_deep_page]=20 [tx_search]=50 [tx_summary]=30 [payee_suggest]=30
-  [audit_first_page]=20 [audit_deep_page]=30)
+  [audit_first_page]=20 [audit_deep_page]=30
+  [sync_first_page]=50 [sync_idle]=10)
 
 out="$(psql "$ADMIN_URL" --no-psqlrc --quiet --file scripts/gen-load.sql)"
 household="$(sed -n 's/^perf_household=//p' <<< "$out")"
@@ -62,6 +63,10 @@ declare -A CALLS=(
   # E25-T05: audit jurnali — birinchi va chuqur sahifa (sintetik yukda hamma
   # yozuvning vaqti bir xil: kursor faqat `id` bo'yicha ajratadi — eng og'ir holat).
   [audit_first_page]="(select count(*) from public.audit_list('$household'))"
+  # E28-T03: sinxron — birinchi sahifa (to'liq yuklash, 500 qator) va eng
+  # tez-tez uchraydigan holat: kursor oxirida, yangi yozuv yo'q.
+  [sync_first_page]="(public.sync_pull('$household', 0) -> 'next_cursor')"
+  [sync_idle]="(public.sync_pull('$household', 1000000000000000) -> 'next_cursor')"
   [audit_deep_page]="(select count(*) from public.audit_list('$household',
      p_after_at => (select max(a.at) from public.audit_log a where a.household_id = '$household'),
      p_after_id => (select min(a.id) + 12000 from public.audit_log a where a.household_id = '$household')))"
@@ -71,7 +76,7 @@ failed=0
 printf '%-16s %10s %10s\n' "hisobot" "mediana" "maqsad"
 for report in report_month report_year report_savings health_check \
   tx_first_page tx_deep_page tx_search tx_summary payee_suggest \
-  audit_first_page audit_deep_page; do
+  audit_first_page audit_deep_page sync_first_page sync_idle; do
   # Rejalar: auto_explain NOTICE sifatida mijozga chiqaradi.
   plans="$(psql "$ADMIN_URL" --no-psqlrc --quiet 2>&1 <<SQL
 load 'auto_explain';

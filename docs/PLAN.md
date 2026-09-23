@@ -784,7 +784,7 @@ E21–E26 (admin) M2 bilan.
 - [x] **E28-T02** Xavfsizlik tekshiruvi: Supabase Security Advisor va
   Performance Advisor ogohlantirishlari 0; RLS har jadvalda yoqilgan
   (pgTAP `tests.rls_enabled_everywhere`); sirlar skaneri (gitleaks) CI'da.
-- [ ] **E28-T03** Yuklama/ishlash: prod o'lchamidagi sintetik ma'lumotda
+- [x] **E28-T03** Yuklama/ishlash: prod o'lchamidagi sintetik ma'lumotda
   hisobotlar va sinxron vaqtlari (`docs/PERF.md`), mobil sovuq start < 2 s.
 - [ ] **E28-T04** Zaxira: prod zaxirasidan staging'ga tiklash mashqi
   muvaffaqiyatli (natija `DEPLOY.md` jurnaliga).
