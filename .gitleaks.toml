@@ -1,0 +1,21 @@
+# E28-T02: sirlar skaneri sozlamasi — standart qoidalar ustiga istisnolar.
+# Repo ochiq: haqiqiy kalit hech qachon kodga tushmaydi (env/Vault orqali).
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Lokal artefaktlar (git'ga tushmaydi): lokal Supabase demo kalitlari, build natijasi, E2E sessiyasi"
+paths = [
+  '''web/\.env\.local''',
+  '''web/dist/''',
+  '''web/e2e/\.auth/''',
+  '''supabase/\.temp/''',
+  '''playwright-report/''',
+  '''test-results/''',
+]
+
+[[allowlists]]
+description = "FCM testi: PEM sarlavhasi — shablon matni, kalit test vaqtida generatsiya qilinadi"
+paths = ['''supabase/functions/_tests/fcm_telegram\.test\.ts''']
+regexTarget = "match"
+regexes = ['''BEGIN PRIVATE KEY''']

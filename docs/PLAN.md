@@ -781,7 +781,7 @@ E21–E26 (admin) M2 bilan.
 - [ ] 🔑 **E28-T01** Prod muhit: `DEPLOY.md` 2–7-qadamlari bajarilganini
   tekshirish ro'yxati (Supabase prod, Cloudflare, Firebase, Telegram bot,
   Google OAuth, SMTP, GitHub sirlari).
-- [ ] **E28-T02** Xavfsizlik tekshiruvi: Supabase Security Advisor va
+- [x] **E28-T02** Xavfsizlik tekshiruvi: Supabase Security Advisor va
   Performance Advisor ogohlantirishlari 0; RLS har jadvalda yoqilgan
   (pgTAP `tests.rls_enabled_everywhere`); sirlar skaneri (gitleaks) CI'da.
 - [ ] **E28-T03** Yuklama/ishlash: prod o'lchamidagi sintetik ma'lumotda
@@ -980,6 +980,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | E'lon — `admin-ops` Edge Function o'rniga RPC (`send_announcement`): navbat baribir outbox, yuborishni `notify-dispatch` qiladi; bloklash — `auth.users.banned_until` (o'chirish emas) | yangi funksiya = yangi deploy, sir va monitoring; RPC pgTAP bilan qoplanadi; bloklangan foydalanuvchi ma'lumoti saqlanib qoladi (qo'llab-quvvatlash uchun) | E26-T03, E26-T04, BR-213 |
 | 2026-09-23 | Tizim salomatligi — mavjud `jobs.platform_stats()` ustiga bitta RPC (`platform_health`); keep-alive/zaxira holati GitHub API'dan olinmadi | statistikani kunlik cron allaqachon hisoblaydi, sahifa jonli chaqiradi — ikkinchi hisob-kitob yo'q; GitHub API brauzerdan token talab qiladi (ochiq repoda sir bo'lmaydi) — holat Actions'da ko'rinadi | E26-T05 |
 | 2026-09-23 | Ko'chirish dry-run — haqiqiy yozuv + bekor qilish (blok ichidagi `raise ... detail` orqali natija qaytadi), farq `private.month_facts` dan; import `security definer`, yordamchilar klientga berilmagan | "nima bo'lishini" ikkinchi kod bilan taxmin qilish emas — aynan import yo'li tekshiriladi (triggerlar, cheklovlar bilan); `import_batch_id` va tombstone yozish huquqi klientda yo'q | E27-T03, BR-181 |
+| 2026-09-23 | Sirlar skaneri — rasmiy gitleaks binarisi (versiya + SHA256), uchinchi tomon action'isiz; Advisor qoidalarining bir qismi pgTAP'ga ko'chirildi (auth.uid() initplan, bitta permissive siyosat, takroriy indeks); har FK uchun indeks talab qilinmadi | action litsenziya/telemetriya olib keladi, binar esa checksum bilan qotiriladi; Advisor faqat hosted loyihada ishlaydi — invariantlar har PR'da tekshirilsin; `created_by`/`currency` FK'lari qidiruvda ishlatilmaydi, 24 ta ortiqcha indeks yozuvni sekinlashtirardi | E28-T02 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

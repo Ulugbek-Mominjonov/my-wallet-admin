@@ -1,7 +1,7 @@
 -- Umumiy xavfsizlik invariantlari (har yangi migratsiyadan keyin ham to'g'ri
 -- bo'lishi shart). Fayl oxirida ishlaydi (900_).
 begin;
-select plan(7);
+select plan(10);
 
 select is_empty(
   $$ select c.relname
@@ -81,6 +81,43 @@ select is_empty(
       where t.column_name = 'deleted_at'
         and has_table_privilege('authenticated', t.rel, 'delete') $$,
   'soft delete jadvallarida klient DELETE qila olmaydi (tombstone sinxronga yetadi)'
+);
+
+-- ─── Supabase Advisor qoidalari (E28-T02) ──────────────────────────────────
+-- `auth_rls_initplan`: siyosatda `auth.uid()` har qatorda emas, so'rovga bir
+-- marta baholanishi kerak — `(select auth.uid())` ko'rinishida.
+select is_empty(
+  $$ select p.tablename || '.' || p.policyname
+       from pg_policies p
+      where p.schemaname = 'public'
+        and (coalesce(p.qual, '') ~ 'auth\.uid\(\)'
+             or coalesce(p.with_check, '') ~ 'auth\.uid\(\)')
+        and not (coalesce(p.qual, '') ~ '\( SELECT auth\.uid\(\)'
+                 or coalesce(p.with_check, '') ~ '\( SELECT auth\.uid\(\)') $$,
+  'RLS siyosatlarida auth.uid() so''rovga bir marta baholanadi (initplan)'
+);
+
+-- `multiple_permissive_policies`: bir amal uchun bir nechta permissive siyosat
+-- har qatorda ikki marta tekshiriladi.
+select is_empty(
+  $$ select p.tablename || ':' || p.cmd
+       from pg_policies p
+      where p.schemaname = 'public' and p.permissive = 'PERMISSIVE'
+      group by p.tablename, p.cmd having count(*) > 1 $$,
+  'bir jadval + amal uchun bitta permissive siyosat'
+);
+
+-- `duplicate_index`: bir xil ustunlar va shart bo'yicha ikkinchi indeks —
+-- ortiqcha yozuv yuklamasi.
+select is_empty(
+  $$ select a.indrelid::regclass::text
+       from pg_index a
+       join pg_index b on a.indrelid = b.indrelid and a.indexrelid < b.indexrelid
+       join pg_class c on c.oid = a.indrelid
+       join pg_namespace n on n.oid = c.relnamespace
+      where n.nspname = 'public' and a.indkey = b.indkey
+        and pg_get_expr(a.indpred, a.indrelid) is not distinct from pg_get_expr(b.indpred, b.indrelid) $$,
+  'takroriy indeks yo''q'
 );
 
 select * from finish();
