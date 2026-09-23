@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev e2e contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check fn-lint fn-test fn-snapshots fn-smoke
+.PHONY: help check lint test fmt dev e2e docs-shots contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check fn-lint fn-test fn-snapshots fn-smoke
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -40,6 +40,9 @@ web-test: ## Web: unit testlar (Vitest)
 
 web-e2e: ## Web: Playwright e2e (build + preview, desktop va mobil)
 	pnpm --filter @my-wallet/web e2e
+
+docs-shots: ## Qo'llanma skrinshotlarini yangilash (docs/img) — lokal Supabase kerak
+	DOCS_SHOTS=1 pnpm --filter @my-wallet/web e2e --project=desktop e2e/docs.spec.ts
 
 e2e: web-e2e ## Barcha e2e testlar
 

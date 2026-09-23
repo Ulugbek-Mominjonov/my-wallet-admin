@@ -18,6 +18,8 @@ Mobil ilova — alohida repo: `my-wallet-mobil`.
 | [`docs/BIZNES-QOIDALAR.md`](docs/BIZNES-QOIDALAR.md) | biznes qoidalar spetsifikatsiyasi (BR-xxx) |
 | [`docs/ARXITEKTURA.md`](docs/ARXITEKTURA.md) | arxitektura, ADR'lar, ma'lumotlar modeli, API, sinxron |
 | [`docs/DEPLOY.md`](docs/DEPLOY.md) | bepul deploy uchun akkaunt va kalitlarni tayyorlash |
+| [`docs/QOLLANMA.md`](docs/QOLLANMA.md) | foydalanuvchi qo'llanmasi (mobil va admin panel) |
+| [`docs/MIGRATSIYA.md`](docs/MIGRATSIYA.md) | eski Google Sheets byudjetini ko'chirish |
 
 ## Lokal ishga tushirish
 
@@ -31,4 +33,5 @@ Talablar: Docker, Node 24, pnpm. Batafsil: [`docs/CONTRIBUTING.md`](docs/CONTRIB
 
 ## Holat
 
-Loyiha rejalashtirish bosqichida — kod `docs/PLAN.md` dagi E01 dan boshlanadi.
+Platforma yadrosi, mobil ilova va admin panel tayyor (E01–E27); hozir —
+production relizi (E28). Batafsil: [`docs/PLAN.md`](docs/PLAN.md).

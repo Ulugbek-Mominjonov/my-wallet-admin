@@ -788,7 +788,7 @@ E21–E26 (admin) M2 bilan.
   hisobotlar va sinxron vaqtlari (`docs/PERF.md`), mobil sovuq start < 2 s.
 - [ ] **E28-T04** Zaxira: prod zaxirasidan staging'ga tiklash mashqi
   muvaffaqiyatli (natija `DEPLOY.md` jurnaliga).
-- [ ] **E28-T05** Hujjatlar: `docs/QOLLANMA.md` (foydalanuvchi qo'llanmasi —
+- [x] **E28-T05** Hujjatlar: `docs/QOLLANMA.md` (foydalanuvchi qo'llanmasi —
   skrinshotlar bilan: onboarding, amal qo'shish, oy ochish, to'lovlar,
   fondlar, hisobotlar, Telegram), `CHANGELOG`.
 - [ ] **E28-T06** Reliz: admin `v1.0.0` teg → prod deploy; mobil `v1.0.0`
@@ -981,6 +981,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Tizim salomatligi — mavjud `jobs.platform_stats()` ustiga bitta RPC (`platform_health`); keep-alive/zaxira holati GitHub API'dan olinmadi | statistikani kunlik cron allaqachon hisoblaydi, sahifa jonli chaqiradi — ikkinchi hisob-kitob yo'q; GitHub API brauzerdan token talab qiladi (ochiq repoda sir bo'lmaydi) — holat Actions'da ko'rinadi | E26-T05 |
 | 2026-09-23 | Ko'chirish dry-run — haqiqiy yozuv + bekor qilish (blok ichidagi `raise ... detail` orqali natija qaytadi), farq `private.month_facts` dan; import `security definer`, yordamchilar klientga berilmagan | "nima bo'lishini" ikkinchi kod bilan taxmin qilish emas — aynan import yo'li tekshiriladi (triggerlar, cheklovlar bilan); `import_batch_id` va tombstone yozish huquqi klientda yo'q | E27-T03, BR-181 |
 | 2026-09-23 | Sirlar skaneri — rasmiy gitleaks binarisi (versiya + SHA256), uchinchi tomon action'isiz; Advisor qoidalarining bir qismi pgTAP'ga ko'chirildi (auth.uid() initplan, bitta permissive siyosat, takroriy indeks); har FK uchun indeks talab qilinmadi | action litsenziya/telemetriya olib keladi, binar esa checksum bilan qotiriladi; Advisor faqat hosted loyihada ishlaydi — invariantlar har PR'da tekshirilsin; `created_by`/`currency` FK'lari qidiruvda ishlatilmaydi, 24 ta ortiqcha indeks yozuvni sekinlashtirardi | E28-T02 |
+| 2026-09-23 | Qo'llanma skrinshotlari Playwright bilan yangilanadi (`make docs-shots`, sintetik lokal ma'lumot); CHANGELOG qo'lda yozilmaydi — release-please yuritadi | qo'lda olingan surat birinchi o'zgarishdayoq eskiradi; ma'lumot lokal bo'lgani uchun shaxsiy hech narsa chiqmaydi | E28-T05 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
