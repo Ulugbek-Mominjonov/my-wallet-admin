@@ -1907,6 +1907,7 @@ export type Database = {
           payee: string
         }[]
       }
+      platform_health: { Args: never; Returns: Json }
       platform_set_blocked: {
         Args: { p_blocked: boolean; p_user: string }
         Returns: Json

@@ -1,7 +1,7 @@
--- E26-T03, T04: platforma admini — foydalanuvchilar ro'yxati (agregat),
--- bloklash va e'lonlar. Qoidalar: BR-213, BR-163..166.
+-- E26-T03..T05: platforma admini — foydalanuvchilar ro'yxati (agregat),
+-- bloklash, e'lonlar va tizim salomatligi. Qoidalar: BR-213, BR-163..166.
 begin;
-select plan(12);
+select plan(16);
 
 create temporary table u (name text primary key, id uuid) on commit drop;
 insert into u values
@@ -35,6 +35,10 @@ select tests.authenticate_as((select id from u where name = 'root'));
 select throws_ok(
   $$ select public.platform_users() $$,
   'P0001', 'forbidden', 'BR-213: 2FA''siz (aal1) platforma amallari yopiq'
+);
+select throws_ok(
+  $$ select public.platform_health() $$,
+  'P0001', 'forbidden', 'BR-213: tizim salomatligi — platforma admini (aal2)'
 );
 
 select tests.authenticate_as((select id from u where name = 'root'), 'aal2');
@@ -97,6 +101,26 @@ select is(
   (select (v -> 'items' -> 0 ->> 'users')::int
      from (select public.announcement_log() as v) x), 1,
   'e''lonlar jurnali: nechta foydalanuvchiga ketgani'
+);
+
+-- ─── Tizim salomatligi (E26-T05) ───────────────────────────────────────────
+insert into r select 'health', public.platform_health();
+select ok(
+  (select (v #>> '{stats,db_bytes}')::bigint > 0
+      and (v #>> '{limits,db_bytes}')::bigint = 500 * 1024 * 1024
+      and (v #>> '{limits,warn_pct}')::numeric = 70
+     from r where name = 'health'),
+  'baza hajmi va bepul reja chegarasi (ogohlantirish 70%)'
+);
+select ok(
+  (select jsonb_typeof(v #> '{stats,largest_tables}') = 'array'
+      and jsonb_array_length(v #> '{stats,largest_tables}') > 0
+     from r where name = 'health'),
+  'eng katta jadvallar ro''yxati'
+);
+select is(
+  (select (v #>> '{outbox,pending}')::int from r where name = 'health'), 2,
+  'navbatda — yuqorida yuborilgan e''lon xabarlari'
 );
 
 select * from finish();

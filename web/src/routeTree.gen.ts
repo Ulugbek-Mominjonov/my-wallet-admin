@@ -20,6 +20,7 @@ import { Route as AppHHouseholdIdRouteImport } from './routes/_app/h/$householdI
 import { Route as AppPlatformIndexRouteImport } from './routes/_app/platform/index'
 import { Route as AppPlatformAnnouncementsRouteImport } from './routes/_app/platform/announcements'
 import { Route as AppPlatformConfigRouteImport } from './routes/_app/platform/config'
+import { Route as AppPlatformHealthRouteImport } from './routes/_app/platform/health'
 import { Route as AppPlatformUsersRouteImport } from './routes/_app/platform/users'
 import { Route as AuthAuthCallbackRouteImport } from './routes/_auth/auth/callback'
 import { Route as AppHHouseholdIdIndexRouteImport } from './routes/_app/h/$householdId/index'
@@ -101,6 +102,11 @@ const AppPlatformAnnouncementsRoute =
 const AppPlatformConfigRoute = AppPlatformConfigRouteImport.update({
   id: '/config',
   path: '/config',
+  getParentRoute: () => AppPlatformRoute,
+} as any)
+const AppPlatformHealthRoute = AppPlatformHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
   getParentRoute: () => AppPlatformRoute,
 } as any)
 const AppPlatformUsersRoute = AppPlatformUsersRouteImport.update({
@@ -263,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/platform/announcements': typeof AppPlatformAnnouncementsRoute
   '/platform/config': typeof AppPlatformConfigRoute
+  '/platform/health': typeof AppPlatformHealthRoute
   '/platform/users': typeof AppPlatformUsersRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/platform/': typeof AppPlatformIndexRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/mfa': typeof AuthMfaRoute
   '/platform/announcements': typeof AppPlatformAnnouncementsRoute
   '/platform/config': typeof AppPlatformConfigRoute
+  '/platform/health': typeof AppPlatformHealthRoute
   '/platform/users': typeof AppPlatformUsersRoute
   '/auth/callback': typeof AuthAuthCallbackRoute
   '/platform': typeof AppPlatformIndexRoute
@@ -341,6 +349,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId': typeof AppHHouseholdIdRouteWithChildren
   '/_app/platform/announcements': typeof AppPlatformAnnouncementsRoute
   '/_app/platform/config': typeof AppPlatformConfigRoute
+  '/_app/platform/health': typeof AppPlatformHealthRoute
   '/_app/platform/users': typeof AppPlatformUsersRoute
   '/_auth/auth/callback': typeof AuthAuthCallbackRoute
   '/_app/platform/': typeof AppPlatformIndexRoute
@@ -382,6 +391,7 @@ export interface FileRouteTypes {
     | '/h/$householdId'
     | '/platform/announcements'
     | '/platform/config'
+    | '/platform/health'
     | '/platform/users'
     | '/auth/callback'
     | '/platform/'
@@ -419,6 +429,7 @@ export interface FileRouteTypes {
     | '/mfa'
     | '/platform/announcements'
     | '/platform/config'
+    | '/platform/health'
     | '/platform/users'
     | '/auth/callback'
     | '/platform'
@@ -459,6 +470,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId'
     | '/_app/platform/announcements'
     | '/_app/platform/config'
+    | '/_app/platform/health'
     | '/_app/platform/users'
     | '/_auth/auth/callback'
     | '/_app/platform/'
@@ -572,6 +584,13 @@ declare module '@tanstack/react-router' {
       path: '/config'
       fullPath: '/platform/config'
       preLoaderRoute: typeof AppPlatformConfigRouteImport
+      parentRoute: typeof AppPlatformRoute
+    }
+    '/_app/platform/health': {
+      id: '/_app/platform/health'
+      path: '/health'
+      fullPath: '/platform/health'
+      preLoaderRoute: typeof AppPlatformHealthRouteImport
       parentRoute: typeof AppPlatformRoute
     }
     '/_app/platform/users': {
@@ -776,6 +795,7 @@ declare module '@tanstack/react-router' {
 interface AppPlatformRouteChildren {
   AppPlatformAnnouncementsRoute: typeof AppPlatformAnnouncementsRoute
   AppPlatformConfigRoute: typeof AppPlatformConfigRoute
+  AppPlatformHealthRoute: typeof AppPlatformHealthRoute
   AppPlatformUsersRoute: typeof AppPlatformUsersRoute
   AppPlatformIndexRoute: typeof AppPlatformIndexRoute
 }
@@ -783,6 +803,7 @@ interface AppPlatformRouteChildren {
 const AppPlatformRouteChildren: AppPlatformRouteChildren = {
   AppPlatformAnnouncementsRoute: AppPlatformAnnouncementsRoute,
   AppPlatformConfigRoute: AppPlatformConfigRoute,
+  AppPlatformHealthRoute: AppPlatformHealthRoute,
   AppPlatformUsersRoute: AppPlatformUsersRoute,
   AppPlatformIndexRoute: AppPlatformIndexRoute,
 }

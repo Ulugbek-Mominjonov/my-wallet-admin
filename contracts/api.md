@@ -289,6 +289,7 @@ Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi
 | `platform_set_blocked(p_user, p_blocked)` | `{user_id, blocked}`; kirish to'xtaydi (`banned_until`), ma'lumot o'chmaydi. Xatolar: `self_block`, `admin_block`, `not_found` | platforma admini (aal2) |
 | `send_announcement(p_message{uz,ru,en}, p_title?, p_users[]?, p_channels[] = {push,telegram})` | `{batch, queued, users}` — navbatga qo'yiladi (yuborish: notify-dispatch); kanali o'chiq yoki qurilmasi yo'qqa yozilmaydi (BR-163). Xatolar: `invalid_message`, `invalid_channel` | platforma admini (aal2) |
 | `announcement_log(p_limit = 20)` | `{items[{batch, created_at, users, total, sent, failed, pending, message}]}` | platforma admini (aal2) |
+| `platform_health()` | `{stats{db_bytes, db_limit_pct, storage_bytes, storage_limit_pct, users, households, largest_tables[]}, limits{db_bytes, storage_bytes, warn_pct}, jobs[{job, started_at, finished_at, status, details}], outbox{pending, sending, failed, sent, oldest_pending}}` | platforma admini (aal2) |
 | `merge_categories(p_from, p_to)` | `{children, transactions, plans, recurring_rules, quick_actions}` — manba o'chiriladi, maqsad limiti ustun (BR-036) | owner/admin |
 | `onboarding_apply(p_household, p_payload)` | `{applied: true, accounts, income_types, recurring_rules}` yoki qayta chaqirilsa `{applied: false}` | owner/admin |
 

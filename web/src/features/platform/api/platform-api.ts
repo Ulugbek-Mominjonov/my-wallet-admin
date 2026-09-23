@@ -290,3 +290,50 @@ export const announcementLogQuery = queryOptions({
     return announcementLogSchema.parse(data)
   },
 })
+
+const healthSchema = z.object({
+  stats: z.object({
+    db_bytes: z.number(),
+    db_limit_pct: z.number(),
+    storage_bytes: z.number(),
+    storage_limit_pct: z.number(),
+    users: z.number(),
+    households: z.number(),
+    largest_tables: z
+      .array(z.object({ table: z.string(), bytes: z.number(), rows: z.number() }))
+      .nullable(),
+  }),
+  limits: z.object({
+    db_bytes: z.number(),
+    storage_bytes: z.number(),
+    warn_pct: z.number(),
+  }),
+  jobs: z.array(
+    z.object({
+      job: z.string(),
+      started_at: z.string(),
+      finished_at: z.string().nullable(),
+      status: z.enum(['running', 'ok', 'failed']),
+      details: z.unknown(),
+    }),
+  ),
+  outbox: z.object({
+    pending: z.number(),
+    sending: z.number(),
+    failed: z.number(),
+    sent: z.number(),
+    oldest_pending: z.string().nullable(),
+  }),
+})
+
+export type PlatformHealth = z.infer<typeof healthSchema>
+
+/** E26-T05: bepul reja chegaralari, rejali ishlar va navbat holati. */
+export const healthQuery = queryOptions({
+  queryKey: platformKey('health'),
+  queryFn: async (): Promise<PlatformHealth> => {
+    const { data, error } = await supabase.rpc('platform_health')
+    if (error) throw toAppError(error)
+    return healthSchema.parse(data)
+  },
+})

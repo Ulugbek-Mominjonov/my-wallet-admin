@@ -740,7 +740,7 @@ E21–E26 (admin) M2 bilan.
 - [x] **E26-T04** **Foydalanuvchilar va byudjetlar** (qo'llab-quvvatlash
   uchun, faqat agregat — amal tafsilotlari ko'rinmaydi): ro'yxat, ro'yxatdan
   o'tgan sana, oxirgi faollik, byudjetlar soni, bloklash.
-- [ ] **E26-T05** **Tizim salomatligi**: rejali ishlar (`job_runs` — oxirgi
+- [x] **E26-T05** **Tizim salomatligi**: rejali ishlar (`job_runs` — oxirgi
   natija, davomiylik, xato), DB hajmi va 500 MB chegaragacha foiz, Storage
   hajmi, eng katta jadvallar, outbox navbati, keep-alive/zaxira holati
   (GitHub API — ixtiyoriy). 70% dan oshsa ogohlantirish.
@@ -978,6 +978,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Platforma bo'limi — alohida marshrut (`/platform`) va o'z karkasi; kirish 2FA (aal2) talab qiladi va bootstrap qayta so'raladi; karta shablonlari faqat platforma adminiga ko'rinadi | byudjet menyusi byudjetga bog'liq (`$householdId`), platforma esa undan tashqarida; `is_platform_admin` aal2'siz `false` qaytadi — eski keshdan 403 bo'lmasligi uchun; naqshlar klientga kerak emas (bot service kalit bilan o'qiydi) | E26-T01, BR-213, BR-222 |
 | 2026-09-23 | `app_config` qiymatlari shakli bazada tekshiriladi (CHECK: versiya `X.Y.Z`, texnik ishlar xabari uch tilda); yozish — platforma admini siyosati, grant'lar aniq ro'yxatga keltirildi | konfiguratsiya hamma klientga `app_bootstrap` orqali boradi — noto'g'ri qiymat mobil ilovani to'xtatib qo'yishi mumkin; iOS kaliti qo'shilmadi (loyihada iOS yo'q) | E26-T02, BR-214 |
 | 2026-09-23 | E'lon — `admin-ops` Edge Function o'rniga RPC (`send_announcement`): navbat baribir outbox, yuborishni `notify-dispatch` qiladi; bloklash — `auth.users.banned_until` (o'chirish emas) | yangi funksiya = yangi deploy, sir va monitoring; RPC pgTAP bilan qoplanadi; bloklangan foydalanuvchi ma'lumoti saqlanib qoladi (qo'llab-quvvatlash uchun) | E26-T03, E26-T04, BR-213 |
+| 2026-09-23 | Tizim salomatligi — mavjud `jobs.platform_stats()` ustiga bitta RPC (`platform_health`); keep-alive/zaxira holati GitHub API'dan olinmadi | statistikani kunlik cron allaqachon hisoblaydi, sahifa jonli chaqiradi — ikkinchi hisob-kitob yo'q; GitHub API brauzerdan token talab qiladi (ochiq repoda sir bo'lmaydi) — holat Actions'da ko'rinadi | E26-T05 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |
