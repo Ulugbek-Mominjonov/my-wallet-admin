@@ -1,0 +1,233 @@
+{
+  "version": 1,
+  "exportedAt": "2026-09-23T10:00:00",
+  "settings": {
+    "personalFund": { "mode": "percent", "value": 10, "method": "card", "day": 5 },
+    "incomeRules": [
+      { "type": "Oylik", "shift": -1 },
+      { "type": "Avans", "shift": 0 }
+    ],
+    "limits": [{ "category": "Oziq-ovqat", "monthlyLimit": 2000000 }],
+    "recurring": [
+      {
+        "name": "Ijara",
+        "category": "Ijara",
+        "amount": 3000000,
+        "method": "card",
+        "day": 5,
+        "autoPay": true
+      },
+      {
+        "name": "Internet",
+        "category": "Internet/Aloqa",
+        "amount": 300000,
+        "method": "card",
+        "day": 10,
+        "autoPay": false
+      }
+    ],
+    "quickAdd": [
+      { "name": "Kofe", "amount": 25000, "category": "Ko'ngilochar", "method": "cash" }
+    ],
+    "reminders": {
+      "telegram": true,
+      "email": "",
+      "kun": 3,
+      "soat": 9,
+      "oylik": true,
+      "hisobotKuni": 21
+    }
+  },
+  "incomes": [
+    {
+      "monthKey": "2026-08",
+      "paidAt": "2026-09-02",
+      "type": "Oylik",
+      "method": "card",
+      "amount": 8000000,
+      "note": "",
+      "debtName": ""
+    },
+    {
+      "monthKey": "2026-08",
+      "paidAt": "2026-08-20",
+      "type": "Avans",
+      "method": "cash",
+      "amount": 2000000,
+      "note": "",
+      "debtName": ""
+    },
+    {
+      "monthKey": "2026-09",
+      "paidAt": "2026-10-02",
+      "type": "Oylik",
+      "method": "card",
+      "amount": 8500000,
+      "note": "",
+      "debtName": ""
+    }
+  ],
+  "expenses": [
+    {
+      "monthKey": "2026-08",
+      "dueDate": "2026-08-05",
+      "name": "Ijara",
+      "category": "Ijara",
+      "method": "card",
+      "planned": 3000000,
+      "actual": 3000000,
+      "note": "",
+      "debtName": "",
+      "manualMonth": "",
+      "autoPay": true
+    },
+    {
+      "monthKey": "2026-08",
+      "dueDate": "2026-08-12",
+      "name": "Korzinka",
+      "category": "Oziq-ovqat",
+      "method": "cash",
+      "planned": null,
+      "actual": 1200000,
+      "note": "haftalik xarid",
+      "debtName": "",
+      "manualMonth": "",
+      "autoPay": false
+    },
+    {
+      "monthKey": "2026-08",
+      "dueDate": "2026-08-10",
+      "name": "Internet",
+      "category": "Internet/Aloqa",
+      "method": "card",
+      "planned": 300000,
+      "actual": null,
+      "note": "",
+      "debtName": "",
+      "manualMonth": "",
+      "autoPay": false
+    },
+    {
+      "monthKey": "2026-08",
+      "dueDate": "2026-08-05",
+      "name": "O'zim uchun",
+      "category": "O'zim uchun",
+      "method": "card",
+      "planned": 1000000,
+      "actual": 1000000,
+      "note": "",
+      "debtName": "",
+      "manualMonth": "",
+      "autoPay": false
+    },
+    {
+      "monthKey": "2026-09",
+      "dueDate": "2026-09-05",
+      "name": "Ijara",
+      "category": "Ijara",
+      "method": "card",
+      "planned": 3000000,
+      "actual": 3000000,
+      "note": "",
+      "debtName": "",
+      "manualMonth": "",
+      "autoPay": true
+    },
+    {
+      "monthKey": "2026-09",
+      "dueDate": "2026-09-18",
+      "name": "Yandex Go",
+      "category": "Transport",
+      "method": "cash",
+      "planned": null,
+      "actual": 500000,
+      "note": "",
+      "debtName": "",
+      "manualMonth": "2026-09",
+      "autoPay": false
+    },
+    {
+      "monthKey": "2026-09",
+      "dueDate": "2026-09-05",
+      "name": "O'zim uchun",
+      "category": "O'zim uchun",
+      "method": "card",
+      "planned": 1000000,
+      "actual": 1000000,
+      "note": "",
+      "debtName": "",
+      "manualMonth": "",
+      "autoPay": false
+    },
+    {
+      "monthKey": "2026-09",
+      "dueDate": "2026-09-15",
+      "name": "Kredit to'lovi",
+      "category": "Kredit/Qarz",
+      "method": "card",
+      "planned": 1500000,
+      "actual": 1500000,
+      "note": "",
+      "debtName": "Hamkor bank",
+      "manualMonth": "",
+      "autoPay": false
+    }
+  ],
+  "personalSpends": [
+    {
+      "monthKey": "2026-08",
+      "spentAt": "2026-08-15",
+      "amount": 400000,
+      "purpose": "Kitob",
+      "method": "cash",
+      "note": ""
+    },
+    {
+      "monthKey": "2026-09",
+      "spentAt": "2026-09-10",
+      "amount": 250000,
+      "purpose": "Kino",
+      "method": "card",
+      "note": ""
+    }
+  ],
+  "debts": [
+    {
+      "name": "Hamkor bank",
+      "direction": "iOwe",
+      "total": 15000000,
+      "paidBefore": 3000000,
+      "monthly": 1500000,
+      "note": "24 oylik kredit"
+    }
+  ],
+  "goals": [
+    {
+      "name": "Ta'til",
+      "target": 12000000,
+      "saved": 4000000,
+      "monthly": 1000000,
+      "deadline": "2027-06-01"
+    }
+  ],
+  "expectedMonths": [
+    {
+      "monthKey": "2026-08",
+      "income": 10000000,
+      "expense": 5200000,
+      "balance": 4800000,
+      "saved": 5400000,
+      "personalAllocated": 1000000,
+      "personalSpent": 400000
+    },
+    {
+      "monthKey": "2026-09",
+      "income": 8500000,
+      "expense": 6000000,
+      "balance": 2500000,
+      "saved": 3250000,
+      "personalAllocated": 1000000,
+      "personalSpent": 250000
+    }
+  ]
+}

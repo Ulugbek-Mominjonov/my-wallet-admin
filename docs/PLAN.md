@@ -751,10 +751,10 @@ E21–E26 (admin) M2 bilan.
 > uchun `qoldiq` va `orttirgan` yangi tizim hisobotlari bilan **aynan teng**;
 > dry-run hisobot; qayta ishga tushirish xavfsiz.
 
-- [ ] **E27-T01** Eksport: eski `apps-script-export.gs` (v1 JSON: settings,
+- [x] **E27-T01** Eksport: eski `apps-script-export.gs` (v1 JSON: settings,
   incomes, expenses, personal spends, debts, goals, months) — yo'riqnoma
   `docs/MIGRATSIYA.md`; namunaviy anonim fayl `scripts/fixtures/legacy-v1.json`.
-- [ ] **E27-T02** Moslashtirish qoidalari (hujjat + kod):
+- [x] **E27-T02** Moslashtirish qoidalari (hujjat + kod):
   daromad → income (tur → kategoriya `month_shift` bilan; `monthKey` saqlanadi,
   `manual`); xarajat qatori: reja bor → `planned_item` (+ fakt bo'lsa to'lov
   amali), faqat fakt → amal; K ustun → `manual` oy; avto belgisi;
