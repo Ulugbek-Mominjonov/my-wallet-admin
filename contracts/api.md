@@ -78,6 +78,7 @@ Postgres standart kodlari: `23505` — nom band (cheklov nomi `message` da, masa
 |---|---|---|---|
 | `app_bootstrap()` | — | `{schema_version, is_platform_admin, profile{user_id, display_name, locale, last_household_id}, households[{id, name, role, base_currency, timezone, onboarded}], currencies[{code, name{uz,ru,en}, symbol, exponent, allocation_rounding}], app_config{min_android_version, maintenance, …}}` | har kim |
 | `create_household(p_name)` | nom | `uuid` | har kim (owner bo'ladi) |
+| `household_members(p_household)` | byudjet | `[{user_id, name, role, joined_at, is_me}]` | a'zolar |
 | `create_invite(p_household, p_role='member')` | byudjet, rol (`owner` emas) | `[{code, expires_at}]` | owner/admin |
 | `accept_invite(p_code)` | 8 belgili kod (registr farqsiz) | byudjet `uuid` | har kim |
 | `leave_household(p_household)` | byudjet | — | a'zo |

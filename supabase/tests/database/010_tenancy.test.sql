@@ -1,6 +1,6 @@
 -- E05-T07: byudjet, a'zolar, rollar, takliflar, RLS (BR-010..015, BR-210).
 begin;
-select plan(33);
+select plan(35);
 
 -- ─── Tayyorgarlik: 4 foydalanuvchi ─────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
@@ -141,6 +141,23 @@ select is_empty(
   $$ select 1 from public.audit_log where household_id = (select id from h) $$,
   'member audit jurnalini ko''rmaydi'
 );
+
+-- ─── A'zolar ro'yxati (E30-T04, mobil) ─────────────────────────────────────
+select tests.authenticate_as((select id from u where name = 'bob'));
+select results_eq(
+  $$ select m ->> 'name', m ->> 'role', (m ->> 'is_me')::boolean
+       from jsonb_array_elements(public.household_members((select id from h))) m
+      order by m ->> 'name' $$,
+  $$ values ('alice', 'owner', false), ('bob', 'member', true),
+            ('carol', 'viewer', false) $$,
+  'BR-011: a''zolar — ism, rol va "bu men" belgisi'
+);
+select tests.authenticate_as((select id from u where name = 'dave'));
+select throws_ok(
+  $$ select public.household_members((select id from h)) $$,
+  'P0001', 'forbidden', 'BR-210: begona byudjet a''zolari ko''rinmaydi'
+);
+select tests.authenticate_as((select id from u where name = 'bob'));
 
 -- ─── Rollar va oxirgi owner (BR-011, BR-014) ───────────────────────────────
 select throws_ok(

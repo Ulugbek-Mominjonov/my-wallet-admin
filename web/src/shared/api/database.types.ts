@@ -1871,6 +1871,7 @@ export type Database = {
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }
       household_devices: { Args: { p_household: string }; Returns: Json }
+      household_members: { Args: { p_household: string }; Returns: Json }
       import_legacy_v1: {
         Args: { p_dry_run?: boolean; p_household: string; p_payload: Json }
         Returns: Json
