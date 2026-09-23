@@ -114,7 +114,8 @@
     "transactions": "Amallar",
     "plans": "Rejalar",
     "report": "Hisobot",
-    "health": "Tekshiruv"
+    "health": "Tekshiruv",
+    "export": "Eksport"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1102,6 +1103,33 @@
       "openedMonths": "Ochilgan oylar",
       "closedMonths": "Yopilgan oylar",
       "incomeRules": "Daromad turlari"
+    }
+  },
+  "export": {
+    "title": "Eksport",
+    "description": "Zaxira nusxa va jadvallar (BR-180)",
+    "backup": "To'liq zaxira (JSON)",
+    "backupText": "Byudjetning hamma ma'lumoti bitta faylda: hisoblar, kategoriyalar, amallar, rejalar, qarzlar, maqsadlar. Chek rasmlari kirmaydi.",
+    "backupAction": "Zaxirani yuklab olish",
+    "backupDone": "Zaxira tayyor",
+    "onlyAdmin": "To'liq zaxirani faqat egasi yoki admin oladi",
+    "plans": "Rejalar (CSV)",
+    "plansText": "Tanlangan davr rejalari: nomi, oyi, muddati, summasi va to'langani.",
+    "from": "Dan",
+    "to": "Gacha",
+    "plansAction": "Rejalarni yuklab olish",
+    "plansDone": "{{count}} ta reja",
+    "transactions": "Amallar (CSV)",
+    "transactionsText": "Amallar filtr bilan eksport qilinadi — amallar sahifasida davr, kategoriya va boshqa filtrlarni tanlang.",
+    "transactionsAction": "Amallar sahifasiga",
+    "columns": {
+      "kind": "Turi",
+      "name": "Reja",
+      "month": "Oy",
+      "due": "Muddat",
+      "planned": "Summa",
+      "paid": "To'langan",
+      "status": "Holat"
     }
   }
 }

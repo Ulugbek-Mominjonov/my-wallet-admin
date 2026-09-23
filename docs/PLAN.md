@@ -708,8 +708,8 @@ E21–E26 (admin) M2 bilan.
 - [x] **E25-T01** **Tekshiruv** sahifasi (`health_check`): 3 bo'lim,
   har muammo yonida amal ("Oyni ochish", "Qarzga bog'lash" — o'xshash
   xarajatlar ro'yxatidan tanlab, "Telegram'ni ulash"), "Qayta tekshirish".
-- [ ] **E25-T02** **Eksport**: to'liq JSON zaxira (`export_household`),
-  CSV/XLSX (amallar, rejalar, davr bo'yicha). BR-180.
+- [x] **E25-T02** **Eksport**: to'liq JSON zaxira (`export_household`),
+  CSV (rejalar — davr bo'yicha; amallar — amallar sahifasida filtr bilan). BR-180.
 - [ ] **E25-T03** **CSV import**: fayl → ustunlarni moslashtirish (sana,
   summa, nom, kategoriya, hisob) → preview (xatolar, dublikatlar — sana +
   summa + nom) → tasdiq → bitta RPC paket. BR-182.

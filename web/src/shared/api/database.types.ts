@@ -1775,6 +1775,7 @@ export type Database = {
         Args: { p_confirm_name: string; p_household: string }
         Returns: undefined
       }
+      export_household: { Args: { p_household: string }; Returns: Json }
       fx_upsert: { Args: { p_rates: Json }; Returns: number }
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }

@@ -223,6 +223,15 @@ xil filtrdan; a'zo bo'lmagan — `forbidden`.
   yoki o'chirilgan) yoki SQLSTATE. Xatolar: `forbidden`, `invalid_action`,
   `invalid_batch` (> 500 ID).
 
+### Eksport (E25-T02)
+
+- `export_household(p_household)` → to'liq JSON zaxira (BR-180): `{version,
+  exported_at, household, members[], accounts[], categories[], tags[],
+  recurring_rules[], quick_actions[], category_limits[], debts[], goals[],
+  months[], planned_items[], transactions[], transaction_tags[],
+  attachments[]}`. Faqat **owner/admin**; o'chirilgan (tombstone) qatorlar
+  kirmaydi; chek fayllari emas, faqat `attachments` yo'llari.
+
 ### Amal formasi (E23-T02)
 
 - `save_transaction(p_household, p_kind, p_account_id, p_amount, p_occurred_on,

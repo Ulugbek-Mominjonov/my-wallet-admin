@@ -114,7 +114,8 @@
     "transactions": "Transactions",
     "plans": "Plans",
     "report": "Report",
-    "health": "Checks"
+    "health": "Checks",
+    "export": "Export"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -1102,6 +1103,33 @@
       "openedMonths": "Opened months",
       "closedMonths": "Closed months",
       "incomeRules": "Income types"
+    }
+  },
+  "export": {
+    "title": "Export",
+    "description": "Backup and tables (BR-180)",
+    "backup": "Full backup (JSON)",
+    "backupText": "All budget data in one file: accounts, categories, transactions, plans, debts, goals. Receipt images are not included.",
+    "backupAction": "Download backup",
+    "backupDone": "Backup ready",
+    "onlyAdmin": "Only the owner or an admin can download the full backup",
+    "plans": "Plans (CSV)",
+    "plansText": "Plans for the chosen period: name, month, due date, amount and payment.",
+    "from": "From",
+    "to": "To",
+    "plansAction": "Download plans",
+    "plansDone": "{{count}} plans",
+    "transactions": "Transactions (CSV)",
+    "transactionsText": "Transactions are exported with filters — choose period and categories on the transactions page.",
+    "transactionsAction": "Go to transactions",
+    "columns": {
+      "kind": "Type",
+      "name": "Plan",
+      "month": "Month",
+      "due": "Due",
+      "planned": "Amount",
+      "paid": "Paid",
+      "status": "Status"
     }
   }
 }
