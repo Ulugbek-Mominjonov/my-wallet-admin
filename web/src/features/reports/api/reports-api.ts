@@ -357,22 +357,3 @@ export const categoryTrendQuery = (
       return trendSchema.parse(data)
     },
   })
-
-const healthSchema = z.object({
-  problems: z.array(z.object({ code: z.string() }).loose()),
-  warnings: z.array(z.object({ code: z.string() }).loose()),
-})
-
-export type HealthReport = z.infer<typeof healthSchema>
-
-/** BR-130: tekshiruv — muammolar va ogohlantirishlar (dashboard belgisi). */
-export const healthCheckQuery = (householdId: string) =>
-  queryOptions({
-    queryKey: [...reportsKey(householdId), 'health'],
-    staleTime: REPORT_STALE_MS,
-    queryFn: async (): Promise<HealthReport> => {
-      const { data, error } = await supabase.rpc('health_check', { p_household: householdId })
-      if (error) throw toAppError(error)
-      return healthSchema.parse(data)
-    },
-  })

@@ -705,7 +705,7 @@ E21–E26 (admin) M2 bilan.
 > **DoD:** eski `🩺 Tekshirish`, eksport, audit, qoida o'zgarishi oqimlari
 > ishlaydi; import dry-run bilan.
 
-- [ ] **E25-T01** **Tekshiruv** sahifasi (`health_check`): 3 bo'lim,
+- [x] **E25-T01** **Tekshiruv** sahifasi (`health_check`): 3 bo'lim,
   har muammo yonida amal ("Oyni ochish", "Qarzga bog'lash" — o'xshash
   xarajatlar ro'yxatidan tanlab, "Telegram'ni ulash"), "Qayta tekshirish".
 - [ ] **E25-T02** **Eksport**: to'liq JSON zaxira (`export_household`),

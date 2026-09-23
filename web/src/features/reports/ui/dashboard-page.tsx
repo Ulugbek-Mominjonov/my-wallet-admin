@@ -4,7 +4,6 @@ import { CalendarClock, PiggyBank, Wallet } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import {
-  healthCheckQuery,
   monthReportQuery,
   savingsReportQuery,
   type MonthReport,
@@ -42,16 +41,18 @@ export function DashboardPage({
   householdId,
   month,
   baseCurrency,
+  health,
 }: {
   householdId: string
   month: MonthKey
   baseCurrency: string
+  /** Tekshiruv natijasi soni (marshrutdan — `tools` feature'i o'qiydi). */
+  health: { problems: number; warnings: number }
 }) {
   const { t } = useTranslation()
   const locale = useAppLocale()
   const report = useQuery(monthReportQuery(householdId, month))
   const savings = useQuery(savingsReportQuery(householdId))
-  const health = useQuery(healthCheckQuery(householdId))
   const money = (value: number) => formatMoney(value, { currency: baseCurrency, locale })
 
   // Sarlavha holatdan qat'i nazar ko'rinadi (yuklanish/xato — ostida).
@@ -256,8 +257,8 @@ export function DashboardPage({
 
       <Alerts
         report={report.data}
-        problems={health.data?.problems.length ?? 0}
-        warnings={health.data?.warnings.length ?? 0}
+        problems={health.problems}
+        warnings={health.warnings}
         unknownCount={totals.unknown_count}
       />
     </div>

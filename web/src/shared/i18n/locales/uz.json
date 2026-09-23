@@ -113,7 +113,8 @@
     "budget": "Byudjet",
     "transactions": "Amallar",
     "plans": "Rejalar",
-    "report": "Hisobot"
+    "report": "Hisobot",
+    "health": "Tekshiruv"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1057,6 +1058,50 @@
       "empty": "Bu davrda xarajat yo'q",
       "unknown": "O'chirilgan kategoriya",
       "actualSeries": "Xarajat"
+    }
+  },
+  "health": {
+    "title": "Tekshiruv",
+    "description": "Byudjetdagi muammolar va ogohlantirishlar",
+    "recheck": "Qayta tekshirish",
+    "problems": "Muammolar",
+    "warnings": "Ogohlantirishlar",
+    "info": "Ma'lumot",
+    "clean": "Muammo topilmadi — hammasi joyida",
+    "codes": {
+      "month_not_opened": "Ochilmagan oylar: {{count}} ta — doimiy rejalardan oy rejalari yaratilmagan",
+      "debt_unlinked": "«{{name}}» qarziga bog'lanmagan o'xshash xarajatlar bor",
+      "debt_plans_overdue": "«{{name}}» qarzining rejalari muddati o'tgan",
+      "no_active_rules": "Aktiv doimiy reja yo'q — oy ochilganda reja yaratilmaydi",
+      "negative_cash": "Naqd hisob qoldig'i manfiy: {{balance}}",
+      "long_overdue": "{{count}} ta reja {{days}} kundan ortiq to'lanmagan",
+      "edited_after_close": "Yopilgan oydan keyin tahrirlangan yozuvlar bor",
+      "fx_rate_stale": "{{currency}} kursi eskirgan (oxirgisi: {{date}})"
+    },
+    "actions": {
+      "openMonth": "Rejalarga o‘tish",
+      "linkDebt": "Qarzga bog'lash",
+      "telegram": "Telegram'ni ulash",
+      "accounts": "Hisoblarga o‘tish",
+      "rules": "Doimiy rejalar",
+      "transactions": "Amallarga o‘tish"
+    },
+    "link": {
+      "title": "«{{name}}» qarziga bog'lash",
+      "text": "Nomi o'xshash xarajatlar — qaysi biri shu qarz to'lovi?",
+      "date": "Sana",
+      "amount": "Summa",
+      "payee": "Joy",
+      "apply": "Bog'lash",
+      "done": "Bog'landi"
+    },
+    "stats": {
+      "transactions": "Amallar",
+      "plans": "Rejalar",
+      "firstMonth": "Birinchi oy",
+      "openedMonths": "Ochilgan oylar",
+      "closedMonths": "Yopilgan oylar",
+      "incomeRules": "Daromad turlari"
     }
   }
 }

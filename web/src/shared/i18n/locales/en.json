@@ -113,7 +113,8 @@
     "budget": "Budget",
     "transactions": "Transactions",
     "plans": "Plans",
-    "report": "Report"
+    "report": "Report",
+    "health": "Checks"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -1057,6 +1058,50 @@
       "empty": "No spending in this period",
       "unknown": "Deleted category",
       "actualSeries": "Spending"
+    }
+  },
+  "health": {
+    "title": "Checks",
+    "description": "Problems and warnings in this budget",
+    "recheck": "Check again",
+    "problems": "Problems",
+    "warnings": "Warnings",
+    "info": "Info",
+    "clean": "No problems found — all good",
+    "codes": {
+      "month_not_opened": "Months not opened: {{count}} — this month’s plans were not created",
+      "debt_unlinked": "There are similar expenses not linked to the debt “{{name}}”",
+      "debt_plans_overdue": "Plans of the debt “{{name}}” are overdue",
+      "no_active_rules": "No active recurring rules — opening a month creates nothing",
+      "negative_cash": "Cash balance is negative: {{balance}}",
+      "long_overdue": "{{count}} plans unpaid for more than {{days}} days",
+      "edited_after_close": "Some records were edited after the month was closed",
+      "fx_rate_stale": "The {{currency}} rate is stale (last: {{date}})"
+    },
+    "actions": {
+      "openMonth": "Go to plans",
+      "linkDebt": "Link to debt",
+      "telegram": "Connect Telegram",
+      "accounts": "Go to accounts",
+      "rules": "Recurring rules",
+      "transactions": "Go to transactions"
+    },
+    "link": {
+      "title": "Link to the debt “{{name}}”",
+      "text": "Similar expenses — which one is this debt’s payment?",
+      "date": "Date",
+      "amount": "Amount",
+      "payee": "Payee",
+      "apply": "Link",
+      "done": "Linked"
+    },
+    "stats": {
+      "transactions": "Transactions",
+      "plans": "Plans",
+      "firstMonth": "First month",
+      "openedMonths": "Opened months",
+      "closedMonths": "Closed months",
+      "incomeRules": "Income types"
     }
   }
 }

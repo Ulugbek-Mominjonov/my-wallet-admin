@@ -15,21 +15,22 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({ children }: { children?: ReactNode }) => <a href="/">{children}</a>,
 }))
 
-function mockReports({
-  health = { problems: [{ code: 'month_not_opened' }], warnings: [] },
-  report = MONTH_REPORT,
-}: { health?: object; report?: object } = {}) {
+function mockReports({ report = MONTH_REPORT }: { report?: object } = {}) {
   server.use(
     http.post(supabasePath('/rest/v1/rpc/report_month'), () => HttpResponse.json(report)),
     http.post(supabasePath('/rest/v1/rpc/report_savings'), () => HttpResponse.json(SAVINGS_REPORT)),
-    http.post(supabasePath('/rest/v1/rpc/health_check'), () => HttpResponse.json(health)),
   )
 }
 
-const renderPage = () =>
+const renderPage = (health = { problems: 1, warnings: 0 }) =>
   renderWithProviders(
     <WithHousehold>
-      <DashboardPage householdId={TEST_HOUSEHOLD_ID} month="2026-09" baseCurrency="UZS" />
+      <DashboardPage
+        householdId={TEST_HOUSEHOLD_ID}
+        month="2026-09"
+        baseCurrency="UZS"
+        health={health}
+      />
     </WithHousehold>,
   )
 
@@ -100,7 +101,6 @@ describe('DashboardPage (E24-T01)', () => {
 
   it('muammo yo‘q bo‘lsa — tinch holat', async () => {
     mockReports({
-      health: { problems: [], warnings: [] },
       // Limitsiz va kechikmagan oy.
       report: {
         ...MONTH_REPORT,
@@ -108,7 +108,7 @@ describe('DashboardPage (E24-T01)', () => {
         unpaid: [{ ...MONTH_REPORT.unpaid[0], status: 'pending' }],
       },
     })
-    renderPage()
+    renderPage({ problems: 0, warnings: 0 })
     expect(await screen.findByText('Muammo topilmadi')).toBeInTheDocument()
   })
 })

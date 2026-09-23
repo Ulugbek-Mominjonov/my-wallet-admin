@@ -22,6 +22,7 @@ import { Route as AppHHouseholdIdAccountsRouteImport } from './routes/_app/h/$ho
 import { Route as AppHHouseholdIdCategoriesRouteImport } from './routes/_app/h/$householdId/categories'
 import { Route as AppHHouseholdIdDebtsRouteImport } from './routes/_app/h/$householdId/debts'
 import { Route as AppHHouseholdIdGoalsRouteImport } from './routes/_app/h/$householdId/goals'
+import { Route as AppHHouseholdIdHealthRouteImport } from './routes/_app/h/$householdId/health'
 import { Route as AppHHouseholdIdLimitsRouteImport } from './routes/_app/h/$householdId/limits'
 import { Route as AppHHouseholdIdPlansRouteImport } from './routes/_app/h/$householdId/plans'
 import { Route as AppHHouseholdIdProfileRouteImport } from './routes/_app/h/$householdId/profile'
@@ -99,6 +100,11 @@ const AppHHouseholdIdDebtsRoute = AppHHouseholdIdDebtsRouteImport.update({
 const AppHHouseholdIdGoalsRoute = AppHHouseholdIdGoalsRouteImport.update({
   id: '/goals',
   path: '/goals',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
+const AppHHouseholdIdHealthRoute = AppHHouseholdIdHealthRouteImport.update({
+  id: '/health',
+  path: '/health',
   getParentRoute: () => AppHHouseholdIdRoute,
 } as any)
 const AppHHouseholdIdLimitsRoute = AppHHouseholdIdLimitsRouteImport.update({
@@ -191,6 +197,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
   '/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
+  '/h/$householdId/health': typeof AppHHouseholdIdHealthRoute
   '/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/h/$householdId/plans': typeof AppHHouseholdIdPlansRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
@@ -217,6 +224,7 @@ export interface FileRoutesByTo {
   '/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
   '/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
+  '/h/$householdId/health': typeof AppHHouseholdIdHealthRoute
   '/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/h/$householdId/plans': typeof AppHHouseholdIdPlansRoute
   '/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
@@ -246,6 +254,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId/categories': typeof AppHHouseholdIdCategoriesRoute
   '/_app/h/$householdId/debts': typeof AppHHouseholdIdDebtsRoute
   '/_app/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
+  '/_app/h/$householdId/health': typeof AppHHouseholdIdHealthRoute
   '/_app/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/_app/h/$householdId/plans': typeof AppHHouseholdIdPlansRoute
   '/_app/h/$householdId/profile': typeof AppHHouseholdIdProfileRoute
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/categories'
     | '/h/$householdId/debts'
     | '/h/$householdId/goals'
+    | '/h/$householdId/health'
     | '/h/$householdId/limits'
     | '/h/$householdId/plans'
     | '/h/$householdId/profile'
@@ -301,6 +311,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/categories'
     | '/h/$householdId/debts'
     | '/h/$householdId/goals'
+    | '/h/$householdId/health'
     | '/h/$householdId/limits'
     | '/h/$householdId/plans'
     | '/h/$householdId/profile'
@@ -329,6 +340,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId/categories'
     | '/_app/h/$householdId/debts'
     | '/_app/h/$householdId/goals'
+    | '/_app/h/$householdId/health'
     | '/_app/h/$householdId/limits'
     | '/_app/h/$householdId/plans'
     | '/_app/h/$householdId/profile'
@@ -442,6 +454,13 @@ declare module '@tanstack/react-router' {
       path: '/goals'
       fullPath: '/h/$householdId/goals'
       preLoaderRoute: typeof AppHHouseholdIdGoalsRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
+    '/_app/h/$householdId/health': {
+      id: '/_app/h/$householdId/health'
+      path: '/health'
+      fullPath: '/h/$householdId/health'
+      preLoaderRoute: typeof AppHHouseholdIdHealthRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
     '/_app/h/$householdId/limits': {
@@ -571,6 +590,7 @@ interface AppHHouseholdIdRouteChildren {
   AppHHouseholdIdCategoriesRoute: typeof AppHHouseholdIdCategoriesRoute
   AppHHouseholdIdDebtsRoute: typeof AppHHouseholdIdDebtsRoute
   AppHHouseholdIdGoalsRoute: typeof AppHHouseholdIdGoalsRoute
+  AppHHouseholdIdHealthRoute: typeof AppHHouseholdIdHealthRoute
   AppHHouseholdIdLimitsRoute: typeof AppHHouseholdIdLimitsRoute
   AppHHouseholdIdPlansRoute: typeof AppHHouseholdIdPlansRoute
   AppHHouseholdIdProfileRoute: typeof AppHHouseholdIdProfileRoute
@@ -588,6 +608,7 @@ const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
   AppHHouseholdIdCategoriesRoute: AppHHouseholdIdCategoriesRoute,
   AppHHouseholdIdDebtsRoute: AppHHouseholdIdDebtsRoute,
   AppHHouseholdIdGoalsRoute: AppHHouseholdIdGoalsRoute,
+  AppHHouseholdIdHealthRoute: AppHHouseholdIdHealthRoute,
   AppHHouseholdIdLimitsRoute: AppHHouseholdIdLimitsRoute,
   AppHHouseholdIdPlansRoute: AppHHouseholdIdPlansRoute,
   AppHHouseholdIdProfileRoute: AppHHouseholdIdProfileRoute,
