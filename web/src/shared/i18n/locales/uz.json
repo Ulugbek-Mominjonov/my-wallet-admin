@@ -119,7 +119,8 @@
     "import": "Import",
     "recalc": "Qayta joylash",
     "audit": "Audit jurnali",
-    "notifications": "Bildirishnomalar"
+    "notifications": "Bildirishnomalar",
+    "devices": "Qurilmalar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1315,6 +1316,45 @@
       "expense": "Xarajat",
       "saved": "Orttirildi",
       "generatedAt": "Yaratilgan"
+    }
+  },
+  "devices": {
+    "title": "Qurilmalar va sinxron",
+    "description": "A'zolar qurilmalari, oxirgi sinxron va to'qnashuv/rad etish jurnali",
+    "list": "Qurilmalar",
+    "listHint": "Ilova ochilganda yangilanadi; push tokeni ko'rsatilmaydi",
+    "empty": "Ro'yxatdan o'tgan qurilma yo'q",
+    "sync": "Sinxron holati",
+    "syncHint": "Qurilma bo'yicha oxirgi sinxron va natijalar (30 kun)",
+    "journal": "To'qnashuv va rad etish jurnali",
+    "journalHint": "Sinxronda nima qabul qilinmagani — sababi bilan",
+    "journalEmpty": "Bu filtr bo‘yicha yozuv yo‘q",
+    "unknownMember": "Noma'lum a'zo",
+    "columns": {
+      "member": "A'zo",
+      "platform": "Platforma",
+      "version": "Ilova versiyasi",
+      "lastSeen": "Oxirgi ko'rinish",
+      "device": "Qurilma",
+      "lastSync": "Oxirgi sinxron",
+      "ok": "Qabul qilingan",
+      "conflicts": "To'qnashuv",
+      "rejected": "Rad etilgan",
+      "at": "Vaqt",
+      "table": "Jadval",
+      "status": "Holati"
+    },
+    "statuses": {
+      "ok": "Qabul qilindi",
+      "conflict": "To'qnashuv",
+      "rejected": "Rad etildi"
+    },
+    "codes": {
+      "invalid_mutation": "Noto'g'ri mutatsiya",
+      "household_mismatch": "Boshqa byudjet",
+      "not_found": "Yozuv topilmadi",
+      "month_closed": "Oy yopilgan",
+      "forbidden": "Huquq yo'q"
     }
   }
 }

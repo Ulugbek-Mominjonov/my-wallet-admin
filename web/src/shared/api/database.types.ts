@@ -1801,6 +1801,7 @@ export type Database = {
       fx_upsert: { Args: { p_rates: Json }; Returns: number }
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }
+      household_devices: { Args: { p_household: string }; Returns: Json }
       import_transactions: {
         Args: { p_dry_run?: boolean; p_household: string; p_rows: Json }
         Returns: Json

@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 
 import { accessToken, HOUSEHOLD_URL, signIn } from './support/app.ts'
 import { SIGNED_OUT } from './support/state.ts'
-import { insert, select, uniqueEmail } from './support/supabase.ts'
+import { insert, rpc, select, uniqueEmail } from './support/supabase.ts'
 
 /** Byudjet vaqt zonasi (standart) — "joriy oy" sahifadagi bilan bir xil. */
 const TIMEZONE = 'Asia/Tashkent'
@@ -242,5 +242,42 @@ test.describe('E25: vositalar', () => {
     await expect(page.getByRole('table', { name: 'Oylik hisobotlar arxivi' })).toContainText(
       '9 000 000',
     )
+  })
+
+  test('E25-T07: qurilmalar va sinxron jurnali', async ({ page }) => {
+    await page.goto('/login')
+    await signIn(page, uniqueEmail('devices'))
+    await expect(page).toHaveURL(HOUSEHOLD_URL)
+    const householdId = new URL(page.url()).pathname.split('/').at(-1) ?? ''
+    const token = await accessToken(page)
+
+    await rpc(token, 'register_device', {
+      p_token: 'e2e-device-token-0123456789',
+      p_platform: 'android',
+      p_app_version: '1.4.2',
+    })
+    // Rad etiladigan mutatsiya: sinxronda `months` o'zgartirilmaydi.
+    await rpc(token, 'sync_push', {
+      p_household: householdId,
+      p_device: 'e2e-phone',
+      p_mutations: [
+        {
+          mutation_id: '0198f000-0000-7000-8000-0000000000e2',
+          table: 'months',
+          op: 'upsert',
+          id: '0198f000-0000-7000-8000-0000000000e3',
+        },
+      ],
+    })
+
+    await page.goto(`/h/${householdId}/devices`)
+    const devices = page.getByRole('table', { name: 'Qurilmalar' })
+    await expect(devices).toContainText('android')
+    await expect(devices).toContainText('1.4.2')
+    await expect(page.getByRole('table', { name: 'Sinxron holati' })).toContainText('e2e-phone')
+
+    const journal = page.getByRole('table', { name: "To'qnashuv va rad etish jurnali" })
+    await expect(journal).toContainText('Rad etildi')
+    await expect(journal).toContainText("Noto'g'ri mutatsiya")
   })
 })

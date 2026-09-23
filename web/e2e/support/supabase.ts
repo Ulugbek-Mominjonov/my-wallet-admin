@@ -102,7 +102,9 @@ async function postJson<T = unknown>(path: string, body: unknown, accessToken?: 
     body: JSON.stringify(body),
   })
   if (!response.ok) throw new Error(`${path}: ${String(response.status)} ${await response.text()}`)
-  return (await response.json()) as T
+  // `void` qaytaradigan RPC — bo'sh javob.
+  const text = await response.text()
+  return (text === '' ? null : JSON.parse(text)) as T
 }
 
 async function getJson<T>(url: string): Promise<T> {

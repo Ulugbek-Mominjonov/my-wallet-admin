@@ -283,6 +283,7 @@ Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi
 | `month_close_check(p_household, p_month)` | `{month, unpaid_count, unpaid_amount, unknown_count}` (BR-153) | a'zolar |
 | `set_month_closed(p_household, p_month, p_closed)` | `{month, closed}` — yopish faqat tugagan oy uchun (BR-150) | owner/admin |
 | `audit_list(p_household, p_tables[]?, p_actors[]?, p_from?, p_to?, p_after_at?, p_after_id?, p_limit = 50)` | qator: `{id, at, actor_id, table_name, record_id, action, old_values, new_values}` — eng yangisi birinchi, kursor `(at, id)` kamayishi; davr chegarasi byudjet vaqt zonasida, `p_to` kuni ham kiradi; `p_limit` ≤ 200 (BR-008) | owner/admin |
+| `household_devices(p_household)` | `{devices[{user_id, platform, app_version, last_seen_at}], sync[{user_id, device_id, last_sync_at, ok, conflicts, rejected}]}` — push tokeni qaytmaydi; `sync` — `sync_mutations` dan qurilma kesimida (30 kun) | owner/admin |
 | `merge_categories(p_from, p_to)` | `{children, transactions, plans, recurring_rules, quick_actions}` — manba o'chiriladi, maqsad limiti ustun (BR-036) | owner/admin |
 | `onboarding_apply(p_household, p_payload)` | `{applied: true, accounts, income_types, recurring_rules}` yoki qayta chaqirilsa `{applied: false}` | owner/admin |
 

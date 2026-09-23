@@ -1,5 +1,6 @@
 export { healthCheckQuery } from '@/features/tools/api/health-api'
 export { AuditPage } from '@/features/tools/ui/audit-page'
+export { DevicesPage } from '@/features/tools/ui/devices-page'
 export { ExportPage } from '@/features/tools/ui/export-page'
 export { HealthPage } from '@/features/tools/ui/health-page'
 export { ImportPage } from '@/features/tools/ui/import-page'
