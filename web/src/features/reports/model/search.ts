@@ -9,3 +9,8 @@ export const reportSearchSchema = z.object({
     .optional()
     .catch(undefined),
 })
+
+/** E24-T03: yillik ko'rinish URL'i. */
+export const yearSearchSchema = z.object({
+  year: z.number().int().min(2000).max(2100).optional().catch(undefined),
+})

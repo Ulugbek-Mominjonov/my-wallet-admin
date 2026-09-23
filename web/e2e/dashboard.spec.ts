@@ -136,5 +136,12 @@ test.describe('E24-T01: xulosa', () => {
     await expect(page).toHaveURL(/month=\d{4}-\d{2}/)
     await page.reload()
     await expect(page.getByRole('heading', { name: 'Yakun' })).toBeVisible()
+
+    // E24-T03: yillik ko'rinish — jadval (JAMI) va grafik.
+    await page.getByRole('link', { name: 'Yillik' }).click()
+    await expect(page).toHaveURL(/\/report\/year/)
+    const yearTable = page.getByRole('table', { name: 'Yillik ko‘rinish' })
+    await expect(yearTable.getByRole('row', { name: /JAMI/ })).toContainText("8 000 000 so'm")
+    await expect(page.getByRole('figure', { name: 'Daromad, xarajat va orttirish' })).toBeVisible()
   })
 })

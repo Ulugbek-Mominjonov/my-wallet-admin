@@ -953,6 +953,27 @@
       "remaining": "Qolgan",
       "status": "Holat",
       "empty": "To'lanmagan reja yo'q"
+    },
+    "tabs": {
+      "month": "Oylik",
+      "year": "Yillik"
+    },
+    "year": {
+      "title": "Yillik ko‘rinish",
+      "description": "Oylar bo'yicha daromad, xarajat va orttirish",
+      "prev": "Oldingi yil",
+      "next": "Keyingi yil",
+      "chart": "Daromad, xarajat va orttirish",
+      "month": "Oy",
+      "income": "Daromad",
+      "expense": "Xarajat",
+      "allocated": "Ajratma",
+      "balance": "Qoldiq",
+      "saved": "Orttirgan",
+      "savedRatio": "Orttirgan %",
+      "total": "JAMI",
+      "empty": "Bu yilda yozuv yo'q",
+      "closed": "Yopilgan"
     }
   }
 }

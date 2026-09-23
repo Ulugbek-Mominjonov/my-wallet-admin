@@ -953,6 +953,27 @@
       "remaining": "Remaining",
       "status": "Status",
       "empty": "No unpaid plans"
+    },
+    "tabs": {
+      "month": "Monthly",
+      "year": "Yearly"
+    },
+    "year": {
+      "title": "Yearly overview",
+      "description": "Income, expenses and savings by month",
+      "prev": "Previous year",
+      "next": "Next year",
+      "chart": "Income, expenses and savings",
+      "month": "Month",
+      "income": "Income",
+      "expense": "Expenses",
+      "allocated": "Allocation",
+      "balance": "Balance",
+      "saved": "Saved",
+      "savedRatio": "Saved %",
+      "total": "TOTAL",
+      "empty": "No records this year",
+      "closed": "Closed"
     }
   }
 }

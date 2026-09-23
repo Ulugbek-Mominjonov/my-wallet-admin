@@ -123,6 +123,46 @@ export const monthReportQuery = (householdId: string, month: MonthKey) =>
     },
   })
 
+const yearMonthSchema = z.object({
+  month: z.iso.date(),
+  income: money,
+  expense: money,
+  allocated: money,
+  fund_spent: money,
+  balance: money,
+  forecast: money,
+  saved: money,
+  saved_ratio: z.number(),
+  spent_ratio: z.number(),
+  plan_ratio: z.number().nullable(),
+  closed: z.boolean(),
+  /** Shu oyda yozuv bo'lganmi — bo'sh oylar jadvalda so'nib ko'rsatiladi. */
+  has_records: z.boolean(),
+})
+
+const yearSchema = z.object({
+  year: z.number(),
+  months: z.array(yearMonthSchema),
+  totals: yearMonthSchema.omit({ month: true, closed: true, has_records: true }),
+})
+
+export type YearReport = z.infer<typeof yearSchema>
+
+/** BR-100..103: yillik ko'rinish — 12 oy va jami. */
+export const yearReportQuery = (householdId: string, year: number) =>
+  queryOptions({
+    queryKey: [...reportsKey(householdId), 'year', year],
+    staleTime: REPORT_STALE_MS,
+    queryFn: async (): Promise<YearReport> => {
+      const { data, error } = await supabase.rpc('report_year', {
+        p_household: householdId,
+        p_year: year,
+      })
+      if (error) throw toAppError(error)
+      return yearSchema.parse(data)
+    },
+  })
+
 const savingsSchema = z.object({
   months: z.array(
     z.object({

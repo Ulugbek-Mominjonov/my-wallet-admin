@@ -683,7 +683,7 @@ E21–E26 (admin) M2 bilan.
   qoldig'i, o'rtacha oylik xarajat), 5️⃣ kategoriya + limit (reja, fakt,
   limit, % rangli), 👤 fond, 🏦 jamg'arma, 💳 qarzlar, 🎯 maqsadlar,
   ⏳ to'lanmaganlar. Oy almashtirgich, 🔒 belgisi, chop etish (print CSS).
-- [ ] **E24-T03** **Yillik ko'rinish** (`report_year`): jadval + JAMI qatori
+- [x] **E24-T03** **Yillik ko'rinish** (`report_year`): jadval + JAMI qatori
   + grafik (daromad/xarajat ustunlari, orttirgan chizig'i), yillar
   almashtirgich.
 - [ ] **E24-T04** **Jamg'arma** (to'planish chizig'i, oylar jadvali ⏳ bilan),

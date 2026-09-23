@@ -20,8 +20,11 @@ export function ChartFigure({
   description?: string
   /** Ikki va undan ko'p qator bo'lsa — doim ko'rsatiladi. */
   legend?: ReactNode
-  /** Grafikdagi qiymatlarning jadval ko'rinishi. */
-  table: ReactNode
+  /**
+   * Grafikdagi qiymatlarning jadval ko'rinishi — almashtirish tugmasi bilan.
+   * Sahifada jadval doim ko'rinib tursa berilmaydi (takrorlanmasin).
+   */
+  table?: ReactNode
   children: ReactNode
 }) {
   const { t } = useTranslation()
@@ -39,20 +42,22 @@ export function ChartFigure({
         </div>
         <div className="flex items-center gap-2">
           {legend}
-          <Button
-            variant="ghost"
-            size="sm"
-            aria-pressed={asTable}
-            onClick={() => {
-              setAsTable((value) => !value)
-            }}
-          >
-            {asTable ? <ChartColumn aria-hidden /> : <Table2 aria-hidden />}
-            {asTable ? t('chart.asChart') : t('chart.asTable')}
-          </Button>
+          {table && (
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-pressed={asTable}
+              onClick={() => {
+                setAsTable((value) => !value)
+              }}
+            >
+              {asTable ? <ChartColumn aria-hidden /> : <Table2 aria-hidden />}
+              {asTable ? t('chart.asChart') : t('chart.asTable')}
+            </Button>
+          )}
         </div>
       </div>
-      {asTable ? table : children}
+      {asTable && table ? table : children}
     </figure>
   )
 }
