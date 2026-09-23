@@ -115,7 +115,8 @@
     "plans": "Rejalar",
     "report": "Hisobot",
     "health": "Tekshiruv",
-    "export": "Eksport"
+    "export": "Eksport",
+    "import": "Import"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1131,5 +1132,41 @@
       "paid": "To'langan",
       "status": "Holat"
     }
+  },
+  "import": {
+    "title": "CSV import",
+    "description": "Bank ko'chirmasidan amallarni yuklash (BR-182)",
+    "file": "CSV fayl",
+    "fileHint": "Birinchi qator — sarlavha; ajratgich vergul, nuqtali vergul yoki tabulyatsiya",
+    "mapping": "Ustunlarni moslashtirish",
+    "none": "Tanlanmagan",
+    "column": "{{index}}-ustun: {{name}}",
+    "fields": {
+      "occurred_on": "Sana",
+      "amount": "Summa",
+      "payee": "Joy / nomi",
+      "category": "Kategoriya",
+      "account": "Hisob",
+      "note": "Izoh"
+    },
+    "preview": "Tekshirish",
+    "previewAction": "Tekshirish (yozilmaydi)",
+    "apply": "Import qilish",
+    "rows": "Qatorlar: {{count}}",
+    "ready": "Tayyor: {{count}}",
+    "duplicates": "Dublikat: {{count}}",
+    "errors": "Xato: {{count}}",
+    "imported": "{{count}} ta amal import qilindi",
+    "required": "Sana, summa, kategoriya va hisob ustunlari tanlanishi kerak",
+    "sample": "Namuna (birinchi qatorlar)",
+    "errorCodes": {
+      "invalid_row": "Sana yoki summa noto'g'ri",
+      "account_not_found": "Hisob topilmadi",
+      "category_not_found": "Kategoriya topilmadi",
+      "month_closed": "Oy yopilgan"
+    },
+    "row": "Qator",
+    "reason": "Sabab",
+    "duplicateOf": "Mavjud amal bilan bir xil"
   }
 }

@@ -45,3 +45,28 @@ export async function fetchPlansForExport(
   if (error) throw toAppError(error)
   return z.array(planSchema).parse(data)
 }
+
+const importResultSchema = z.object({
+  total: z.number(),
+  ready: z.number(),
+  imported: z.number(),
+  duplicates: z.array(z.object({ index: z.number(), transaction_id: z.string() })),
+  errors: z.array(z.object({ index: z.number(), code: z.string() })),
+})
+
+export type ImportResult = z.infer<typeof importResultSchema>
+
+/** BR-182: CSV import — `dryRun` da hech narsa yozilmaydi (preview). */
+export async function importTransactions(
+  householdId: string,
+  rows: readonly object[],
+  dryRun: boolean,
+): Promise<ImportResult> {
+  const { data, error } = await supabase.rpc('import_transactions', {
+    p_household: householdId,
+    p_rows: rows as never,
+    p_dry_run: dryRun,
+  })
+  if (error) throw toAppError(error)
+  return importResultSchema.parse(data)
+}

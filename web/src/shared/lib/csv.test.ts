@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { toCsv } from '@/shared/lib/csv'
+import { parseCsv, toCsv } from '@/shared/lib/csv'
 
 describe('toCsv', () => {
   it('BOM, CRLF; vergul, qo‘shtirnoq va qator uzilishi qo‘shtirnoqda', () => {
@@ -25,5 +25,33 @@ describe('toCsv', () => {
         ],
       ),
     ).toBe('﻿t,n\r\n"\'=HYPERLINK(""x"")",-500\r\n\'@cmd,12.5\r\n')
+  })
+})
+
+describe('parseCsv', () => {
+  it('qo‘shtirnoq ichidagi vergul, qo‘shtirnoq va qator uzilishi', () => {
+    expect(parseCsv('a,b\r\n"x, y","u ""v"""\r\n"ikki\nqator",z\r\n')).toEqual([
+      ['a', 'b'],
+      ['x, y', 'u "v"'],
+      ['ikki\nqator', 'z'],
+    ])
+  })
+
+  it('nuqtali vergul va tabulyatsiya; BOM olib tashlanadi', () => {
+    expect(parseCsv('﻿a;b\n1;2')).toEqual([
+      ['a', 'b'],
+      ['1', '2'],
+    ])
+    expect(parseCsv('a\tb\n1\t2')).toEqual([
+      ['a', 'b'],
+      ['1', '2'],
+    ])
+  })
+
+  it('bo‘sh qatorlar tashlanadi', () => {
+    expect(parseCsv('a,b\n\n1,2\n')).toEqual([
+      ['a', 'b'],
+      ['1', '2'],
+    ])
   })
 })

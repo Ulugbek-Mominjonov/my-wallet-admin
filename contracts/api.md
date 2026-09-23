@@ -223,7 +223,7 @@ xil filtrdan; a'zo bo'lmagan — `forbidden`.
   yoki o'chirilgan) yoki SQLSTATE. Xatolar: `forbidden`, `invalid_action`,
   `invalid_batch` (> 500 ID).
 
-### Eksport (E25-T02)
+### Eksport va import (E25-T02, E25-T03)
 
 - `export_household(p_household)` → to'liq JSON zaxira (BR-180): `{version,
   exported_at, household, members[], accounts[], categories[], tags[],
@@ -231,6 +231,17 @@ xil filtrdan; a'zo bo'lmagan — `forbidden`.
   months[], planned_items[], transactions[], transaction_tags[],
   attachments[]}`. Faqat **owner/admin**; o'chirilgan (tombstone) qatorlar
   kirmaydi; chek fayllari emas, faqat `attachments` yo'llari.
+- `import_transactions(p_household, p_rows, p_dry_run = true)` → `{total, ready,
+  imported, duplicates[{index, transaction_id}], errors[{index, code}]}`
+  (BR-182). `p_rows` — `[{occurred_on, amount, payee, account, category, note,
+  kind?}]`; `amount` tiyinda, manfiy — xarajat, musbat — daromad (`kind` berilsa
+  — o'sha). Hisob va kategoriya **nomi** bo'yicha topiladi (registrsiz).
+  `index` — qatorning 1 dan boshlangan tartibi. Dublikat — sana + summa + joy
+  nomi bir xil amal (yozilmaydi). `p_dry_run = true` da hech narsa yozilmaydi
+  (`imported = 0`); `false` da faqat toza qatorlar yoziladi (`source = import`).
+  Qator xatolari: `invalid_row` (sana/summa yo'q yoki 0), `account_not_found`,
+  `category_not_found`, amal triggeri kodlari (masalan `month_closed`).
+  Xatolar: `forbidden`, `invalid_batch` (> 1000 qator). Owner/admin/member.
 
 ### Amal formasi (E23-T02)
 

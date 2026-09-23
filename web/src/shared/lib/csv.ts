@@ -28,3 +28,56 @@ export function toCsvRows(rows: readonly CsvRow[]): string {
 export function toCsv(header: readonly string[], rows: readonly CsvRow[]): string {
   return toCsvRows([header, ...rows])
 }
+
+/**
+ * CSV matnini qatorlarga ajratadi (RFC 4180): qo'shtirnoq ichidagi vergul va
+ * qator uzilishi saqlanadi, `""` — bitta qo'shtirnoq. Ajratgich topilmasa
+ * vergul ishlatiladi (`;` va tabulyatsiya ham qo'llab-quvvatlanadi).
+ */
+export function parseCsv(text: string): string[][] {
+  const clean = text.replace(/^\uFEFF/, '')
+  const delimiter = detectDelimiter(clean)
+  const rows: string[][] = []
+  let row: string[] = []
+  let value = ''
+  let quoted = false
+
+  for (let i = 0; i < clean.length; i++) {
+    const char = clean.charAt(i)
+    if (quoted) {
+      if (char === '"') {
+        if (clean.charAt(i + 1) === '"') {
+          value += '"'
+          i++
+        } else quoted = false
+      } else value += char
+      continue
+    }
+    if (char === '"') quoted = true
+    else if (char === delimiter) {
+      row.push(value)
+      value = ''
+    } else if (char === '\n' || char === '\r') {
+      // CRLF — bitta qator uzilishi.
+      if (char === '\r' && clean.charAt(i + 1) === '\n') i++
+      row.push(value)
+      rows.push(row)
+      row = []
+      value = ''
+    } else value += char
+  }
+  if (value !== '' || row.length > 0) {
+    row.push(value)
+    rows.push(row)
+  }
+  // Bo'sh qatorlar (fayl oxiridagi yangi qator) tashlanadi.
+  return rows.filter((cells) => cells.some((cell) => cell.trim() !== ''))
+}
+
+/** Birinchi qatordagi eng ko'p uchraydigan ajratgich. */
+function detectDelimiter(text: string): string {
+  const line = text.slice(0, text.search(/\r|\n/) === -1 ? text.length : text.search(/\r|\n/))
+  const counts = [',', ';', '\t'].map((d) => [d, line.split(d).length - 1] as const)
+  const best = counts.reduce((a, b) => (b[1] > a[1] ? b : a))
+  return best[1] > 0 ? best[0] : ','
+}

@@ -115,7 +115,8 @@
     "plans": "Plans",
     "report": "Report",
     "health": "Checks",
-    "export": "Export"
+    "export": "Export",
+    "import": "Import"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -1131,5 +1132,41 @@
       "paid": "Paid",
       "status": "Status"
     }
+  },
+  "import": {
+    "title": "CSV import",
+    "description": "Load transactions from a bank statement (BR-182)",
+    "file": "CSV file",
+    "fileHint": "First row is the header; delimiter can be comma, semicolon or tab",
+    "mapping": "Match the columns",
+    "none": "Not selected",
+    "column": "Column {{index}}: {{name}}",
+    "fields": {
+      "occurred_on": "Date",
+      "amount": "Amount",
+      "payee": "Payee",
+      "category": "Category",
+      "account": "Account",
+      "note": "Note"
+    },
+    "preview": "Check",
+    "previewAction": "Check (nothing is written)",
+    "apply": "Import",
+    "rows": "Rows: {{count}}",
+    "ready": "Ready: {{count}}",
+    "duplicates": "Duplicates: {{count}}",
+    "errors": "Errors: {{count}}",
+    "imported": "Imported transactions: {{count}}",
+    "required": "Date, amount, category and account columns must be selected",
+    "sample": "Sample (first rows)",
+    "errorCodes": {
+      "invalid_row": "Invalid date or amount",
+      "account_not_found": "Account not found",
+      "category_not_found": "Category not found",
+      "month_closed": "The month is closed"
+    },
+    "row": "Row",
+    "reason": "Reason",
+    "duplicateOf": "Same as an existing transaction"
   }
 }
