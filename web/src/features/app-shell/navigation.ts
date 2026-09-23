@@ -3,6 +3,7 @@ import type { ParseKeys } from 'i18next'
 import {
   ArrowLeftRight,
   CalendarCheck,
+  CalendarSync,
   ChartColumn,
   Stethoscope,
   Upload,
@@ -81,6 +82,12 @@ export const NAV_SECTIONS: readonly NavSection[] = [
         labelKey: 'nav.import',
         icon: FileUp,
         permission: 'write',
+      },
+      {
+        to: '/h/$householdId/recalc',
+        labelKey: 'nav.recalc',
+        icon: CalendarSync,
+        permission: 'manage',
       },
       { to: '/h/$householdId/settings', labelKey: 'nav.settings', icon: Settings },
     ],

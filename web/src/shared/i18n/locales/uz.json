@@ -116,7 +116,8 @@
     "report": "Hisobot",
     "health": "Tekshiruv",
     "export": "Eksport",
-    "import": "Import"
+    "import": "Import",
+    "recalc": "Qayta joylash"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -341,8 +342,13 @@
     "mergeTarget": "Qaysi kategoriyaga",
     "merged": "Birlashtirildi: {{transactions}} amal, {{plans}} reja, {{rules}} doimiy reja",
     "recalcTitle": "Amallarni qayta joylash",
+    "recalcDescription": "Daromad oyi qoidasi o'zgargan bo'lsa — eski yozuvlar yangi qoida bo'yicha (BR-043)",
     "recalcText": "Oy siljishi o'zgardi. Avtomatik oyga yozilgan {{count}} ta amal boshqa oyga ko'chadi (qo'lda tanlanganlarga tegilmaydi):",
+    "recalcCount": "Ko'chadigan amallar: {{count}} ta",
     "recalcNone": "Ko'chadigan amal yo'q — hammasi joyida.",
+    "recalcNoneHint": "Avtomatik oyga yozilgan daromadlar qoidaga mos; qo'lda tanlangan oylarga tegilmaydi.",
+    "recalcColumn": "Tegishli oy",
+    "recalcConfirm": "{{count}} ta amalning tegishli oyi o'zgaradi. Davom etilsinmi?",
     "recalcApply": "Qayta joylash",
     "recalcLater": "Keyinroq",
     "recalcMove": "{{from}} → {{to}}: {{count}} ta, {{amount}}",

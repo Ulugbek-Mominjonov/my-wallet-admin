@@ -152,3 +152,36 @@ export async function recalcIncomeMonthsApply(
   })
   if (error) throw toAppError(error)
 }
+
+const recalcRowsSchema = z.object({
+  total: z.number(),
+  rows: z.array(
+    z.object({
+      id: z.string(),
+      occurred_on: z.iso.date(),
+      payee: z.string().nullable(),
+      category: z.string(),
+      amount_base: z.number(),
+      from_month: z.iso.date(),
+      to_month: z.iso.date(),
+    }),
+  ),
+})
+export type RecalcRows = z.infer<typeof recalcRowsSchema>
+
+export const recalcRowsKey = (householdId: string) =>
+  [...qk.household(householdId), 'recalc-income-rows'] as const
+
+/** E25-T04: ko'chadigan har bir yozuv (ro'yxat cheklangan, `total` — hammasi). */
+export const recalcRowsQuery = (householdId: string) =>
+  queryOptions({
+    queryKey: recalcRowsKey(householdId),
+    queryFn: async (): Promise<RecalcRows> => {
+      const { data, error } = await supabase.rpc('recalc_income_months_rows', {
+        p_household: householdId,
+      })
+      if (error) throw toAppError(error)
+      return recalcRowsSchema.parse(data)
+    },
+    staleTime: 0,
+  })

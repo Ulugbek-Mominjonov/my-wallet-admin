@@ -713,7 +713,7 @@ E21–E26 (admin) M2 bilan.
 - [x] **E25-T03** **CSV import**: fayl → ustunlarni moslashtirish (sana,
   summa, nom, kategoriya, hisob) → preview (xatolar, dublikatlar — sana +
   summa + nom) → tasdiq → bitta RPC paket. BR-182.
-- [ ] **E25-T04** **Daromad qoidasini qayta qo'llash**: preview jadvali
+- [x] **E25-T04** **Daromad qoidasini qayta qo'llash**: preview jadvali
   (yozuv, turi, eski oy → yangi oy), tasdiq → `recalc_income_months_apply`.
 - [ ] **E25-T05** **Audit jurnali**: filtr (jadval, a'zo, davr), eski/yangi
   farqi (diff ko'rinishi), keyset sahifalash.
@@ -971,6 +971,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Eksport — CSV (BOM bilan, Excel ochadi) va PDF — brauzer print orqali; XLSX (SheetJS) qo'shilmadi | npm'dagi `xlsx` eski (CVE-2023-30533), yangilari faqat sotuvchi CDN'idan keladi — ochiq repoda ta'minot zanjiri xavfi; CSV hamma hisobotda bir xil kod bilan ishlaydi | E24-T06, BR-180 |
 | 2026-09-23 | Pul harakatidan keyin faqat pulga bog'liq keshlar eskiradi (amal, reja, oy, hisob, hisobot, limit, qarz, maqsad); kalit bo'laklari `shared/api/query-keys` da | avval butun byudjet prefiksi eskirardi — spravochniklar (kategoriya, teg, a'zo) ham qayta so'ralardi; feature'lar bir-birining kalitini import qila olmaydi | E24-T07 |
 | 2026-09-23 | Import — bitta RPC ikki rejimda (`p_dry_run`): tekshiruv ham, yozuv ham bir xil yo'ldan o'tadi; hisob va kategoriya nomi bo'yicha (registrsiz), dublikat — sana + summa + joy | preview ko'rsatgani aynan yoziladi (ikkinchi, boshqacha tekshiruv kodi yo'q); bank ko'chirmasida ID yo'q, faqat nom; qator xatosi butun paketni to'xtatmaydi | E25-T03, BR-182 |
+| 2026-09-23 | Qayta joylash sahifasi (E25-T04) — kategoriyalar feature'ida, yangi `recalc_income_months_rows` RPC bilan; kategoriya formasidagi dialog jamlangan preview bilan qoladi | sahifa ham, dialog ham bitta API modulidan foydalanadi (feature'lar bir-birini import qila olmaydi); dialog darhol taklif qiladi, sahifa esa har yozuvni ko'rsatadi — dialogga qo'shimcha ustunlar yuklash shart emas | E25-T04, BR-043 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

@@ -1,7 +1,8 @@
--- E08-T04, T05: tegishli oyni qayta joylash, oyni yopish, kategoriyalarni
--- birlashtirish. Qoidalar: BR-034, BR-036, BR-042, BR-043, BR-150, BR-153, BR-011.
+-- E08-T04, T05: tegishli oyni qayta joylash (E25-T04 — yozuvlar ro'yxati),
+-- oyni yopish, kategoriyalarni birlashtirish.
+-- Qoidalar: BR-034, BR-036, BR-042, BR-043, BR-150, BR-153, BR-011.
 begin;
-select plan(17);
+select plan(19);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
@@ -45,6 +46,10 @@ select throws_ok(
   $$ select public.recalc_income_months_preview((select id from ref where name = 'h')) $$,
   'P0001', 'forbidden', 'BR-011: qayta joylash — owner/admin'
 );
+select throws_ok(
+  $$ select public.recalc_income_months_rows((select id from ref where name = 'h')) $$,
+  'P0001', 'forbidden', 'BR-011: ko''chadigan yozuvlar ro''yxati — owner/admin'
+);
 select tests.authenticate_as((select id from u where name = 'alice'));
 update public.categories set month_shift = 0 where id = (select id from ref where name = 'c_oylik');
 insert into r select 'preview', public.recalc_income_months_preview((select id from ref where name = 'h'));
@@ -52,6 +57,15 @@ select results_eq(
   $$ select (v ->> 'count')::int, v -> 'moves' -> 0 ->> 'from_month', v -> 'moves' -> 0 ->> 'to_month' from r where name = 'preview' $$,
   $$ values (1, '2026-09-01', '2026-10-01') $$,
   'BR-043: preview — "1 ta yozuv ko''chadi: 2026-09 → 2026-10"; qo''lda tanlangani ko''chmaydi (BR-042)'
+);
+insert into r select 'rows', public.recalc_income_months_rows((select id from ref where name = 'h'), 50);
+select results_eq(
+  $$ select (v ->> 'total')::int, jsonb_array_length(v -> 'rows'),
+            v -> 'rows' -> 0 ->> 'occurred_on', v -> 'rows' -> 0 ->> 'category',
+            v -> 'rows' -> 0 ->> 'from_month', v -> 'rows' -> 0 ->> 'to_month'
+       from r where name = 'rows' $$,
+  $$ values (1, 1, '2026-10-02', 'Oylik', '2026-09-01', '2026-10-01') $$,
+  'E25-T04: har yozuv ko''rinadi — sana, turi, eski oy → yangi oy'
 );
 select throws_ok(
   $$ select public.recalc_income_months_apply((select id from ref where name = 'h'), 5) $$,

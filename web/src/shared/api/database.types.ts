@@ -1842,6 +1842,10 @@ export type Database = {
         Args: { p_household: string }
         Returns: Json
       }
+      recalc_income_months_rows: {
+        Args: { p_household: string; p_limit?: number }
+        Returns: Json
+      }
       receipt_files_to_delete: {
         Args: { p_limit?: number; p_now?: string }
         Returns: string[]

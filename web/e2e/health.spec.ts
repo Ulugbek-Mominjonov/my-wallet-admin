@@ -2,14 +2,14 @@ import { readFile } from 'node:fs/promises'
 
 import { expect, test } from '@playwright/test'
 
-import { HOUSEHOLD_URL, signIn } from './support/app.ts'
+import { accessToken, HOUSEHOLD_URL, signIn } from './support/app.ts'
 import { SIGNED_OUT } from './support/state.ts'
-import { uniqueEmail } from './support/supabase.ts'
+import { insert, select, uniqueEmail } from './support/supabase.ts'
 
 /** Byudjet vaqt zonasi (standart) — "joriy oy" sahifadagi bilan bir xil. */
 const TIMEZONE = 'Asia/Tashkent'
 
-test.describe('E25-T01: tekshiruv', () => {
+test.describe('E25: vositalar', () => {
   test.use({ storageState: SIGNED_OUT })
 
   test("yangi byudjet: ogohlantirish va amal havolasi; ma'lumot bo'limi", async ({ page }) => {
@@ -93,5 +93,60 @@ test.describe('E25-T01: tekshiruv', () => {
     await page.goto(`/h/${householdId}/transactions`)
     await expect(page.getByRole('cell', { name: 'Makro', exact: true })).toBeVisible()
     await expect(page.getByRole('cell', { name: 'Bozor', exact: true })).toHaveCount(0)
+  })
+
+  test('E25-T04: daromad oyi qoidasi o‘zgargach — yozuvlar ro‘yxati va qayta joylash', async ({
+    page,
+  }) => {
+    await page.goto('/login')
+    await signIn(page, uniqueEmail('recalc'))
+    await expect(page).toHaveURL(HOUSEHOLD_URL)
+    const householdId = new URL(page.url()).pathname.split('/').at(-1) ?? ''
+    const token = await accessToken(page)
+
+    // "Oylik" (siljish −1) bo'yicha daromad — tegishli oyni trigger qo'yadi.
+    const [accounts, categories] = await Promise.all([
+      select<{ id: string; type: string }[]>(
+        token,
+        `accounts?select=id,type&household_id=eq.${householdId}&type=eq.card`,
+      ),
+      select<{ id: string }[]>(
+        token,
+        `categories?select=id&household_id=eq.${householdId}&name=eq.Oylik`,
+      ),
+    ])
+    await insert(token, 'transactions', [
+      {
+        household_id: householdId,
+        kind: 'income',
+        account_id: accounts[0]?.id,
+        category_id: categories[0]?.id,
+        amount: 800000000,
+        payee: 'Ish joyi',
+        occurred_on: new Intl.DateTimeFormat('en-CA', { timeZone: TIMEZONE }).format(new Date()),
+      },
+    ])
+
+    // Siljishni o'zgartirish — shu yerda darhol taklif qilinadi (BR-043).
+    await page.goto(`/h/${householdId}/categories`)
+    await page.getByRole('tab', { name: 'Daromad' }).click()
+    await page.getByRole('button', { name: 'Oylik: amallar', exact: true }).click()
+    await page.getByRole('menuitem', { name: 'Tahrirlash' }).click()
+    const form = page.getByRole('dialog')
+    await form.getByRole('combobox', { name: 'Qaysi oyga tegishli' }).click()
+    await page.getByRole('option', { name: 'Joriy oy (kelgan oyi)' }).click()
+    await form.getByRole('button', { name: 'Saqlash' }).click()
+    await page.getByRole('button', { name: 'Keyinroq' }).click()
+
+    // Vositalar sahifasi: aynan qaysi yozuv qaysi oyga ko'chishi.
+    await page.goto(`/h/${householdId}/recalc`)
+    const row = page.getByRole('row', { name: /Ish joyi/ })
+    await expect(row).toContainText('Oylik')
+    await expect(row).toContainText('→')
+
+    await page.getByRole('button', { name: 'Qayta joylash' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Qayta joylash' }).click()
+    await expect(page.getByText('1 ta amal qayta joylandi')).toBeVisible()
+    await expect(page.getByText("Ko'chadigan amal yo'q — hammasi joyida.")).toBeVisible()
   })
 })

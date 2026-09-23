@@ -116,7 +116,8 @@
     "report": "Report",
     "health": "Checks",
     "export": "Export",
-    "import": "Import"
+    "import": "Import",
+    "recalc": "Recalculate months"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -341,8 +342,13 @@
     "mergeTarget": "Into category",
     "merged": "Merged: {{transactions}} transactions, {{plans}} plans, {{rules}} recurring",
     "recalcTitle": "Move transactions",
+    "recalcDescription": "If the income month rule changed — old records follow the new rule (BR-043)",
     "recalcText": "The month shift changed. {{count}} transactions with an automatic month will move (manual choices are kept):",
+    "recalcCount": "Transactions to move: {{count}}",
     "recalcNone": "Nothing to move — everything is in place.",
+    "recalcNoneHint": "Income with an automatic month already follows the rule; manually set months are left alone.",
+    "recalcColumn": "Budget month",
+    "recalcConfirm": "The budget month changes for {{count}} transactions. Continue?",
     "recalcApply": "Move",
     "recalcLater": "Later",
     "recalcMove": "{{from}} → {{to}}: {{count}}, {{amount}}",
