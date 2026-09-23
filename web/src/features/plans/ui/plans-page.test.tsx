@@ -23,6 +23,7 @@ const account = (id: string, name: string, type: Account['type'] = 'cash'): Acco
   openingDate: '2026-01-01',
   icon: null,
   color: null,
+  cardLast4: null,
   sortOrder: 0,
   archivedAt: null,
   balance: 0,

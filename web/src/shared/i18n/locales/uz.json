@@ -24,7 +24,8 @@
     "unauthorized": "Sessiya tugagan. Qayta kiring.",
     "forbidden": "Bu amal uchun huquqingiz yo'q.",
     "unknown": "Kutilmagan xato. Qayta urinib ko'ring.",
-    "nameTaken": "Bu nom band — boshqasini tanlang"
+    "nameTaken": "Bu nom band — boshqasini tanlang",
+    "cardTaken": "Bu karta boshqa hisobga biriktirilgan"
   },
   "auth": {
     "loginTitle": "Boshqaruv paneliga kirish",
@@ -309,6 +310,9 @@
     "openingBalance": "Boshlang'ich qoldiq",
     "openingBalanceHint": "Kredit karta qarzi — minus bilan",
     "openingDate": "Boshlang'ich sana",
+    "cardLast4": "Karta oxirgi 4 raqami",
+    "cardLast4Hint": "Ixtiyoriy: bank xabarnomasidagi karta shu hisobga yoziladi",
+    "cardLast4Error": "Roppa-rosa 4 ta raqam yoki bo'sh",
     "emptyTitle": "Hisob yo'q",
     "emptyText": "Birinchi hisobni qo'shing — amallar hisoblarga yoziladi.",
     "types": {

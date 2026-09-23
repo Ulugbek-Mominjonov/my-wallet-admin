@@ -228,7 +228,8 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
 4. Webhook'ni ulash — **deploy workflow o'zi bajaradi**
    (`scripts/telegram-setup.sh`: `setWebhook` →
    `https://<ref>.supabase.co/functions/v1/telegram-webhook`, `secret_token`
-   bilan; buyruqlar menyusi `/balans`, `/bugun`, `/stop` — uz/ru/en).
+   bilan; buyruqlar menyusi `/balans`, `/bugun`, `/hisobot`, `/til`, `/stop`
+   — uz/ru/en).
    Qo'lda kerak emas. Token bo'lmasa — Telegram qadami o'tkaziladi.
 5. BotFather → `/setdescription`, `/setuserpic` — ixtiyoriy.
 

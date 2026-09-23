@@ -1,20 +1,23 @@
 -- E11-T04, T05, T08 (server qismi): navbatdan olish/natija, Telegram ulash
--- va buyruqlar, valyuta kurslari; E29-T01: kurslarni tarixiy to'ldirish.
+-- va buyruqlar, valyuta kurslari; E29-T01: kurslarni tarixiy to'ldirish;
+-- E31-T01: botdan tez kiritish.
 -- Qoidalar: BR-163, BR-166, BR-192, BR-221, ADR-11.
 begin;
-select plan(20);
+select plan(30);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
 insert into u values
   ('alice', tests.create_user('alice@test.uz')),
   ('bob',   tests.create_user('bob@test.uz', '{"locale": "ru"}'));
-grant select on u to authenticated;
+grant select on u to authenticated, service_role;
 
 create temporary table ref (name text primary key, id uuid) on commit drop;
-grant all on ref to authenticated;
+grant all on ref to authenticated, service_role;
 insert into ref select 'h', p.last_household_id from public.profiles p
   where p.user_id = (select id from u where name = 'alice');
+insert into ref select 'h_bob', p.last_household_id from public.profiles p
+  where p.user_id = (select id from u where name = 'bob');
 
 create temporary table r (name text primary key, v jsonb) on commit drop;
 grant all on r to authenticated, service_role;
@@ -252,6 +255,100 @@ select results_eq(
             jsonb_array_length(public.fx_backfill_dates() -> 'dates') $$,
   $$ values (true, 0) $$,
   'kursor eng eski yozuvdan oldin — to''ldiriladigan sana yo''q'
+);
+reset role;
+
+-- ─── Botdan tez kiritish (E31-T01, BR-220) ─────────────────────────────────
+-- Yuqorida bob'ning ikkinchi tokeni 777 chatiga ulangan (BR-163: bitta
+-- foydalanuvchi — bitta chat), 999 esa — ulanmagan chat.
+select tests.authenticate_as((select id from u where name = 'bob'));
+-- Tarix: "Korzinka" — oziq-ovqat kategoriyasi (bob'ning tili — ruscha), naqd hisob.
+insert into public.transactions (household_id, kind, account_id, amount, category_id, payee,
+                                 occurred_on, budget_month)
+select (select id from ref where name = 'h_bob'), 'expense',
+       (select a.id from public.accounts a
+         where a.household_id = (select id from ref where name = 'h_bob') and a.type = 'cash'),
+       5000000,
+       (select c.id from public.categories c
+         where c.household_id = (select id from ref where name = 'h_bob') and c.name = 'Продукты'),
+       'Korzinka', private.household_today((select id from ref where name = 'h_bob')),
+       date_trunc('month', private.household_today((select id from ref where name = 'h_bob'))::timestamp)::date;
+select tests.clear_authentication();
+
+select pg_temp.as_service();
+insert into r select 'qa1', public.telegram_quick_add(777, 'expense', 2500000, 'Korzinka');
+select results_eq(
+  $$ select (v ->> 'ok')::boolean, v ->> 'category', (v ->> 'amount')::bigint
+       from r where name = 'qa1' $$,
+  $$ values (true, 'Продукты', 2500000::bigint) $$,
+  'BR-220: joy nomi tarixidan kategoriya topiladi'
+);
+select is(
+  (select t.source::text from public.transactions t
+    where t.id = (select (v ->> 'transaction_id')::uuid from r where name = 'qa1')),
+  'telegram',
+  'amal manbai — telegram'
+);
+insert into r select 'qa2', public.telegram_quick_add(999, 'expense', 1000, 'X');
+select is(
+  (select v ->> 'code' from r where name = 'qa2'), 'not_linked',
+  'ulanmagan chat — xato kodi'
+);
+insert into r select 'cats', public.telegram_categories(777, 'expense', 3);
+select is(
+  (select jsonb_array_length(v -> 'categories') from r where name = 'cats'), 3,
+  'tugmalar uchun kategoriyalar ro''yxati'
+);
+insert into r select 'set', public.telegram_set_category(
+  777,
+  (select (v ->> 'transaction_id')::uuid from r where name = 'qa1'),
+  (select c.id from public.categories c
+    where c.household_id = (select id from ref where name = 'h_bob') and c.name = 'Транспорт'));
+select results_eq(
+  $$ select (v ->> 'ok')::boolean, v ->> 'category' from r where name = 'set' $$,
+  $$ values (true, 'Транспорт') $$,
+  'tugmadan kategoriya almashtiriladi'
+);
+insert into r select 'undo', public.telegram_undo(
+  777, (select (v ->> 'transaction_id')::uuid from r where name = 'qa1'));
+select is(
+  (select t.deleted_at is not null from public.transactions t
+    where t.id = (select (v ->> 'transaction_id')::uuid from r where name = 'qa1')),
+  true,
+  'bekor qilish — tombstone'
+);
+reset role;
+
+-- ─── Karta xabarnomasi va buyruqlar (E31-T02, T03) ─────────────────────────
+select tests.authenticate_as((select id from u where name = 'bob'));
+update public.accounts set card_last4 = '1234'
+ where household_id = (select id from ref where name = 'h_bob') and type = 'card';
+select tests.clear_authentication();
+
+select pg_temp.as_service();
+insert into r select 'card', public.telegram_quick_add(
+  777, 'expense', 25000000, 'KORZINKA', '2026-10-12', '1234');
+select results_eq(
+  $$ select (v ->> 'ok')::boolean, v ->> 'account', v ->> 'occurred_on' from r where name = 'card' $$,
+  $$ values (true, 'Карта', '2026-10-12') $$,
+  'BR-222: karta oxirgi 4 raqami bo''yicha hisob topiladi, sana xabardan'
+);
+insert into r select 'report', public.telegram_report(777, '2026-10-01');
+select results_eq(
+  $$ select (v ->> 'ok')::boolean, v ->> 'month', (v ->> 'expense')::bigint >= 25000000
+       from r where name = 'report' $$,
+  $$ values (true, '2026-10-01', true) $$,
+  'BR-221: /hisobot — tanlangan oy yakuni'
+);
+insert into r select 'lang', public.telegram_set_locale(777, 'en');
+select results_eq(
+  $$ select (v ->> 'ok')::boolean, v ->> 'locale' from r where name = 'lang' $$,
+  $$ values (true, 'en') $$,
+  'BR-221: /til — profil tili o''zgaradi'
+);
+select is(
+  (select v ->> 'code' from (select public.telegram_set_locale(777, 'fr') as v) x), 'invalid_locale',
+  'noma''lum til — xato kodi'
 );
 reset role;
 

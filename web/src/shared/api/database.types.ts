@@ -12,6 +12,7 @@ export type Database = {
       accounts: {
         Row: {
           archived_at: string | null
+          card_last4: string | null
           color: string | null
           created_at: string
           created_by: string | null
@@ -30,6 +31,7 @@ export type Database = {
         }
         Insert: {
           archived_at?: string | null
+          card_last4?: string | null
           color?: string | null
           created_at?: string
           created_by?: string | null
@@ -48,6 +50,7 @@ export type Database = {
         }
         Update: {
           archived_at?: string | null
+          card_last4?: string | null
           color?: string | null
           created_at?: string
           created_by?: string | null
@@ -2043,12 +2046,44 @@ export type Database = {
         Args: { p_device: string; p_household: string; p_mutations: Json }
         Returns: Json
       }
+      telegram_card_templates: { Args: never; Returns: Json }
+      telegram_categories: {
+        Args: { p_chat_id: number; p_kind?: string; p_limit?: number }
+        Returns: Json
+      }
       telegram_link_consume: {
         Args: { p_chat_id: number; p_token: string }
         Returns: Json
       }
       telegram_link_token: { Args: never; Returns: Json }
+      telegram_quick_add: {
+        Args: {
+          p_amount: number
+          p_card_last4?: string
+          p_chat_id: number
+          p_kind: string
+          p_occurred_on?: string
+          p_payee?: string
+        }
+        Returns: Json
+      }
+      telegram_report: {
+        Args: { p_chat_id: number; p_month?: string }
+        Returns: Json
+      }
+      telegram_set_category: {
+        Args: { p_category: string; p_chat_id: number; p_transaction: string }
+        Returns: Json
+      }
+      telegram_set_locale: {
+        Args: { p_chat_id: number; p_locale: string }
+        Returns: Json
+      }
       telegram_summary: { Args: { p_chat_id: number }; Returns: Json }
+      telegram_undo: {
+        Args: { p_chat_id: number; p_transaction: string }
+        Returns: Json
+      }
       telegram_unlink: { Args: never; Returns: undefined }
       telegram_unlink_chat: { Args: { p_chat_id: number }; Returns: boolean }
       test_notification: { Args: { p_household: string }; Returns: Json }

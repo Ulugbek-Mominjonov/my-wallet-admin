@@ -10,6 +10,7 @@ const valid = {
   openingDate: '2026-09-01',
   icon: 'credit-card',
   color: '#3B82F6',
+  cardLast4: ' 4455 ',
 }
 
 describe('accountFormSchema', () => {
@@ -18,6 +19,7 @@ describe('accountFormSchema', () => {
       ...valid,
       name: 'Humo',
       openingBalance: 150000000,
+      cardLast4: '4455',
     })
   })
 
@@ -28,6 +30,10 @@ describe('accountFormSchema', () => {
     )
   })
 
+  it("karta raqami — bo'sh bo'lsa null (BR-222)", () => {
+    expect(accountFormSchema.parse({ ...valid, cardLast4: '' }).cardLast4).toBeNull()
+  })
+
   it.each([
     ['name', ''],
     ['name', 'x'.repeat(61)],
@@ -35,6 +41,8 @@ describe('accountFormSchema', () => {
     ['openingBalance', 'abc'],
     ['openingDate', '2026-13-01'],
     ['type', 'crypto'],
+    ['cardLast4', '123'],
+    ['cardLast4', '12a4'],
   ])('%s = %j — rad etiladi', (field, value) => {
     const result = accountFormSchema.safeParse({ ...valid, [field]: value })
     expect(result.success).toBe(false)
@@ -52,12 +60,16 @@ describe('accountFormSchema', () => {
         openingDate: '2026-09-01',
         icon: null,
         color: null,
+        cardLast4: '8600',
         sortOrder: 0,
         archivedAt: null,
         balance: 0,
       },
       { currency: 'UZS', today: '2026-09-22' },
     )
-    expect(accountFormSchema.parse(values).openingBalance).toBe(123456750)
+    expect(accountFormSchema.parse(values)).toMatchObject({
+      openingBalance: 123456750,
+      cardLast4: '8600',
+    })
   })
 })

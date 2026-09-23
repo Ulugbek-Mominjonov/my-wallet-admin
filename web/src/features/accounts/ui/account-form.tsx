@@ -158,6 +158,28 @@ export function AccountForm({
       </div>
 
       <div className="grid gap-1.5">
+        <Label htmlFor="account-card">{t('accounts.cardLast4')}</Label>
+        <Input
+          id="account-card"
+          inputMode="numeric"
+          autoComplete="off"
+          maxLength={4}
+          placeholder="1234"
+          aria-invalid={errors.cardLast4 ? true : undefined}
+          aria-describedby="account-card-hint"
+          {...form.register('cardLast4')}
+        />
+        <p
+          id="account-card-hint"
+          className={
+            errors.cardLast4 ? 'text-sm text-destructive' : 'text-xs text-muted-foreground'
+          }
+        >
+          {errors.cardLast4 ? t('accounts.cardLast4Error') : t('accounts.cardLast4Hint')}
+        </p>
+      </div>
+
+      <div className="grid gap-1.5">
         <Label htmlFor="account-icon">{t('directories.icon')}</Label>
         <Controller
           control={form.control}

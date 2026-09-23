@@ -20,6 +20,7 @@ const row = (id: string, name: string, type: string, sortOrder: number, archived
   opening_date: '2026-09-01',
   icon: null,
   color: null,
+  card_last4: null,
   sort_order: sortOrder,
   archived_at: archived ? '2026-09-10T00:00:00Z' : null,
 })
@@ -107,6 +108,7 @@ describe('AccountsPage (E22-T02)', () => {
     const dialog = await screen.findByRole('dialog', { name: 'Yangi hisob' })
     await user.type(within(dialog).getByLabelText('Nomi'), 'Humo')
     await user.type(within(dialog).getByLabelText("Boshlang'ich qoldiq"), '1 500 000')
+    await user.type(within(dialog).getByLabelText('Karta oxirgi 4 raqami'), '4455')
     await user.click(within(dialog).getByRole('button', { name: 'Saqlash' }))
 
     await waitFor(() => {
@@ -118,6 +120,7 @@ describe('AccountsPage (E22-T02)', () => {
       type: 'card',
       currency: 'UZS',
       opening_balance: 150000000,
+      card_last4: '4455',
       sort_order: 3,
     })
     expect(await screen.findByText('Saqlandi')).toBeInTheDocument()
@@ -149,6 +152,33 @@ describe('AccountsPage (E22-T02)', () => {
 
     expect(await within(dialog).findByRole('alert')).toHaveTextContent(
       'Bu nom band — boshqasini tanlang',
+    )
+  })
+
+  it('karta band (23505) — kartaga oid xato matni', async () => {
+    mockList()
+    server.use(
+      http.post(supabasePath('/rest/v1/accounts'), () =>
+        HttpResponse.json(
+          {
+            code: '23505',
+            message: 'duplicate key value violates unique constraint "accounts_card_last4_key"',
+          },
+          { status: 409 },
+        ),
+      ),
+    )
+    const user = renderPage()
+    await screen.findByText('Hamyon')
+
+    await user.click(screen.getByRole('button', { name: "Hisob qo'shish" }))
+    const dialog = await screen.findByRole('dialog', { name: 'Yangi hisob' })
+    await user.type(within(dialog).getByLabelText('Nomi'), 'Humo')
+    await user.type(within(dialog).getByLabelText('Karta oxirgi 4 raqami'), '4455')
+    await user.click(within(dialog).getByRole('button', { name: 'Saqlash' }))
+
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent(
+      'Bu karta boshqa hisobga biriktirilgan',
     )
   })
 

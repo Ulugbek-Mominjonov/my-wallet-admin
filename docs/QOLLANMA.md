@@ -85,7 +85,15 @@ sentabrniki). Kerak bo'lsa amal formasida oyni qo'lda tanlash mumkin.
   kunlik eslatma soati va necha kun oldin, oylik hisobot kuni, limit va
   «daromad kelmadi» ogohlantirishlari.
 - **Telegram**: «Ulash» → QR yoki havola → botda **Start**. Shundan keyin
-  bot `/balans` va `/bugun` buyruqlariga javob beradi.
+  bot `/balans`, `/bugun`, `/hisobot [oy]` va `/til uz|ru|en` buyruqlariga
+  javob beradi.
+- **Botdan tez kiritish**: `taksi 20000` — xarajat; `+5 000 000 oylik` —
+  daromad (`+` bilan); `kofe 25k` — mingda. Kategoriya va hisob shu nom bilan
+  oxirgi amaldan olinadi; javobdagi **✏️ Kategoriya** tugmasi bilan
+  o'zgartiriladi, **❌ Bekor** bilan o'chiriladi.
+- **Karta xabarnomasi**: bank botidagi xabarni botga **forward** qiling —
+  summa, sana va joy xabardan o'qiladi. Xabardagi karta o'z hisobiga tushishi
+  uchun **Hisoblar** sahifasida hisobga *karta oxirgi 4 raqamini* yozing.
 - **Sinov xabari** har kanal uchun natijani aniq ko'rsatadi: yuborildi yoki
   nega yuborilmadi (qurilma yo'q, kanal o'chiq, server sozlanmagan).
 

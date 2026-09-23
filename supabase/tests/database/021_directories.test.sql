@@ -2,7 +2,7 @@
 -- Qoidalar: BR-003, BR-008, BR-011, BR-020, BR-024, BR-031, BR-033, BR-034,
 -- BR-036, BR-060, BR-080, BR-130, BR-140, BR-200, BR-210; ADR-04.
 begin;
-select plan(64);
+select plan(66);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 -- alice — owner; bob — member; carol — viewer; dave — begona.
@@ -116,6 +116,16 @@ select throws_ok(
 select throws_ok(
   $$ update public.accounts set archived_at = now() where id = (select id from ref where name = 'cash') $$,
   'P0001', 'account_in_use', 'BR-060: fond manbai bo''lgan hisob arxivlanmaydi'
+);
+-- BR-222: karta oxirgi 4 raqami — bot xabarnomani shu hisobga yozadi.
+update public.accounts set card_last4 = '8600' where id = (select id from ref where name = 'humo');
+select throws_ok(
+  $$ update public.accounts set card_last4 = '8600' where id = (select id from ref where name = 'cash') $$,
+  '23505', null, 'BR-222: bitta karta raqami — bitta hisobda'
+);
+select throws_ok(
+  $$ update public.accounts set card_last4 = '86' where id = (select id from ref where name = 'cash') $$,
+  '23514', null, 'BR-222: karta raqami — roppa-rosa 4 ta raqam'
 );
 select throws_ok(
   $$ delete from public.accounts where id = (select id from ref where name = 'humo') $$,

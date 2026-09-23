@@ -125,9 +125,12 @@ export function toAppError(error: unknown): AppError {
     if (error.code === 'P0001') {
       return new AppError(error.message, businessErrorMessage(error.message), { cause: error })
     }
-    // Nom band (masalan `accounts_name_key` — byudjet ichida registrsiz, BR-003).
+    // Nom band (masalan `accounts_name_key` — byudjet ichida registrsiz, BR-003);
+    // karta esa bitta hisobga biriktiriladi (`accounts_card_last4_key`, BR-222).
     if (error.code === '23505') {
-      return new AppError('name_taken', i18n.t('errors.nameTaken'), { cause: error })
+      return error.message.includes('card_last4')
+        ? new AppError('card_taken', i18n.t('errors.cardTaken'), { cause: error })
+        : new AppError('name_taken', i18n.t('errors.nameTaken'), { cause: error })
     }
     if (error.status === 401 || error.code === 'PGRST301') {
       return new AppError('unauthorized', i18n.t('errors.unauthorized'), { cause: error })

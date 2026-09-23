@@ -7,7 +7,7 @@ import { supabase } from '@/shared/api/supabase'
 
 /** Faqat ro'yxat va forma uchun kerakli ustunlar. */
 const ACCOUNT_COLUMNS =
-  'id, name, type, currency, opening_balance, opening_date, icon, color, sort_order, archived_at'
+  'id, name, type, currency, opening_balance, opening_date, icon, color, card_last4, sort_order, archived_at'
 
 /** Byudjet hisoblari (arxiv filtridan qat'i nazar) — invalidatsiya prefiksi. */
 export const accountsKey = (householdId: string) => part(householdId, 'accounts')
@@ -45,6 +45,7 @@ export const accountsQuery = (householdId: string, { archived }: { archived: boo
         openingDate: row.opening_date,
         icon: row.icon,
         color: row.color,
+        cardLast4: row.card_last4,
         sortOrder: row.sort_order,
         archivedAt: row.archived_at,
         balance: balanceOf.get(row.id) ?? row.opening_balance,
@@ -60,6 +61,7 @@ export interface AccountInput {
   openingDate: string
   icon: string | null
   color: string | null
+  cardLast4: string | null
 }
 
 const toRow = (input: AccountInput) => ({
@@ -70,6 +72,7 @@ const toRow = (input: AccountInput) => ({
   opening_date: input.openingDate,
   icon: input.icon,
   color: input.color,
+  card_last4: input.cardLast4,
 })
 
 /** Yangi hisob ro'yxat oxiriga ([sortOrder]). */

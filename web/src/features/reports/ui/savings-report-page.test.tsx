@@ -18,6 +18,7 @@ const account = (id: string, name: string, balance: number, currency = 'UZS'): A
   openingDate: '2026-01-01',
   icon: null,
   color: null,
+  cardLast4: null,
   sortOrder: 0,
   archivedAt: null,
   balance,

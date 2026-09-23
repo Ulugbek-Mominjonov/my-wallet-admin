@@ -24,7 +24,8 @@
     "unauthorized": "Your session has expired. Please sign in again.",
     "forbidden": "You don't have permission for this action.",
     "unknown": "Unexpected error. Please try again.",
-    "nameTaken": "This name is taken — choose another"
+    "nameTaken": "This name is taken — choose another",
+    "cardTaken": "This card is already linked to another account"
   },
   "auth": {
     "loginTitle": "Sign in to the admin panel",
@@ -309,6 +310,9 @@
     "openingBalance": "Opening balance",
     "openingBalanceHint": "Credit card debt — with a minus sign",
     "openingDate": "Opening date",
+    "cardLast4": "Card last 4 digits",
+    "cardLast4Hint": "Optional: the card from a bank notification is recorded to this account",
+    "cardLast4Error": "Exactly 4 digits or empty",
     "emptyTitle": "No accounts",
     "emptyText": "Add your first account — transactions are recorded against accounts.",
     "types": {

@@ -27,7 +27,10 @@ set_commands() {
   curl -fsS --max-time 15 -o /dev/null "$api/setMyCommands" \
     --data-urlencode "commands=${commands}" ${lang:+--data-urlencode "language_code=${lang}"}
 }
-set_commands "" "balans|Joriy oy qoldig'i" "bugun|Bugungi va kechikkan to'lovlar" "stop|Botni uzish"
-set_commands ru "balans|Остаток за месяц" "bugun|Платежи на сегодня и просроченные" "stop|Отключить бота"
-set_commands en "balans|This month's balance" "bugun|Payments due today and overdue" "stop|Disconnect the bot"
+set_commands "" "balans|Joriy oy qoldig'i" "bugun|Bugungi va kechikkan to'lovlar" \
+  "hisobot|Oylik yakun (masalan: /hisobot 2026-09)" "til|Til: uz | ru | en" "stop|Botni uzish"
+set_commands ru "balans|Остаток за месяц" "bugun|Платежи на сегодня и просроченные" \
+  "hisobot|Итоги месяца (например: /hisobot 2026-09)" "til|Язык: uz | ru | en" "stop|Отключить бота"
+set_commands en "balans|This month's balance" "bugun|Payments due today and overdue" \
+  "hisobot|Monthly summary (e.g. /hisobot 2026-09)" "til|Language: uz | ru | en" "stop|Disconnect the bot"
 echo "Telegram webhook va buyruqlar yangilandi"

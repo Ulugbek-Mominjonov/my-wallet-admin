@@ -30,6 +30,8 @@ export interface Account {
   openingDate: string
   icon: string | null
   color: string | null
+  /** BR-222: karta xabarnomasidagi oxirgi 4 raqam (bot hisobni shu bo'yicha topadi). */
+  cardLast4: string | null
   sortOrder: number
   archivedAt: string | null
   /** Joriy qoldiq (`account_balances`, hisob valyutasida). */

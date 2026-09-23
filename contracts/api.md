@@ -112,9 +112,8 @@ Umumiy qoidalar (barcha sinxron jadvallar):
 | Jadval | O'qish | Yozish | Klient yozadigan ustunlar (insert → update) |
 |---|---|---|---|
 | `currencies`, `category_templates`, `exchange_rates` | har kim | platforma admini (aal2) | — |
-
 | `card_message_templates` | platforma admini (aal2) | platforma admini (aal2) | `bank, pattern, kind, amount_unit, currency, sample, active, sort_order` (BR-222; naqshda `(?<amount>…)` guruhi majburiy — `date`, `payee`, `card` ixtiyoriy) |
-| `accounts` | a'zolar | owner/admin | `id, household_id, name, type, currency, opening_balance, opening_date, icon, color, sort_order` → `name, type, currency, opening_balance, opening_date, icon, color, sort_order, archived_at, deleted_at` |
+| `accounts` | a'zolar | owner/admin | `id, household_id, name, type, currency, opening_balance, opening_date, icon, color, card_last4, sort_order` → `name, type, currency, opening_balance, opening_date, icon, color, card_last4, sort_order, archived_at, deleted_at` |
 | `categories` | a'zolar | owner/admin | `id, household_id, kind, name, parent_id, month_shift, icon, color, sort_order` → `name, parent_id, month_shift, icon, color, sort_order, archived_at, deleted_at` (`kind` o'zgarmaydi) |
 | `recurring_rules` | a'zolar | owner/admin | `id, household_id, kind, name, category_id, account_id, amount, day_of_month, auto_pay, active, start_month, end_month, sort_order` → shular (`id, household_id` dan tashqari) + `deleted_at` |
 | `category_limits` | a'zolar | owner/admin | `id, household_id, category_id, amount, alert_80, alert_100` → `amount, alert_80, alert_100, deleted_at` |
@@ -125,7 +124,7 @@ Asosiy cheklovlar:
 
 | Jadval | Cheklov |
 |---|---|
-| `accounts` | `type`: `cash`, `card`, `bank`, `ewallet`, `deposit`, `personal_fund`, `other`; `personal_fund` byudjetda bitta (`accounts_personal_fund_key`) |
+| `accounts` | `type`: `cash`, `card`, `bank`, `ewallet`, `deposit`, `personal_fund`, `other`; `personal_fund` byudjetda bitta (`accounts_personal_fund_key`); `card_last4` — 4 ta raqam, byudjetda takrorlanmaydi (`accounts_card_last4_key`, BR-222) |
 | `categories` | `month_shift` −1..1 faqat `income` da; `parent_id` — bir daraja, bir turda; `system_code = personal_allocation` — tizim kategoriyasi |
 | `recurring_rules` | `kind`: `expense`/`income` — kategoriya majburiy va turi mos; `allocation` — kategoriyasiz, manba fond bo'lmagan hisob; `amount` NULL = o'zgaruvchan; `day_of_month` 1–31; `auto_pay` → summa va hisob majburiy; `end_month ≥ start_month` |
 | `category_limits` | faqat `expense` kategoriyasiga, bittadan (`category_limits_category_key`); `amount > 0` |
@@ -452,6 +451,20 @@ O'qish — faqat o'ziniki; yozish — `update` (qator qo'shilmaydi/o'chmaydi).
   (15 daqiqa, bir martalik) → `https://t.me/<bot>?start=<token>` ni oching.
 - Holat: `telegram_links` (o'z qatori: `linked_at`) — bor bo'lsa "Ulangan".
 - `telegram_unlink()` — uzish (botda `/stop` ham).
+
+Botdagi amallar (E31) — RPC'lar faqat `service_role` uchun, klient chaqirmaydi;
+klientga tegishlisi: `accounts.card_last4` va bot tilining `profiles.locale` bilan
+bir manbadan o'qilishi.
+
+| Bot | Natija |
+|---|---|
+| `taksi 20000`, `+500 ming maosh` (BR-220) | amal yoziladi (`source = 'telegram'`); nom tarixidan kategoriya/hisob taxmin qilinadi; javobda **✏️ Kategoriya** va **❌ Bekor** tugmalari |
+| Bank botidan **forward** qilingan karta xabari (BR-222) | `card_message_templates` naqshlari bo'yicha summa/sana/joy/karta o'qiladi; karta `accounts.card_last4` ga mos hisobga yoziladi |
+| `/hisobot`, `/hisobot 2026-08` (BR-221) | oy yakuni: daromad, xarajat, qoldiq va top-3 kategoriya |
+| `/til uz\|ru\|en` | bot tili (`profiles.locale`) |
+
+Bot amali oddiy amal bilan bir xil qoidalarga bo'ysunadi: yopilgan oyga
+yozilmaydi (`month_closed`), bekor qilish — soft delete (sinxronda tombstone).
 
 ### Test xabar va "hozir yuborish" (BR-164)
 

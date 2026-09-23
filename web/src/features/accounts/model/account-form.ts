@@ -7,6 +7,9 @@ import { formatMoneyInput, parseMoney } from '@/shared/lib/money'
 /** `entity_name` domeni bilan bir xil (BR-003). */
 export const NAME_MAX = 60
 
+/** BR-222: karta oxirgi 4 raqami — bo'sh yoki roppa-rosa 4 ta raqam. */
+const CARD_LAST4 = /^(\d{4})?$/
+
 /** Forma maydonlari (matn) → server qiymatlari; summa valyutaga qarab o'qiladi. */
 export const accountFormSchema = z
   .object({
@@ -17,6 +20,7 @@ export const accountFormSchema = z
     openingDate: z.iso.date(),
     icon: z.string().nullable(),
     color: z.string().nullable(),
+    cardLast4: z.string().trim().regex(CARD_LAST4),
   })
   .refine((values) => parseMoney(values.openingBalance || '0', values.currency) !== null, {
     path: ['openingBalance'],
@@ -24,6 +28,7 @@ export const accountFormSchema = z
   .transform((values): AccountInput => ({
     ...values,
     openingBalance: parseMoney(values.openingBalance || '0', values.currency) ?? 0,
+    cardLast4: values.cardLast4 || null,
   }))
 
 export type AccountFormValues = z.input<typeof accountFormSchema>
@@ -41,6 +46,7 @@ export function accountFormDefaults(
       openingDate: defaults.today,
       icon: null,
       color: null,
+      cardLast4: '',
     }
   }
   return {
@@ -51,5 +57,6 @@ export function accountFormDefaults(
     openingDate: account.openingDate,
     icon: account.icon,
     color: account.color,
+    cardLast4: account.cardLast4 ?? '',
   }
 }
