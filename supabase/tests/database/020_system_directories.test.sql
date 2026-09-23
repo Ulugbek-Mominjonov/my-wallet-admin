@@ -1,8 +1,8 @@
 -- E06-T01: tizim spravochniklari — valyutalar, kategoriya shablonlari,
--- kurslar; E26-T01: karta xabar shablonlari.
--- Qoidalar: BR-031..033, BR-190, BR-213, BR-222.
+-- kurslar; E26-T01: karta xabar shablonlari; E26-T02: ilova konfiguratsiyasi.
+-- Qoidalar: BR-031..033, BR-190, BR-213, BR-214, BR-222.
 begin;
-select plan(20);
+select plan(28);
 
 create temporary table u (name text primary key, id uuid) on commit drop;
 insert into u values
@@ -76,6 +76,24 @@ select throws_ok(
      values ('Bank', 'Xarajat (?<amount>[0-9]+) so''m') $$,
   '42501', null, 'oddiy foydalanuvchi karta shabloni qo''sha olmaydi'
 );
+-- BR-214: konfiguratsiyani hamma o'qiydi, faqat platforma admini yozadi.
+select isnt_empty(
+  $$ select 1 from public.app_config where key = 'min_android_version' $$,
+  'BR-214: minimal versiya hamma uchun ochiq'
+);
+select throws_ok(
+  $$ insert into public.app_config (key, value) values ('feature_x', 'true') $$,
+  '42501', null, 'oddiy foydalanuvchi konfiguratsiyaga kalit qo''sha olmaydi'
+);
+-- RLS'da yozish siyosati yo'q: UPDATE xato bermaydi, lekin hech nimani
+-- o'zgartirmaydi (qator ko'rinmaydi) — natija bo'yicha tekshiriladi.
+select lives_ok(
+  $$ update public.app_config set value = '"9.9.9"' where key = 'min_android_version' $$
+);
+select is(
+  (select value #>> '{}' from public.app_config where key = 'min_android_version'), '0.1.0',
+  'BR-214: oddiy foydalanuvchi minimal versiyani o''zgartira olmaydi'
+);
 select throws_ok(
   $$ update public.households set base_currency = 'XYZ'
       where id = (select last_household_id from public.profiles where user_id = (select id from u where name = 'alice')) $$,
@@ -117,6 +135,24 @@ select throws_ok(
   $$ insert into public.card_message_templates (bank, pattern, kind)
      values ('Bank', 'Xarajat (?<amount>[0-9]+)', 'transfer') $$,
   '23514', null, 'karta xabari o''tkazma bo''lmaydi'
+);
+select lives_ok(
+  $$ update public.app_config set value = '"1.5.0"' where key = 'min_android_version' $$,
+  'BR-214: platforma admini (aal2) minimal versiyani o''zgartiradi'
+);
+select throws_ok(
+  $$ update public.app_config set value = '"1.5"' where key = 'min_android_version' $$,
+  '23514', null, 'BR-214: versiya `X.Y.Z` ko''rinishida'
+);
+select throws_ok(
+  $$ update public.app_config set value = '{"message": {"uz": "Ish"}}' where key = 'maintenance' $$,
+  '23514', null, 'texnik ishlar xabari uch tilda bo''lishi kerak'
+);
+select lives_ok(
+  $$ update public.app_config
+        set value = '{"message": {"uz": "Ish", "ru": "Работы", "en": "Maintenance"}}'
+      where key = 'maintenance' $$,
+  'texnik ishlar banneri yoqiladi'
 );
 
 select * from finish();

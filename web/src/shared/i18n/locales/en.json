@@ -1378,6 +1378,33 @@
         "cards": "Card message template"
       }
     },
+    "config": {
+      "title": "App configuration",
+      "description": "Forced update, maintenance banner and flags — delivered to every client",
+      "saved": "Configuration saved",
+      "version": "Forced update (BR-214)",
+      "versionHint": "Older app versions see the “Update required” screen",
+      "minAndroid": "Minimum Android version",
+      "versionError": "The version looks like `X.Y.Z`",
+      "saveVersion": "Save the minimum version",
+      "maintenance": "Maintenance banner",
+      "maintenanceHint": "The message shown in the app (three languages)",
+      "maintenanceOn": "Banner enabled",
+      "until": "Ends at",
+      "untilHint": "Empty means open-ended; a past time hides the banner",
+      "active": "Showing now",
+      "saveMaintenance": "Save the banner",
+      "flags": "Extra flags",
+      "flagsHint": "Other keys (JSON value); clients ignore unknown keys",
+      "noFlags": "No extra keys",
+      "key": "Key",
+      "value": "Value (JSON)",
+      "valueOf": "Value of {{key}}",
+      "deleteFlag": "Delete {{key}}",
+      "invalidJson": "The value must be JSON (for example `true` or `\"text\"`)",
+      "deleteTitle": "Delete “{{key}}”?",
+      "deleteText": "The key disappears for every client."
+    },
     "fields": {
       "code": "Code",
       "name": "Name",

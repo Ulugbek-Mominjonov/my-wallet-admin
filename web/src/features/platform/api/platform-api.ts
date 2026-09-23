@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/react-query'
 import { z } from 'zod'
 
+import type { Json } from '@/shared/api/database.types'
 import { toAppError } from '@/shared/api/errors'
 import { supabase } from '@/shared/api/supabase'
 
@@ -159,5 +160,32 @@ export async function saveCardTemplate(id: string | null, input: CardTemplateInp
 
 export async function deleteCardTemplate(id: string): Promise<void> {
   const { error } = await supabase.from('card_message_templates').delete().eq('id', id)
+  if (error) throw toAppError(error)
+}
+
+/** `app_config.value` — ixtiyoriy JSON (`Json` — generatsiya qilingan tip). */
+export type ConfigValue = Json
+
+const configRowSchema = z.object({ key: z.string(), value: z.custom<ConfigValue>() })
+
+export type ConfigRow = z.infer<typeof configRowSchema>
+
+/** BR-214: ilova konfiguratsiyasi (hamma klientga `app_bootstrap` orqali boradi). */
+export const appConfigQuery = queryOptions({
+  queryKey: platformKey('app-config'),
+  queryFn: async (): Promise<ConfigRow[]> => {
+    const { data, error } = await supabase.from('app_config').select('key, value').order('key')
+    if (error) throw toAppError(error)
+    return z.array(configRowSchema).parse(data)
+  },
+})
+
+export async function saveConfig(key: string, value: ConfigValue): Promise<void> {
+  const { error } = await supabase.from('app_config').upsert({ key, value })
+  if (error) throw toAppError(error)
+}
+
+export async function deleteConfig(key: string): Promise<void> {
+  const { error } = await supabase.from('app_config').delete().eq('key', key)
   if (error) throw toAppError(error)
 }

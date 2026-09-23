@@ -1378,6 +1378,33 @@
         "cards": "Karta xabar shabloni"
       }
     },
+    "config": {
+      "title": "Ilova konfiguratsiyasi",
+      "description": "Majburiy yangilash, texnik ishlar banneri va flaglar — hamma klientga boradi",
+      "saved": "Konfiguratsiya saqlandi",
+      "version": "Majburiy yangilash (BR-214)",
+      "versionHint": "Ilova versiyasi shundan kichik bo'lsa — «Yangilash kerak» ekrani",
+      "minAndroid": "Minimal Android versiyasi",
+      "versionError": "Versiya `X.Y.Z` ko'rinishida",
+      "saveVersion": "Minimal versiyani saqlash",
+      "maintenance": "Texnik ishlar banneri",
+      "maintenanceHint": "Ilovada ko'rinadigan xabar (uch tilda)",
+      "maintenanceOn": "Banner yoqilgan",
+      "until": "Tugash vaqti",
+      "untilHint": "Bo'sh — muddatsiz; o'tgan vaqt bo'lsa banner ko'rsatilmaydi",
+      "active": "Hozir ko‘rinmoqda",
+      "saveMaintenance": "Bannerni saqlash",
+      "flags": "Qo‘shimcha flaglar",
+      "flagsHint": "Boshqa kalitlar (JSON qiymat); noma'lum kalitni klient e'tiborsiz qoldiradi",
+      "noFlags": "Qo'shimcha kalit yo'q",
+      "key": "Kalit",
+      "value": "Qiymat (JSON)",
+      "valueOf": "{{key}} qiymati",
+      "deleteFlag": "{{key}} ni o‘chirish",
+      "invalidJson": "Qiymat JSON bo'lishi kerak (masalan `true` yoki `\"matn\"`)",
+      "deleteTitle": "«{{key}}» o‘chirilsinmi?",
+      "deleteText": "Kalit hamma klientdan yo'qoladi."
+    },
     "fields": {
       "code": "Kod",
       "name": "Nomi",
