@@ -612,7 +612,9 @@
       "roleChanged": "Rol o'zgartirildi",
       "removed": "A'zo chiqarildi",
       "transferred": "Egalik o'tkazildi",
-      "left": "Byudjetdan chiqdingiz"
+      "left": "Byudjetdan chiqdingiz",
+      "qrAlt": "Taklif havolasi (QR)",
+      "qrHint": "Telefon kamerasi bilan oching — ilova kodni o'zi to'ldiradi"
     },
     "danger": {
       "title": "Xavfli zona",
@@ -916,6 +918,15 @@
       "total": "JAMI",
       "other": "Ro'yxatdan tashqari daromad: {{amount}}",
       "empty": "Bu oyda daromad yo'q"
+    },
+    "members": {
+      "title": "A'zolar kesimi",
+      "hint": "Shu oyda kim qancha sarfladi (o'tkazmalar hisobga olinmaydi)",
+      "name": "A'zo",
+      "expense": "Xarajat",
+      "share": "Ulush",
+      "income": "Daromad",
+      "count": "Amallar"
     },
     "savings": {
       "title": "Orttirish",
@@ -1287,7 +1298,8 @@
       "monthlyReport": "Oylik hisobot",
       "reportDay": "Hisobot kuni",
       "limitAlerts": "Limit ogohlantirishi",
-      "incomeMissing": "Daromad kelmadi"
+      "incomeMissing": "Daromad kelmadi",
+      "bigExpense": "Katta xarajat chegarasi"
     },
     "hints": {
       "push": "Mobil ilova ochilgan qurilmalarga",
@@ -1295,7 +1307,8 @@
       "email": "Server sozlangan bo'lsa",
       "monthlyReport": "O'tgan oy yakuni (BR-161)",
       "limitAlerts": "Kategoriya limiti oshganda (BR-133)",
-      "incomeMissing": "Kutilgan daromad kelmaganda (BR-165)"
+      "incomeMissing": "Kutilgan daromad kelmaganda (BR-165)",
+      "bigExpense": "Boshqa a'zo shu summadan ko'p sarflasa xabar keladi; bo'sh — o'chiq"
     },
     "telegram": {
       "title": "Telegram'ni ulash",
@@ -1359,6 +1372,9 @@
       "expense": "Xarajat",
       "saved": "Orttirildi",
       "generatedAt": "Yaratilgan"
+    },
+    "errors": {
+      "amount": "Summani to'g'ri kiriting"
     }
   },
   "devices": {

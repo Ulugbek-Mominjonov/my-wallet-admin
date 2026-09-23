@@ -979,6 +979,7 @@ export type Database = {
       }
       notification_prefs: {
         Row: {
+          big_expense: number | null
           days_ahead: number
           email: boolean
           household_id: string
@@ -993,6 +994,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          big_expense?: number | null
           days_ahead?: number
           email?: boolean
           household_id: string
@@ -1007,6 +1009,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          big_expense?: number | null
           days_ahead?: number
           email?: boolean
           household_id?: string
@@ -1961,6 +1964,10 @@ export type Database = {
       }
       report_debts: { Args: { p_household: string }; Returns: Json }
       report_goals: { Args: { p_household: string }; Returns: Json }
+      report_members: {
+        Args: { p_household: string; p_month: unknown }
+        Returns: Json
+      }
       report_month: {
         Args: { p_household: string; p_month: unknown }
         Returns: Json
@@ -2062,6 +2069,7 @@ export type Database = {
           category_id: string
           created_by: string
           debt_id: string
+          fx_rate: number
           has_receipt: boolean
           id: string
           kind: Database["public"]["Enums"]["transaction_kind"]

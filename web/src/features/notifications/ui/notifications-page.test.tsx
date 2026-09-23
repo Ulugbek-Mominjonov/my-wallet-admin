@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { beforeEach, describe, expect, it } from 'vitest'
@@ -18,6 +18,7 @@ const PREFS = {
   report_day: 21,
   limit_alerts: true,
   income_missing: true,
+  big_expense: null,
 }
 
 const OUTBOX = [
@@ -52,7 +53,7 @@ const ARCHIVE = [
 const patches: Record<string, unknown>[] = []
 const rpc: { name: string; body: Record<string, unknown> }[] = []
 
-function renderPage({ linked = false }: { linked?: boolean } = {}) {
+function renderPage({ linked = false, multiMember = false } = {}) {
   server.use(
     http.get(supabasePath('/rest/v1/notification_prefs'), () => HttpResponse.json(PREFS)),
     http.patch(supabasePath('/rest/v1/notification_prefs'), async ({ request }) => {
@@ -89,6 +90,7 @@ function renderPage({ linked = false }: { linked?: boolean } = {}) {
         householdId={TEST_HOUSEHOLD_ID}
         currentMonth="2026-09"
         baseCurrency="UZS"
+        multiMember={multiMember}
       />
     </WithHousehold>,
   )
@@ -143,6 +145,23 @@ describe('NotificationsPage (E25-T06)', () => {
       name: 'send_monthly_report_now',
       body: { p_household: TEST_HOUSEHOLD_ID, p_month: '2026-08-01' },
     })
+  })
+
+  it('E30-T03: katta xarajat chegarasi — faqat oilaviy byudjetda', async () => {
+    const user = renderPage({ multiMember: true })
+    const field = await screen.findByLabelText('Katta xarajat chegarasi')
+    await user.type(field, '2 000 000')
+    await user.tab()
+    // Toast oldingi testdan ham qolishi mumkin — so'rov bo'yicha tekshiriladi.
+    await waitFor(() => {
+      expect(patches).toEqual([{ big_expense: 200000000 }])
+    })
+  })
+
+  it('yakka byudjetda chegara maydoni ko‘rinmaydi', async () => {
+    renderPage()
+    await screen.findByRole('switch', { name: 'Ilova (push)' })
+    expect(screen.queryByLabelText('Katta xarajat chegarasi')).toBeNull()
   })
 
   it('jurnal va arxiv jadvallari', async () => {

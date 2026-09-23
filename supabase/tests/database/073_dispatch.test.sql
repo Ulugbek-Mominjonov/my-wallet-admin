@@ -2,7 +2,7 @@
 -- va buyruqlar, valyuta kurslari; E29-T01: kurslarni tarixiy to'ldirish.
 -- Qoidalar: BR-163, BR-166, BR-192, BR-221, ADR-11.
 begin;
-select plan(19);
+select plan(20);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
@@ -210,15 +210,6 @@ select throws_ok(
 );
 select tests.clear_authentication();
 
-select pg_temp.as_service();
--- Yozuv yo'q: to'ldiradigan sana ham yo'q.
-select results_eq(
-  $$ select (public.fx_backfill_dates() ->> 'done')::boolean,
-            jsonb_array_length(public.fx_backfill_dates() -> 'dates') $$,
-  $$ values (true, 0) $$,
-  'yozuvsiz byudjetda kurs kerak emas'
-);
-reset role;
 
 -- Alice'ning eng eski amali — 2026-09-14 (juma).
 insert into public.transactions (household_id, kind, account_id, amount, category_id,
@@ -235,15 +226,32 @@ select pg_temp.as_service();
 -- Kursor qo'lda qo'yiladi: natija "bugun" ga bog'liq bo'lmasin.
 select public.fx_backfill_mark('2026-09-18');
 insert into r select 'bf1', public.fx_backfill_dates(5);
-select results_eq(
-  $$ select x #>> '{}' from r, jsonb_array_elements(v -> 'dates') x where name = 'bf1' $$,
-  $$ values ('2026-09-17'), ('2026-09-16'), ('2026-09-15'), ('2026-09-14') $$,
-  'kursordan orqaga: ish kunlari, kursi bor sana (18-sentabr) tashlanadi'
+-- Ro'yxat: kursordan orqaga, ish kunlari, kursi yo'q sanalar (bazadagi
+-- boshqa byudjetlarning eski yozuvlari sonini o'zgartirishi mumkin).
+select is(
+  (select v -> 'dates' ->> 0 from r where name = 'bf1'), '2026-09-17',
+  'kursordan orqaga birinchi sana — kursi bor 18-sentabr tashlanadi'
+);
+select is_empty(
+  $$ select x #>> '{}' from r, jsonb_array_elements(v -> 'dates') x
+      where name = 'bf1'
+        and (extract(isodow from (x #>> '{}')::date) >= 6
+             or exists (select 1 from public.exchange_rates e where e.rate_date = (x #>> '{}')::date)
+             or (x #>> '{}')::date >= '2026-09-18') $$,
+  'faqat ish kunlari, kursi yo''q va kursordan eski sanalar'
 );
 select public.fx_backfill_mark('2026-09-15');
 select is(
-  (select jsonb_array_length(public.fx_backfill_dates(5) -> 'dates')), 1,
-  'kursor surilgach faqat undan eski sanalar qoladi'
+  (select public.fx_backfill_dates(5) -> 'dates' ->> 0), '2026-09-14',
+  'kursor surilgach ro''yxat undan eski sanadan boshlanadi'
+);
+-- Kursor eng eski yozuvdan oldin bo'lsa — to'ldirish tugagan.
+select public.fx_backfill_mark('2001-01-01');
+select results_eq(
+  $$ select (public.fx_backfill_dates() ->> 'done')::boolean,
+            jsonb_array_length(public.fx_backfill_dates() -> 'dates') $$,
+  $$ values (true, 0) $$,
+  'kursor eng eski yozuvdan oldin — to''ldiriladigan sana yo''q'
 );
 reset role;
 

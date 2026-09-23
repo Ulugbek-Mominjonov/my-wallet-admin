@@ -14,12 +14,19 @@ const INCOME_TYPES = [
   { category_id: 'c-extra', name: "Qo'shimcha", card: 0, cash: 50000000 },
 ]
 
-function mockReport(overrides: Record<string, unknown> = {}) {
+/** E30-T02: a'zolar kesimi — standart holatda bitta a'zo (karta ko'rinmaydi). */
+const MEMBERS = {
+  month: '2026-09-01',
+  members: [{ user_id: 'u1', name: 'Ali', expense: 300000000, income: 750000000, count: 7 }],
+}
+
+function mockReport(overrides: Record<string, unknown> = {}, members = MEMBERS) {
   server.use(
     http.post(supabasePath('/rest/v1/rpc/report_month'), () =>
       HttpResponse.json({ ...MONTH_REPORT, by_type: INCOME_TYPES, ...overrides }),
     ),
     http.post(supabasePath('/rest/v1/rpc/report_savings'), () => HttpResponse.json(SAVINGS_REPORT)),
+    http.post(supabasePath('/rest/v1/rpc/report_members'), () => HttpResponse.json(members)),
   )
 }
 
@@ -108,5 +115,35 @@ describe('MonthReportPage (E24-T02)', () => {
     await cardOf('Yakun')
     await user.click(screen.getByRole('button', { name: 'Oldingi oy' }))
     expect(onMonthChange).toHaveBeenCalledWith('2026-08')
+  })
+})
+
+describe('MonthReportPage — a’zolar kesimi (E30-T02)', () => {
+  beforeEach(() => {
+    signInTestUser()
+  })
+
+  it('bitta a’zoda ko‘rinmaydi, bir nechtasida ulush bilan', async () => {
+    mockReport()
+    renderPage()
+    expect(await screen.findByRole('heading', { name: 'Yakun' })).toBeInTheDocument()
+    expect(screen.queryByRole('table', { name: "A'zolar kesimi" })).toBeNull()
+
+    server.resetHandlers()
+    mockReport(
+      {},
+      {
+        month: '2026-09-01',
+        members: [
+          { user_id: 'u1', name: 'Ali', expense: 300000000, income: 750000000, count: 7 },
+          { user_id: 'u2', name: 'Vali', expense: 100000000, income: 0, count: 3 },
+        ],
+      },
+    )
+    renderPage()
+    const table = await screen.findByRole('table', { name: "A'zolar kesimi" })
+    expect(table).toHaveTextContent('Ali')
+    expect(table).toHaveTextContent('75%')
+    expect(table).toHaveTextContent('25%')
   })
 })

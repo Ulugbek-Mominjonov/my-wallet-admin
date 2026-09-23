@@ -1,8 +1,9 @@
 -- E11-T03: navbatga qo'yish — kunlik eslatma (BR-160), kechikkan daromad
 -- (BR-165), oylik hisobot va arxiv (BR-161, BR-162, BR-167), limit
--- ogohlantirishi (BR-133). Takror yo'q — dedupe_key (BR-166).
+-- ogohlantirishi (BR-133); E30-T03: katta xarajat haqida a'zolarga xabar.
+-- Takror yo'q — dedupe_key (BR-166).
 begin;
-select plan(11);
+select plan(14);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
@@ -171,6 +172,44 @@ select is(
   (select count(*)::int from q o join u on u.id = o.user_id
     where o.type = 'limit_alert' and u.name <> 'alice'),
   0, 'faqat yetkaziladigan a''zolarga'
+);
+
+-- ─── Katta xarajat (E30-T03) ───────────────────────────────────────────────
+-- Bob chegara qo'yadi (2 000 000 so'm), alice xarajat yozadi.
+update public.notification_prefs set big_expense = 200000000, push = true
+ where user_id = (select id from u where name = 'bob')
+   and household_id = (select id from ref where name = 'h');
+select tests.authenticate_as((select id from u where name = 'bob'));
+select public.register_device('fcm-token-bob-0001', 'android');
+
+select tests.authenticate_as((select id from u where name = 'alice'));
+insert into public.transactions (household_id, kind, account_id, amount, category_id, payee,
+                                 occurred_on, budget_month)
+values ((select id from ref where name = 'h'), 'expense', (select id from ref where name = 'card'),
+        250000000, (select id from ref where name = 'c_kommunal'), 'Mebel Market',
+        '2026-10-06', '2026-10-01'),
+       -- Chegaradan kichik — xabar yo'q.
+       ((select id from ref where name = 'h'), 'expense', (select id from ref where name = 'card'),
+        50000000, (select id from ref where name = 'c_kommunal'), 'Korzinka',
+        '2026-10-06', '2026-10-01');
+select tests.clear_authentication();
+
+select results_eq(
+  $$ select o.user_id, o.payload ->> 'payee', (o.payload ->> 'amount')::bigint
+       from q o where o.type = 'big_expense' $$,
+  $$ values ((select id from u where name = 'bob'), 'Mebel Market', 250000000::bigint) $$,
+  'E30-T03: chegaradan katta xarajat — faqat chegara qo''ygan boshqa a''zoga'
+);
+select is(
+  (select count(*) from q o where o.type = 'big_expense'
+     and o.user_id = (select id from u where name = 'alice')),
+  0::bigint,
+  'xarajat egasiga o''ziga xabar bormaydi'
+);
+select is(
+  (select o.payload ->> 'actor' from q o where o.type = 'big_expense'),
+  (select display_name from public.profiles where user_id = (select id from u where name = 'alice')),
+  'xabarda kim sarflagani ko''rinadi'
 );
 
 select * from finish();

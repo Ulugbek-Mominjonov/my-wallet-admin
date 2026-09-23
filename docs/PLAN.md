@@ -823,11 +823,11 @@ E21–E26 (admin) M2 bilan.
 > **Qoidalar:** BR-011..014. Backend E05 da tayyor; bu epik — UI va tahlil.
 > Mobil qismi: E30-T04..T06.
 
-- [ ] **E30-T01** Admin: a'zolar sahifasi (rol o'zgartirish, chiqarish),
+- [x] **E30-T01** Admin: a'zolar sahifasi (rol o'zgartirish, chiqarish),
   taklif yaratish (kod + havola + QR, muddati), egalikni o'tkazish.
-- [ ] **E30-T02** Hisobotlarda "a'zo" kesimi (kim qancha sarfladi —
+- [x] **E30-T02** Hisobotlarda "a'zo" kesimi (kim qancha sarfladi —
   `created_by`), amallar filtrida a'zo.
-- [ ] **E30-T03** Bildirishnoma: a'zo katta xarajat qilsa (chegara
+- [x] **E30-T03** Bildirishnoma: a'zo katta xarajat qilsa (chegara
   sozlanadi) boshqa a'zolarga push (ixtiyoriy sozlama).
 
 ### E31 · Telegram bot: tez kiritish `[admin]`
@@ -985,6 +985,9 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Kurslarni tarixiy to'ldirish — kursor `private.fx_state` da (app_config emas), har kunlik ishda cheklangan paket va vaqt budjeti | `app_config` hamma klientga boradi — xizmat holati u yerda ortiqcha; paket va budjet Edge Function chegarasiga sig'adi, uzilsa keyingi ish davom ettiradi | E29-T01 |
 | 2026-09-23 | Qarz/hisob jamlari `*_base` ustunlari orqali (avval boshqa valyutadagilar jamdan tashlanardi); kursi yo'q qator jamga kirmaydi (0 emas) | ko'p valyutada jam UZS'da bo'lishi kerak; 0 deb hisoblash qarzni yo'q qilib ko'rsatardi | E29-T03, BR-194 |
 | 2026-09-23 | `schema-version` 1 da qoldi: o'zgarishlar qo'shimcha (yangi ustun va RPC), buzuvchi emas | contracts/README qoidasi — +1 faqat buzuvchi o'zgarishda; bumping mobil ilovalarni sababsiz "Yangilash kerak" holatiga tushirardi | E29-T05 |
+| 2026-09-23 | Katta xarajat xabari — amal triggeridan (statement-level, mavjud `transactions_changed` ichida), chegara har a'zoning o'z sozlamasida | xabar darhol kerak (kunlik ishda emas); chegara qabul qiluvchida — har kim o'ziga mos summani tanlaydi; xarajat egasiga o'ziga xabar bormaydi | E30-T03, BR-011 |
+| 2026-09-23 | A'zolar kesimi alohida RPC (`report_members`), `report_month` ga qo'shilmadi | mobil ilovaga kerak emas (u lokal hisoblaydi), oylik hisobot javobi kattalashmaydi; admin sahifasi faqat bir nechta a'zo bo'lganda so'raydi | E30-T02 |
+| 2026-09-23 | pgTAP testlari lokal bazadagi qoldiq ma'lumotga bog'liq bo'lmasin: e'lon aniq foydalanuvchiga yuboriladi, kurs to'ldirish ro'yxati xossalar bo'yicha tekshiriladi | E2E va perf yuklari bazada qoladi — global hisoblagan test lokalda yiqilardi (CI'da toza baza) | E29-T01, E26-T03 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

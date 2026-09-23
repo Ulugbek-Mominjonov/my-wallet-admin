@@ -612,7 +612,9 @@
       "roleChanged": "Role changed",
       "removed": "Member removed",
       "transferred": "Ownership transferred",
-      "left": "You left the budget"
+      "left": "You left the budget",
+      "qrAlt": "Invite link (QR)",
+      "qrHint": "Scan with the phone camera — the app fills the code in"
     },
     "danger": {
       "title": "Danger zone",
@@ -916,6 +918,15 @@
       "total": "TOTAL",
       "other": "Income outside the list: {{amount}}",
       "empty": "No income this month"
+    },
+    "members": {
+      "title": "By member",
+      "hint": "Who spent how much this month (transfers are excluded)",
+      "name": "Member",
+      "expense": "Expense",
+      "share": "Share",
+      "income": "Income",
+      "count": "Transactions"
     },
     "savings": {
       "title": "Savings",
@@ -1287,7 +1298,8 @@
       "monthlyReport": "Monthly report",
       "reportDay": "Report day",
       "limitAlerts": "Limit alerts",
-      "incomeMissing": "Missing income"
+      "incomeMissing": "Missing income",
+      "bigExpense": "Large expense threshold"
     },
     "hints": {
       "push": "To devices with the app installed",
@@ -1295,7 +1307,8 @@
       "email": "If the server is configured",
       "monthlyReport": "Last month summary (BR-161)",
       "limitAlerts": "When a category limit is exceeded (BR-133)",
-      "incomeMissing": "When expected income does not arrive (BR-165)"
+      "incomeMissing": "When expected income does not arrive (BR-165)",
+      "bigExpense": "Notify when another member spends more than this; empty means off"
     },
     "telegram": {
       "title": "Link Telegram",
@@ -1359,6 +1372,9 @@
       "expense": "Expense",
       "saved": "Saved",
       "generatedAt": "Generated"
+    },
+    "errors": {
+      "amount": "Enter a valid amount"
     }
   },
   "devices": {

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-import type { MonthReport } from '@/features/reports/api/reports-api'
+import type { MembersReport, MonthReport } from '@/features/reports/api/reports-api'
 import { useAppLocale } from '@/shared/i18n'
 import { formatDate } from '@/shared/lib/date'
 import { formatMoney } from '@/shared/lib/money'
@@ -178,6 +178,50 @@ export function UnpaidPlans({
                 {t(`plans.status.${row.status}`, { defaultValue: row.status })}
               </Badge>
             </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  )
+}
+
+/** E30-T02: a'zolar kesimi — kim qancha sarfladi (o'tkazmasiz). */
+export function MemberBreakdown({
+  rows,
+  baseCurrency,
+}: {
+  rows: MembersReport['members']
+  baseCurrency: string
+}) {
+  const { t } = useTranslation()
+  const locale = useAppLocale()
+  const total = rows.reduce((sum, row) => sum + row.expense, 0)
+
+  return (
+    <Table aria-label={t('report.members.title')}>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t('report.members.name')}</TableHead>
+          <TableHead className="text-right">{t('report.members.expense')}</TableHead>
+          <TableHead className="text-right">{t('report.members.share')}</TableHead>
+          <TableHead className="text-right">{t('report.members.income')}</TableHead>
+          <TableHead className="text-right">{t('report.members.count')}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {rows.map((row) => (
+          <TableRow key={row.user_id}>
+            <TableCell className="font-medium">{row.name}</TableCell>
+            <TableCell className="text-right tabular-nums">
+              {formatMoney(row.expense, { currency: baseCurrency, locale })}
+            </TableCell>
+            <TableCell className="text-right text-muted-foreground tabular-nums">
+              {total > 0 ? `${Math.round((row.expense / total) * 100)}%` : '—'}
+            </TableCell>
+            <TableCell className="text-right tabular-nums">
+              {formatMoney(row.income, { currency: baseCurrency, locale })}
+            </TableCell>
+            <TableCell className="text-right tabular-nums">{row.count}</TableCell>
           </TableRow>
         ))}
       </TableBody>

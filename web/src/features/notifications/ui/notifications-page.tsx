@@ -20,10 +20,13 @@ export function NotificationsPage({
   householdId,
   currentMonth,
   baseCurrency,
+  multiMember = false,
 }: {
   householdId: string
   currentMonth: MonthKey
   baseCurrency: string
+  /** Byudjetda bir nechta a'zo bormi (E30-T03 sozlamasi shunda ko'rinadi). */
+  multiMember?: boolean
 }) {
   const { t } = useTranslation()
   const prefs = useQuery(prefsQuery(householdId))
@@ -47,6 +50,8 @@ export function NotificationsPage({
           householdId={householdId}
           prefs={prefs.data}
           telegramLinked={telegram.data != null}
+          baseCurrency={baseCurrency}
+          multiMember={multiMember}
         />
       )}
 

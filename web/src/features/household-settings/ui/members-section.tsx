@@ -19,10 +19,12 @@ import {
   type Member,
 } from '@/features/household-settings/api/settings-api'
 import { toAppError } from '@/shared/api/errors'
+import { inviteLink } from '@/shared/lib/invite-link'
 import { qk } from '@/shared/api/query-keys'
 import { useAppLocale } from '@/shared/i18n'
 import { formatDateTime } from '@/shared/lib/date'
 import { Badge } from '@/shared/ui/badge'
+import { QrCode } from '@/shared/ui/qr-code'
 import { Button } from '@/shared/ui/button'
 import { ConfirmDialog } from '@/shared/ui/confirm-dialog'
 import {
@@ -325,6 +327,17 @@ function InviteCreatedDialog({ invite, onClose }: { invite: Invite | null; onClo
         <p className="text-center font-mono text-3xl font-semibold tracking-[0.3em]">
           {invite?.code}
         </p>
+        {invite && (
+          <div className="flex flex-col items-center gap-2">
+            {/* BR-012: telefon kamerasi bilan — ilova o'zi ochiladi. */}
+            <QrCode
+              value={inviteLink(invite.code)}
+              label={t('settings.members.qrAlt')}
+              className="size-40"
+            />
+            <p className="text-xs text-muted-foreground">{t('settings.members.qrHint')}</p>
+          </div>
+        )}
         {copy.error && (
           <p role="alert" className="text-sm text-destructive">
             {toAppError(copy.error).message}

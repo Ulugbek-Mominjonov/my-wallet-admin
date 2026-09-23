@@ -213,7 +213,7 @@ xil filtrdan; a'zo bo'lmagan — `forbidden`.
 
 - `transactions_list(p_household, p_filters = '{}', p_after_date, p_after_id, p_limit = 50)` —
   keyset sahifa, `(occurred_on, id)` bo'yicha kamayish; keyingi sahifa — oxirgi
-  qatorning `occurred_on` va `id` si. `p_limit` 1..1000 (PostgREST `max_rows`; eksport — 1000 tadan). Qator: amal ustunlari +
+  qatorning `occurred_on` va `id` si. `p_limit` 1..1000 (PostgREST `max_rows`; eksport — 1000 tadan). Qator: amal ustunlari (shu jumladan `fx_rate` — qo'llangan kurs, BR-193) +
   `tag_ids uuid[]`, `has_receipt boolean`.
 - `transactions_summary(p_household, p_filters = '{}')` →
   `{count, income, expense, transfer}` (asosiy valyutada).
@@ -293,6 +293,7 @@ Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi
 | `platform_health()` | `{stats{db_bytes, db_limit_pct, storage_bytes, storage_limit_pct, users, households, largest_tables[]}, limits{db_bytes, storage_bytes, warn_pct}, jobs[{job, started_at, finished_at, status, details}], outbox{pending, sending, failed, sent, oldest_pending}}` | platforma admini (aal2) |
 | `import_legacy_v1(p_household, p_payload, p_dry_run = true)` | `{batch, dry_run, counts{incomes, expenses, plans, allocations, fund_spends}, warnings[{code, name}], months[{month, legacy{balance, saved}, current{…}, diff{…}}]}` — eski Sheets eksporti (v1, docs/MIGRATSIYA.md); `p_dry_run` da yozuvlar bekor qilinadi, natija qoladi; qayta import oldingi paketni tombstone qiladi (`import_batch_id`). Xatolar: `forbidden`, `unsupported_version`, `accounts_missing` | owner/admin |
 | `fx_rate_for(p_household, p_currency, p_date)` | `numeric` yoki `null` — sanadagi (yoki undan oldingi eng yaqin) kurs; amal formasi shuni ko'rsatadi (BR-191) | a'zolar |
+| `report_members(p_household, p_month)` | `{month, members[{user_id, name, expense, income, count}]}` — kim qancha sarfladi (`created_by`, o'tkazmasiz, asosiy valyutada) | a'zolar |
 | `merge_categories(p_from, p_to)` | `{children, transactions, plans, recurring_rules, quick_actions}` — manba o'chiriladi, maqsad limiti ustun (BR-036) | owner/admin |
 | `onboarding_apply(p_household, p_payload)` | `{applied: true, accounts, income_types, recurring_rules}` yoki qayta chaqirilsa `{applied: false}` | owner/admin |
 
@@ -433,6 +434,7 @@ O'qish — faqat o'ziniki; yozish — `update` (qator qo'shilmaydi/o'chmaydi).
 | `days_ahead` | 3 | 0–14 — kunlik eslatmada necha kun oldinga |
 | `monthly_report`, `report_day` | `true`, 21 | 1–28 — o'tgan oy hisoboti kuni (BR-161) |
 | `limit_alerts`, `income_missing` | `true`, `true` | BR-133, BR-165 |
+| `big_expense` | `null` | E30-T03: boshqa a'zoning shu summadan katta xarajati haqida xabar (asosiy valyutada; `null` — o'chiq) |
 
 ### Qurilma (FCM push)
 
@@ -440,7 +442,7 @@ O'qish — faqat o'ziniki; yozish — `update` (qator qo'shilmaydi/o'chmaydi).
   ochilganda va token yangilanganda; token boshqa akkauntda bo'lsa — ko'chadi.
 - `unregister_device(p_token)` — chiqishda.
 - Push: `notification { title, body }` (tayyor matn, foydalanuvchi tilida) +
-  `data { type }`: `daily_reminder` | `monthly_report` | `limit_alert` |
+  `data { type }`: `daily_reminder` | `monthly_report` | `limit_alert` | `big_expense` |
   `income_missing` | `test` — ilova bosilganda tegishli ekranni ochadi.
   Eskirgan token server tomonda o'chiriladi.
 

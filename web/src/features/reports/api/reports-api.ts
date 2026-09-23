@@ -357,3 +357,33 @@ export const categoryTrendQuery = (
       return trendSchema.parse(data)
     },
   })
+
+const membersSchema = z.object({
+  month: z.iso.date(),
+  members: z.array(
+    z.object({
+      user_id: z.string(),
+      name: z.string(),
+      expense: money,
+      income: money,
+      count: z.number(),
+    }),
+  ),
+})
+
+export type MembersReport = z.infer<typeof membersSchema>
+
+/** E30-T02 (BR-011): oilaviy byudjetda kim qancha sarfladi. */
+export const membersReportQuery = (householdId: string, month: MonthKey) =>
+  queryOptions({
+    queryKey: [...reportsKey(householdId), 'members', month],
+    staleTime: REPORT_STALE_MS,
+    queryFn: async (): Promise<MembersReport> => {
+      const { data, error } = await supabase.rpc('report_members', {
+        p_household: householdId,
+        p_month: `${month}-01`,
+      })
+      if (error) throw toAppError(error)
+      return membersSchema.parse(data)
+    },
+  })

@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
+  membersReportQuery,
   monthReportQuery,
   savingsReportQuery,
   type MonthReport,
@@ -11,7 +12,12 @@ import {
 } from '@/features/reports/api/reports-api'
 import { monthReportRows } from '@/features/reports/model/export-rows'
 import { incomeOutsideTypes } from '@/features/reports/model/month-report'
-import { CategoryLimits, IncomeMatrix, UnpaidPlans } from '@/features/reports/ui/report-tables'
+import {
+  CategoryLimits,
+  IncomeMatrix,
+  MemberBreakdown,
+  UnpaidPlans,
+} from '@/features/reports/ui/report-tables'
 import { useAppLocale } from '@/shared/i18n'
 import { formatMoney } from '@/shared/lib/money'
 import { formatMonth, type MonthKey } from '@/shared/lib/month'
@@ -49,6 +55,8 @@ export function MonthReportPage({
   const locale = useAppLocale()
   const report = useQuery(monthReportQuery(householdId, month))
   const savings = useQuery(savingsReportQuery(householdId))
+  // E30-T02: a'zolar kesimi — faqat bir nechta a'zo bo'lganda ko'rsatiladi.
+  const members = useQuery(membersReportQuery(householdId, month))
   const money = (value: number) => formatMoney(value, { currency: baseCurrency, locale })
 
   const header = (
@@ -163,6 +171,12 @@ export function MonthReportPage({
           <Figure label={t('report.summary.fundSpent')}>{money(totals.fund_spent)}</Figure>
         </dl>
       </SectionCard>
+
+      {members.data && members.data.members.length > 1 && (
+        <SectionCard title={t('report.members.title')} description={t('report.members.hint')}>
+          <MemberBreakdown rows={members.data.members} baseCurrency={baseCurrency} />
+        </SectionCard>
+      )}
 
       <SectionCard title={t('report.income.title')}>
         <IncomeMatrix

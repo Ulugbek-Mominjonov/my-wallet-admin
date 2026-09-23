@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
@@ -8,7 +9,9 @@ import {
   type NotificationPrefs,
   type PrefsPatch,
 } from '@/features/notifications/api/notifications-api'
+import { formatMoneyInput, parseMoney } from '@/shared/lib/money'
 import { FormSelect } from '@/shared/ui/form-select'
+import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { SectionCard } from '@/shared/ui/section-card'
 import { Switch } from '@/shared/ui/switch'
@@ -31,13 +34,19 @@ export function PrefsSection({
   householdId,
   prefs,
   telegramLinked,
+  baseCurrency,
+  multiMember,
 }: {
   householdId: string
   prefs: NotificationPrefs
   telegramLinked: boolean
+  baseCurrency: string
+  /** E30-T03: katta xarajat xabari — faqat oilaviy byudjetda ma'noli. */
+  multiMember: boolean
 }) {
   const { t } = useTranslation()
   const queryClient = useQueryClient()
+  const [bigExpenseInvalid, setBigExpenseInvalid] = useState(false)
   const key = prefsKey(householdId)
 
   const save = useMutation({
@@ -134,6 +143,37 @@ export function PrefsSection({
             )}
           {toggle('limitAlerts', t('notifications.hints.limitAlerts'))}
           {toggle('incomeMissing', t('notifications.hints.incomeMissing'))}
+          {multiMember && (
+            <div className="grid gap-1.5">
+              <Label htmlFor="pref-big-expense">{t('notifications.fields.bigExpense')}</Label>
+              <Input
+                id="pref-big-expense"
+                inputMode="decimal"
+                className="w-48"
+                aria-describedby="pref-big-expense-hint"
+                aria-invalid={bigExpenseInvalid ? true : undefined}
+                defaultValue={
+                  prefs.bigExpense === null ? '' : formatMoneyInput(prefs.bigExpense, baseCurrency)
+                }
+                onBlur={(event) => {
+                  const text = event.target.value.trim()
+                  const value = text === '' ? null : parseMoney(text, baseCurrency)
+                  if (text !== '' && (value === null || value <= 0)) {
+                    setBigExpenseInvalid(true)
+                    return
+                  }
+                  setBigExpenseInvalid(false)
+                  if (value !== prefs.bigExpense) save.mutate({ bigExpense: value })
+                }}
+              />
+              <p id="pref-big-expense-hint" className="text-xs text-muted-foreground">
+                {t('notifications.hints.bigExpense')}
+              </p>
+              {bigExpenseInvalid && (
+                <p className="text-sm text-destructive">{t('notifications.errors.amount')}</p>
+              )}
+            </div>
+          )}
         </div>
       </SectionCard>
     </>

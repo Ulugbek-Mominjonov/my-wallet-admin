@@ -11,6 +11,7 @@ export type MessageType =
   | 'income_missing'
   | 'test'
   | 'announcement'
+  | 'big_expense'
 
 export interface Rendered {
   title: string
@@ -82,6 +83,8 @@ const TEXT = {
     testTitle: '✅ My Wallet',
     testBody: 'Test xabar — bildirishnomalar ishlayapti.',
     announcementTitle: '📣 My Wallet',
+    bigExpenseTitle: '👛 Katta xarajat',
+    bigExpense: (actor: string, amount: string, place: string) => `${actor}: ${amount}${place}`,
   },
   ru: {
     reminderTitle: '💳 Напоминание о платежах',
@@ -109,6 +112,8 @@ const TEXT = {
     testTitle: '✅ My Wallet',
     testBody: 'Тестовое сообщение — уведомления работают.',
     announcementTitle: '📣 My Wallet',
+    bigExpenseTitle: '👛 Крупный расход',
+    bigExpense: (actor: string, amount: string, place: string) => `${actor}: ${amount}${place}`,
   },
   en: {
     reminderTitle: '💳 Payment reminder',
@@ -136,6 +141,8 @@ const TEXT = {
     testTitle: '✅ My Wallet',
     testBody: 'Test message — notifications are working.',
     announcementTitle: '📣 My Wallet',
+    bigExpenseTitle: '👛 Large expense',
+    bigExpense: (actor: string, amount: string, place: string) => `${actor}: ${amount}${place}`,
   },
 } as const
 
@@ -212,6 +219,21 @@ export function render(type: MessageType, payload: Payload, locale: Locale): Ren
       return { title: t.incomeMissingTitle, lines: [t.incomeMissing(payload.name, shortDate(payload.due_date))] }
     case 'test':
       return { title: t.testTitle, lines: [t.testBody] }
+    case 'big_expense': {
+      // E30-T03: kim, qancha va qayerda (joy yoki kategoriya bo'lsa).
+      const place = payload.payee ?? payload.category
+      return {
+        title: t.bigExpenseTitle,
+        lines: [
+          t.bigExpense(
+            String(payload.actor ?? ''),
+            formatMoney(payload.amount ?? 0, locale),
+            place ? ` — ${String(place)}` : '',
+          ),
+          shortDate(String(payload.date ?? '')),
+        ],
+      }
+    }
     case 'announcement': {
       // E26-T03: matn admin panelda uch tilda yoziladi; tili topilmasa — uz.
       const message: Record<string, string> = payload.message ?? {}

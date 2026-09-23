@@ -24,6 +24,8 @@ export interface NotificationPrefs {
   reportDay: number
   limitAlerts: boolean
   incomeMissing: boolean
+  /** E30-T03: boshqa a'zoning shu summadan katta xarajati (null — o'chiq). */
+  bigExpense: number | null
 }
 
 export type PrefsPatch = Partial<NotificationPrefs>
@@ -32,7 +34,7 @@ export const prefsKey = (householdId: string) =>
   [...qk.household(householdId), 'notification-prefs'] as const
 
 const PREFS_COLUMNS =
-  'push, telegram, email, reminder_hour, days_ahead, monthly_report, report_day, limit_alerts, income_missing'
+  'push, telegram, email, reminder_hour, days_ahead, monthly_report, report_day, limit_alerts, income_missing, big_expense'
 
 /** BR-160..165: o'z sozlamalari (qator a'zolik bilan yaratilgan). */
 export const prefsQuery = (householdId: string) =>
@@ -55,6 +57,7 @@ export const prefsQuery = (householdId: string) =>
         reportDay: data.report_day,
         limitAlerts: data.limit_alerts,
         incomeMissing: data.income_missing,
+        bigExpense: data.big_expense,
       }
     },
   })
@@ -73,6 +76,7 @@ export async function updatePrefs(householdId: string, patch: PrefsPatch): Promi
       report_day: patch.reportDay,
       limit_alerts: patch.limitAlerts,
       income_missing: patch.incomeMissing,
+      big_expense: patch.bigExpense,
     })
     .eq('household_id', householdId)
   if (error) throw toAppError(error)

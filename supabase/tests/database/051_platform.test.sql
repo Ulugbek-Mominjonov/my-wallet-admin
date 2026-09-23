@@ -80,8 +80,11 @@ select throws_ok(
 );
 
 -- ─── E'lon (E26-T03) ───────────────────────────────────────────────────────
+-- Aniq foydalanuvchiga: bazada boshqa testlardan qolgan hisoblar bo'lishi mumkin.
 insert into r select 'sent', public.send_announcement(
-  '{"uz": "Yangilanish", "ru": "Обновление", "en": "Update"}'::jsonb
+  '{"uz": "Yangilanish", "ru": "Обновление", "en": "Update"}'::jsonb,
+  null,
+  array[(select id from u where name = 'alice')]
 );
 select results_eq(
   $$ select (v ->> 'queued')::int, (v ->> 'users')::int from r where name = 'sent' $$,

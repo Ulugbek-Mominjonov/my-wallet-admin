@@ -291,6 +291,45 @@ Test message — notifications are working.",
 }
 `;
 
+snapshot[`big_expense — uz 1`] = `
+{
+  push: {
+    body: "Ali: 2 500 000 so'm — Mebel Market
+05.10",
+    title: "👛 Katta xarajat",
+  },
+  telegram: "<b>👛 Katta xarajat</b>
+Ali: 2 500 000 so'm — Mebel Market
+05.10",
+}
+`;
+
+snapshot[`big_expense — ru 1`] = `
+{
+  push: {
+    body: "Ali: 2 500 000 сум — Mebel Market
+05.10",
+    title: "👛 Крупный расход",
+  },
+  telegram: "<b>👛 Крупный расход</b>
+Ali: 2 500 000 сум — Mebel Market
+05.10",
+}
+`;
+
+snapshot[`big_expense — en 1`] = `
+{
+  push: {
+    body: "Ali: 2 500 000 UZS — Mebel Market
+05.10",
+    title: "👛 Large expense",
+  },
+  telegram: "<b>👛 Large expense</b>
+Ali: 2 500 000 UZS — Mebel Market
+05.10",
+}
+`;
+
 snapshot[`announcement — uz 1`] = `
 {
   push: {
