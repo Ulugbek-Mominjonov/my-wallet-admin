@@ -257,15 +257,16 @@ test.describe('E25: vositalar', () => {
       p_app_version: '1.4.2',
     })
     // Rad etiladigan mutatsiya: sinxronda `months` o'zgartirilmaydi.
+    // `mutation_id` — har safar yangi: sync_push idempotent (bir marta yoziladi).
     await rpc(token, 'sync_push', {
       p_household: householdId,
       p_device: 'e2e-phone',
       p_mutations: [
         {
-          mutation_id: '0198f000-0000-7000-8000-0000000000e2',
+          mutation_id: crypto.randomUUID(),
           table: 'months',
           op: 'upsert',
-          id: '0198f000-0000-7000-8000-0000000000e3',
+          id: crypto.randomUUID(),
         },
       ],
     })

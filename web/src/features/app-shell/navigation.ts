@@ -78,6 +78,14 @@ export const NAV_SECTIONS: readonly NavSection[] = [
       { to: '/h/$householdId/transactions', labelKey: 'nav.transactions', icon: ArrowLeftRight },
       { to: '/h/$householdId/plans', labelKey: 'nav.plans', icon: CalendarCheck },
       { to: '/h/$householdId/report', labelKey: 'nav.report', icon: ChartColumn },
+      { to: '/h/$householdId/notifications', labelKey: 'nav.notifications', icon: Bell },
+      { to: '/h/$householdId/settings', labelKey: 'nav.settings', icon: Settings },
+    ],
+  },
+  {
+    id: 'tools',
+    titleKey: 'nav.tools',
+    items: [
       { to: '/h/$householdId/health', labelKey: 'nav.health', icon: Stethoscope },
       { to: '/h/$householdId/export', labelKey: 'nav.export', icon: Upload },
       {
@@ -87,25 +95,23 @@ export const NAV_SECTIONS: readonly NavSection[] = [
         permission: 'write',
       },
       {
+        to: '/h/$householdId/recalc',
+        labelKey: 'nav.recalc',
+        icon: CalendarSync,
+        permission: 'manage',
+      },
+      {
         to: '/h/$householdId/audit',
         labelKey: 'nav.audit',
         icon: ScrollText,
         permission: 'manage',
       },
       {
-        to: '/h/$householdId/recalc',
-        labelKey: 'nav.recalc',
-        icon: CalendarSync,
-        permission: 'manage',
-      },
-      { to: '/h/$householdId/notifications', labelKey: 'nav.notifications', icon: Bell },
-      {
         to: '/h/$householdId/devices',
         labelKey: 'nav.devices',
         icon: Smartphone,
         permission: 'manage',
       },
-      { to: '/h/$householdId/settings', labelKey: 'nav.settings', icon: Settings },
     ],
   },
 ]
