@@ -1,7 +1,8 @@
 -- E11-T04, T05, T08 (server qismi): navbatdan olish/natija, Telegram ulash
--- va buyruqlar, valyuta kurslari. Qoidalar: BR-163, BR-166, BR-192, BR-221, ADR-11.
+-- va buyruqlar, valyuta kurslari; E29-T01: kurslarni tarixiy to'ldirish.
+-- Qoidalar: BR-163, BR-166, BR-192, BR-221, ADR-11.
 begin;
-select plan(15);
+select plan(19);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
@@ -200,6 +201,51 @@ select results_eq(
   $$ values ('EUR', 14000::numeric, 'manual'), ('USD', 12651::numeric, 'CBU') $$,
   'CBU kursi yoziladi/yangilanadi; qo''lda kiritilgan tuzatish ustidan yozilmaydi; spravochnikda yo''q valyuta — yo''q'
 );
+
+-- ─── Tarixiy to'ldirish (E29-T01) ──────────────────────────────────────────
+select tests.authenticate_as((select id from u where name = 'alice'));
+select throws_ok(
+  $$ select public.fx_backfill_dates() $$,
+  '42501', null, 'BR-213: to''ldirish RPC''si faqat serverga (service_role)'
+);
+select tests.clear_authentication();
+
+select pg_temp.as_service();
+-- Yozuv yo'q: to'ldiradigan sana ham yo'q.
+select results_eq(
+  $$ select (public.fx_backfill_dates() ->> 'done')::boolean,
+            jsonb_array_length(public.fx_backfill_dates() -> 'dates') $$,
+  $$ values (true, 0) $$,
+  'yozuvsiz byudjetda kurs kerak emas'
+);
+reset role;
+
+-- Alice'ning eng eski amali — 2026-09-14 (juma).
+insert into public.transactions (household_id, kind, account_id, amount, category_id,
+                                 occurred_on, budget_month)
+select (select id from ref where name = 'h'), 'expense',
+       (select a.id from public.accounts a where a.household_id = (select id from ref where name = 'h')
+         and a.type = 'cash' limit 1),
+       100000,
+       (select c.id from public.categories c where c.household_id = (select id from ref where name = 'h')
+         and c.kind = 'expense' limit 1),
+       '2026-09-14', '2026-09-01';
+
+select pg_temp.as_service();
+-- Kursor qo'lda qo'yiladi: natija "bugun" ga bog'liq bo'lmasin.
+select public.fx_backfill_mark('2026-09-18');
+insert into r select 'bf1', public.fx_backfill_dates(5);
+select results_eq(
+  $$ select x #>> '{}' from r, jsonb_array_elements(v -> 'dates') x where name = 'bf1' $$,
+  $$ values ('2026-09-17'), ('2026-09-16'), ('2026-09-15'), ('2026-09-14') $$,
+  'kursordan orqaga: ish kunlari, kursi bor sana (18-sentabr) tashlanadi'
+);
+select public.fx_backfill_mark('2026-09-15');
+select is(
+  (select jsonb_array_length(public.fx_backfill_dates(5) -> 'dates')), 1,
+  'kursor surilgach faqat undan eski sanalar qoladi'
+);
+reset role;
 
 select * from finish();
 rollback;

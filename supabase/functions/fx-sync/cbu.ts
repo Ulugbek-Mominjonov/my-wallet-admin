@@ -4,6 +4,9 @@
 
 export const CBU_URL = 'https://cbu.uz/uz/arkhiv-kursov-valyut/json/'
 
+/** Sana bo'yicha arxiv (E29-T01): `.../json/all/2026-09-01/`. */
+export const cbuDateUrl = (date: string): string => `${CBU_URL}all/${date}/`
+
 export interface FxRate {
   currency: string
   rate_date: string

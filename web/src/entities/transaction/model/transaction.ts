@@ -16,6 +16,8 @@ export interface Transaction {
   toAmount: number | null
   /** Asosiy valyutada (BR-191) — jami va filtr shu bo'yicha. */
   amountBase: number
+  /** Qo'llangan kurs (hisob valyutasi = asosiy bo'lsa `null`, BR-193). */
+  fxRate: number | null
   categoryId: string | null
   payee: string | null
   occurredOn: string

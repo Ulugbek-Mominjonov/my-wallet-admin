@@ -1,6 +1,7 @@
 // E11-T08: kurslar (CBU), chek fayllarini tozalash, akkauntni o'chirish.
 import { assertEquals, assertRejects, assertThrows } from '@std/assert'
-import { parseCbu } from '../fx-sync/cbu.ts'
+import { backfillRates } from '../fx-sync/backfill.ts'
+import { cbuDateUrl, parseCbu } from '../fx-sync/cbu.ts'
 import { purgeFiles } from '../purge-files/purge.ts'
 import { bearerToken, deleteAccount } from '../delete-account/account.ts'
 import { RpcError } from '../_shared/supabase.ts'
@@ -18,6 +19,64 @@ Deno.test('CBU: kurs / nominal, sana ISO, yaroqsizlar tashlanadi', () => {
     { currency: 'USD', rate_date: '2026-09-18', rate_to_base: 12650.55 },
     { currency: 'IRR', rate_date: '2026-09-18', rate_to_base: 0.301 },
   ])
+})
+
+Deno.test('CBU: sana bo‘yicha arxiv manzili', () => {
+  assertEquals(cbuDateUrl('2026-09-01'), 'https://cbu.uz/uz/arkhiv-kursov-valyut/json/all/2026-09-01/')
+})
+
+Deno.test('fx backfill: paket oxirigacha, kursor eng eski sanaga suriladi', async () => {
+  const seen: string[] = []
+  const marks: string[] = []
+  const result = await backfillRates({
+    dates: () => Promise.resolve({ dates: ['2026-09-03', '2026-09-02', '2026-09-01'], done: false }),
+    ratesFor: (date) => {
+      seen.push(date)
+      // 2-sentabr — e'lon yo'q (dam olish kuni kabi).
+      return Promise.resolve(
+        date === '2026-09-02' ? [] : [{ currency: 'USD', rate_date: date, rate_to_base: 12650 }],
+      )
+    },
+    upsert: (rates) => Promise.resolve(rates.length),
+    mark: (until) => {
+      marks.push(until)
+      return Promise.resolve()
+    },
+  }, { budgetMs: 10_000 })
+
+  assertEquals(seen, ['2026-09-03', '2026-09-02', '2026-09-01'])
+  assertEquals(result, { dates: 3, rates: 2, done: false })
+  assertEquals(marks, ['2026-09-01'])
+})
+
+Deno.test('fx backfill: vaqt budjeti tugasa to‘xtaydi, kursor ko‘rilganigacha', async () => {
+  let clock = 0
+  const marks: string[] = []
+  const result = await backfillRates({
+    dates: () => Promise.resolve({ dates: ['2026-09-03', '2026-09-02'], done: false }),
+    ratesFor: () => {
+      clock += 800
+      return Promise.resolve([])
+    },
+    upsert: () => Promise.resolve(0),
+    mark: (until) => {
+      marks.push(until)
+      return Promise.resolve()
+    },
+  }, { budgetMs: 500, now: () => clock })
+
+  assertEquals(result.dates, 1)
+  assertEquals(marks, ['2026-09-03'])
+})
+
+Deno.test('fx backfill: sana qolmasa — tugadi', async () => {
+  const result = await backfillRates({
+    dates: () => Promise.resolve({ dates: [], done: true }),
+    ratesFor: () => Promise.reject(new Error('chaqirilmasin')),
+    upsert: () => Promise.reject(new Error('chaqirilmasin')),
+    mark: () => Promise.reject(new Error('chaqirilmasin')),
+  }, { budgetMs: 10_000 })
+  assertEquals(result, { dates: 0, rates: 0, done: true })
 })
 
 Deno.test('CBU: kutilmagan javob — xato', () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { formatMoney, formatMoneyInput, parseMoney } from '@/shared/lib/money'
+import { formatMoney, formatMoneyInput, parseMoney, parseRate } from '@/shared/lib/money'
 
 const NBSP = ' '
 
@@ -55,5 +55,16 @@ describe('parseMoney / formatMoneyInput', () => {
     for (const minor of [0, 1, 99, 150000000, -123456750]) {
       expect(parseMoney(formatMoneyInput(minor))).toBe(minor)
     }
+  })
+})
+
+describe('parseRate (E29-T04, BR-191)', () => {
+  it('musbat o‘nlik son (6 xonagacha); boshqasi — null', () => {
+    expect(parseRate('12650.55')).toBe(12650.55)
+    expect(parseRate('1,5')).toBe(1.5)
+    expect(parseRate('12 650')).toBeNull()
+    expect(parseRate('0')).toBeNull()
+    expect(parseRate('-1')).toBeNull()
+    expect(parseRate('1.1234567')).toBeNull()
   })
 })

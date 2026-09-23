@@ -337,3 +337,47 @@ export const healthQuery = queryOptions({
     return healthSchema.parse(data)
   },
 })
+
+const rateSchema = z.object({
+  currency: z.string(),
+  rate_date: z.iso.date(),
+  rate_to_base: z.number(),
+  source: z.enum(['CBU', 'manual']),
+})
+
+export type ExchangeRate = z.infer<typeof rateSchema>
+
+/** Bir valyuta uchun oxirgi kurslar (BR-191). */
+export const RATES_LIMIT = 60
+
+export const ratesQuery = (currency: string) =>
+  queryOptions({
+    queryKey: [...platformKey('rates'), currency],
+    queryFn: async (): Promise<ExchangeRate[]> => {
+      const { data, error } = await supabase
+        .from('exchange_rates')
+        .select('currency, rate_date, rate_to_base, source')
+        .eq('currency', currency)
+        .order('rate_date', { ascending: false })
+        .limit(RATES_LIMIT)
+      if (error) throw toAppError(error)
+      return z.array(rateSchema).parse(data)
+    },
+  })
+
+/** Qo'lda tuzatish (BR-193): `manual` kursni `fx-sync` ustidan yozmaydi. */
+export async function saveRate(currency: string, date: string, rate: number): Promise<void> {
+  const { error } = await supabase
+    .from('exchange_rates')
+    .upsert({ currency, rate_date: date, rate_to_base: rate, source: 'manual' })
+  if (error) throw toAppError(error)
+}
+
+export async function deleteRate(currency: string, date: string): Promise<void> {
+  const { error } = await supabase
+    .from('exchange_rates')
+    .delete()
+    .eq('currency', currency)
+    .eq('rate_date', date)
+  if (error) throw toAppError(error)
+}

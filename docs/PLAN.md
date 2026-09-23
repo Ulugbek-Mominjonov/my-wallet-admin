@@ -801,21 +801,21 @@ E21–E26 (admin) M2 bilan.
 > **Qoidalar:** BR-190..194, ADR-08. Mobil qismi: E29-T07..T09
 > (`my-wallet-mobil/docs/PLAN.md`).
 
-- [ ] **E29-T01** `fx-sync` to'liq: cbu.uz JSON (`Ccy`, `Rate`, `Nominal`,
+- [x] **E29-T01** `fx-sync` to'liq: cbu.uz JSON (`Ccy`, `Rate`, `Nominal`,
   `Date`) → `exchange_rates` upsert; tarixiy to'ldirish (sana bo'yicha
   so'rov) — birinchi amal sanasidan beri; xatoda `job_runs`.
-- [ ] **E29-T02** `tx_derive`: `amount_base = round(amount × kurs)`
+- [x] **E29-T02** `tx_derive`: `amount_base = round(amount × kurs)`
   (sanadagi yoki undan oldingi eng yaqin kurs), qo'lda `fx_rate` ustun;
   o'tkazma — `to_amount` majburiy (valyutalar har xil bo'lsa).
-- [ ] **E29-T03** Hisobotlar `amount_base` bilan; hisob qoldig'i o'z
+- [x] **E29-T03** Hisobotlar `amount_base` bilan; hisob qoldig'i o'z
   valyutasida + asosiy valyutadagi ekvivalent (joriy kurs); qarz/maqsad
   valyutasi (BR-194).
-- [ ] **E29-T04** Admin UI: hisob valyutasi tanlash (UZS dan boshqa ham),
+- [x] **E29-T04** Admin UI: hisob valyutasi tanlash (UZS dan boshqa ham),
   amal formasida kurs ko'rinishi va qo'lda kurs, "Valyuta kurslari" sahifasi
   (tarix, qo'lda tuzatish — platforma admini).
-- [ ] **E29-T05** Fixture'lar: ko'p valyutali holatlar (USD daromad, USD→UZS
+- [x] **E29-T05** Fixture'lar: ko'p valyutali holatlar (USD daromad, USD→UZS
   o'tkazma, kurs yo'q kun) → `contracts/`, `schema-version` +1.
-- [ ] **E29-T06** Mavjud ma'lumot migratsiyasi: `amount_base` qayta hisobi
+- [x] **E29-T06** Mavjud ma'lumot migratsiyasi: `amount_base` qayta hisobi
   (UZS uchun o'zgarmaydi — test).
 
 ### E30 · Oilaviy byudjet `[admin + mobile]` — platforma qismi
@@ -982,6 +982,9 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Ko'chirish dry-run — haqiqiy yozuv + bekor qilish (blok ichidagi `raise ... detail` orqali natija qaytadi), farq `private.month_facts` dan; import `security definer`, yordamchilar klientga berilmagan | "nima bo'lishini" ikkinchi kod bilan taxmin qilish emas — aynan import yo'li tekshiriladi (triggerlar, cheklovlar bilan); `import_batch_id` va tombstone yozish huquqi klientda yo'q | E27-T03, BR-181 |
 | 2026-09-23 | Sirlar skaneri — rasmiy gitleaks binarisi (versiya + SHA256), uchinchi tomon action'isiz; Advisor qoidalarining bir qismi pgTAP'ga ko'chirildi (auth.uid() initplan, bitta permissive siyosat, takroriy indeks); har FK uchun indeks talab qilinmadi | action litsenziya/telemetriya olib keladi, binar esa checksum bilan qotiriladi; Advisor faqat hosted loyihada ishlaydi — invariantlar har PR'da tekshirilsin; `created_by`/`currency` FK'lari qidiruvda ishlatilmaydi, 24 ta ortiqcha indeks yozuvni sekinlashtirardi | E28-T02 |
 | 2026-09-23 | Qo'llanma skrinshotlari Playwright bilan yangilanadi (`make docs-shots`, sintetik lokal ma'lumot); CHANGELOG qo'lda yozilmaydi — release-please yuritadi | qo'lda olingan surat birinchi o'zgarishdayoq eskiradi; ma'lumot lokal bo'lgani uchun shaxsiy hech narsa chiqmaydi | E28-T05 |
+| 2026-09-23 | Kurslarni tarixiy to'ldirish — kursor `private.fx_state` da (app_config emas), har kunlik ishda cheklangan paket va vaqt budjeti | `app_config` hamma klientga boradi — xizmat holati u yerda ortiqcha; paket va budjet Edge Function chegarasiga sig'adi, uzilsa keyingi ish davom ettiradi | E29-T01 |
+| 2026-09-23 | Qarz/hisob jamlari `*_base` ustunlari orqali (avval boshqa valyutadagilar jamdan tashlanardi); kursi yo'q qator jamga kirmaydi (0 emas) | ko'p valyutada jam UZS'da bo'lishi kerak; 0 deb hisoblash qarzni yo'q qilib ko'rsatardi | E29-T03, BR-194 |
+| 2026-09-23 | `schema-version` 1 da qoldi: o'zgarishlar qo'shimcha (yangi ustun va RPC), buzuvchi emas | contracts/README qoidasi — +1 faqat buzuvchi o'zgarishda; bumping mobil ilovalarni sababsiz "Yangilash kerak" holatiga tushirardi | E29-T05 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

@@ -710,7 +710,11 @@
       "tags": "Tags",
       "note": "Note",
       "receipts": "Receipts",
-      "receipt": "Receipt {{n}}"
+      "receipt": "Receipt {{n}}",
+      "fxRate": "Rate (1 {{currency}} = ? {{base}})",
+      "fxRateHint": "Leave empty for the official rate on that date (CBU)",
+      "fxRateNone": "No rate found",
+      "fxRateRequired": "No official rate for this date — enter the rate manually"
     },
     "errors": {
       "amount": "Enter an amount above 0",
@@ -733,7 +737,8 @@
       "monthClosed": "The month is closed (strict lock) — reopen it first",
       "tagDeleted": "A tag was deleted — refresh the list",
       "notFound": "Transaction not found — it may have been deleted",
-      "categoryDeleted": "The category was deleted — choose another"
+      "categoryDeleted": "The category was deleted — choose another",
+      "fxRate": "The rate must be a positive number (for example 12650.55)"
     },
     "export": {
       "button": "Export CSV",
@@ -1440,6 +1445,20 @@
       "invalidJson": "The value must be JSON (for example `true` or `\"text\"`)",
       "deleteTitle": "Delete “{{key}}”?",
       "deleteText": "The key disappears for every client."
+    },
+    "rates": {
+      "title": "Exchange rates",
+      "description": "CBU history and manual correction (BR-191..193)",
+      "add": "Add or correct a rate",
+      "addHint": "A manual rate is never overwritten by the daily sync",
+      "date": "Date",
+      "rate": "1 {{currency}} = ? {{base}}",
+      "source": "Source",
+      "manual": "Manual",
+      "history": "{{currency}} rates",
+      "empty": "No rates for this currency",
+      "saved": "The rate is saved",
+      "delete": "Delete the rate for {{date}}"
     },
     "announcements": {
       "title": "Announcements",

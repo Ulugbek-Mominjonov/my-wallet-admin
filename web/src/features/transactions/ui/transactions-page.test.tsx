@@ -69,6 +69,7 @@ const row = (id: string, overrides: Record<string, unknown> = {}) => ({
   amount: 5000000,
   to_amount: null,
   amount_base: 5000000,
+  fx_rate: null,
   category_id: FOOD,
   payee: 'Korzinka',
   occurred_on: '2026-09-03',

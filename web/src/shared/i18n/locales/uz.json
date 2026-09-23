@@ -710,7 +710,11 @@
       "tags": "Teglar",
       "note": "Izoh",
       "receipts": "Chek rasmlari",
-      "receipt": "Chek {{n}}"
+      "receipt": "Chek {{n}}",
+      "fxRate": "Kurs (1 {{currency}} = ? {{base}})",
+      "fxRateHint": "Bo'sh qoldirilsa — sanadagi rasmiy kurs (CBU)",
+      "fxRateNone": "Kurs topilmadi",
+      "fxRateRequired": "Bu sanada rasmiy kurs yo'q — kursni qo'lda kiriting"
     },
     "errors": {
       "amount": "Summani kiriting (0 dan katta)",
@@ -733,7 +737,8 @@
       "monthClosed": "Oy yopilgan (qattiq qulf) — avval oyni qayta oching",
       "tagDeleted": "Teg o'chirilgan — ro'yxatni yangilang",
       "notFound": "Amal topilmadi — ehtimol o'chirilgan",
-      "categoryDeleted": "Kategoriya o'chirilgan — boshqasini tanlang"
+      "categoryDeleted": "Kategoriya o'chirilgan — boshqasini tanlang",
+      "fxRate": "Kurs musbat son bo'lsin (masalan 12650.55)"
     },
     "export": {
       "button": "CSV eksport",
@@ -1440,6 +1445,20 @@
       "invalidJson": "Qiymat JSON bo'lishi kerak (masalan `true` yoki `\"matn\"`)",
       "deleteTitle": "«{{key}}» o‘chirilsinmi?",
       "deleteText": "Kalit hamma klientdan yo'qoladi."
+    },
+    "rates": {
+      "title": "Valyuta kurslari",
+      "description": "CBU tarixi va qo'lda tuzatish (BR-191..193)",
+      "add": "Kurs qo‘shish yoki tuzatish",
+      "addHint": "Qo'lda kiritilgan kursni kunlik sinxron ustidan yozmaydi",
+      "date": "Sana",
+      "rate": "1 {{currency}} = ? {{base}}",
+      "source": "Manba",
+      "manual": "Qo'lda",
+      "history": "{{currency}} kurslari",
+      "empty": "Bu valyuta uchun kurs yo'q",
+      "saved": "Kurs saqlandi",
+      "delete": "{{date}} kursini o‘chirish"
     },
     "announcements": {
       "title": "E'lonlar",

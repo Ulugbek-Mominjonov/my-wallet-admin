@@ -112,6 +112,7 @@ Umumiy qoidalar (barcha sinxron jadvallar):
 | Jadval | O'qish | Yozish | Klient yozadigan ustunlar (insert → update) |
 |---|---|---|---|
 | `currencies`, `category_templates`, `exchange_rates` | har kim | platforma admini (aal2) | — |
+
 | `card_message_templates` | platforma admini (aal2) | platforma admini (aal2) | `bank, pattern, kind, amount_unit, currency, sample, active, sort_order` (BR-222; naqshda `(?<amount>…)` guruhi majburiy — `date`, `payee`, `card` ixtiyoriy) |
 | `accounts` | a'zolar | owner/admin | `id, household_id, name, type, currency, opening_balance, opening_date, icon, color, sort_order` → `name, type, currency, opening_balance, opening_date, icon, color, sort_order, archived_at, deleted_at` |
 | `categories` | a'zolar | owner/admin | `id, household_id, kind, name, parent_id, month_shift, icon, color, sort_order` → `name, parent_id, month_shift, icon, color, sort_order, archived_at, deleted_at` (`kind` o'zgarmaydi) |
@@ -197,8 +198,8 @@ tartibni takrorlaydi (`private.planned_status`).
 
 | View | Ustunlar | Qoida |
 |---|---|---|
-| `account_balances` | `household_id, account_id, balance` (hisob valyutasida) | BR-021 |
-| `debt_balances` | `household_id, debt_id, paid_in_app, pending_amount, pending_count, remaining, progress, months_left, end_month, status` (`closed`/`paying`/`pending`/`unlinked`) | BR-112..116 |
+| `account_balances` | `household_id, account_id, balance` (hisob valyutasida), `balance_base` (asosiy valyutadagi ekvivalent, joriy kurs; kurs yo'q — `null`) | BR-021, BR-194 |
+| `debt_balances` | `household_id, debt_id, paid_in_app, pending_amount, pending_count, remaining, progress, months_left, end_month, status` (`closed`/`paying`/`pending`/`unlinked`), `remaining_base`, `monthly_base` (asosiy valyutada — jamlar shundan) | BR-112..116, BR-194 |
 | `goal_progress` | `household_id, goal_id, saved, remaining, progress, months_left, end_month, on_track` | BR-121, BR-122 |
 
 ### Admin amallar jadvali (E23) — a'zolar
@@ -291,6 +292,7 @@ Summalar tiyinda. Ichki nomlar (onboarding) byudjet ichida registrsiz qidiriladi
 | `announcement_log(p_limit = 20)` | `{items[{batch, created_at, users, total, sent, failed, pending, message}]}` | platforma admini (aal2) |
 | `platform_health()` | `{stats{db_bytes, db_limit_pct, storage_bytes, storage_limit_pct, users, households, largest_tables[]}, limits{db_bytes, storage_bytes, warn_pct}, jobs[{job, started_at, finished_at, status, details}], outbox{pending, sending, failed, sent, oldest_pending}}` | platforma admini (aal2) |
 | `import_legacy_v1(p_household, p_payload, p_dry_run = true)` | `{batch, dry_run, counts{incomes, expenses, plans, allocations, fund_spends}, warnings[{code, name}], months[{month, legacy{balance, saved}, current{…}, diff{…}}]}` — eski Sheets eksporti (v1, docs/MIGRATSIYA.md); `p_dry_run` da yozuvlar bekor qilinadi, natija qoladi; qayta import oldingi paketni tombstone qiladi (`import_batch_id`). Xatolar: `forbidden`, `unsupported_version`, `accounts_missing` | owner/admin |
+| `fx_rate_for(p_household, p_currency, p_date)` | `numeric` yoki `null` — sanadagi (yoki undan oldingi eng yaqin) kurs; amal formasi shuni ko'rsatadi (BR-191) | a'zolar |
 | `merge_categories(p_from, p_to)` | `{children, transactions, plans, recurring_rules, quick_actions}` — manba o'chiriladi, maqsad limiti ustun (BR-036) | owner/admin |
 | `onboarding_apply(p_household, p_payload)` | `{applied: true, accounts, income_types, recurring_rules}` yoki qayta chaqirilsa `{applied: false}` | owner/admin |
 

@@ -61,6 +61,14 @@ begin
     join fx_keys k on k.key = 'account:' || o.key
    where a.id = k.id;
 
+  -- E29-T05: ko'p valyutali holatlar uchun kurslar (BR-191).
+  for v_item in select * from jsonb_array_elements(coalesce(v_setup -> 'rates', '[]')) loop
+    insert into public.exchange_rates (currency, rate_date, rate_to_base, source)
+    values (v_item ->> 'currency', (v_item ->> 'date')::date,
+            (v_item ->> 'rate')::numeric, coalesce(v_item ->> 'source', 'CBU'))
+    on conflict (currency, rate_date) do update set rate_to_base = excluded.rate_to_base;
+  end loop;
+
   for v_item in select * from jsonb_array_elements(coalesce(v_setup -> 'limits', '[]')) loop
     insert into public.category_limits (household_id, category_id, amount)
     values (v_household, (select k.id from fx_keys k where k.key = 'category:' || (v_item ->> 'category')),
@@ -69,7 +77,8 @@ begin
 
   for v_item in select * from jsonb_array_elements(coalesce(v_setup -> 'debts', '[]')) loop
     insert into public.debts (household_id, name, direction, currency, total, paid_before, monthly_payment)
-    values (v_household, v_item ->> 'name', (v_item ->> 'direction')::public.debt_direction, 'UZS',
+    values (v_household, v_item ->> 'name', (v_item ->> 'direction')::public.debt_direction,
+            coalesce(v_item ->> 'currency', 'UZS'),
             (v_item ->> 'total')::bigint, coalesce((v_item ->> 'paid_before')::bigint, 0),
             (v_item ->> 'monthly_payment')::bigint)
     returning id into v_id;
@@ -100,7 +109,7 @@ begin
   for v_item in select * from jsonb_array_elements(coalesce(v_setup -> 'transactions', '[]')) loop
     insert into public.transactions (household_id, kind, account_id, to_account_id, amount, to_amount,
                                      category_id, occurred_on, budget_month, budget_month_source,
-                                     planned_item_id, debt_id, payee)
+                                     planned_item_id, debt_id, payee, fx_rate)
     values (v_household, (v_item ->> 'kind')::public.transaction_kind,
             (select k.id from fx_keys k where k.key = 'account:' || (v_item ->> 'account')),
             (select k.id from fx_keys k where k.key = 'account:' || (v_item ->> 'to')),
@@ -111,7 +120,7 @@ begin
             case when v_item ? 'month' then 'manual' else 'auto' end::public.budget_month_source,
             (select k.id from fx_keys k where k.key = 'plan:' || (v_item ->> 'plan')),
             (select k.id from fx_keys k where k.key = 'debt:' || (v_item ->> 'debt')),
-            v_item ->> 'payee');
+            v_item ->> 'payee', (v_item ->> 'fx_rate')::numeric);
     -- Eski tizimda istalgan to'lov rejani yopardi — "settle" shu xulqni beradi.
     if (v_item ->> 'settle')::boolean then
       update public.planned_items p set closed_at = now()

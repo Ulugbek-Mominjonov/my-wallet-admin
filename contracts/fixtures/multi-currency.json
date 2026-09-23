@@ -1,0 +1,214 @@
+{
+  "description": "Ko'p valyuta (E29): USD daromad, USD→UZS o'tkazma, kursi yo'q kun (qo'lda kurs), qarz jamlari ekvivalentda.",
+  "cases": [
+    {
+      "name": "USD daromad: asosiy valyutaga sanadagi (yoki oldingi) kurs bilan o'tadi",
+      "rules": [
+        "BR-191",
+        "BR-192"
+      ],
+      "today": "2026-09-30",
+      "setup": {
+        "accounts": [
+          {
+            "key": "usd",
+            "name": "Dollar",
+            "type": "bank",
+            "currency": "USD",
+            "opening_balance": 0
+          }
+        ],
+        "rates": [
+          {
+            "currency": "USD",
+            "date": "2026-09-10",
+            "rate": 12600
+          },
+          {
+            "currency": "USD",
+            "date": "2026-09-20",
+            "rate": 12700
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "usd",
+            "amount": 100000,
+            "category": "Avans",
+            "date": "2026-09-12"
+          },
+          {
+            "kind": "expense",
+            "account": "usd",
+            "amount": 20000,
+            "category": "Oziq-ovqat",
+            "date": "2026-09-22"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-09-01"
+          },
+          "result": {
+            "totals": {
+              "income": 1260000000,
+              "expense": 254000000
+            },
+            "derived": {
+              "balance": 1006000000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "USD→UZS o'tkazma: har hisob o'z valyutasida, byudjetga ta'sir qilmaydi",
+      "rules": [
+        "BR-193",
+        "BR-021"
+      ],
+      "today": "2026-09-30",
+      "setup": {
+        "accounts": [
+          {
+            "key": "usd",
+            "name": "Dollar",
+            "type": "bank",
+            "currency": "USD",
+            "opening_balance": 100000
+          }
+        ],
+        "rates": [
+          {
+            "currency": "USD",
+            "date": "2026-09-20",
+            "rate": 12700
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "transfer",
+            "account": "usd",
+            "to": "cash",
+            "amount": 50000,
+            "to_amount": 635000000,
+            "date": "2026-09-22"
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-09-01"
+          },
+          "result": {
+            "totals": {
+              "income": 0,
+              "expense": 0
+            },
+            "derived": {
+              "balance": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "kursi yo'q kun: amaldagi qo'lda kurs ishlatiladi",
+      "rules": [
+        "BR-193"
+      ],
+      "today": "2026-09-30",
+      "setup": {
+        "accounts": [
+          {
+            "key": "usd",
+            "name": "Dollar",
+            "type": "bank",
+            "currency": "USD",
+            "opening_balance": 0
+          }
+        ],
+        "rates": [
+          {
+            "currency": "USD",
+            "date": "2026-09-20",
+            "rate": 12700
+          }
+        ],
+        "transactions": [
+          {
+            "kind": "income",
+            "account": "usd",
+            "amount": 100000,
+            "category": "Avans",
+            "date": "2026-09-22",
+            "fx_rate": 13000
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_month",
+          "args": {
+            "month": "2026-09-01"
+          },
+          "result": {
+            "totals": {
+              "income": 1300000000
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "boshqa valyutadagi qarz jamga ekvivalent bilan kiradi",
+      "rules": [
+        "BR-114",
+        "BR-194"
+      ],
+      "today": "2026-09-30",
+      "setup": {
+        "rates": [
+          {
+            "currency": "USD",
+            "date": "2026-09-20",
+            "rate": 12700
+          }
+        ],
+        "debts": [
+          {
+            "key": "usd_debt",
+            "name": "Aka",
+            "direction": "i_owe",
+            "currency": "USD",
+            "total": 20000,
+            "monthly_payment": 5000
+          },
+          {
+            "key": "uzs_debt",
+            "name": "Do'st",
+            "direction": "i_owe",
+            "total": 100000000
+          }
+        ]
+      },
+      "expect": [
+        {
+          "rpc": "report_debts",
+          "result": {
+            "totals": {
+              "i_owe": 354000000,
+              "monthly_obligation": 63500000
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -2,5 +2,6 @@ export { PlatformAnnouncementsPage } from '@/features/platform/ui/announcements-
 export { PlatformConfigPage } from '@/features/platform/ui/config-page'
 export { PlatformDirectoriesPage } from '@/features/platform/ui/directories-page'
 export { PlatformHealthPage } from '@/features/platform/ui/health-page'
+export { PlatformRatesPage } from '@/features/platform/ui/rates-page'
 export { PlatformShell } from '@/features/platform/ui/platform-shell'
 export { PlatformUsersPage } from '@/features/platform/ui/users-page'

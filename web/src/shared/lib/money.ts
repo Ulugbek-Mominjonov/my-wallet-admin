@@ -90,3 +90,16 @@ export function formatMoneyInput(minor: number, currency = 'UZS'): string {
     fraction === 0 ? '' : `,${String(fraction).padStart(exponent, '0').replace(/0+$/, '')}`
   return `${sign}${groupDigits(whole)}${tail}`
 }
+
+/**
+ * Valyuta kursi: musbat o'nlik son, 6 xonagacha (`numeric(18,6)` bilan bir
+ * xil aniqlik, BR-191). Boshqasi — `null`.
+ *
+ * @example parseRate('12650,55') // 12650.55
+ */
+export function parseRate(text: string): number | null {
+  const value = text.trim()
+  if (!/^\d+([.,]\d{1,6})?$/.test(value)) return null
+  const rate = Number(value.replace(',', '.'))
+  return rate > 0 ? rate : null
+}

@@ -1733,17 +1733,8 @@ export type Database = {
         Row: {
           account_id: string | null
           balance: number | null
+          balance_base: number | null
           household_id: string | null
-        }
-        Insert: {
-          account_id?: string | null
-          balance?: never
-          household_id?: string | null
-        }
-        Update: {
-          account_id?: string | null
-          balance?: never
-          household_id?: string | null
         }
         Relationships: [
           {
@@ -1760,12 +1751,14 @@ export type Database = {
           debt_id: string | null
           end_month: string | null
           household_id: string | null
+          monthly_base: number | null
           months_left: number | null
           paid_in_app: number | null
           pending_amount: number | null
           pending_count: number | null
           progress: number | null
           remaining: number | null
+          remaining_base: number | null
           status: string | null
         }
         Relationships: [
@@ -1855,6 +1848,12 @@ export type Database = {
         Returns: undefined
       }
       export_household: { Args: { p_household: string }; Returns: Json }
+      fx_backfill_dates: { Args: { p_limit?: number }; Returns: Json }
+      fx_backfill_mark: { Args: { p_until: string }; Returns: undefined }
+      fx_rate_for: {
+        Args: { p_currency: string; p_date: string; p_household: string }
+        Returns: number
+      }
       fx_upsert: { Args: { p_rates: Json }; Returns: number }
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }

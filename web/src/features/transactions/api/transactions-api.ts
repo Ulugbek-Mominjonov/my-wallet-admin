@@ -26,6 +26,7 @@ const rowSchema = z.object({
   amount: z.number(),
   to_amount: z.number().nullable(),
   amount_base: z.number(),
+  fx_rate: z.number().nullable(),
   category_id: z.string().nullable(),
   payee: z.string().nullable(),
   occurred_on: z.string(),
@@ -47,6 +48,7 @@ const toTransaction = (row: z.infer<typeof rowSchema>): Transaction => ({
   amount: row.amount,
   toAmount: row.to_amount,
   amountBase: row.amount_base,
+  fxRate: row.fx_rate,
   categoryId: row.category_id,
   payee: row.payee,
   occurredOn: row.occurred_on,
@@ -187,6 +189,7 @@ export async function saveTransaction(
     p_occurred_on: input.occurredOn,
     p_to_account_id: input.toAccountId ?? undefined,
     p_to_amount: input.toAmount ?? undefined,
+    p_fx_rate: input.fxRate ?? undefined,
     p_category_id: input.categoryId ?? undefined,
     p_payee: input.payee ?? undefined,
     p_budget_month: input.budgetMonth ?? undefined,
@@ -338,4 +341,24 @@ export const receiptsQuery = (householdId: string, transactionId: string) =>
         return url ? [{ id: a.id, url }] : []
       })
     },
+  })
+
+/**
+ * E29-T04 (BR-191): sanadagi (yoki undan oldingi eng yaqin) kurs — formada
+ * ko'rsatish uchun; `null` — kurs yo'q, qo'lda kiritiladi.
+ */
+export const fxRateQuery = (householdId: string, currency: string, date: string) =>
+  queryOptions({
+    queryKey: [...qk.household(householdId), 'fx-rate', currency, date],
+    queryFn: async (): Promise<number | null> => {
+      const { data, error } = await supabase.rpc('fx_rate_for', {
+        p_household: householdId,
+        p_currency: currency,
+        p_date: date,
+      })
+      if (error) throw toAppError(error)
+      return data
+    },
+    // Kurs kun davomida o'zgarmaydi.
+    staleTime: 60 * 60 * 1000,
   })

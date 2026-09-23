@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 import type { Account } from '@/entities/account'
 import { TRANSACTION_KINDS, type Transaction, type TransactionKind } from '@/entities/transaction'
-import { formatMoneyInput, parseMoney } from '@/shared/lib/money'
+import { formatMoneyInput, parseMoney, parseRate } from '@/shared/lib/money'
 import { isMonthKey } from '@/shared/lib/month'
 
 /** `entity_name` va `note_text` domenlari (contracts/api.md). */
@@ -25,6 +25,8 @@ export interface TransactionInput {
   debtId: string | null
   note: string | null
   tagIds: string[]
+  /** BR-193: qo'lda kiritilgan kurs; `null` — server sanadagi kursni oladi. */
+  fxRate: number | null
 }
 
 /** Forma tekshiruvi uchun hisob ma'lumoti (valyuta va 👤 fond). */
@@ -57,6 +59,8 @@ export function transactionFormSchema(accountOf: (id: string) => AccountInfo | u
       debtId: z.string(),
       note: z.string().trim().max(NOTE_MAX),
       tagIds: z.array(z.string()),
+      /** Bo'sh — avtomatik (sanadagi kurs). */
+      fxRate: z.string(),
     })
     .superRefine((v, ctx) => {
       const issue = (path: string, message = path) => {
@@ -88,6 +92,8 @@ export function transactionFormSchema(accountOf: (id: string) => AccountInfo | u
         issue('categoryId')
       }
       if (v.manualMonth && !isMonthKey(v.budgetMonth)) issue('budgetMonth')
+      // BR-193: kurs faqat boshqa valyutadagi hisobda va musbat son bo'lsin.
+      if (v.fxRate.trim() !== '' && parseRate(v.fxRate) === null) issue('fxRate')
     })
     .transform((v): TransactionInput => {
       const account = accountOf(v.accountId)
@@ -109,6 +115,7 @@ export function transactionFormSchema(accountOf: (id: string) => AccountInfo | u
         debtId: v.kind === 'transfer' || v.debtId === '' ? null : v.debtId,
         note: v.note || null,
         tagIds: v.tagIds,
+        fxRate: v.fxRate.trim() === '' ? null : parseRate(v.fxRate),
       }
     })
 }
@@ -135,6 +142,7 @@ export function transactionFormDefaults(
       debtId: '',
       note: '',
       tagIds: [],
+      fxRate: '',
     }
   }
   const t = transaction
@@ -156,5 +164,6 @@ export function transactionFormDefaults(
     debtId: t.debtId ?? '',
     note: t.note ?? '',
     tagIds: t.tagIds,
+    fxRate: t.fxRate === null ? '' : String(t.fxRate),
   }
 }

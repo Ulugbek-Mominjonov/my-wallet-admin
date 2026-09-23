@@ -16,6 +16,7 @@ import {
   type TransactionKind,
 } from '@/entities/transaction'
 import {
+  fxRateQuery,
   linkablePlansQuery,
   monthClosedQuery,
   PAYEE_QUERY_MIN,
@@ -155,6 +156,12 @@ export function TransactionForm({
     planMonth: null,
   })
   const plans = useQuery(linkablePlansQuery(householdId, ruleMonth))
+  // BR-193: boshqa valyutadagi hisobda sanadagi kurs ko'rsatiladi.
+  const rate = useQuery({
+    ...fxRateQuery(householdId, currency, validDate),
+    enabled: currency !== baseCurrency,
+  })
+  const autoRate = rate.data ?? null
   const plan = plans.data?.find((p) => p.id === plannedItemId)
   // BR-044: rejaga bog'langan amal — reja oyiga.
   const autoMonth = autoBudgetMonth({
@@ -367,6 +374,29 @@ export function TransactionForm({
           error={errors.toAmount ? t('transactions.errors.toAmount') : undefined}
           registration={form.register('toAmount')}
         />
+      )}
+
+      {/* BR-193: boshqa valyutadagi hisobda kurs ko'rinadi va qo'lda kiritiladi. */}
+      {currency !== baseCurrency && (
+        <div className="grid gap-1.5">
+          <Label htmlFor="tx-fx-rate">
+            {t('transactions.form.fxRate', { currency, base: baseCurrency })}
+          </Label>
+          <Input
+            id="tx-fx-rate"
+            inputMode="decimal"
+            placeholder={autoRate === null ? t('transactions.form.fxRateNone') : String(autoRate)}
+            aria-invalid={errors.fxRate ? true : undefined}
+            aria-describedby={errors.fxRate ? 'tx-fx-rate-error' : 'tx-fx-rate-hint'}
+            {...form.register('fxRate')}
+          />
+          <p id="tx-fx-rate-hint" className="text-xs text-muted-foreground">
+            {autoRate === null
+              ? t('transactions.form.fxRateRequired')
+              : t('transactions.form.fxRateHint')}
+          </p>
+          {fieldError('tx-fx-rate-error', errors.fxRate && t('transactions.errors.fxRate'))}
+        </div>
       )}
 
       {kind !== 'transfer' && (

@@ -2,6 +2,7 @@ import type { LinkProps } from '@tanstack/react-router'
 import type { ParseKeys } from 'i18next'
 import {
   Activity,
+  Coins,
   Library,
   Megaphone,
   SlidersHorizontal,
@@ -26,6 +27,7 @@ export interface PlatformNavItem {
 export const PLATFORM_NAV: readonly PlatformNavItem[] = [
   { to: '/platform', labelKey: 'platform.directories.title', icon: Library, exact: true },
   { to: '/platform/config', labelKey: 'platform.config.title', icon: SlidersHorizontal },
+  { to: '/platform/rates', labelKey: 'platform.rates.title', icon: Coins },
   { to: '/platform/announcements', labelKey: 'platform.announcements.title', icon: Megaphone },
   { to: '/platform/users', labelKey: 'platform.users.title', icon: Users },
   { to: '/platform/health', labelKey: 'platform.health.title', icon: Activity },

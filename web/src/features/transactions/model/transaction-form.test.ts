@@ -42,6 +42,7 @@ describe('transactionFormSchema (E23-T02)', () => {
       debtId: null,
       note: null,
       tagIds: ['t1'],
+      fxRate: null,
     })
   })
 
@@ -99,6 +100,7 @@ describe('transactionFormDefaults', () => {
       amount: 12050,
       toAmount: null,
       amountBase: 151830000,
+      fxRate: null,
       categoryId: 'food',
       payee: null,
       occurredOn: '2026-10-05',
