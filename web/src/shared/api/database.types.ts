@@ -1044,6 +1044,7 @@ export type Database = {
           due_date: string
           household_id: string
           id: string
+          import_batch_id: string | null
           kind: Database["public"]["Enums"]["plan_kind"]
           name: string
           note: string | null
@@ -1069,6 +1070,7 @@ export type Database = {
           due_date: string
           household_id: string
           id?: string
+          import_batch_id?: string | null
           kind: Database["public"]["Enums"]["plan_kind"]
           name: string
           note?: string | null
@@ -1094,6 +1096,7 @@ export type Database = {
           due_date?: string
           household_id?: string
           id?: string
+          import_batch_id?: string | null
           kind?: Database["public"]["Enums"]["plan_kind"]
           name?: string
           note?: string | null
@@ -1594,6 +1597,7 @@ export type Database = {
           fx_rate: number | null
           household_id: string
           id: string
+          import_batch_id: string | null
           kind: Database["public"]["Enums"]["transaction_kind"]
           note: string | null
           occurred_on: string
@@ -1619,6 +1623,7 @@ export type Database = {
           fx_rate?: number | null
           household_id: string
           id?: string
+          import_batch_id?: string | null
           kind: Database["public"]["Enums"]["transaction_kind"]
           note?: string | null
           occurred_on: string
@@ -1644,6 +1649,7 @@ export type Database = {
           fx_rate?: number | null
           household_id?: string
           id?: string
+          import_batch_id?: string | null
           kind?: Database["public"]["Enums"]["transaction_kind"]
           note?: string | null
           occurred_on?: string
@@ -1853,6 +1859,10 @@ export type Database = {
       health: { Args: never; Returns: Json }
       health_check: { Args: { p_household: string }; Returns: Json }
       household_devices: { Args: { p_household: string }; Returns: Json }
+      import_legacy_v1: {
+        Args: { p_dry_run?: boolean; p_household: string; p_payload: Json }
+        Returns: Json
+      }
       import_transactions: {
         Args: { p_dry_run?: boolean; p_household: string; p_rows: Json }
         Returns: Json

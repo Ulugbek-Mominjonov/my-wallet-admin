@@ -281,4 +281,31 @@ test.describe('E25: vositalar', () => {
     await expect(journal).toContainText('Rad etildi')
     await expect(journal).toContainText("Noto'g'ri mutatsiya")
   })
+
+  test('E27-T04: eski tizimdan ko‘chirish — farq 0 bo‘lgach import', async ({ page }) => {
+    await page.goto('/login')
+    await signIn(page, uniqueEmail('legacy'))
+    await expect(page).toHaveURL(HOUSEHOLD_URL)
+    const householdId = new URL(page.url()).pathname.split('/').at(-1) ?? ''
+
+    await page.goto(`/h/${householdId}/legacy`)
+    await page
+      .getByLabel('Eksport fayli (JSON)')
+      .setInputFiles('../scripts/fixtures/legacy-v1.json')
+    await expect(page.getByText('Oylar: 2')).toBeVisible()
+
+    // Dry-run: hech narsa yozilmaydi, lekin yakunlar solishtiriladi (BR-181).
+    await page.getByRole('button', { name: 'Tekshirish (yozilmaydi)' }).click()
+    await expect(page.getByText(/Hamma oy bo‘yicha farq yo‘q/)).toBeVisible()
+
+    await page.getByRole('button', { name: 'Import qilish' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Import qilish' }).click()
+    await expect(page.getByText(/Ko'chirildi/)).toBeVisible()
+
+    // Amallar eski oy taqsimotida (2026-08).
+    await page.goto(`/h/${householdId}/transactions?month=2026-08`)
+    const row = page.getByRole('row', { name: /Korzinka/ })
+    await expect(row).toContainText('Oziq-ovqat')
+    await expect(row).toContainText("1 200 000 so'm")
+  })
 })

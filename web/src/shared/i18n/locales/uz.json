@@ -122,7 +122,8 @@
     "audit": "Audit jurnali",
     "notifications": "Bildirishnomalar",
     "devices": "Qurilmalar",
-    "platform": "Platforma"
+    "platform": "Platforma",
+    "legacy": "Eski tizimdan"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1179,6 +1180,41 @@
     "row": "Qator",
     "reason": "Sabab",
     "duplicateOf": "Mavjud amal bilan bir xil"
+  },
+  "legacy": {
+    "title": "Eski tizimdan ko‘chirish",
+    "description": "Google Sheets eksporti (v1) — tekshiruvdan keyin import (BR-181)",
+    "file": "Eksport fayli (JSON)",
+    "fileHint": "Qanday olish — docs/MIGRATSIYA.md; fayl faqat shu byudjetga yoziladi",
+    "tooLarge": "Fayl juda katta (8 MB dan ortiq)",
+    "errors": {
+      "invalid_json": "Fayl JSON emas",
+      "unsupported_version": "Fayl versiyasi mos emas (v1 kerak)"
+    },
+    "counts": {
+      "incomes": "Daromad: {{count}}",
+      "expenses": "Xarajat: {{count}}",
+      "fund": "Fond sarfi: {{count}}",
+      "months": "Oylar: {{count}}"
+    },
+    "check": "Tekshirish (yozilmaydi)",
+    "import": "Import qilish",
+    "months": "Oylar solishtiruvi",
+    "monthsHint": "Sheets yakunlari va yangi tizim — farq 0 bo'lishi shart",
+    "matched": "Hamma oy bo‘yicha farq yo‘q — import qilish mumkin",
+    "notMatched": "Farq bor: import tugmasi yopiq. Fayl yoki qoidalarni tekshiring.",
+    "month": "Oy",
+    "legacyBalance": "Sheets qoldiq",
+    "currentBalance": "Yangi qoldiq",
+    "legacySaved": "Sheets orttirgan",
+    "currentSaved": "Yangi orttirgan",
+    "diff": "Farq (qoldiq / orttirgan)",
+    "warnings": {
+      "debt_not_found": "Qarz topilmadi: {{name}} — amal bog'lanmadi"
+    },
+    "confirmTitle": "Import boshlansinmi?",
+    "confirmText": "Yozuvlar shu byudjetga tushadi. Qayta import oldingi paketni almashtiradi.",
+    "done": "Ko'chirildi: {{count}} ta amal"
   },
   "audit": {
     "title": "Audit jurnali",

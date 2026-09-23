@@ -33,6 +33,7 @@ import { Route as AppHHouseholdIdExportRouteImport } from './routes/_app/h/$hous
 import { Route as AppHHouseholdIdGoalsRouteImport } from './routes/_app/h/$householdId/goals'
 import { Route as AppHHouseholdIdHealthRouteImport } from './routes/_app/h/$householdId/health'
 import { Route as AppHHouseholdIdImportRouteImport } from './routes/_app/h/$householdId/import'
+import { Route as AppHHouseholdIdLegacyRouteImport } from './routes/_app/h/$householdId/legacy'
 import { Route as AppHHouseholdIdLimitsRouteImport } from './routes/_app/h/$householdId/limits'
 import { Route as AppHHouseholdIdNotificationsRouteImport } from './routes/_app/h/$householdId/notifications'
 import { Route as AppHHouseholdIdPlansRouteImport } from './routes/_app/h/$householdId/plans'
@@ -170,6 +171,11 @@ const AppHHouseholdIdImportRoute = AppHHouseholdIdImportRouteImport.update({
   path: '/import',
   getParentRoute: () => AppHHouseholdIdRoute,
 } as any)
+const AppHHouseholdIdLegacyRoute = AppHHouseholdIdLegacyRouteImport.update({
+  id: '/legacy',
+  path: '/legacy',
+  getParentRoute: () => AppHHouseholdIdRoute,
+} as any)
 const AppHHouseholdIdLimitsRoute = AppHHouseholdIdLimitsRouteImport.update({
   id: '/limits',
   path: '/limits',
@@ -282,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
   '/h/$householdId/health': typeof AppHHouseholdIdHealthRoute
   '/h/$householdId/import': typeof AppHHouseholdIdImportRoute
+  '/h/$householdId/legacy': typeof AppHHouseholdIdLegacyRoute
   '/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/h/$householdId/notifications': typeof AppHHouseholdIdNotificationsRoute
   '/h/$householdId/plans': typeof AppHHouseholdIdPlansRoute
@@ -320,6 +327,7 @@ export interface FileRoutesByTo {
   '/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
   '/h/$householdId/health': typeof AppHHouseholdIdHealthRoute
   '/h/$householdId/import': typeof AppHHouseholdIdImportRoute
+  '/h/$householdId/legacy': typeof AppHHouseholdIdLegacyRoute
   '/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/h/$householdId/notifications': typeof AppHHouseholdIdNotificationsRoute
   '/h/$householdId/plans': typeof AppHHouseholdIdPlansRoute
@@ -362,6 +370,7 @@ export interface FileRoutesById {
   '/_app/h/$householdId/goals': typeof AppHHouseholdIdGoalsRoute
   '/_app/h/$householdId/health': typeof AppHHouseholdIdHealthRoute
   '/_app/h/$householdId/import': typeof AppHHouseholdIdImportRoute
+  '/_app/h/$householdId/legacy': typeof AppHHouseholdIdLegacyRoute
   '/_app/h/$householdId/limits': typeof AppHHouseholdIdLimitsRoute
   '/_app/h/$householdId/notifications': typeof AppHHouseholdIdNotificationsRoute
   '/_app/h/$householdId/plans': typeof AppHHouseholdIdPlansRoute
@@ -404,6 +413,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/goals'
     | '/h/$householdId/health'
     | '/h/$householdId/import'
+    | '/h/$householdId/legacy'
     | '/h/$householdId/limits'
     | '/h/$householdId/notifications'
     | '/h/$householdId/plans'
@@ -442,6 +452,7 @@ export interface FileRouteTypes {
     | '/h/$householdId/goals'
     | '/h/$householdId/health'
     | '/h/$householdId/import'
+    | '/h/$householdId/legacy'
     | '/h/$householdId/limits'
     | '/h/$householdId/notifications'
     | '/h/$householdId/plans'
@@ -483,6 +494,7 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId/goals'
     | '/_app/h/$householdId/health'
     | '/_app/h/$householdId/import'
+    | '/_app/h/$householdId/legacy'
     | '/_app/h/$householdId/limits'
     | '/_app/h/$householdId/notifications'
     | '/_app/h/$householdId/plans'
@@ -677,6 +689,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdImportRouteImport
       parentRoute: typeof AppHHouseholdIdRoute
     }
+    '/_app/h/$householdId/legacy': {
+      id: '/_app/h/$householdId/legacy'
+      path: '/legacy'
+      fullPath: '/h/$householdId/legacy'
+      preLoaderRoute: typeof AppHHouseholdIdLegacyRouteImport
+      parentRoute: typeof AppHHouseholdIdRoute
+    }
     '/_app/h/$householdId/limits': {
       id: '/_app/h/$householdId/limits'
       path: '/limits'
@@ -843,6 +862,7 @@ interface AppHHouseholdIdRouteChildren {
   AppHHouseholdIdGoalsRoute: typeof AppHHouseholdIdGoalsRoute
   AppHHouseholdIdHealthRoute: typeof AppHHouseholdIdHealthRoute
   AppHHouseholdIdImportRoute: typeof AppHHouseholdIdImportRoute
+  AppHHouseholdIdLegacyRoute: typeof AppHHouseholdIdLegacyRoute
   AppHHouseholdIdLimitsRoute: typeof AppHHouseholdIdLimitsRoute
   AppHHouseholdIdNotificationsRoute: typeof AppHHouseholdIdNotificationsRoute
   AppHHouseholdIdPlansRoute: typeof AppHHouseholdIdPlansRoute
@@ -867,6 +887,7 @@ const AppHHouseholdIdRouteChildren: AppHHouseholdIdRouteChildren = {
   AppHHouseholdIdGoalsRoute: AppHHouseholdIdGoalsRoute,
   AppHHouseholdIdHealthRoute: AppHHouseholdIdHealthRoute,
   AppHHouseholdIdImportRoute: AppHHouseholdIdImportRoute,
+  AppHHouseholdIdLegacyRoute: AppHHouseholdIdLegacyRoute,
   AppHHouseholdIdLimitsRoute: AppHHouseholdIdLimitsRoute,
   AppHHouseholdIdNotificationsRoute: AppHHouseholdIdNotificationsRoute,
   AppHHouseholdIdPlansRoute: AppHHouseholdIdPlansRoute,

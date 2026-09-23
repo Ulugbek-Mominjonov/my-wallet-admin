@@ -44,10 +44,11 @@ select throws_ok(
 select tests.authenticate_as((select id from u where name = 'root'), 'aal2');
 
 -- ─── Foydalanuvchilar (E26-T04) ────────────────────────────────────────────
-insert into r select 'users', public.platform_users();
+-- Qidiruv bilan: bazada boshqa testlardan qolgan foydalanuvchilar bo'lishi mumkin.
+insert into r select 'users', public.platform_users('@test.uz');
 select is(
   (select (v ->> 'total')::int from r where name = 'users'), 3,
-  'ro''yxatda uch foydalanuvchi'
+  'ro''yxat va qidiruv: uch sinov foydalanuvchisi'
 );
 select results_eq(
   $$ select x ->> 'email', (x ->> 'households')::int, (x ->> 'blocked')::boolean, (x ->> 'is_admin')::boolean

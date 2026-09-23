@@ -763,11 +763,11 @@ E21–E26 (admin) M2 bilan.
   qarzlar (nom → `debt_id`, eski nom bo'yicha bog'lanishlar tiklanadi);
   maqsadlar; sozlamalar → doimiy rejalar, limitlar, tez tugmalar, fond
   qoidasi, eslatmalar; yopilgan oylar.
-- [ ] **E27-T03** `import_legacy_v1(household, payload, dry_run)` RPC (yoki
+- [x] **E27-T03** `import_legacy_v1(household, payload, dry_run)` RPC (yoki
   admin-ops funksiyasi) — bitta tranzaksiya, `source = import`,
   idempotent (`import_batch_id`), dry-run → `{counts, per_month_diff,
   warnings}`.
-- [ ] **E27-T04** Admin sahifa: fayl yuklash → dry-run natijasi (oylar
+- [x] **E27-T04** Admin sahifa: fayl yuklash → dry-run natijasi (oylar
   jadvali: Sheets qoldiq/orttirgan ↔ yangi, farq qizil) → faqat farq 0 bo'lsa
   "Import" tugmasi faol.
 - [ ] **E27-T05** 🔑 Haqiqiy import (staging'da sinov → prod), natija
@@ -979,6 +979,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | `app_config` qiymatlari shakli bazada tekshiriladi (CHECK: versiya `X.Y.Z`, texnik ishlar xabari uch tilda); yozish — platforma admini siyosati, grant'lar aniq ro'yxatga keltirildi | konfiguratsiya hamma klientga `app_bootstrap` orqali boradi — noto'g'ri qiymat mobil ilovani to'xtatib qo'yishi mumkin; iOS kaliti qo'shilmadi (loyihada iOS yo'q) | E26-T02, BR-214 |
 | 2026-09-23 | E'lon — `admin-ops` Edge Function o'rniga RPC (`send_announcement`): navbat baribir outbox, yuborishni `notify-dispatch` qiladi; bloklash — `auth.users.banned_until` (o'chirish emas) | yangi funksiya = yangi deploy, sir va monitoring; RPC pgTAP bilan qoplanadi; bloklangan foydalanuvchi ma'lumoti saqlanib qoladi (qo'llab-quvvatlash uchun) | E26-T03, E26-T04, BR-213 |
 | 2026-09-23 | Tizim salomatligi — mavjud `jobs.platform_stats()` ustiga bitta RPC (`platform_health`); keep-alive/zaxira holati GitHub API'dan olinmadi | statistikani kunlik cron allaqachon hisoblaydi, sahifa jonli chaqiradi — ikkinchi hisob-kitob yo'q; GitHub API brauzerdan token talab qiladi (ochiq repoda sir bo'lmaydi) — holat Actions'da ko'rinadi | E26-T05 |
+| 2026-09-23 | Ko'chirish dry-run — haqiqiy yozuv + bekor qilish (blok ichidagi `raise ... detail` orqali natija qaytadi), farq `private.month_facts` dan; import `security definer`, yordamchilar klientga berilmagan | "nima bo'lishini" ikkinchi kod bilan taxmin qilish emas — aynan import yo'li tekshiriladi (triggerlar, cheklovlar bilan); `import_batch_id` va tombstone yozish huquqi klientda yo'q | E27-T03, BR-181 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

@@ -122,7 +122,8 @@
     "audit": "Audit log",
     "notifications": "Notifications",
     "devices": "Devices",
-    "platform": "Platform"
+    "platform": "Platform",
+    "legacy": "Legacy import"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -1179,6 +1180,41 @@
     "row": "Row",
     "reason": "Reason",
     "duplicateOf": "Same as an existing transaction"
+  },
+  "legacy": {
+    "title": "Migrate from the old system",
+    "description": "Google Sheets export (v1) — import after the check (BR-181)",
+    "file": "Export file (JSON)",
+    "fileHint": "How to get it — docs/MIGRATSIYA.md; data lands only in this budget",
+    "tooLarge": "The file is too large (over 8 MB)",
+    "errors": {
+      "invalid_json": "The file is not JSON",
+      "unsupported_version": "Unsupported file version (v1 required)"
+    },
+    "counts": {
+      "incomes": "Income rows: {{count}}",
+      "expenses": "Expense rows: {{count}}",
+      "fund": "Fund spends: {{count}}",
+      "months": "Months: {{count}}"
+    },
+    "check": "Check (nothing is written)",
+    "import": "Import",
+    "months": "Month comparison",
+    "monthsHint": "Sheets totals vs the new system — the difference must be 0",
+    "matched": "No differences — you can import",
+    "notMatched": "There are differences: import stays closed. Check the file or the rules.",
+    "month": "Month",
+    "legacyBalance": "Balance (Sheets)",
+    "currentBalance": "Balance (new)",
+    "legacySaved": "Saved (Sheets)",
+    "currentSaved": "Saved (new)",
+    "diff": "Difference (balance / saved)",
+    "warnings": {
+      "debt_not_found": "Debt not found: {{name}} — the transaction is unlinked"
+    },
+    "confirmTitle": "Start the import?",
+    "confirmText": "Rows land in this budget. Re-importing replaces the previous batch.",
+    "done": "Migrated transactions: {{count}}"
   },
   "audit": {
     "title": "Audit log",
