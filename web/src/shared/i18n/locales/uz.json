@@ -958,7 +958,8 @@
       "month": "Oylik",
       "year": "Yillik",
       "savings": "Jamg‘arma",
-      "obligations": "Qarz va maqsad"
+      "obligations": "Qarz va maqsad",
+      "categories": "Kategoriyalar"
     },
     "year": {
       "title": "Yillik ko‘rinish",
@@ -1037,6 +1038,24 @@
       "avg": "O'rtacha oylik jamg'arma",
       "fromAverage": "o'rtachadan",
       "empty": "Maqsad yo'q"
+    },
+    "categoriesPage": {
+      "title": "Kategoriya tahlili",
+      "description": "Davr bo'yicha trend va solishtirish (o'tgan oy, 3 oylik o'rtacha)",
+      "from": "Dan",
+      "to": "Gacha",
+      "all": "Hamma kategoriyalar",
+      "chart": "Oyma-oy xarajat",
+      "category": "Kategoriya",
+      "actual": "Fakt",
+      "prev": "O'tgan oy",
+      "avg3": "3 oylik o'rtacha",
+      "vsPrev": "O'tgan oyga",
+      "vsAvg3": "O'rtachaga",
+      "transactions": "Amallarni ko‘rish",
+      "empty": "Bu davrda xarajat yo'q",
+      "unknown": "O'chirilgan kategoriya",
+      "actualSeries": "Xarajat"
     }
   }
 }

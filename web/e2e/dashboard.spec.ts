@@ -110,6 +110,8 @@ test.describe('E24-T01: xulosa', () => {
     const householdId = await ownerWithData(page)
     await page.goto(`/h/${householdId}/report`)
 
+    // Hisobot tablari — yon menyudagi bir xil nomli havolalardan ajratib.
+    const tabs = page.getByRole('navigation', { name: 'Oylik hisobot' })
     const summary = page.getByRole('heading', { name: 'Yakun' })
     await expect(summary).toBeVisible()
     await expect(page.getByRole('table', { name: 'Daromad turlari' })).toContainText('JAMI')
@@ -138,22 +140,31 @@ test.describe('E24-T01: xulosa', () => {
     await expect(page.getByRole('heading', { name: 'Yakun' })).toBeVisible()
 
     // E24-T03: yillik ko'rinish — jadval (JAMI) va grafik.
-    await page.getByRole('link', { name: 'Yillik' }).click()
+    await tabs.getByRole('link', { name: 'Yillik' }).click()
     await expect(page).toHaveURL(/\/report\/year/)
     const yearTable = page.getByRole('table', { name: 'Yillik ko‘rinish' })
     await expect(yearTable.getByRole('row', { name: /JAMI/ })).toContainText("8 000 000 so'm")
     await expect(page.getByRole('figure', { name: 'Daromad, xarajat va orttirish' })).toBeVisible()
 
     // E24-T04: jamg'arma, 👤 fond va hisoblar qoldig'i.
-    await page.getByRole('link', { name: 'Jamg‘arma' }).click()
+    await tabs.getByRole('link', { name: 'Jamg‘arma' }).click()
     await expect(page).toHaveURL(/\/report\/savings/)
     await expect(page.getByRole('table', { name: 'Jamg‘arma' })).toContainText('⏳')
     const balances = page.getByRole('table', { name: 'Hisoblar qoldig‘i' })
     await expect(balances).toContainText('Naqd')
     await expect(balances.getByRole('row', { name: /JAMI/ })).toBeVisible()
 
+    // E24-T05: kategoriya tahlili — trend va solishtirish jadvali.
+    await tabs.getByRole('link', { name: 'Kategoriyalar' }).click()
+    await expect(page).toHaveURL(/\/report\/categories/)
+    const trend = page.getByRole('table', { name: 'Kategoriya tahlili' })
+    await expect(trend).toContainText('Oziq-ovqat')
+    await trend.getByRole('button', { name: 'Oziq-ovqat' }).click()
+    await expect(page).toHaveURL(/category=/)
+    await expect(page.getByRole('link', { name: 'Amallarni ko‘rish' })).toBeVisible()
+
     // E24-T04: qarz va maqsadlar (bu byudjetda — bo'sh holatlar).
-    await page.getByRole('link', { name: 'Qarz va maqsad' }).click()
+    await tabs.getByRole('link', { name: 'Qarz va maqsad' }).click()
     await expect(page).toHaveURL(/\/report\/obligations/)
     await expect(page.getByText("Qarz yo'q")).toBeVisible()
     await expect(page.getByText("Maqsad yo'q")).toBeVisible()

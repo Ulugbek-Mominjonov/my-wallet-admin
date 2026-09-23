@@ -320,6 +320,45 @@ export const goalsReportQuery = (householdId: string) =>
     },
   })
 
+const trendSchema = z.object({
+  series: z.array(z.object({ month: z.iso.date(), category_id: z.string(), actual: money })),
+  compare: z.array(
+    z.object({
+      category_id: z.string(),
+      actual: money,
+      prev: money,
+      avg3: money,
+      /** Taqqoslash bazasi nol bo'lsa — `null` (nolga bo'linmaydi). */
+      vs_prev: z.number().nullable(),
+      vs_avg3: z.number().nullable(),
+    }),
+  ),
+})
+
+export type CategoryTrend = z.infer<typeof trendSchema>
+
+/** BR-095: kategoriya trendi — oyma-oy va o'tgan oy / 3 oylik o'rtacha bilan solishtirish. */
+export const categoryTrendQuery = (
+  householdId: string,
+  from: MonthKey,
+  to: MonthKey,
+  categoryId?: string,
+) =>
+  queryOptions({
+    queryKey: [...reportsKey(householdId), 'category-trend', from, to, categoryId ?? null],
+    staleTime: REPORT_STALE_MS,
+    queryFn: async (): Promise<CategoryTrend> => {
+      const { data, error } = await supabase.rpc('report_category_trend', {
+        p_household: householdId,
+        p_from: `${from}-01`,
+        p_to: `${to}-01`,
+        p_category: categoryId,
+      })
+      if (error) throw toAppError(error)
+      return trendSchema.parse(data)
+    },
+  })
+
 const healthSchema = z.object({
   problems: z.array(z.object({ code: z.string() }).loose()),
   warnings: z.array(z.object({ code: z.string() }).loose()),

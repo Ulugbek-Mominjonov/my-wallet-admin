@@ -958,7 +958,8 @@
       "month": "Monthly",
       "year": "Yearly",
       "savings": "Savings",
-      "obligations": "Debts & goals"
+      "obligations": "Debts & goals",
+      "categories": "Categories"
     },
     "year": {
       "title": "Yearly overview",
@@ -1037,6 +1038,24 @@
       "avg": "Average monthly saving",
       "fromAverage": "from average",
       "empty": "No goals"
+    },
+    "categoriesPage": {
+      "title": "Category analysis",
+      "description": "Trend over a period and comparison (previous month, 3-month average)",
+      "from": "From",
+      "to": "To",
+      "all": "All categories",
+      "chart": "Spending by month",
+      "category": "Category",
+      "actual": "Actual",
+      "prev": "Previous month",
+      "avg3": "3-month average",
+      "vsPrev": "vs previous",
+      "vsAvg3": "vs average",
+      "transactions": "View transactions",
+      "empty": "No spending in this period",
+      "unknown": "Deleted category",
+      "actualSeries": "Spending"
     }
   }
 }

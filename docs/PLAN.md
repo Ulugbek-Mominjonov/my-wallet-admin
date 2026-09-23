@@ -690,7 +690,7 @@ E21–E26 (admin) M2 bilan.
   **Shaxsiy fond** (ajratma/sarf daftari, qoldiq grafigi), **Qarzlar**
   (holatlar, progress, tugash, sof holat, bog'langan to'lovlar tarixi),
   **Maqsadlar** (progress, prognoz, ulguradimi), **Hisoblar qoldig'i**.
-- [ ] **E24-T05** **Kategoriya tahlili**: tanlangan davr, oyma-oy trend,
+- [x] **E24-T05** **Kategoriya tahlili**: tanlangan davr, oyma-oy trend,
   o'tgan oy va 3 oylik o'rtacha bilan solishtirish (BR-095), subkategoriyaga
   tushish (drill-down) → amallar ro'yxati (filtr bilan).
 - [ ] **E24-T06** Eksport: har hisobot → CSV/XLSX (SheetJS), oylik hisobot →
