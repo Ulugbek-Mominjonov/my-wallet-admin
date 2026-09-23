@@ -12,7 +12,8 @@
     "close": "Закрыть",
     "prevMonth": "Предыдущий месяц",
     "nextMonth": "Следующий месяц",
-    "currentMonth": "Текущий месяц"
+    "currentMonth": "Текущий месяц",
+    "exportCsv": "Экспорт CSV"
   },
   "errors": {
     "notFoundTitle": "Страница не найдена",

@@ -693,8 +693,8 @@ E21–E26 (admin) M2 bilan.
 - [x] **E24-T05** **Kategoriya tahlili**: tanlangan davr, oyma-oy trend,
   o'tgan oy va 3 oylik o'rtacha bilan solishtirish (BR-095), subkategoriyaga
   tushish (drill-down) → amallar ro'yxati (filtr bilan).
-- [ ] **E24-T06** Eksport: har hisobot → CSV/XLSX (SheetJS), oylik hisobot →
-  PDF (brauzer print yoki `@react-pdf/renderer`). BR-180.
+- [x] **E24-T06** Eksport: har hisobot → CSV (XLSX o'rniga — qarorlar
+  jurnaliga qarang), oylik hisobot → PDF (brauzer print). BR-180.
 - [ ] **E24-T07** Kesh siyosati: hisobotlar `staleTime` 60 s, amal
   yozilganda faqat tegishli oy/yil kalitlari invalidatsiya; e2e: amal
   qo'shish → hisobot yangilanadi.
@@ -968,6 +968,7 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | Grafik ranglari — tekshirilgan 8 ta kategorik palitra (`--chart-1..8`); daromad/xarajat grafikda ko'k/to'q sariq, matnda esa yashil/qizil qoladi | yashil-qizil juftligi rang ko'rmaslikda ajralmaydi (ΔE 5,9 yorug'/2,9 qorong'i — talab ≥ 8); matnda ishora bor (+/−), grafikda esa faqat rang | E24-T01 |
 | 2026-09-23 | Ulush uchun donut emas — gorizontal ustunlar (bitta rang), har grafikda jadval ko'rinishi | uzun kategoriya nomlari bilan donut yomon o'qiladi; rang yolg'iz belgilovchi bo'lmasligi kerak (ekran o'quvchi, bosib chiqarish) | E24-T01 |
 | 2026-09-23 | Hisobot javoblari zod bilan tekshiriladi (`plan_ratio`, `per_day_available` — null, `income_pending` — mantiqiy) | uchala maydon hujjatda tип bilan ko'rsatilmagan edi; tekshiruv ularni sahifa buzilishidan oldin topdi | E24-T01 |
+| 2026-09-23 | Eksport — CSV (BOM bilan, Excel ochadi) va PDF — brauzer print orqali; XLSX (SheetJS) qo'shilmadi | npm'dagi `xlsx` eski (CVE-2023-30533), yangilari faqat sotuvchi CDN'idan keladi — ochiq repoda ta'minot zanjiri xavfi; CSV hamma hisobotda bir xil kod bilan ishlaydi | E24-T06, BR-180 |
 | 2026-09-19 | Mobil lokal baza — server jadvallarining nusxasi: ustunlar va snake_case JSON bir xil, lokal FK yo'q, indekslar `EXPLAIN QUERY PLAN` bilan (`SEARCH`) | pull qatori mappersiz yoziladi; FK pull tartibiga bog'lanmaydi; oy/ro'yxat so'rovlari indeksdan | E13-T01 |
 | 2026-09-19 | Oy yig'indisi lokalda SQL'da (bitta GROUP BY), ro'yxat — keyset (50 tadan) | butun tarixni xotiraga yuklamaslik; domen bilan parite testi (52/52) SQL'ni himoya qiladi | E13-T02 |
 | 2026-09-19 | Outbox: qatorga bitta kutilayotgan mutatsiya (birlashtiriladi, birinchi `base_version`), yuborilayotganiga tegilmaydi; `base_row` — rad etilganda qaytarish | kamroq push va server yozuvi; javob yo'qolsa ham o'zgarish yo'qolmaydi; rollback serverga so'rovsiz | E13-T04, T05, BR-006 |

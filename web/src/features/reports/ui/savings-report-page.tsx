@@ -7,6 +7,7 @@ import {
   savingsReportQuery,
   type SavingsReport,
 } from '@/features/reports/api/reports-api'
+import { savingsRows } from '@/features/reports/model/export-rows'
 import { savingsChartPoints } from '@/features/reports/model/savings-report'
 import { useAppLocale } from '@/shared/i18n'
 import { formatDate } from '@/shared/lib/date'
@@ -15,6 +16,7 @@ import { formatMonth, shiftMonth, type MonthKey } from '@/shared/lib/month'
 import { Badge } from '@/shared/ui/badge'
 import { ChartFigure, ChartLegend } from '@/shared/ui/chart/chart-figure'
 import { ColumnChart } from '@/shared/ui/chart/column-chart'
+import { ExportCsvButton } from '@/shared/ui/export-csv-button'
 import { MoneyText } from '@/shared/ui/money-text'
 import { PageHeader } from '@/shared/ui/page-header'
 import { QueryError } from '@/shared/ui/query-error'
@@ -53,6 +55,20 @@ export function SavingsReportPage({
     <PageHeader
       title={t('report.savingsPage.title')}
       description={t('report.savingsPage.description')}
+      actions={
+        savings.data && (
+          <ExportCsvButton
+            fileName="jamgarma.csv"
+            rows={() =>
+              savingsRows(savings.data, {
+                t,
+                major: (minor) => minor / 100,
+                month: (iso) => formatMonth(iso.slice(0, 7), locale),
+              })
+            }
+          />
+        )
+      }
     />
   )
   if (savings.isPending) {

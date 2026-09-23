@@ -16,10 +16,15 @@ function cell(value: string | number | null): string {
   return NEEDS_QUOTES.test(safe) ? `"${safe.replaceAll('"', '""')}"` : safe
 }
 
-/** Sarlavha va qatorlar → CSV matni (BOM bilan, CRLF — RFC 4180). */
-export function toCsv(
-  header: readonly string[],
-  rows: readonly (readonly (string | number | null)[])[],
-): string {
-  return BOM + [header, ...rows].map((row) => row.map(cell).join(',')).join('\r\n') + '\r\n'
+export type CsvCell = string | number | null
+export type CsvRow = readonly CsvCell[]
+
+/** Qatorlar (birinchisi — sarlavha) → CSV matni (BOM bilan, CRLF — RFC 4180). */
+export function toCsvRows(rows: readonly CsvRow[]): string {
+  return BOM + rows.map((row) => row.map(cell).join(',')).join('\r\n') + '\r\n'
+}
+
+/** Sarlavha va qatorlar → CSV matni. */
+export function toCsv(header: readonly string[], rows: readonly CsvRow[]): string {
+  return toCsvRows([header, ...rows])
 }

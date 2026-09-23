@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import type { Category } from '@/entities/category'
 import { categoryTrendQuery } from '@/features/reports/api/reports-api'
 import { compareRows, trendPoints } from '@/features/reports/model/category-trend'
+import { categoryTrendRows } from '@/features/reports/model/export-rows'
 import { useAppLocale } from '@/shared/i18n'
 import { formatMoney } from '@/shared/lib/money'
 import { formatMonth, shiftMonth, type MonthKey } from '@/shared/lib/month'
@@ -13,6 +14,7 @@ import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 import { ChartFigure } from '@/shared/ui/chart/chart-figure'
 import { ColumnChart } from '@/shared/ui/chart/column-chart'
+import { ExportCsvButton } from '@/shared/ui/export-csv-button'
 import { FormSelect } from '@/shared/ui/form-select'
 import { Label } from '@/shared/ui/label'
 import { PageHeader } from '@/shared/ui/page-header'
@@ -66,6 +68,25 @@ export function CategoryTrendPage({
       <PageHeader
         title={t('report.categoriesPage.title')}
         description={t('report.categoriesPage.description')}
+        actions={
+          trend.data && (
+            <ExportCsvButton
+              fileName={`kategoriyalar-${from}_${to}.csv`}
+              rows={() =>
+                categoryTrendRows(
+                  trend.data,
+                  compareRows(trend.data.compare, byId, t('report.categoriesPage.unknown')),
+                  byId,
+                  {
+                    t,
+                    major: (minor) => minor / 100,
+                    month: (iso) => formatMonth(iso.slice(0, 7), locale),
+                  },
+                )
+              }
+            />
+          )
+        }
       />
       <div className="flex flex-wrap items-end gap-3 print:hidden">
         <div className="grid gap-1.5">

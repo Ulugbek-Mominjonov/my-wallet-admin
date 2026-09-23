@@ -1,4 +1,6 @@
-// Faqat testlar uchun — hisobot RPC javoblarining namunasi (E24).
+// Faqat testlar uchun — hisobot RPC javoblarining namunasi (E24). Turlari
+// sxemadan: namuna javob shaklidan chetga chiqsa, kompilyator aytadi.
+import type { MonthReport, SavingsReport } from '@/features/reports/api/reports-api'
 export const reportCategory = (
   id: string,
   name: string,
@@ -17,7 +19,7 @@ export const reportCategory = (
   ...extra,
 })
 
-export const MONTH_REPORT = {
+export const MONTH_REPORT: MonthReport = {
   month: '2026-09-01',
   closed: false,
   is_current: true,
@@ -95,7 +97,7 @@ export const MONTH_REPORT = {
   goals: [],
 }
 
-export const SAVINGS_REPORT = {
+export const SAVINGS_REPORT: SavingsReport = {
   months: [
     {
       month: '2026-08-01',

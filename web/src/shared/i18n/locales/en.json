@@ -12,7 +12,8 @@
     "close": "Close",
     "prevMonth": "Previous month",
     "nextMonth": "Next month",
-    "currentMonth": "Current month"
+    "currentMonth": "Current month",
+    "exportCsv": "Export CSV"
   },
   "errors": {
     "notFoundTitle": "Page not found",

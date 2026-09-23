@@ -2,10 +2,12 @@ import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 
 import { debtsReportQuery, goalsReportQuery } from '@/features/reports/api/reports-api'
+import { obligationsRows } from '@/features/reports/model/export-rows'
 import { useAppLocale } from '@/shared/i18n'
 import { formatMoney } from '@/shared/lib/money'
 import { formatMonth } from '@/shared/lib/month'
 import { Badge } from '@/shared/ui/badge'
+import { ExportCsvButton } from '@/shared/ui/export-csv-button'
 import { MoneyText } from '@/shared/ui/money-text'
 import { PageHeader } from '@/shared/ui/page-header'
 import { ProgressBar } from '@/shared/ui/progress-bar'
@@ -44,6 +46,21 @@ export function ObligationsReportPage({
       <PageHeader
         title={t('report.debtsPage.title')}
         description={t('report.debtsPage.description')}
+        actions={
+          debts.data &&
+          goals.data && (
+            <ExportCsvButton
+              fileName="qarz-maqsad.csv"
+              rows={() =>
+                obligationsRows(debts.data, goals.data, {
+                  t,
+                  major: (minor) => minor / 100,
+                  month: (iso) => formatMonth(iso.slice(0, 7), locale),
+                })
+              }
+            />
+          )
+        }
       />
 
       <SectionCard title={t('report.debtsPage.title')}>

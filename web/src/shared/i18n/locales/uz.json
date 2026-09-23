@@ -12,7 +12,8 @@
     "close": "Yopish",
     "prevMonth": "Oldingi oy",
     "nextMonth": "Keyingi oy",
-    "currentMonth": "Joriy oy"
+    "currentMonth": "Joriy oy",
+    "exportCsv": "CSV eksport"
   },
   "errors": {
     "notFoundTitle": "Sahifa topilmadi",

@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises'
+
 import { expect, test, type Page } from '@playwright/test'
 
 import { accessToken, HOUSEHOLD_URL, signIn } from './support/app.ts'
@@ -125,6 +127,15 @@ test.describe('E24-T01: xulosa', () => {
     if (testInfo.project.name === 'desktop') {
       await page.screenshot({ path: testInfo.outputPath('report.png'), fullPage: true })
     }
+
+    // E24-T06: CSV eksport — yakun va kategoriyalar bitta faylda.
+    const downloading = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'CSV eksport' }).click()
+    const download = await downloading
+    expect(download.suggestedFilename()).toMatch(/^hisobot-\d{4}-\d{2}\.csv$/)
+    const csv = await readFile(await download.path(), 'utf8')
+    expect(csv).toContain('Yakun')
+    expect(csv).toContain('Oziq-ovqat')
 
     // Chop etishda faqat hisobot qoladi (BR-180 uchun print uslublari).
     await page.emulateMedia({ media: 'print' })

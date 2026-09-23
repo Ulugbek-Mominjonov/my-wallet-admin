@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Lock } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { yearReportQuery, type YearReport } from '@/features/reports/api/reports-api'
+import { yearReportRows } from '@/features/reports/model/export-rows'
 import { yearChartPoints } from '@/features/reports/model/year-report'
 import { useAppLocale } from '@/shared/i18n'
 import { formatMoney } from '@/shared/lib/money'
@@ -11,6 +12,7 @@ import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 import { ChartFigure, ChartLegend } from '@/shared/ui/chart/chart-figure'
 import { ColumnChart } from '@/shared/ui/chart/column-chart'
+import { ExportCsvButton } from '@/shared/ui/export-csv-button'
 import { MoneyText } from '@/shared/ui/money-text'
 import { PageHeader } from '@/shared/ui/page-header'
 import { QueryError } from '@/shared/ui/query-error'
@@ -48,7 +50,24 @@ export function YearReportPage({
 
   const header = (
     <>
-      <PageHeader title={t('report.year.title')} description={t('report.year.description')} />
+      <PageHeader
+        title={t('report.year.title')}
+        description={t('report.year.description')}
+        actions={
+          report.data && (
+            <ExportCsvButton
+              fileName={`hisobot-${String(year)}.csv`}
+              rows={() =>
+                yearReportRows(report.data, {
+                  t,
+                  major: (minor) => minor / 100,
+                  month: (iso) => formatMonth(iso.slice(0, 7), locale),
+                })
+              }
+            />
+          )
+        }
+      />
       <div className="flex flex-wrap items-center gap-1 print:hidden">
         <Button
           variant="outline"

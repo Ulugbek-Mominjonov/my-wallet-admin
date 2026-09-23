@@ -9,6 +9,7 @@ import {
   type MonthReport,
   type SavingsReport,
 } from '@/features/reports/api/reports-api'
+import { monthReportRows } from '@/features/reports/model/export-rows'
 import { incomeOutsideTypes } from '@/features/reports/model/month-report'
 import { CategoryLimits, IncomeMatrix, UnpaidPlans } from '@/features/reports/ui/report-tables'
 import { useAppLocale } from '@/shared/i18n'
@@ -16,6 +17,7 @@ import { formatMoney } from '@/shared/lib/money'
 import { formatMonth, type MonthKey } from '@/shared/lib/month'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
+import { ExportCsvButton } from '@/shared/ui/export-csv-button'
 import { MoneyText } from '@/shared/ui/money-text'
 import { MonthStepper } from '@/shared/ui/month-stepper'
 import { PageHeader } from '@/shared/ui/page-header'
@@ -55,16 +57,30 @@ export function MonthReportPage({
         title={t('report.title')}
         description={t('report.description')}
         actions={
-          <Button
-            variant="outline"
-            className="print:hidden"
-            onClick={() => {
-              window.print()
-            }}
-          >
-            <Printer aria-hidden />
-            {t('report.print')}
-          </Button>
+          <>
+            {report.data && (
+              <ExportCsvButton
+                fileName={`hisobot-${month}.csv`}
+                rows={() =>
+                  monthReportRows(report.data, {
+                    t,
+                    major: (minor) => minor / 100,
+                    month: (iso) => formatMonth(iso.slice(0, 7), locale),
+                  })
+                }
+              />
+            )}
+            <Button
+              variant="outline"
+              className="print:hidden"
+              onClick={() => {
+                window.print()
+              }}
+            >
+              <Printer aria-hidden />
+              {t('report.print')}
+            </Button>
+          </>
         }
       />
       <div className="flex flex-wrap items-center gap-3">
