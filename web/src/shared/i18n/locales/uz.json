@@ -118,7 +118,8 @@
     "export": "Eksport",
     "import": "Import",
     "recalc": "Qayta joylash",
-    "audit": "Audit jurnali"
+    "audit": "Audit jurnali",
+    "notifications": "Bildirishnomalar"
   },
   "shell": {
     "toggleSidebar": "Menyuni yig'ish/ochish",
@@ -1215,6 +1216,105 @@
       "attachments": "Cheklar",
       "households": "Byudjet",
       "household_members": "A'zolar"
+    }
+  },
+  "notifications": {
+    "title": "Bildirishnomalar",
+    "description": "Eslatmalar, kanallar va oylik hisobot — har a'zoning o'z sozlamasi",
+    "saved": "Saqlandi",
+    "channels": "Kanallar",
+    "channelsHint": "Xabar qaysi yo'l bilan kelsin (BR-163)",
+    "channel": {
+      "push": "Push",
+      "telegram": "Telegram",
+      "email": "Email"
+    },
+    "schedule": "Kunlik eslatma",
+    "monthly": "Oylik hisobot va ogohlantirishlar",
+    "hour": "{{hour}}:00",
+    "days": "{{count}} kun",
+    "day": "Har oyning {{day}}-kuni",
+    "fields": {
+      "push": "Ilova (push)",
+      "telegram": "Telegram",
+      "email": "Email",
+      "reminderHour": "Eslatma soati",
+      "daysAhead": "Necha kun oldin",
+      "monthlyReport": "Oylik hisobot",
+      "reportDay": "Hisobot kuni",
+      "limitAlerts": "Limit ogohlantirishi",
+      "incomeMissing": "Daromad kelmadi"
+    },
+    "hints": {
+      "push": "Mobil ilova ochilgan qurilmalarga",
+      "telegram": "Avval Telegram'ni ulang",
+      "email": "Server sozlangan bo'lsa",
+      "monthlyReport": "O'tgan oy yakuni (BR-161)",
+      "limitAlerts": "Kategoriya limiti oshganda (BR-133)",
+      "incomeMissing": "Kutilgan daromad kelmaganda (BR-165)"
+    },
+    "telegram": {
+      "title": "Telegram'ni ulash",
+      "description": "Bot orqali eslatma, `/balans` va `/bugun` (BR-163)",
+      "link": "Ulash",
+      "linkHint": "QR'ni telefon kamerasi bilan oching yoki havolani bosing — botda «Start» ni bosing.",
+      "qrAlt": "Telegram botiga ulash havolasi (QR)",
+      "copy": "Nusxa olish",
+      "copied": "Havola nusxalandi",
+      "linked": "Ulangan",
+      "unlink": "Uzish",
+      "unlinked": "Telegram uzildi",
+      "notConfigured": "Serverda Telegram boti sozlanmagan."
+    },
+    "test": {
+      "title": "Tekshirish",
+      "hint": "Xabar aynan qayerga borishini tekshiring (BR-164)",
+      "send": "Sinov xabari",
+      "month": "Hisobot oyi",
+      "sendReport": "Hisobotni hozir yuborish",
+      "queued": "navbatga qo'yildi",
+      "summary": "{{month}}: daromad {{income}}, xarajat {{expense}}, orttirildi {{saved}}"
+    },
+    "reasons": {
+      "disabled": "sozlamada o'chiq",
+      "no_device": "qurilma yo'q",
+      "not_linked": "ulanmagan",
+      "not_configured": "server sozlamagan",
+      "unknown": "noma'lum sabab"
+    },
+    "types": {
+      "daily_reminder": "Kunlik eslatma",
+      "monthly_report": "Oylik hisobot",
+      "limit_alert": "Limit ogohlantirishi",
+      "income_missing": "Daromad kelmadi",
+      "test": "Sinov xabari",
+      "announcement": "E'lon"
+    },
+    "statuses": {
+      "pending": "Navbatda",
+      "sending": "Yuborilmoqda",
+      "sent": "Yuborildi",
+      "failed": "Xato",
+      "skipped": "O'tkazildi"
+    },
+    "log": {
+      "title": "Yuborish jurnali",
+      "hint": "Oxirgi xabarlar (90 kun saqlanadi — BR-166)",
+      "empty": "Hali xabar yuborilmagan",
+      "at": "Vaqt",
+      "channel": "Kanal",
+      "type": "Turi",
+      "status": "Holati"
+    },
+    "archive": {
+      "title": "Oylik hisobotlar arxivi",
+      "hint": "Yuborilgan oylik yakunlar (BR-167)",
+      "empty": "Arxiv bo'sh",
+      "month": "Oy",
+      "income": "Daromad",
+      "expense": "Xarajat",
+      "saved": "Orttirildi",
+      "generatedAt": "Yaratilgan"
     }
   }
 }

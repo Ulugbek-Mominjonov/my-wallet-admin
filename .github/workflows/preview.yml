@@ -23,6 +23,7 @@ jobs:
       VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL_STAGING }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY_STAGING }}
       VITE_APP_ENV: staging
+      VITE_TELEGRAM_BOT: ${{ vars.TELEGRAM_BOT }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup

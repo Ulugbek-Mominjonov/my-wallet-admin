@@ -172,4 +172,75 @@ test.describe('E25: vositalar', () => {
     await expect(page.getByRole('cell', { name: 'Teglar' })).toHaveCount(1)
     await expect(page.getByRole('cell', { name: 'Hisoblar' })).toHaveCount(0)
   })
+
+  test('E25-T06: bildirishnomalar — sozlama, sinov natijasi va hisobot arxivi', async ({
+    page,
+  }) => {
+    await page.goto('/login')
+    await signIn(page, uniqueEmail('notify'))
+    await expect(page).toHaveURL(HOUSEHOLD_URL)
+    const householdId = new URL(page.url()).pathname.split('/').at(-1) ?? ''
+    const token = await accessToken(page)
+
+    // O'tgan oyda daromad — hisobot yakuni bo'sh bo'lmasin.
+    const [accounts, categories] = await Promise.all([
+      select<{ id: string }[]>(
+        token,
+        `accounts?select=id&household_id=eq.${householdId}&type=eq.card`,
+      ),
+      select<{ id: string }[]>(
+        token,
+        `categories?select=id&household_id=eq.${householdId}&name=eq.Avans`,
+      ),
+    ])
+    const today = new Intl.DateTimeFormat('en-CA', { timeZone: TIMEZONE }).format(new Date())
+    const previous = new Date(`${today.slice(0, 7)}-01T00:00:00Z`)
+    previous.setUTCMonth(previous.getUTCMonth() - 1)
+    const previousMonth = previous.toISOString().slice(0, 7)
+    await insert(token, 'transactions', [
+      {
+        household_id: householdId,
+        kind: 'income',
+        account_id: accounts[0]?.id,
+        category_id: categories[0]?.id,
+        amount: 900000000,
+        occurred_on: `${previousMonth}-10`,
+      },
+    ])
+
+    await page.goto(`/h/${householdId}/notifications`)
+    await expect(page.getByRole('heading', { level: 1, name: 'Bildirishnomalar' })).toBeVisible()
+
+    // Telegram ulanmagan — kanal o'chiq; sozlama darhol saqlanadi.
+    await expect(page.getByRole('switch', { name: 'Telegram' })).toHaveAttribute(
+      'aria-disabled',
+      'true',
+    )
+    await page.getByRole('switch', { name: 'Daromad kelmadi' }).click()
+    await expect(page.getByText('Saqlandi')).toBeVisible()
+    await page.reload()
+    await expect(page.getByRole('switch', { name: 'Daromad kelmadi' })).toHaveAttribute(
+      'aria-checked',
+      'false',
+    )
+
+    // BR-164: sinov xabari — har kanal uchun sabab ko'rinadi.
+    await page.getByRole('button', { name: 'Sinov xabari' }).click()
+    await expect(page.getByText("Push: qurilma yo'q")).toBeVisible()
+    await expect(page.getByText('Telegram: ulanmagan')).toBeVisible()
+
+    // Ulash havolasi va QR (lokalda bot nomi — MyWalletLocalBot).
+    await page.getByRole('button', { name: 'Ulash' }).click()
+    await expect(page.getByRole('link', { name: /t\.me\/MyWalletLocalBot\?start=/ })).toBeVisible()
+    await expect(
+      page.getByRole('img', { name: 'Telegram botiga ulash havolasi (QR)' }),
+    ).toBeVisible()
+
+    // "Hozir yuborish": hisobot yaratiladi va arxivda ko'rinadi (BR-167).
+    await page.getByRole('button', { name: 'Hisobotni hozir yuborish' }).click()
+    await expect(page.getByText("daromad 9 000 000 so'm", { exact: false })).toBeVisible()
+    await expect(page.getByRole('table', { name: 'Oylik hisobotlar arxivi' })).toContainText(
+      '9 000 000',
+    )
+  })
 })

@@ -26,6 +26,8 @@ web-env: ## web/.env.local ni lokal Supabase qiymatlaridan yaratish
 		$$1 == "API_URL" { gsub(/"/, "", $$2); print "VITE_SUPABASE_URL=" $$2 } \
 		$$1 == "PUBLISHABLE_KEY" { gsub(/"/, "", $$2); print "VITE_SUPABASE_PUBLISHABLE_KEY=" $$2 }' > web/.env.local
 	@echo "VITE_APP_ENV=local" >> web/.env.local
+	@# Lokalda bot yo'q — nom faqat ulash oqimini (havola, QR) ko'rsatish uchun.
+	@echo "VITE_TELEGRAM_BOT=MyWalletLocalBot" >> web/.env.local
 	@echo "web/.env.local yaratildi"
 
 web-lint: ## Web: format, ESLint va tip tekshiruvi

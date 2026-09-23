@@ -219,14 +219,18 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
      bot → `OPS_TELEGRAM_BOT_TOKEN` (**secret**). O'zingiz botga `/start`
      yozing, keyin `https://api.telegram.org/bot<token>/getUpdates` dan
      `chat.id` → `OPS_TELEGRAM_CHAT_ID` (variable).
-2. Webhook maxfiy kaliti: `openssl rand -hex 32` → har Environment'ga
+2. Ilova boti nomini (`@` siz, masalan `MyWalletUzBot`) repo **variable**
+   `TELEGRAM_BOT` ga yozing — admin panel ulash havolasi va QR'ni shundan
+   quradi (`VITE_TELEGRAM_BOT`; bo'sh bo'lsa ulash bo'limi "sozlanmagan"
+   deydi). Bot **tokeni** faqat serverda (Environment secret).
+3. Webhook maxfiy kaliti: `openssl rand -hex 32` → har Environment'ga
    **secret** `TELEGRAM_WEBHOOK_SECRET`.
-3. Webhook'ni ulash — **deploy workflow o'zi bajaradi**
+4. Webhook'ni ulash — **deploy workflow o'zi bajaradi**
    (`scripts/telegram-setup.sh`: `setWebhook` →
    `https://<ref>.supabase.co/functions/v1/telegram-webhook`, `secret_token`
    bilan; buyruqlar menyusi `/balans`, `/bugun`, `/stop` — uz/ru/en).
    Qo'lda kerak emas. Token bo'lmasa — Telegram qadami o'tkaziladi.
-4. BotFather → `/setdescription`, `/setuserpic` — ixtiyoriy.
+5. BotFather → `/setdescription`, `/setuserpic` — ixtiyoriy.
 
 ✅ **Tekshiruv:** ilovada Sozlamalar → Telegram → "Ulash" → botda `/start`
 → "✅ My Wallet ulandi" xabari.
@@ -278,6 +282,7 @@ reviewer tasdig'idan keyin ochiladi.
 | `CLOUDFLARE_ACCOUNT_ID` | akkaunt ID | 5.2 |
 | `BACKUP_AGE_RECIPIENT` | `age1...` ochiq kalit | 8 |
 | `OPS_TELEGRAM_CHAT_ID` | ops chat ID | 7.1 |
+| `TELEGRAM_BOT` | bot nomi `@` siz (admin paneldagi ulash havolasi va QR uchun) | 7 |
 
 *Secrets (repo):*
 

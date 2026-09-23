@@ -8,6 +8,8 @@ const envSchema = z.object({
   VITE_SUPABASE_URL: z.url(),
   VITE_SUPABASE_PUBLISHABLE_KEY: z.string().min(1),
   VITE_APP_ENV: z.enum(['local', 'staging', 'production']).default('local'),
+  /** Telegram bot nomi (`t.me/<bot>`); bo'sh — ulash ko'rsatilmaydi (BR-163). */
+  VITE_TELEGRAM_BOT: z.string().default(''),
 })
 
 const parsed = envSchema.safeParse(import.meta.env)

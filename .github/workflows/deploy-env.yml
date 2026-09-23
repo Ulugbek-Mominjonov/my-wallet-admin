@@ -33,6 +33,8 @@ jobs:
       VITE_SUPABASE_URL: ${{ inputs.environment == 'production' && vars.SUPABASE_URL_PRODUCTION || vars.SUPABASE_URL_STAGING }}
       VITE_SUPABASE_PUBLISHABLE_KEY: ${{ inputs.environment == 'production' && vars.SUPABASE_PUBLISHABLE_KEY_PRODUCTION || vars.SUPABASE_PUBLISHABLE_KEY_STAGING }}
       VITE_APP_ENV: ${{ inputs.environment }}
+      # Telegram bot nomi — sir emas (t.me havolasi); tokeni Vault'da (E11).
+      VITE_TELEGRAM_BOT: ${{ vars.TELEGRAM_BOT }}
       ADMIN_URL: ${{ inputs.environment == 'production' && vars.ADMIN_URL_PRODUCTION || vars.ADMIN_URL_STAGING }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

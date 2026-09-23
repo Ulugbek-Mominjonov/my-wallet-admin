@@ -15,6 +15,7 @@ export default mergeConfig(
         VITE_SUPABASE_URL: 'http://supabase.test',
         VITE_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_test',
         VITE_APP_ENV: 'local',
+        VITE_TELEGRAM_BOT: 'mywallet_test_bot',
       },
       coverage: {
         provider: 'v8',

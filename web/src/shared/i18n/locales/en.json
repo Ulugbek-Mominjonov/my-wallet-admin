@@ -118,7 +118,8 @@
     "export": "Export",
     "import": "Import",
     "recalc": "Recalculate months",
-    "audit": "Audit log"
+    "audit": "Audit log",
+    "notifications": "Notifications"
   },
   "shell": {
     "toggleSidebar": "Toggle menu",
@@ -1215,6 +1216,105 @@
       "attachments": "Receipts",
       "households": "Budget",
       "household_members": "Members"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Reminders, channels and the monthly report — each member has their own settings",
+    "saved": "Saved",
+    "channels": "Channels",
+    "channelsHint": "How messages reach you (BR-163)",
+    "channel": {
+      "push": "Push",
+      "telegram": "Telegram",
+      "email": "Email"
+    },
+    "schedule": "Daily reminder",
+    "monthly": "Monthly report and alerts",
+    "hour": "{{hour}}:00",
+    "days": "{{count}} days",
+    "day": "Day {{day}} of the month",
+    "fields": {
+      "push": "App (push)",
+      "telegram": "Telegram",
+      "email": "Email",
+      "reminderHour": "Reminder hour",
+      "daysAhead": "Days ahead",
+      "monthlyReport": "Monthly report",
+      "reportDay": "Report day",
+      "limitAlerts": "Limit alerts",
+      "incomeMissing": "Missing income"
+    },
+    "hints": {
+      "push": "To devices with the app installed",
+      "telegram": "Link Telegram first",
+      "email": "If the server is configured",
+      "monthlyReport": "Last month summary (BR-161)",
+      "limitAlerts": "When a category limit is exceeded (BR-133)",
+      "incomeMissing": "When expected income does not arrive (BR-165)"
+    },
+    "telegram": {
+      "title": "Link Telegram",
+      "description": "Reminders in the bot, `/balans` and `/bugun` (BR-163)",
+      "link": "Link",
+      "linkHint": "Scan the QR with your phone camera or open the link — then press “Start” in the bot.",
+      "qrAlt": "Telegram bot linking URL (QR)",
+      "copy": "Copy",
+      "copied": "Link copied",
+      "linked": "Linked",
+      "unlink": "Unlink",
+      "unlinked": "Telegram unlinked",
+      "notConfigured": "The Telegram bot is not configured on the server."
+    },
+    "test": {
+      "title": "Check",
+      "hint": "See exactly where a message goes (BR-164)",
+      "send": "Test message",
+      "month": "Report month",
+      "sendReport": "Send the report now",
+      "queued": "queued",
+      "summary": "{{month}}: income {{income}}, expense {{expense}}, saved {{saved}}"
+    },
+    "reasons": {
+      "disabled": "turned off in settings",
+      "no_device": "no device",
+      "not_linked": "not linked",
+      "not_configured": "server not configured",
+      "unknown": "unknown reason"
+    },
+    "types": {
+      "daily_reminder": "Daily reminder",
+      "monthly_report": "Monthly report",
+      "limit_alert": "Limit alert",
+      "income_missing": "Missing income",
+      "test": "Test message",
+      "announcement": "Announcement"
+    },
+    "statuses": {
+      "pending": "Queued",
+      "sending": "Sending",
+      "sent": "Sent",
+      "failed": "Failed",
+      "skipped": "Skipped"
+    },
+    "log": {
+      "title": "Delivery log",
+      "hint": "Recent messages (kept for 90 days — BR-166)",
+      "empty": "Nothing has been sent yet",
+      "at": "Time",
+      "channel": "Channel",
+      "type": "Type",
+      "status": "Status"
+    },
+    "archive": {
+      "title": "Monthly report archive",
+      "hint": "Monthly summaries that were sent (BR-167)",
+      "empty": "The archive is empty",
+      "month": "Month",
+      "income": "Income",
+      "expense": "Expense",
+      "saved": "Saved",
+      "generatedAt": "Generated"
     }
   }
 }
