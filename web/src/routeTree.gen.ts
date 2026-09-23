@@ -32,6 +32,8 @@ import { Route as AppHHouseholdIdSettingsRouteImport } from './routes/_app/h/$ho
 import { Route as AppHHouseholdIdTagsRouteImport } from './routes/_app/h/$householdId/tags'
 import { Route as AppHHouseholdIdTransactionsRouteImport } from './routes/_app/h/$householdId/transactions'
 import { Route as AppHHouseholdIdReportIndexRouteImport } from './routes/_app/h/$householdId/report.index'
+import { Route as AppHHouseholdIdReportObligationsRouteImport } from './routes/_app/h/$householdId/report.obligations'
+import { Route as AppHHouseholdIdReportSavingsRouteImport } from './routes/_app/h/$householdId/report.savings'
 import { Route as AppHHouseholdIdReportYearRouteImport } from './routes/_app/h/$householdId/report.year'
 
 const AppRoute = AppRouteImport.update({
@@ -152,6 +154,18 @@ const AppHHouseholdIdReportIndexRoute =
     path: '/',
     getParentRoute: () => AppHHouseholdIdReportRoute,
   } as any)
+const AppHHouseholdIdReportObligationsRoute =
+  AppHHouseholdIdReportObligationsRouteImport.update({
+    id: '/obligations',
+    path: '/obligations',
+    getParentRoute: () => AppHHouseholdIdReportRoute,
+  } as any)
+const AppHHouseholdIdReportSavingsRoute =
+  AppHHouseholdIdReportSavingsRouteImport.update({
+    id: '/savings',
+    path: '/savings',
+    getParentRoute: () => AppHHouseholdIdReportRoute,
+  } as any)
 const AppHHouseholdIdReportYearRoute =
   AppHHouseholdIdReportYearRouteImport.update({
     id: '/year',
@@ -180,6 +194,8 @@ export interface FileRoutesByFullPath {
   '/h/$householdId/tags': typeof AppHHouseholdIdTagsRoute
   '/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
   '/h/$householdId/': typeof AppHHouseholdIdIndexRoute
+  '/h/$householdId/report/obligations': typeof AppHHouseholdIdReportObligationsRoute
+  '/h/$householdId/report/savings': typeof AppHHouseholdIdReportSavingsRoute
   '/h/$householdId/report/year': typeof AppHHouseholdIdReportYearRoute
   '/h/$householdId/report/': typeof AppHHouseholdIdReportIndexRoute
 }
@@ -202,6 +218,8 @@ export interface FileRoutesByTo {
   '/h/$householdId/tags': typeof AppHHouseholdIdTagsRoute
   '/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
   '/h/$householdId': typeof AppHHouseholdIdIndexRoute
+  '/h/$householdId/report/obligations': typeof AppHHouseholdIdReportObligationsRoute
+  '/h/$householdId/report/savings': typeof AppHHouseholdIdReportSavingsRoute
   '/h/$householdId/report/year': typeof AppHHouseholdIdReportYearRoute
   '/h/$householdId/report': typeof AppHHouseholdIdReportIndexRoute
 }
@@ -229,6 +247,8 @@ export interface FileRoutesById {
   '/_app/h/$householdId/tags': typeof AppHHouseholdIdTagsRoute
   '/_app/h/$householdId/transactions': typeof AppHHouseholdIdTransactionsRoute
   '/_app/h/$householdId/': typeof AppHHouseholdIdIndexRoute
+  '/_app/h/$householdId/report/obligations': typeof AppHHouseholdIdReportObligationsRoute
+  '/_app/h/$householdId/report/savings': typeof AppHHouseholdIdReportSavingsRoute
   '/_app/h/$householdId/report/year': typeof AppHHouseholdIdReportYearRoute
   '/_app/h/$householdId/report/': typeof AppHHouseholdIdReportIndexRoute
 }
@@ -255,6 +275,8 @@ export interface FileRouteTypes {
     | '/h/$householdId/tags'
     | '/h/$householdId/transactions'
     | '/h/$householdId/'
+    | '/h/$householdId/report/obligations'
+    | '/h/$householdId/report/savings'
     | '/h/$householdId/report/year'
     | '/h/$householdId/report/'
   fileRoutesByTo: FileRoutesByTo
@@ -277,6 +299,8 @@ export interface FileRouteTypes {
     | '/h/$householdId/tags'
     | '/h/$householdId/transactions'
     | '/h/$householdId'
+    | '/h/$householdId/report/obligations'
+    | '/h/$householdId/report/savings'
     | '/h/$householdId/report/year'
     | '/h/$householdId/report'
   id:
@@ -303,6 +327,8 @@ export interface FileRouteTypes {
     | '/_app/h/$householdId/tags'
     | '/_app/h/$householdId/transactions'
     | '/_app/h/$householdId/'
+    | '/_app/h/$householdId/report/obligations'
+    | '/_app/h/$householdId/report/savings'
     | '/_app/h/$householdId/report/year'
     | '/_app/h/$householdId/report/'
   fileRoutesById: FileRoutesById
@@ -475,6 +501,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppHHouseholdIdReportIndexRouteImport
       parentRoute: typeof AppHHouseholdIdReportRoute
     }
+    '/_app/h/$householdId/report/obligations': {
+      id: '/_app/h/$householdId/report/obligations'
+      path: '/obligations'
+      fullPath: '/h/$householdId/report/obligations'
+      preLoaderRoute: typeof AppHHouseholdIdReportObligationsRouteImport
+      parentRoute: typeof AppHHouseholdIdReportRoute
+    }
+    '/_app/h/$householdId/report/savings': {
+      id: '/_app/h/$householdId/report/savings'
+      path: '/savings'
+      fullPath: '/h/$householdId/report/savings'
+      preLoaderRoute: typeof AppHHouseholdIdReportSavingsRouteImport
+      parentRoute: typeof AppHHouseholdIdReportRoute
+    }
     '/_app/h/$householdId/report/year': {
       id: '/_app/h/$householdId/report/year'
       path: '/year'
@@ -486,11 +526,15 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppHHouseholdIdReportRouteChildren {
+  AppHHouseholdIdReportObligationsRoute: typeof AppHHouseholdIdReportObligationsRoute
+  AppHHouseholdIdReportSavingsRoute: typeof AppHHouseholdIdReportSavingsRoute
   AppHHouseholdIdReportYearRoute: typeof AppHHouseholdIdReportYearRoute
   AppHHouseholdIdReportIndexRoute: typeof AppHHouseholdIdReportIndexRoute
 }
 
 const AppHHouseholdIdReportRouteChildren: AppHHouseholdIdReportRouteChildren = {
+  AppHHouseholdIdReportObligationsRoute: AppHHouseholdIdReportObligationsRoute,
+  AppHHouseholdIdReportSavingsRoute: AppHHouseholdIdReportSavingsRoute,
   AppHHouseholdIdReportYearRoute: AppHHouseholdIdReportYearRoute,
   AppHHouseholdIdReportIndexRoute: AppHHouseholdIdReportIndexRoute,
 }

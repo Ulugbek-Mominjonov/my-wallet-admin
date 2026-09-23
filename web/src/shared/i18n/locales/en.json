@@ -956,7 +956,9 @@
     },
     "tabs": {
       "month": "Monthly",
-      "year": "Yearly"
+      "year": "Yearly",
+      "savings": "Savings",
+      "obligations": "Debts & goals"
     },
     "year": {
       "title": "Yearly overview",
@@ -974,6 +976,67 @@
       "total": "TOTAL",
       "empty": "No records this year",
       "closed": "Closed"
+    },
+    "savingsPage": {
+      "title": "Savings",
+      "description": "Accumulation by month",
+      "chart": "Saved per month and in total",
+      "monthly": "Per month",
+      "accumulated": "Accumulated",
+      "month": "Month",
+      "income": "Income",
+      "expense": "Expenses",
+      "current": "in progress",
+      "empty": "No records yet"
+    },
+    "fundPage": {
+      "title": "👤 Personal fund",
+      "description": "Allocations and spending",
+      "allocated": "Total allocated",
+      "spent": "Total spent",
+      "balance": "Balance",
+      "month": "Month",
+      "spends": "Spending",
+      "date": "Date",
+      "amount": "Amount",
+      "note": "Note",
+      "emptySpends": "No spending"
+    },
+    "accounts": {
+      "title": "Account balances",
+      "name": "Account",
+      "currency": "Currency",
+      "balance": "Balance",
+      "total": "TOTAL (base currency)",
+      "empty": "No accounts"
+    },
+    "debtsPage": {
+      "title": "💳 Debts",
+      "description": "Remaining, progress and end",
+      "name": "Debt",
+      "remaining": "Remaining",
+      "progress": "Progress",
+      "monthly": "Monthly",
+      "end": "Ends",
+      "status": "Status",
+      "empty": "No debts",
+      "unknown": "—"
+    },
+    "goalsPage": {
+      "title": "🎯 Goals",
+      "description": "Saved and forecast",
+      "name": "Goal",
+      "saved": "Saved",
+      "remaining": "Remaining",
+      "progress": "Progress",
+      "monthly": "Monthly",
+      "end": "Forecast",
+      "deadline": "Deadline",
+      "onTrack": "On track",
+      "late": "Behind",
+      "avg": "Average monthly saving",
+      "fromAverage": "from average",
+      "empty": "No goals"
     }
   }
 }

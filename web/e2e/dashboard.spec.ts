@@ -143,5 +143,19 @@ test.describe('E24-T01: xulosa', () => {
     const yearTable = page.getByRole('table', { name: 'Yillik ko‘rinish' })
     await expect(yearTable.getByRole('row', { name: /JAMI/ })).toContainText("8 000 000 so'm")
     await expect(page.getByRole('figure', { name: 'Daromad, xarajat va orttirish' })).toBeVisible()
+
+    // E24-T04: jamg'arma, 👤 fond va hisoblar qoldig'i.
+    await page.getByRole('link', { name: 'Jamg‘arma' }).click()
+    await expect(page).toHaveURL(/\/report\/savings/)
+    await expect(page.getByRole('table', { name: 'Jamg‘arma' })).toContainText('⏳')
+    const balances = page.getByRole('table', { name: 'Hisoblar qoldig‘i' })
+    await expect(balances).toContainText('Naqd')
+    await expect(balances.getByRole('row', { name: /JAMI/ })).toBeVisible()
+
+    // E24-T04: qarz va maqsadlar (bu byudjetda — bo'sh holatlar).
+    await page.getByRole('link', { name: 'Qarz va maqsad' }).click()
+    await expect(page).toHaveURL(/\/report\/obligations/)
+    await expect(page.getByText("Qarz yo'q")).toBeVisible()
+    await expect(page.getByText("Maqsad yo'q")).toBeVisible()
   })
 })

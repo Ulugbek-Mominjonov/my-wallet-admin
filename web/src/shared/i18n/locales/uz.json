@@ -956,7 +956,9 @@
     },
     "tabs": {
       "month": "Oylik",
-      "year": "Yillik"
+      "year": "Yillik",
+      "savings": "Jamg‘arma",
+      "obligations": "Qarz va maqsad"
     },
     "year": {
       "title": "Yillik ko‘rinish",
@@ -974,6 +976,67 @@
       "total": "JAMI",
       "empty": "Bu yilda yozuv yo'q",
       "closed": "Yopilgan"
+    },
+    "savingsPage": {
+      "title": "Jamg‘arma",
+      "description": "Oylar bo'yicha to'planish",
+      "chart": "Oylik orttirgan va to'plangan",
+      "monthly": "Oylik orttirgan",
+      "accumulated": "To'plangan",
+      "month": "Oy",
+      "income": "Daromad",
+      "expense": "Xarajat",
+      "current": "davom etmoqda",
+      "empty": "Hali yozuv yo'q"
+    },
+    "fundPage": {
+      "title": "👤 Shaxsiy fond",
+      "description": "Ajratma va sarf daftari",
+      "allocated": "Jami ajratildi",
+      "spent": "Jami sarflandi",
+      "balance": "Qoldiq",
+      "month": "Oy",
+      "spends": "Sarflar",
+      "date": "Sana",
+      "amount": "Summa",
+      "note": "Izoh",
+      "emptySpends": "Sarf yo'q"
+    },
+    "accounts": {
+      "title": "Hisoblar qoldig‘i",
+      "name": "Hisob",
+      "currency": "Valyuta",
+      "balance": "Qoldiq",
+      "total": "JAMI (asosiy valyutada)",
+      "empty": "Hisob yo'q"
+    },
+    "debtsPage": {
+      "title": "💳 Qarzlar",
+      "description": "Qoldiq, progress va tugash oyi",
+      "name": "Qarz",
+      "remaining": "Qolgan",
+      "progress": "Progress",
+      "monthly": "Oylik",
+      "end": "Tugash",
+      "status": "Holat",
+      "empty": "Qarz yo'q",
+      "unknown": "—"
+    },
+    "goalsPage": {
+      "title": "🎯 Maqsadlar",
+      "description": "Yig'ilgan summa va prognoz",
+      "name": "Maqsad",
+      "saved": "Yig‘ildi",
+      "remaining": "Qoldi",
+      "progress": "Progress",
+      "monthly": "Oyiga",
+      "end": "Prognoz",
+      "deadline": "Muddat",
+      "onTrack": "Ulguradi",
+      "late": "Kechikadi",
+      "avg": "O'rtacha oylik jamg'arma",
+      "fromAverage": "o'rtachadan",
+      "empty": "Maqsad yo'q"
     }
   }
 }

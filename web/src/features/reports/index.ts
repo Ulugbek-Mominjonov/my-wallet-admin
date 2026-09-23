@@ -1,4 +1,6 @@
 export { reportSearchSchema, yearSearchSchema } from '@/features/reports/model/search'
 export { DashboardPage } from '@/features/reports/ui/dashboard-page'
 export { MonthReportPage } from '@/features/reports/ui/month-report-page'
+export { ObligationsReportPage } from '@/features/reports/ui/obligations-report-page'
+export { SavingsReportPage } from '@/features/reports/ui/savings-report-page'
 export { YearReportPage } from '@/features/reports/ui/year-report-page'

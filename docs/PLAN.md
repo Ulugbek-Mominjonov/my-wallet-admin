@@ -686,7 +686,7 @@ E21–E26 (admin) M2 bilan.
 - [x] **E24-T03** **Yillik ko'rinish** (`report_year`): jadval + JAMI qatori
   + grafik (daromad/xarajat ustunlari, orttirgan chizig'i), yillar
   almashtirgich.
-- [ ] **E24-T04** **Jamg'arma** (to'planish chizig'i, oylar jadvali ⏳ bilan),
+- [x] **E24-T04** **Jamg'arma** (to'planish chizig'i, oylar jadvali ⏳ bilan),
   **Shaxsiy fond** (ajratma/sarf daftari, qoldiq grafigi), **Qarzlar**
   (holatlar, progress, tugash, sof holat, bog'langan to'lovlar tarixi),
   **Maqsadlar** (progress, prognoz, ulguradimi), **Hisoblar qoldig'i**.

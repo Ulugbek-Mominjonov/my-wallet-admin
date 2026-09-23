@@ -43,6 +43,34 @@ function ReportLayout() {
         >
           {t('report.tabs.year')}
         </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          render={
+            <Link
+              to="/h/$householdId/report/savings"
+              params={{ householdId }}
+              activeProps={{ 'data-active': 'true' }}
+            />
+          }
+          className="data-active:bg-muted"
+        >
+          {t('report.tabs.savings')}
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          render={
+            <Link
+              to="/h/$householdId/report/obligations"
+              params={{ householdId }}
+              activeProps={{ 'data-active': 'true' }}
+            />
+          }
+          className="data-active:bg-muted"
+        >
+          {t('report.tabs.obligations')}
+        </Button>
       </nav>
       <Outlet />
     </div>

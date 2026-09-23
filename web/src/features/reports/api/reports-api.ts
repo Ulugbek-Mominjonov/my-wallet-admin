@@ -199,6 +199,127 @@ export const savingsReportQuery = (householdId: string) =>
     },
   })
 
+const fundSchema = z.object({
+  balance: money,
+  total_allocated: money,
+  total_spent: money,
+  months: z.array(z.object({ month: z.iso.date(), allocated: money, spent: money })),
+  spends: z.array(
+    z.object({
+      id: z.string(),
+      occurred_on: z.iso.date(),
+      amount: money,
+      category_id: z.string().nullable(),
+      payee: z.string().nullable(),
+      note: z.string().nullable(),
+    }),
+  ),
+})
+
+export type FundReport = z.infer<typeof fundSchema>
+
+/** BR-060..065: 👤 fond daftari — oylar kesimi va sarflar. */
+export const fundReportQuery = (householdId: string, from: MonthKey, to: MonthKey) =>
+  queryOptions({
+    queryKey: [...reportsKey(householdId), 'fund', from, to],
+    staleTime: REPORT_STALE_MS,
+    queryFn: async (): Promise<FundReport> => {
+      const { data, error } = await supabase.rpc('report_personal_fund', {
+        p_household: householdId,
+        p_from: `${from}-01`,
+        p_to: `${to}-01`,
+      })
+      if (error) throw toAppError(error)
+      return fundSchema.parse(data)
+    },
+  })
+
+const debtsSchema = z.object({
+  debts: z.array(
+    z.object({
+      debt_id: z.string(),
+      name: z.string(),
+      direction: z.enum(['i_owe', 'owed_to_me']),
+      currency: z.string(),
+      total: money,
+      paid_before: money,
+      /** Oylik to'lov belgilanmagan bo'lishi mumkin (BR-110). */
+      monthly_payment: money.nullable(),
+      due_date: z.iso.date().nullable(),
+      archived: z.boolean(),
+      paid_in_app: money,
+      pending_amount: money,
+      pending_count: z.number(),
+      remaining: money,
+      progress: z.number(),
+      /** Oylik to'lov yo'q bo'lsa — noma'lum (BR-113). */
+      months_left: z.number().nullable(),
+      end_month: z.iso.date().nullable(),
+      status: z.enum(['unlinked', 'pending', 'paying', 'closed']),
+    }),
+  ),
+  totals: z.object({
+    i_owe: money,
+    owed_to_me: money,
+    monthly_obligation: money,
+    net: money,
+    paid_this_month: money,
+  }),
+})
+
+export type DebtsReport = z.infer<typeof debtsSchema>
+
+/** BR-112..116: qarzlar — qoldiq, progress, tugash oyi va jamlar. */
+export const debtsReportQuery = (householdId: string) =>
+  queryOptions({
+    queryKey: [...reportsKey(householdId), 'debts'],
+    staleTime: REPORT_STALE_MS,
+    queryFn: async (): Promise<DebtsReport> => {
+      const { data, error } = await supabase.rpc('report_debts', { p_household: householdId })
+      if (error) throw toAppError(error)
+      return debtsSchema.parse(data)
+    },
+  })
+
+const goalsSchema = z.object({
+  avg_monthly_saved: money,
+  goals: z.array(
+    z.object({
+      goal_id: z.string(),
+      name: z.string(),
+      currency: z.string(),
+      target: money,
+      saved: money,
+      remaining: money,
+      progress: z.number(),
+      /** Oylik badal: maqsadniki yoki o'rtacha jamg'armadan (BR-121). */
+      monthly: money.nullable(),
+      monthly_source: z.enum(['goal', 'average']).nullable(),
+      months_left: z.number().nullable(),
+      end_month: z.iso.date().nullable(),
+      deadline: z.iso.date().nullable(),
+      /** Muddat yoki prognoz noma'lum bo'lsa — `null` (BR-122). */
+      on_track: z.boolean().nullable(),
+      account_id: z.string().nullable(),
+      achieved_at: z.string().nullable(),
+    }),
+  ),
+})
+
+export type GoalsReport = z.infer<typeof goalsSchema>
+
+/** BR-120..122: maqsadlar — progress, prognoz va ulgurish belgisi. */
+export const goalsReportQuery = (householdId: string) =>
+  queryOptions({
+    queryKey: [...reportsKey(householdId), 'goals'],
+    staleTime: REPORT_STALE_MS,
+    queryFn: async (): Promise<GoalsReport> => {
+      const { data, error } = await supabase.rpc('report_goals', { p_household: householdId })
+      if (error) throw toAppError(error)
+      return goalsSchema.parse(data)
+    },
+  })
+
 const healthSchema = z.object({
   problems: z.array(z.object({ code: z.string() }).loose()),
   warnings: z.array(z.object({ code: z.string() }).loose()),
