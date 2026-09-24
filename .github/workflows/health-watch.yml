@@ -1,0 +1,38 @@
+# E28-T07: ishga tushgandan keyingi kundalik nazorat — rejali ishlar
+# (`job_runs`), bildirishnoma navbati va valyuta kurslari. Muammo bo'lsa
+# ops boti xabar beradi (DEPLOY.md 7.1); loglarda faqat sonlar va ish
+# nomlari — repo public, foydalanuvchi ma'lumoti chiqmaydi.
+name: Health watch
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # har kuni 08:00 Toshkent (kechki ishlardan keyin)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: prod — rejali ishlar va navbat
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: psql
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+
+      - name: Nazorat so'rovlari
+        id: check
+        env:
+          PGURL: ${{ secrets.SUPABASE_DB_URL_PRODUCTION }}
+        run: scripts/health-watch.sh
+
+      - uses: ./.github/actions/ops-alert
+        if: failure()
+        with:
+          message: |
+            🔴 My Wallet (prod) kundalik nazorat: ${{ steps.check.outputs.summary || 'so''rov bajarilmadi' }}
+          bot-token: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          chat-id: ${{ vars.OPS_TELEGRAM_CHAT_ID }}

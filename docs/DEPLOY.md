@@ -42,11 +42,24 @@ yozmang.
    Kodda sir yo'q; loglar va artefaktlar ochiq bo'lgani uchun zaxira
    shifrlanadi (8-qadam). Private qilinsa — bu imkoniyatlar uchun GitHub Pro
    kerak bo'ladi.
-2. Har repoda **Settings → Branches → Add rule** (`main`):
-   ✅ Require a pull request · ✅ Require status checks (`ci`) ·
-   ✅ Require linear history.
-3. **Settings → Environments:** `staging` (cheklovsiz) va `production`
-   (✅ Required reviewers → o'zingiz). Prod deploy faqat tasdiqdan keyin.
+2. **2 va 3-qadamni bitta buyruq bajaradi** (veb-interfeysga kirmasdan):
+
+   ```bash
+   # Fine-grained token: ikkala repo → Administration: Read and write
+   GITHUB_TOKEN=<token> scripts/github-setup.sh
+   ```
+
+   U `main` himoyasini (PR majburiy, CI yashil bo'lmaguncha merge yo'q,
+   force-push va o'chirish taqiq, linear history), `staging` va
+   `production` muhitlarini (prod — sizning tasdig'ingiz bilan) va
+   Actions'ga PR yaratish ruxsatini (release-please) qo'yadi. Qayta
+   ishlatish xavfsiz. Egasi (admin) shoshilinch holatda himoyani chetlab
+   o'tadi — buni ham yopish uchun `--enforce-admins`.
+
+   Qo'lda qilmoqchi bo'lsangiz: **Settings → Branches → Add rule** (`main`):
+   ✅ Require a pull request · ✅ Require status checks (CI ishlari) ·
+   ✅ Require linear history; **Settings → Environments:** `staging`
+   (cheklovsiz) va `production` (✅ Required reviewers → o'zingiz).
 4. **Personal access token (fine-grained)** — mobil CI admin repodan
    `contracts/` va backendni o'qishi uchun: *Settings → Developer settings →
    Fine-grained tokens* → Repository access: faqat `my-wallet-admin` →
@@ -351,6 +364,15 @@ reviewer tasdig'idan keyin ochiladi.
       net._http_response order by id desc limit 10;` — 200 (403 emas).
 - [ ] Zaxira workflow yashil, restore-drill yashil.
 - [ ] Supabase **Security Advisor** va **Performance Advisor** — ogohlantirish yo'q.
+
+**Kundalik nazorat (E28-T07) avtomatik:** `health-watch.yml` har kuni 08:00
+(Toshkent) prod bazani tekshiradi — rejali ishlar xatosi yoki kechikishi,
+navbatda qotib qolgan bildirishnomalar, eskirgan valyuta kurslari. Muammo
+bo'lsa ops boti xabar yuboradi. Qo'lda ham ishlatiladi:
+
+```bash
+PGURL="<prod session pooler ulanish satri>" scripts/health-watch.sh
+```
 
 ---
 

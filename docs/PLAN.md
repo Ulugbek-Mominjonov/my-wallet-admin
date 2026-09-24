@@ -160,10 +160,11 @@ E21–E26 (admin) M2 bilan.
 - [x] **E00-T07** GitHub remote (Q1): eski kod `legacy-v1` branchi va
   `legacy-v1-final` tegida saqlanadi, yangi `main` mavjud repolarga
   `--force-with-lease` bilan yuklanadi.
-- [ ] 🔑 **E00-T08** GitHub sozlamalari (foydalanuvchi, veb-interfeys —
-  `DEPLOY.md` 1-bo'lim): `main` himoyasi (PR + CI yashil), Environments
-  `staging` va `production` (prod — reviewer tasdig'i), Actions'ga PR
-  yaratish ruxsati (release-please).
+- [ ] 🔑 **E00-T08** GitHub sozlamalari: `main` himoyasi (PR + CI yashil),
+  Environments `staging` va `production` (prod — reviewer tasdig'i),
+  Actions'ga PR yaratish ruxsati (release-please). **Bir buyruq bilan:**
+  `GITHUB_TOKEN=… scripts/github-setup.sh` (token faqat foydalanuvchida —
+  shuning uchun 🔑).
 
 ### E01 · Supabase backend skeleti `[admin]`
 
@@ -794,7 +795,10 @@ E21–E26 (admin) M2 bilan.
 - [ ] **E28-T06** Reliz: admin `v1.0.0` teg → prod deploy; mobil `v1.0.0`
   (E20-T08) → GitHub Release + App Distribution; E27 importi prod'da.
 - [ ] **E28-T07** Ishga tushgandan keyingi 2 hafta: kundalik `health_check`
-  va `job_runs` nazorati, xatolar ro'yxati → yangi vazifalar.
+  va `job_runs` nazorati, xatolar ro'yxati → yangi vazifalar. **Nazorat
+  avtomatlashtirildi:** `health-watch.yml` har kuni tekshiradi va muammoda
+  ops boti xabar beradi (`scripts/health-watch.sh`); 🔑 qolgani — kelgan
+  ogohlantirishlarga javob berish.
 
 ### E29 · Ko'p valyuta (CBU) `[admin + mobile]` — platforma qismi
 
@@ -1055,3 +1059,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | E29-T07 (server qismi) | mobil lokal kurslar jadvali uchun `fx_rates(p_since)` RPC'si (kurslar jadvali o'qishga ochiq, lekin mobil klient faqat RPC bilan ishlaydi — ARXITEKTURA 5); pgTAP 604 |
 | 2026-09-23 | E30-T04 (server qismi) | mobil a'zolar ekrani uchun `household_members(p_household)` RPC'si (ism, rol, qo'shilgan sana, "bu men"); admin panel jadvallarni bevosita o'qiydi, mobil esa faqat RPC bilan — pgTAP 606 |
 | 2026-09-24 | M5 yakuni | E29..E34 ning mobil qismlari ham tugadi (my-wallet-mobil): ko'p valyuta, oilaviy byudjet, tahlillar, vidjet/QR/tez amallar, limitlar v2. Reja bo'yicha qolgani — faqat 🔑 foydalanuvchi qadamlari: E00-T08, E03-T08, E20-T08, E27-T05, E28-T01/T04/T06/T07 |
+| 2026-09-24 | 🔑 qadamlarni yengillashtirish | `scripts/github-setup.sh` (E00-T08 ni bitta buyruqqa aylantiradi: main himoyasi, muhitlar, Actions ruxsati — token foydalanuvchida) va `health-watch.yml` + `scripts/health-watch.sh` (E28-T07: kundalik rejali ish/navbat/kurs nazorati, muammoda ops boti xabar beradi). Qolgan 🔑 qadamlar hisob va sir talab qiladi — ular foydalanuvchida qoladi |
