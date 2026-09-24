@@ -117,12 +117,12 @@ Epik holati: ⬜ boshlanmagan · 🟨 jarayonda · ✅ tugadi.
 | | E26 | Platforma (super-admin) | admin | E21, E11 | ✅ |
 | **M4 Ishga tushirish** | E27 | Eski ma'lumotni ko'chirish | admin | E25 | 🟨 (T05 🔑) |
 | | E28 | Production v1.0 | admin + mobile | E20, E26, E27 | 🟨 (T01, T04, T06, T07 🔑) |
-| **M5 Kengaytmalar** | E29 | Ko'p valyuta (CBU) | admin + mobile | E28 | 🟨 (mobil: T07..T09) |
-| | E30 | Oilaviy byudjet (takliflar, rollar UI) | admin + mobile | E28 | 🟨 (mobil: T04..T06) |
+| **M5 Kengaytmalar** | E29 | Ko'p valyuta (CBU) | admin + mobile | E28 | ✅ |
+| | E30 | Oilaviy byudjet (takliflar, rollar UI) | admin + mobile | E28 | ✅ |
 | | E31 | Telegram bot: tez kiritish, karta xabarlari | admin | E28 | ✅ |
-| | E32 | Tahlillar (insights) | admin + mobile | E28 | 🟨 (mobil qismi keyin) |
-| | E33 | Android vidjet, chek QR skaneri | mobile | E28 | ⬜ |
-| | E34 | Limitlar v2 (rollover, ota-kategoriya) | admin + mobile | E28 | 🟨 (mobil qismi keyin) |
+| | E32 | Tahlillar (insights) | admin + mobile | E28 | ✅ |
+| | E33 | Android vidjet, chek QR skaneri | mobile | E28 | ✅ |
+| | E34 | Limitlar v2 (rollover, ota-kategoriya) | admin + mobile | E28 | ✅ |
 
 **Kritik yo'l:** E00 → E01 → E05 → E06 → E07 → E10 → E13 → E14 → E15 → E20 → E28.
 Parallel olib borish mumkin: E02/E03 (admin skelet) E05–E09 bilan;
@@ -1054,3 +1054,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | E34-T01, T02 | limitlar v2: ota-kategoriya limiti (BR-132 — hisobot, oylik xabar va ogohlantirishlarda `actual_total`), rollover (BR-134 — `category_limits.rollover`, `rollover_negative`, amaldagi limit `private.limit_carry` orqali bitta joyda), admin limit formasida ikki sozlama va jadvalda o'tgan oy qoldig'i. pgTAP 602 (yangi 055), golden 58 (2 ta rollover holati), Vitest 358, Playwright 82. **E34 platforma qismi yakunlandi** |
 | 2026-09-23 | E29-T07 (server qismi) | mobil lokal kurslar jadvali uchun `fx_rates(p_since)` RPC'si (kurslar jadvali o'qishga ochiq, lekin mobil klient faqat RPC bilan ishlaydi — ARXITEKTURA 5); pgTAP 604 |
 | 2026-09-23 | E30-T04 (server qismi) | mobil a'zolar ekrani uchun `household_members(p_household)` RPC'si (ism, rol, qo'shilgan sana, "bu men"); admin panel jadvallarni bevosita o'qiydi, mobil esa faqat RPC bilan — pgTAP 606 |
+| 2026-09-24 | M5 yakuni | E29..E34 ning mobil qismlari ham tugadi (my-wallet-mobil): ko'p valyuta, oilaviy byudjet, tahlillar, vidjet/QR/tez amallar, limitlar v2. Reja bo'yicha qolgani — faqat 🔑 foydalanuvchi qadamlari: E00-T08, E03-T08, E20-T08, E27-T05, E28-T01/T04/T06/T07 |
