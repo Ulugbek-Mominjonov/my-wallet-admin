@@ -20,7 +20,9 @@ Qoidalarning to'liq ta'rifi — [`BIZNES-QOIDALAR.md`](BIZNES-QOIDALAR.md).
    xarajatlar (ijara, internet…) kiritiladi. Keyinroq admin panelda
    (**Spravochniklar**) o'zgartirish mumkin.
 4. Oilaviy byudjet: admin panel → **Byudjet sozlamalari → A'zolar → Taklif
-   yaratish** → 8 belgili kodni bering. Rollar: egasi, admin, a'zo, kuzatuvchi.
+   yaratish** → 8 belgili kodni bering (mobil ilovada ham: **Sozlamalar →
+   A'zolar → Taklif qilish** — kod, havola va QR). Rollar: egasi, admin,
+   a'zo, kuzatuvchi; kuzatuvchi faqat ko'radi.
 
 ## 2. Kundalik ish — amallar
 
@@ -29,8 +31,17 @@ Qoidalarning to'liq ta'rifi — [`BIZNES-QOIDALAR.md`](BIZNES-QOIDALAR.md).
   mumkin.
 - Joy nomini yozsangiz — kategoriya va hisob tarixdan taklif qilinadi.
 - Chek rasmini biriktirish mumkin (1 MB gacha); oflaynda navbatda turadi.
-- Admin panelda: **Amallar** → filtr (davr, tur, hisob, kategoriya, teg),
-  qidiruv, ommaviy amallar va CSV eksport.
+  **Chek QR kodi** (soliq.uz) skanerlansa — summa va sana o'zi to'ladi,
+  havola izohga yoziladi.
+- Boshqa valyutadagi hisobda summa **o'sha valyutada** kiritiladi; ostida
+  asosiy valyutadagi ekvivalent (`≈ …`) ko'rinadi, kerak bo'lsa kursni
+  qo'lda kiritasiz. Turli valyutali o'tkazmada ikkinchi summa so'raladi.
+- Telefon ikonini **uzoq bosib** «Xarajat», «Daromad» yoki «To'lovlar» ni
+  darhol ochish mumkin; bosh ekranga **vidjet** qo'ysangiz — oy qoldig'i,
+  «kuniga ≈ …» va «＋» tugmasi ko'rinadi (maxfiylik rejimida summalar
+  yashiriladi).
+- Admin panelda: **Amallar** → filtr (davr, tur, hisob, kategoriya, teg,
+  a'zo), qidiruv, ommaviy amallar va CSV eksport.
 
 ![Amallar](img/admin-amallar.png)
 
