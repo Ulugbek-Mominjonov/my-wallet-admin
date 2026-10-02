@@ -177,8 +177,13 @@ jamoa a'zolariga — ishlatib bo'lmaydi. Bepul yechim — Gmail SMTP.
    signup** ikkalasiga `supabase/templates/sign-in-code.html` mazmunini
    qo'ying (subject: `My Wallet — kirish kodi`). Standart shablonda havola
    bo'ladi, ilova esa **kod** (`{{ .Token }}`) kutadi.
-5. GitHub (admin): `SMTP_USER` (variable), `SMTP_PASSWORD` (**secret**) —
-   `config.toml` va ixtiyoriy email bildirishnomalari uchun.
+5. GitHub'ga **hech narsa kerak emas** — SMTP faqat dashboard sozlamasi
+   (`config.toml` dagi mailer bloki lokal Mailpit uchun). Parolni
+   almashtirsangiz, faqat 2-qadamni qaytarasiz.
+
+> Domen **kerak emas**: Gmail SMTP oddiy `@gmail.com` hisobi bilan ishlaydi,
+> jo'natuvchi manzil ham shu bo'ladi. Bu qadamni keyinga qoldirsangiz, Google
+> bilan kirish ishlaydi, "Email orqali" esa ishlamaydi.
 
 > 💲 Muqobil: o'z domeningiz bo'lsa Resend (oyiga 3000 xat bepul, domen
 > tasdig'i kerak) — deliverability yaxshiroq.
