@@ -476,6 +476,9 @@ PGURL="<prod session pooler ulanish satri>" scripts/health-watch.sh
 | Loyiha "Paused" | 7 kun so'rov bo'lmagan | Dashboard → Restore; `keepalive.yml` yoqilganini tekshiring |
 | `supabase db push` — auth xatosi | `SUPABASE_ACCESS_TOKEN` / DB paroli noto'g'ri | 2.1, 2.3 |
 | Zaxira: `could not connect` | to'g'ridan-to'g'ri ulanish IPv6 | **Session pooler** satrini ishlating (2.2) |
+| Tiklash: `permission denied for parameter log_min_messages` | `roles.sql` dagi sozlamani faqat `supabase_admin` qo'llaydi | `restore.sh` shu satrni o'tkazib yuboradi (jurnal sozlamasi, ma'lumot emas) |
+| Zaxira: `chek rasmlarini yuklab bo'lmadi` | `receipts` bucket hali yo'q (deploy qilinmagan) | Prod deploydan keyin o'zi tuziladi; bazada yozuv bo'lmasa zaxira baribir o'tadi |
+| Ops xabari kelmaydi, `ops-alert` 403 | `OPS_TELEGRAM_CHAT_ID` noto'g'ri (masalan botning o'z ID si) | Botga `/start` yozing → `getUpdates` dagi `chat.id`; `make github-secrets` tekshiradi |
 | Google kirish: `DEVELOPER_ERROR` (Android) | SHA-1 yoki package mos emas | 3.3 — keystore SHA-1 va `applicationId` |
 | Google kirish: redirect xato (web) | Redirect URI ro'yxatda yo'q | 2.4 va 3.3 |
 | Email kod kelmaydi | custom SMTP yo'q / App password xato | 4 |

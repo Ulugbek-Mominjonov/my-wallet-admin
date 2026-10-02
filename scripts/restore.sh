@@ -21,14 +21,23 @@ dir="$1"
 target="$2"
 
 restore_into() {
+  # `roles.sql` da `ALTER ROLE ... SET log_min_messages` bo'ladi — uni faqat
+  # `supabase_admin` qo'llay oladi, biz esa `postgres` bilan ulanamiz
+  # ("permission denied for parameter"). Bu jurnal darajasi sozlamasi,
+  # ma'lumot emas — shuning uchun faqat shu satr o'tkazib yuboriladi.
+  local roles status=0
+  roles="$(mktemp)"
+  grep -v 'log_min_messages' "$dir/roles.sql" > "$roles"
   psql --single-transaction --variable ON_ERROR_STOP=1 --quiet --output /dev/null \
-    --file "$dir/roles.sql" \
+    --file "$roles" \
     --file "$dir/schema.sql" \
     --command 'SET session_replication_role = replica' \
     --file "$dir/data.sql" \
     --command 'SET client_min_messages = warning' \
     --file "$dir/storage-policies.sql" \
-    --dbname "$1"
+    --dbname "$1" || status=$?
+  rm -f "$roles"
+  return "$status"
 }
 
 # Chek rasmlari: <papka>/storage/<byudjet>/... → receipts/<byudjet>/...
