@@ -64,12 +64,13 @@ if [ -z "$staging_ref" ] || [ -z "$prod_ref" ]; then
   found="$(python3 -c "$(
     cat <<'PY'
 import json, sys
-projects = json.load(sys.stdin)
+raw = json.load(sys.stdin)
+projects = raw['projects'] if isinstance(raw, dict) else raw
 def pick(*needles):
     for p in projects:
         name = (p.get('name') or '').lower()
         if any(n in name for n in needles):
-            return p.get('id') or ''
+            return p.get('ref') or p.get('id') or ''
     return ''
 print(pick('staging', 'stg'))
 print(pick('prod'))
@@ -93,15 +94,19 @@ keys_of() {
   cli projects api-keys --project-ref "$ref" --reveal -o json 2>/dev/null |
     python3 -c "$(
       cat <<'PY'
-import json, sys
+import json, re, sys
 kind = sys.argv[1]
 prefix = f'sb_{kind}_'
 rows = json.load(sys.stdin)
 for row in rows:
     value = row.get('api_key') or row.get('apiKey') or ''
-    if value.startswith(prefix):
-        print(value)
-        break
+    if row.get('type') != kind and not value.startswith(prefix):
+        continue
+    # Niqoblangan qiymat (`sb_secret_6Xv8x·...`) — faylga yozilmaydi.
+    if not re.fullmatch(r'sb_(publishable|secret)_[A-Za-z0-9_-]+', value):
+        sys.exit(4)
+    print(value)
+    break
 else:
     sys.exit(3)
 PY
@@ -117,14 +122,21 @@ for env_name in staging production; do
   [ -n "$ref" ] || continue
 
   suffix="$(tr '[:lower:]' '[:upper:]' <<<"$env_name")"
-  if ! publishable="$(keys_of "$ref" publishable)"; then
-    echo "❌ $env_name ($ref): publishable kalit topilmadi (token huquqi yoki ref?)" >&2
-    exit 1
-  fi
-  if ! secret="$(keys_of "$ref" secret)"; then
-    echo "❌ $env_name ($ref): secret kalit topilmadi" >&2
-    exit 1
-  fi
+  for kind in publishable secret; do
+    status=0
+    value="$(keys_of "$ref" "$kind")" || status=$?
+    if [ "$status" -ne 0 ]; then
+      case "$status" in
+        4) echo "❌ $env_name ($ref): $kind kaliti niqoblangan keldi — CLI'ni yangilang" >&2 ;;
+        *) echo "❌ $env_name ($ref): $kind kaliti topilmadi (token huquqi yoki ref?)" >&2 ;;
+      esac
+      exit 1
+    fi
+    case "$kind" in
+      publishable) publishable="$value" ;;
+      *) secret="$value" ;;
+    esac
+  done
   values["REF_$suffix"]="$ref"
   values["URL_$suffix"]="https://$ref.supabase.co"
   values["PUB_$suffix"]="$publishable"
