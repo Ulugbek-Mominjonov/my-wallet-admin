@@ -125,6 +125,40 @@ function readValues(path) {
   return values
 }
 
+// Yuborishdan oldingi ko'rinish tekshiruvi: noto'g'ri nusxalangan qiymat
+// (masalan DB ulanish satri o'rniga API manzili) GitHub'ga chiqmasin.
+const checks = [
+  [/^SUPABASE_DB_URL_/, (v) => v.startsWith('postgres'), 'postgresql://… bilan boshlanadi (Connect → Session pooler)'],
+  [/^SUPABASE_URL_/, (v) => v.startsWith('https://'), 'https://… bo\'lishi kerak'],
+  [/^ADMIN_URL_/, (v) => v.startsWith('https://'), 'https://… bo\'lishi kerak'],
+  [/^SUPABASE_PUBLISHABLE_KEY_/, (v) => v.startsWith('sb_publishable_'), 'sb_publishable_… bo\'lishi kerak'],
+  [/^SUPABASE_SECRET_KEY_/, (v) => v.startsWith('sb_secret_'), 'sb_secret_… bo\'lishi kerak'],
+  [/^SUPABASE_ACCESS_TOKEN$/, (v) => v.startsWith('sbp_'), 'sbp_… bo\'lishi kerak (Account → Access Tokens)'],
+  [/^BACKUP_AGE_RECIPIENT$/, (v) => v.startsWith('age1'), 'age1… ochiq kalit bo\'lishi kerak'],
+  [/^CLOUDFLARE_ACCOUNT_ID$/, (v) => /^[0-9a-f]{32}$/.test(v), '32 ta hex belgi'],
+  [/TELEGRAM_BOT_TOKEN/, (v) => /^\d+:[\w-]+$/.test(v), '123456:ABC-… ko\'rinishida'],
+  [/^OPS_TELEGRAM_CHAT_ID$/, (v) => /^-?\d+$/.test(v), 'butun son (manfiy ham bo\'ladi)'],
+  [/^(DEPLOY_ENABLED|ANDROID_RELEASE_ENABLED)$/, (v) => v === 'true' || v === 'false', "'true' yoki 'false'"],
+  [/^(FCM_SERVICE_ACCOUNT|FIREBASE_APPDIST_SA)_/, isServiceAccount, 'base64 qilingan servis akkaunt JSON'],
+]
+
+function isServiceAccount(value) {
+  try {
+    const json = JSON.parse(Buffer.from(value, 'base64').toString('utf8'))
+    return Boolean(json.project_id && json.client_email && json.private_key)
+  } catch {
+    return false
+  }
+}
+
+// Qiymat ko'rinishi noto'g'ri bo'lsa — sabab, to'g'ri bo'lsa bo'sh satr.
+function invalid(name, value) {
+  for (const [pattern, ok, message] of checks) {
+    if (pattern.test(name) && !ok(value)) return message
+  }
+  return ''
+}
+
 async function call(method, path, body) {
   const response = await fetch(`${API}${path}`, {
     method,
@@ -280,6 +314,12 @@ async function main() {
       group = where
     }
     const label = `${target.kind === 'secret' ? 'sir' : "o'zgaruvchi"} ${target.name}`
+    const problem = invalid(target.source, value)
+    if (problem) {
+      console.log(`  ❌ ${label}: ${target.source} — ${problem}`)
+      failed += 1
+      continue
+    }
     if (dryRun) {
       console.log(`  → ${label}`)
       continue
