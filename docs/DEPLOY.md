@@ -149,10 +149,12 @@ yozmang.
 4. Supabase (har loyiha) → **Authentication → Providers → Google** → yoqing:
    Client ID = Web client ID, Client Secret = Web client secret,
    ✅ "Skip nonce checks" — **o'chiq** qoldiring.
-5. GitHub'ga:
-   - admin repo: `GOOGLE_WEB_CLIENT_ID` (variable), `GOOGLE_WEB_CLIENT_SECRET`
-     (**secret** → `config.toml` dagi `env(...)`);
-   - mobil repo: `GOOGLE_WEB_CLIENT_ID` (variable → `serverClientId`).
+5. GitHub'ga **faqat Client ID** ketadi (ochiq qiymat, 9-bo'lim oqimi bilan):
+   `.env.deploy` → `GOOGLE_WEB_CLIENT_ID` → mobil repo **variable**
+   (`serverClientId` uchun). **Client Secret GitHub'ga kerak emas** — u faqat
+   Supabase dashboard'ida (4-qadam): admin panel brauzerda
+   `supabase.auth.signInWithOAuth` ishlatadi, tokenni Supabase serveri
+   tekshiradi. Lokal muhitda Google kirishi o'chiq (`config.toml`).
 
 ✅ **Tekshiruv:** admin panel login sahifasida "Google bilan kirish" →
 Google oynasi → qaytib kirilgan holat.
