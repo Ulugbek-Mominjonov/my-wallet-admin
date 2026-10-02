@@ -216,26 +216,51 @@ sahifani yangilaganda (`/reports/month`) 404 bo'lmaydi (SPA rejimi).
 
 ## 6. Firebase (push, Crashlytics, App Distribution)
 
-1. <https://console.firebase.google.com> → **2 loyiha**: `my-wallet-staging`,
-   `my-wallet-prod` (Google Analytics — ixtiyoriy). Reja **Spark** qoladi —
-   Blaze'ga o'tmang.
-2. Har loyihada **Android ilova** qo'shing: package `uz.mywallet.app.stg` /
-   `uz.mywallet.app`, SHA-1 (3-qadamdagi) → `google-services.json` ni
-   yuklab oling → mobil repo sirlari (`my-wallet-mobil/docs/DEPLOY.md`).
-3. **Cloud Messaging (FCM) — server kaliti:** Project settings → Service
-   accounts → **Generate new private key** (JSON) → base64:
-   `base64 -w0 key.json` → admin repo **Environment secret**
-   `FCM_SERVICE_ACCOUNT` (`staging` va `production` — har biriga o'z Firebase
-   loyihasi kaliti). Deploy uni Edge Function muhitiga o'tkazadi
-   (`notify-dispatch`). JSON faylni keyin o'chiring.
-4. **App Distribution:** Release & Monitor → App Distribution → Get started →
-   Testers & Groups → guruh `testers` (o'zingiz + oila a'zolari emaillari).
-   CI yuklashi uchun servis akkaunt: Google Cloud Console (shu Firebase
-   loyihasi) → IAM → Service accounts → Create → rol **Firebase App
-   Distribution Admin** → JSON kalit → mobil repo **secret**
-   `FIREBASE_APPDIST_SA_STAGING` / `_PROD` (base64).
-5. **Crashlytics:** Release & Monitor → Crashlytics → Enable (SDK ilova
-   ichida).
+Ilova `google-services.json` ishlatmaydi — `FirebaseOptions` dart-define'lardan
+keladi (`lib/bootstrap.dart`). Shuning uchun kerak bo'lgani: har muhit uchun
+loyiha va shu flavor paketiga ro'yxatdan o'tgan Android ilova.
+
+1. <https://console.firebase.google.com> → **2 loyiha**: staging va prod uchun
+   (Google Analytics — ixtiyoriy). Reja **Spark** qoladi — Blaze'ga o'tmang.
+2. Loyiha ID larini `.env.deploy` ga yozing (`FIREBASE_PROJECT_ID_STAGING`,
+   `FIREBASE_PROJECT_ID_PRODUCTION`) → `make deploy-env` qolganini
+   `firebase` CLI bilan oladi: API kalit, app ID va sender ID, hamda mobil
+   `env/staging.json` / `env/prod.json` ni to'ldiradi. Android ilova hali
+   ro'yxatdan o'tmagan bo'lsa (paket flavor bilan mos kelishi shart):
+
+   ```bash
+   firebase apps:create ANDROID "My Wallet staging" \
+     --package-name uz.mywallet.app.stg --project <staging-loyiha>
+   firebase apps:create ANDROID "My Wallet" \
+     --package-name uz.mywallet.app --project <prod-loyiha>
+   ```
+
+   > SHA-1 ni Firebase'ga qo'shish **kerak emas** (Firebase Auth ishlatilmaydi;
+   > push, Crashlytics va App Distribution SHA'siz ishlaydi). Qo'shishga
+   > urinish `409 Oauth client already exists in a different project` beradi —
+   > paket+SHA juftligini 3-qadamdagi Android OAuth client'lar egallagan.
+3. **Cloud Messaging (FCM) — servis akkaunt kaliti:** Project settings →
+   Service accounts → **Generate new private key** (JSON) → har loyiha uchun
+   alohida → `.env.deploy` dagi `FCM_SERVICE_ACCOUNT_STAGING` /
+   `_PRODUCTION` ga **base64** holida (`base64 -w0 key.json`). Deploy uni
+   Edge Function muhitiga o'tkazadi (`notify-dispatch`). JSON faylni keyin
+   o'chiring. (Konsol qadami — CLI servis akkaunt kaliti bermaydi.)
+4. **App Distribution** (guruh va testerlar — CLI bilan):
+
+   ```bash
+   firebase appdistribution:group:create "Testers" testers --project <loyiha>
+   firebase appdistribution:testers:add you@gmail.com --group-alias testers \
+     --project <loyiha>
+   ```
+
+   CI yuklashi uchun servis akkaunt kaliti: 3-qadamdagi JSON shu ish uchun ham
+   yetishi mumkin (`FIREBASE_APPDIST_SA_*`); ruxsat yetmasa Google Cloud
+   Console → IAM → Service accounts → yangi akkaunt, rol **Firebase App
+   Distribution Admin** → JSON kalit (base64). Tekshirish:
+   `GOOGLE_APPLICATION_CREDENTIALS=key.json firebase appdistribution:testers:list
+   --group-alias testers --project <loyiha>`.
+5. **Crashlytics:** alohida yoqish shart emas — birinchi hisobot kelganda
+   konsolda o'zi paydo bo'ladi (SDK ilova ichida).
 
 ✅ **Tekshiruv:** Firebase Console → Messaging → "Send test message" →
 qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.

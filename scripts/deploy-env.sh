@@ -367,7 +367,8 @@ if ops and not (os.environ.get('TG_OPS_CHAT') or ''):
     else:
         notes.append("·  Ops botiga Telegram'da `/start` yozing — chat ID keyin olinadi")
 
-print('\n'.join(notes), file=sys.stderr)
+if notes:
+    print('\n'.join(notes), file=sys.stderr)
 print('\n'.join(pairs))
 PY
   )"
@@ -381,39 +382,133 @@ if [ -n "$tg_pairs" ]; then
   echo "✅ Telegram: ${#tg_lines[@]} qiymat olindi (bot nomlari, ops chat ID)"
 fi
 
+# --- Firebase: ilova kaliti, app ID va sender ID (DEPLOY.md 6) ---------------
+# `FIREBASE_PROJECT_ID_<MUHIT>` yozilgan bo'lsa qolganini `firebase` CLI topadi:
+# shu loyihadagi Android ilovalardan flavor paketiga mos keladigani. Paketlar —
+# my-wallet-mobil/android/app/build.gradle.kts dagi applicationId va suffikslar.
+fb_pairs=()
+for env_pair in "STAGING uz.mywallet.app.stg" "PRODUCTION uz.mywallet.app"; do
+  fb_env="${env_pair%% *}"
+  fb_package="${env_pair##* }"
+  fb_project="$(sed -n "s/^FIREBASE_PROJECT_ID_$fb_env=//p" "$out_file" | tail -1)"
+  fb_key="$(sed -n "s/^FIREBASE_API_KEY_$fb_env=//p" "$out_file" | tail -1)"
+  # Loyiha ko'rsatilmagan yoki qiymatlar allaqachon bor — o'tkazamiz.
+  if [ -z "$fb_project" ] || [ -n "$fb_key" ]; then
+    continue
+  fi
+  if ! command -v firebase >/dev/null; then
+    echo "·  Firebase CLI yo'q — $fb_env o'tkazildi (npm i -g firebase-tools)"
+    continue
+  fi
+  # Ilova ID kerak: ID siz `apps:sdkconfig` interaktiv so'raydi. Har qanday
+  # Android ilova ID si yetarli — javobda loyihaning hamma mijozi bo'ladi.
+  fb_app="$(
+    firebase apps:list ANDROID --project "$fb_project" --json 2>/dev/null |
+      python3 -c "import json,sys; rows=json.load(sys.stdin).get('result') or []; print(rows[0]['appId'] if rows else '')"
+  )"
+  if [ -z "$fb_app" ]; then
+    echo "·  Firebase: $fb_project da Android ilova yo'q"
+    continue
+  fi
+  fb_out="$(
+    firebase apps:sdkconfig ANDROID "$fb_app" --project "$fb_project" 2>/dev/null |
+      FB_ENV="$fb_env" FB_PACKAGE="$fb_package" python3 -c "$(
+        cat <<'PYFB'
+import json, os, sys
+
+raw = sys.stdin.read()
+start = raw.find('{')
+if start < 0:
+    print("·  Firebase: javob bo'sh (loyiha ID to'g'rimi?)", file=sys.stderr)
+    raise SystemExit(0)
+config = json.loads(raw[start:])
+package = os.environ['FB_PACKAGE']
+env = os.environ['FB_ENV']
+number = config['project_info']['project_number']
+for client in config.get('client', []):
+    info = client['client_info']
+    if info['android_client_info']['package_name'] != package:
+        continue
+    print('FIREBASE_API_KEY_%s=%s' % (env, client['api_key'][0]['current_key']))
+    print('FIREBASE_APP_ID_ANDROID_%s=%s' % (env, info['mobilesdk_app_id']))
+    print('FIREBASE_MESSAGING_SENDER_ID_%s=%s' % (env, number))
+    break
+else:
+    print("·  Firebase: %s paketli ilova topilmadi" % package, file=sys.stderr)
+PYFB
+      )"
+  )"
+  while IFS= read -r line; do
+    [ -n "$line" ] && fb_pairs+=("$line")
+  done <<<"$fb_out"
+done
+if [ ${#fb_pairs[@]} -gt 0 ]; then
+  merge_into_env "${fb_pairs[@]}"
+  echo "✅ Firebase: ${#fb_pairs[@]} qiymat olindi (kalit, app ID, sender ID)"
+fi
+
 chmod 600 "$out_file"
 echo "✅ $out_file yangilandi (Supabase qiymatlari)"
 
 # --- mobil env/<flavor>.json -------------------------------------------------
-# Mavjud fayl bo'lsa — faqat Supabase maydonlari yangilanadi (Firebase va
-# Google qiymatlari saqlanadi); bo'lmasa namunadan boshlanadi.
-for pair in "staging:staging" "production:prod"; do
-  env_name="${pair%%:*}"
-  flavor="${pair##*:}"
-  suffix="$(tr '[:lower:]' '[:upper:]' <<<"$env_name")"
-  [ -n "${values[URL_$suffix]:-}" ] || continue
-  target="$mobil_root/env/$flavor.json"
-  [ -d "$mobil_root/env" ] || {
-    echo "⚠️  Mobil repo topilmadi ($mobil_root) — env fayllari o'tkazib yuborildi" >&2
-    break
-  }
-  python3 -c "$(
-    cat <<'PY'
-import json, os, sys
-target, example, url, key = sys.argv[1:5]
+# CI `tool/ci_release_files.sh` bilan bir xil maydonlar — lokal imzolangan
+# build ham CI bilan bir xil sozlamada ishlaydi. Faqat `.env.deploy` da bor
+# qiymatlar yoziladi; fayldagi boshqa maydonlar saqlanadi.
+if [ -d "$mobil_root/env" ]; then
+  for pair in "STAGING staging" "PRODUCTION prod"; do
+    suffix="${pair%% *}"
+    flavor="${pair##* }"
+    target="$mobil_root/env/$flavor.json"
+    python3 -c "$(
+      cat <<'PYENV'
+import json, os, pathlib, sys
+
+env_file, target, example, suffix = sys.argv[1:5]
+# `.env.deploy` → mobil json maydoni (CI dagi nomlar bilan bir xil).
+mapping = {
+    'SUPABASE_URL': 'SUPABASE_URL_%s',
+    'SUPABASE_PUBLISHABLE_KEY': 'SUPABASE_PUBLISHABLE_KEY_%s',
+    'TELEGRAM_BOT_USERNAME': 'TELEGRAM_BOT_USERNAME_%s',
+    'FIREBASE_API_KEY': 'FIREBASE_API_KEY_%s',
+    'FIREBASE_APP_ID': 'FIREBASE_APP_ID_ANDROID_%s',
+    'FIREBASE_MESSAGING_SENDER_ID': 'FIREBASE_MESSAGING_SENDER_ID_%s',
+    'FIREBASE_PROJECT_ID': 'FIREBASE_PROJECT_ID_%s',
+    'GOOGLE_WEB_CLIENT_ID': 'GOOGLE_WEB_CLIENT_ID',
+}
+
+values = {}
+for line in pathlib.Path(env_file).read_text(encoding='utf-8').splitlines():
+    text = line.strip()
+    if not text or text.startswith('#') or '=' not in text:
+        continue
+    name, value = text.split('=', 1)
+    values[name.strip()] = value.strip()
+
 source = target if os.path.exists(target) else example
-with open(source, encoding='utf-8') as fh:
-    data = json.load(fh)
-data['SUPABASE_URL'] = url
-data['SUPABASE_PUBLISHABLE_KEY'] = key
-with open(target, 'w', encoding='utf-8') as fh:
-    json.dump(data, fh, ensure_ascii=False, indent=2)
-    fh.write('\n')
-PY
-  )" "$target" "$mobil_root/env/$flavor.example.json" \
-    "${values[URL_$suffix]}" "${values[PUB_$suffix]}"
-  echo "✅ $target yangilandi (SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY)"
-done
+data = json.loads(pathlib.Path(source).read_text(encoding='utf-8'))
+written = []
+for field, pattern in mapping.items():
+    value = values.get(pattern % suffix if '%s' in pattern else pattern, '')
+    if value and data.get(field) != value:
+        data[field] = value
+        written.append(field)
+pathlib.Path(target).write_text(
+    json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8'
+)
+print(','.join(written))
+PYENV
+    )" "$out_file" "$target" "$mobil_root/env/$flavor.example.json" "$suffix" |
+      while IFS= read -r changed; do
+        if [ -n "$changed" ]; then
+          echo "✅ env/$flavor.json: $changed"
+        else
+          echo "·  env/$flavor.json: o'zgarish yo'q"
+        fi
+      done
+  done
+else
+  echo "⚠️  Mobil repo topilmadi ($mobil_root) — env fayllari o'tkazib yuborildi" >&2
+fi
 
 cat <<'MSG'
 
