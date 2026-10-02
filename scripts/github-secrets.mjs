@@ -235,6 +235,11 @@ function reason({ status, text }) {
   return `HTTP ${status}${message ? ` — ${message}` : ''}`
 }
 
+// Huquq xatosi bo'lsa qolgan 50 ta chaqiruv ham shunday tugaydi — to'xtaymiz.
+function authFailure(error) {
+  return error.startsWith('HTTP 401') || error.startsWith('HTTP 403')
+}
+
 // Faylning izoh sarlavhasi — `--help` uchun.
 function usage() {
   return readFileSync(new URL(import.meta.url), 'utf8').split('\n').slice(1, 14).join('\n')
@@ -329,8 +334,22 @@ async function main() {
     }
     const error = await upload(target, value)
     console.log(error ? `  ❌ ${label}: ${error}` : `  ✅ ${label}`)
-    if (error) failed += 1
-    else done += 1
+    if (!error) {
+      done += 1
+      continue
+    }
+    failed += 1
+    if (authFailure(error)) {
+      console.log(
+        '\nToken huquqi yetmaydi. Fine-grained tokenda shu 4 ruxsat' +
+          " **Read and write** bo'lishi kerak (Read-only yetmaydi):\n" +
+          '  Secrets · Variables · Environments · Administration\n' +
+          "Mavjud tokenni tahrirlash kifoya (qiymati o'zgarmaydi):\n" +
+          '  Settings → Developer settings → Fine-grained tokens → <token> → Permissions\n' +
+          "Yoki klassik token: Settings → Developer settings → Tokens (classic) → `repo` scope.",
+      )
+      break
+    }
   }
 
   console.log(
