@@ -253,10 +253,13 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
      bot → `OPS_TELEGRAM_BOT_TOKEN` (**secret**). O'zingiz botga `/start`
      yozing, keyin `https://api.telegram.org/bot<token>/getUpdates` dan
      `chat.id` → `OPS_TELEGRAM_CHAT_ID` (variable).
-2. Ilova boti nomini (`@` siz, masalan `MyWalletUzBot`) repo **variable**
-   `TELEGRAM_BOT` ga yozing — admin panel ulash havolasi va QR'ni shundan
-   quradi (`VITE_TELEGRAM_BOT`; bo'sh bo'lsa ulash bo'limi "sozlanmagan"
-   deydi). Bot **tokeni** faqat serverda (Environment secret).
+2. `.env.deploy` ga **faqat 3 tokenni** yozasiz
+   (`TELEGRAM_BOT_TOKEN_PRODUCTION`, `TELEGRAM_BOT_TOKEN_STAGING`,
+   `OPS_TELEGRAM_BOT_TOKEN`) → `make deploy-env` qolganini Bot API'dan oladi:
+   bot nomlari (`TELEGRAM_BOT`, `TELEGRAM_BOT_USERNAME_*` — admin panel ulash
+   havolasi va QR shundan quriladi) va ops chat ID (buning uchun ops botiga
+   Telegram'da bir marta `/start` yozing). Tokenlar faqat Environment
+   secret sifatida serverda qoladi.
 3. Webhook maxfiy kaliti: `TELEGRAM_WEBHOOK_SECRET` — `make deploy-env`
    o'zi yaratadi (`openssl rand -hex 32`), har Environment uchun alohida.
 4. Webhook'ni ulash — **deploy workflow o'zi bajaradi**

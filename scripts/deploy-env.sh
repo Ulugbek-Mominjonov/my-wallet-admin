@@ -310,6 +310,77 @@ PY
   fi
 fi
 
+# --- Telegram: bot nomlari va ops chat ID (DEPLOY.md 7) ----------------------
+# Tokenlar @BotFather dan qo'lda yoziladi; nomni va chat ID ni Bot API beradi.
+tg_pairs="$(
+  TG_PROD="$(sed -n 's/^TELEGRAM_BOT_TOKEN_PRODUCTION=//p' "$out_file" | tail -1)" \
+    TG_STG="$(sed -n 's/^TELEGRAM_BOT_TOKEN_STAGING=//p' "$out_file" | tail -1)" \
+    TG_OPS="$(sed -n 's/^OPS_TELEGRAM_BOT_TOKEN=//p' "$out_file" | tail -1)" \
+    TG_OPS_CHAT="$(sed -n 's/^OPS_TELEGRAM_CHAT_ID=//p' "$out_file" | tail -1)" \
+    python3 -c "$(
+    cat <<'PY'
+import json, os, sys, urllib.error, urllib.request
+
+api = os.environ.get('TG_API', 'https://api.telegram.org')
+
+
+def call(token, method):
+    try:
+        with urllib.request.urlopen(f'{api}/bot{token}/{method}', timeout=20) as response:
+            body = json.load(response)
+    except urllib.error.HTTPError as error:
+        return None, f'HTTP {error.code}'
+    except (OSError, json.JSONDecodeError) as error:
+        return None, str(error)
+    return (body.get('result'), None) if body.get('ok') else (None, body.get('description', '?'))
+
+
+pairs = []
+notes = []
+
+for env_var, names in (('TG_PROD', ('TELEGRAM_BOT', 'TELEGRAM_BOT_USERNAME_PRODUCTION')),
+                       ('TG_STG', ('TELEGRAM_BOT_USERNAME_STAGING',))):
+    token = os.environ.get(env_var) or ''
+    if not token:
+        continue
+    result, error = call(token, 'getMe')
+    if error:
+        notes.append(f'·  Telegram ({env_var}): {error}')
+        continue
+    pairs += [f'{name}={result["username"]}' for name in names]
+
+ops = os.environ.get('TG_OPS') or ''
+if ops and not (os.environ.get('TG_OPS_CHAT') or ''):
+    result, error = call(ops, 'getUpdates')
+    chats = {
+        update[key]['chat']['id']
+        for update in (result or [])
+        for key in ('message', 'channel_post')
+        if key in update
+    } if not error else set()
+    if error:
+        notes.append(f'·  Ops boti: {error}')
+    elif len(chats) == 1:
+        pairs.append(f'OPS_TELEGRAM_CHAT_ID={chats.pop()}')
+    elif chats:
+        notes.append(f'·  Ops botiga bir nechta chat yozgan ({sorted(chats)}) — birini qo\'lda yozing')
+    else:
+        notes.append("·  Ops botiga Telegram'da `/start` yozing — chat ID keyin olinadi")
+
+print('\n'.join(notes), file=sys.stderr)
+print('\n'.join(pairs))
+PY
+  )"
+)"
+if [ -n "$tg_pairs" ]; then
+  tg_lines=()
+  while IFS= read -r line; do
+    [ -n "$line" ] && tg_lines+=("$line")
+  done <<<"$tg_pairs"
+  merge_into_env "${tg_lines[@]}"
+  echo "✅ Telegram: ${#tg_lines[@]} qiymat olindi (bot nomlari, ops chat ID)"
+fi
+
 chmod 600 "$out_file"
 echo "✅ $out_file yangilandi (Supabase qiymatlari)"
 
