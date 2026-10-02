@@ -60,11 +60,11 @@ yozmang.
    ✅ Require a pull request · ✅ Require status checks (CI ishlari) ·
    ✅ Require linear history; **Settings → Environments:** `staging`
    (cheklovsiz) va `production` (✅ Required reviewers → o'zingiz).
-4. **Personal access token (fine-grained)** — mobil CI admin repodan
-   `contracts/` va backendni o'qishi uchun: *Settings → Developer settings →
-   Fine-grained tokens* → Repository access: faqat `my-wallet-admin` →
-   Permissions: **Contents: Read-only** → muddati 1 yil.
-   → mobil repo sirlari: `ADMIN_REPO_TOKEN`.
+4. Mobil CI admin repodan `contracts/` va backendni o'qiydi — repo **public**
+   bo'lgani uchun alohida token kerak emas: `actions/checkout` standart
+   `GITHUB_TOKEN` bilan o'qiydi (`integration.yml`, `e2e.yml`). Agar repo
+   keyinchalik private qilinsa, o'sha paytda fine-grained token (Contents:
+   Read-only) qo'shiladi.
 
 5. **Settings → Actions → General → Workflow permissions:**
    ✅ "Allow GitHub Actions to create and approve pull requests" — reliz PR'i

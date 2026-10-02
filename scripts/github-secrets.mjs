@@ -54,7 +54,6 @@ const repoLevel = {
       'ANDROID_KEYSTORE_PASSWORD',
       'ANDROID_KEY_ALIAS',
       'ANDROID_KEY_PASSWORD',
-      'ADMIN_REPO_TOKEN',
     ],
   },
 }
