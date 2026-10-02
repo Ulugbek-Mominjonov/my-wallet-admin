@@ -196,15 +196,17 @@ jamoa a'zolariga — ishlatib bo'lmaydi. Bepul yechim — Gmail SMTP.
 ## 5. Cloudflare (admin panel)
 
 1. <https://dash.cloudflare.com> → ro'yxatdan o'ting (karta kerak emas).
-2. **Account ID:** o'ng panelda (Workers & Pages) → `CLOUDFLARE_ACCOUNT_ID`
-   (variable).
-3. **API Token:** My Profile → API Tokens → Create → shablon **"Edit Cloudflare
-   Workers"** → Account resources: faqat o'z akkauntingiz →
-   `CLOUDFLARE_API_TOKEN` (**secret**).
-4. Worker nomlari (`wrangler.jsonc` da): `my-wallet-admin` (prod) va
-   `my-wallet-admin-staging`. Birinchi deploy'dan keyin manzillar:
-   `https://my-wallet-admin.<subdomen>.workers.dev` — Supabase Site URL va
-   Redirect URL'larga yozing (2-qadam, 4-band).
+2. **API Token** — yagona qo'lda qadam: My Profile → API Tokens → Create →
+   shablon **"Edit Cloudflare Workers"** → Account resources: faqat o'z
+   akkauntingiz → tokenni `.env.deploy` dagi `CLOUDFLARE_API_TOKEN=` ga yozing.
+3. `make deploy-env` — qolganini API'dan o'zi oladi: `CLOUDFLARE_ACCOUNT_ID`
+   va `workers.dev` manzillari (`ADMIN_URL_STAGING` / `_PRODUCTION`, worker
+   nomlari `web/wrangler.jsonc` dan). Akkauntingiz bir nechta bo'lsa — skript
+   nomlarini ko'rsatadi, ID ni qo'lda yozasiz. Subdomen hali
+   yaratilmagan bo'lsa (Workers bo'limiga birinchi kirishda beriladi) —
+   manzillar birinchi deploydan keyin to'ladi.
+4. Manzilni Supabase'ga ham yozish kerak: **Authentication → URL
+   Configuration** → Site URL va Redirect URLs (2-qadam, 4-band).
 5. (ixtiyoriy 💲) O'z domeningiz: Workers → Settings → Domains & Routes.
 
 ✅ **Tekshiruv:** Actions → Deploy (staging) yashil → manzil ochiladi,

@@ -210,6 +210,92 @@ if [ ${#generated[@]} -gt 0 ]; then
   echo "✅ ${#generated[@]} ta tasodifiy sir yaratildi (CRON_SECRET, TELEGRAM_WEBHOOK_SECRET)"
 fi
 
+# --- Cloudflare: akkaunt ID va workers.dev manzillari (DEPLOY.md 5) ----------
+# Faqat API tokeni kerak (dashboardda yaratiladi); qolganini API beradi.
+cf_token="$(sed -n 's/^CLOUDFLARE_API_TOKEN=//p' "$out_file" | tail -1)"
+if [ -z "$cf_token" ]; then
+  echo "·  Cloudflare: CLOUDFLARE_API_TOKEN bo'sh — akkaunt ID va manzillar o'tkazildi"
+else
+  cf_pairs="$(
+    CF_TOKEN="$cf_token" \
+      CF_ACCOUNT="$(sed -n 's/^CLOUDFLARE_ACCOUNT_ID=//p' "$out_file" | tail -1)" \
+      python3 -c "$(
+      cat <<'PY'
+import json, os, pathlib, re, sys, urllib.error, urllib.request
+
+api = os.environ.get('CF_API', 'https://api.cloudflare.com/client/v4')
+token = os.environ['CF_TOKEN']
+
+
+def get(path):
+    request = urllib.request.Request(
+        api + path, headers={'Authorization': 'Bearer ' + token}
+    )
+    with urllib.request.urlopen(request, timeout=20) as response:
+        return json.load(response)
+
+
+def fail(message):
+    print(message, file=sys.stderr)
+    raise SystemExit(0)
+
+
+# Worker nomlari — wrangler.jsonc dan (manzil shundan quriladi).
+def worker_names():
+    default = ('my-wallet-admin', 'my-wallet-admin-staging')
+    try:
+        text = pathlib.Path('web/wrangler.jsonc').read_text(encoding='utf-8')
+        text = re.sub(r'//[^"\n]*$', '', text, flags=re.M)
+        text = re.sub(r',(\s*[}\]])', r'\1', text)
+        config = json.loads(text)
+        return config['name'], config['env']['staging']['name']
+    except Exception:
+        print("·  wrangler.jsonc o'qilmadi — nomlar standart deb olindi", file=sys.stderr)
+        return default
+
+
+try:
+    accounts = get('/accounts')['result']
+except urllib.error.HTTPError as error:
+    fail(f'·  Cloudflare tokeni ishlamadi (HTTP {error.code}) — DEPLOY.md 5.3')
+except OSError as error:
+    fail(f'·  Cloudflare API ga ulanilmadi: {error}')
+
+chosen = os.environ.get('CF_ACCOUNT') or ''
+if not chosen:
+    if len(accounts) == 1:
+        chosen = accounts[0]['id']
+    else:
+        names = ', '.join(a.get('name', '?') for a in accounts)
+        fail(f'·  Cloudflare akkauntlari bir nechta ({names}) — CLOUDFLARE_ACCOUNT_ID ni qo\'lda yozing')
+
+pairs = [f'CLOUDFLARE_ACCOUNT_ID={chosen}']
+try:
+    subdomain = get(f'/accounts/{chosen}/workers/subdomain')['result']['subdomain']
+except (urllib.error.HTTPError, KeyError, OSError):
+    subdomain = ''
+if subdomain:
+    prod, staging = worker_names()
+    pairs += [
+        f'ADMIN_URL_PRODUCTION=https://{prod}.{subdomain}.workers.dev',
+        f'ADMIN_URL_STAGING=https://{staging}.{subdomain}.workers.dev',
+    ]
+else:
+    print("·  workers.dev subdomeni hali yo'q — manzillar birinchi deploydan keyin", file=sys.stderr)
+print('\n'.join(pairs))
+PY
+    )"
+  )"
+  if [ -n "$cf_pairs" ]; then
+    cf_lines=()
+    while IFS= read -r line; do
+      [ -n "$line" ] && cf_lines+=("$line")
+    done <<<"$cf_pairs"
+    merge_into_env "${cf_lines[@]}"
+    echo "✅ Cloudflare: ${#cf_lines[@]} qiymat olindi (akkaunt ID, manzillar)"
+  fi
+fi
+
 chmod 600 "$out_file"
 echo "✅ $out_file yangilandi (Supabase qiymatlari)"
 
