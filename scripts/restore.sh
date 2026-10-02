@@ -21,6 +21,7 @@ dir="$1"
 target="$2"
 
 restore_into() {
+  local data_file="${2:-$dir/data.sql}"
   # `roles.sql` da `ALTER ROLE ... SET log_min_messages` bo'ladi — uni faqat
   # `supabase_admin` qo'llay oladi, biz esa `postgres` bilan ulanamiz
   # ("permission denied for parameter"). Bu jurnal darajasi sozlamasi,
@@ -32,7 +33,7 @@ restore_into() {
     --file "$roles" \
     --file "$dir/schema.sql" \
     --command 'SET session_replication_role = replica' \
-    --file "$dir/data.sql" \
+    --file "$data_file" \
     --command 'SET client_min_messages = warning' \
     --file "$dir/storage-policies.sql" \
     --dbname "$1" || status=$?
@@ -96,7 +97,41 @@ pnpm exec supabase start --workdir "$workdir" \
   -x studio,imgproxy,edge-runtime,logflare,vector,supavisor,realtime,mailpit,postgres-meta > /dev/null
 local_url="postgresql://postgres:postgres@127.0.0.1:55322/postgres"
 
-restore_into "$local_url"
+# Lokal Supabase image'i prod platformasidan eski bo'lishi mumkin (masalan
+# `auth.mfa_recovery_code_sets` hali yo'q). Zaxirada ular qoladi — faqat shu
+# tekshiruvda o'tkazib yuboriladi va nomlari aytiladi.
+verify_data="$(mktemp)"
+skipped="$(
+  psql "$local_url" --no-psqlrc --tuples-only --no-align --quiet \
+    --command "select schemaname || '.' || tablename from pg_tables" |
+    python3 -c "$(
+      cat <<'PYFILTER'
+import sys
+
+source, target = sys.argv[1], sys.argv[2]
+present = {line.strip() for line in sys.stdin if line.strip()}
+skipped, copying = [], False
+with open(source, encoding='utf-8') as src, open(target, 'w', encoding='utf-8') as dst:
+    for line in src:
+        if copying:
+            if line.startswith(r'\.'):
+                copying = False
+            continue
+        if line.startswith('COPY '):
+            name = line[5:].split('(')[0].strip().replace('"', '')
+            if name not in present:
+                skipped.append(name)
+                copying = True
+                continue
+        dst.write(line)
+print(' '.join(skipped))
+PYFILTER
+    )" "$dir/data.sql" "$verify_data"
+)"
+[ -z "$skipped" ] || echo "ℹ️  Lokal image'da yo'q jadvallar tekshiruvdan o'tkazildi: $skipped"
+
+restore_into "$local_url" "$verify_data"
+rm -f "$verify_data"
 
 if diff <(row_counts "$SUPABASE_DB_URL") <(row_counts "$local_url") > /dev/null; then
   echo "✅ Tiklash tekshiruvi: public jadvallar qatorlari va storage siyosatlari soni mos."
