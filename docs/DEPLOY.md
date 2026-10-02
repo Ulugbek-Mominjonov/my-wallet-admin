@@ -262,8 +262,12 @@ loyiha va shu flavor paketiga ro'yxatdan o'tgan Android ilova.
 5. **Crashlytics:** alohida yoqish shart emas — birinchi hisobot kelganda
    konsolda o'zi paydo bo'ladi (SDK ilova ichida).
 
-✅ **Tekshiruv:** Firebase Console → Messaging → "Send test message" →
-qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
+✅ **Tekshiruv (qurilmasiz):** `scripts/fcm-check.py --env
+FCM_SERVICE_ACCOUNT_PRODUCTION` — Edge Function bilan bir xil yo'ldan boradi
+(JWT → access token → `messages:send`), lekin `validate_only` bilan: xabar
+yuborilmaydi. Ruxsat yo'q yoki FCM API o'chiq bo'lsa 403 ko'rsatadi.
+Qurilmada to'liq tekshirish: Firebase Console → Messaging → "Send test
+message" → qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da).
 
 ---
 
