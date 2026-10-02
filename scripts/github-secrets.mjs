@@ -153,6 +153,9 @@ function isServiceAccount(value) {
 
 // Qiymat ko'rinishi noto'g'ri bo'lsa — sabab, to'g'ri bo'lsa bo'sh satr.
 function invalid(name, value) {
+  // Nusxalashda qolib ketgan shablon: `[YOUR-PASSWORD]`, `<ref>` kabi.
+  const placeholder = value.match(/\[[A-Za-z0-9_-]+\]|<[A-Za-z0-9_-]+>/)
+  if (placeholder) return `shablon qolgan: ${placeholder[0]} — haqiqiy qiymat bilan almashtiring`
   for (const [pattern, ok, message] of checks) {
     if (pattern.test(name) && !ok(value)) return message
   }
