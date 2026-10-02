@@ -174,20 +174,34 @@ merge_into_env() {
   printf '%s\n' "$@" | python3 -c "$(
     cat <<'PY'
 import pathlib, sys
+
+
+def name_of(line):
+    text = line.lstrip()
+    return line.split('=', 1)[0].strip() if '=' in line and not text.startswith('#') else None
+
+
 path = pathlib.Path(sys.argv[1])
 lines = path.read_text(encoding='utf-8').splitlines()
-# Mavjud `NOM=` satrlarining o'rni (izoh satrlari hisobga olinmaydi).
-where = {}
+# Qo'lda `>>` bilan qo'shilgan takroriy kalit bo'lishi mumkin: oxirgisi
+# yutadi (`github-secrets.mjs` ham shunday o'qiydi), avvalgilari olib
+# tashlanadi — ikki joyda turgan qiymat chalkashmasin.
+last = {}
 for i, line in enumerate(lines):
-    if '=' in line and not line.lstrip().startswith('#'):
-        where.setdefault(line.split('=', 1)[0].strip(), i)
+    name = name_of(line)
+    if name:
+        last[name] = i
+lines = [l for i, l in enumerate(lines) if name_of(l) is None or last[name_of(l)] == i]
+last = {name_of(l): i for i, l in enumerate(lines) if name_of(l)}
+
 for pair in sys.stdin.read().splitlines():
     if '=' not in pair:
         continue
     name = pair.split('=', 1)[0]
-    if name in where:
-        lines[where[name]] = pair
+    if name in last:
+        lines[last[name]] = pair
     else:
+        last[name] = len(lines)
         lines.append(pair)
 path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
 PY
