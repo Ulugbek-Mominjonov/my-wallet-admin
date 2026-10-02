@@ -2,7 +2,7 @@
 # Har bir maqsad CI'dagi qadam bilan bir xil ishlaydi (lokal = CI).
 
 .DEFAULT_GOAL := help
-.PHONY: help check lint test fmt dev e2e docs-shots contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check fn-lint fn-test fn-snapshots fn-smoke
+.PHONY: help check lint test fmt dev e2e docs-shots contracts contracts-check contract-test sync-test perf web-env web-lint web-test web-e2e web-build db-start db-stop db-status db-reset db-test db-lint db-types db-types-check fn-lint fn-test fn-snapshots fn-smoke deploy-env github-setup
 
 help: ## Buyruqlar ro'yxati
 	@grep -E '^[a-zA-Z_-]+:.*## ' $(MAKEFILE_LIST) | \
@@ -113,3 +113,10 @@ db-types: ## TypeScript tiplarini bazadan generatsiya qilish
 
 db-types-check: db-types ## Tiplar commit qilinganiga mosligini tekshirish (CI)
 	git diff --exit-code -- $(DB_TYPES)
+
+# ─── Deploy sozlamalari (remote Supabase) ──────────────────────────────────
+deploy-env: ## Supabase'dan deploy qiymatlarini olish (.env.deploy, mobil env/)
+	scripts/supabase-env.sh
+
+github-setup: ## GitHub repo sozlamalari: main himoyasi, muhitlar (GITHUB_TOKEN kerak)
+	scripts/github-setup.sh

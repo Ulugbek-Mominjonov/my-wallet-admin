@@ -781,7 +781,8 @@ E21–E26 (admin) M2 bilan.
 
 - [ ] 🔑 **E28-T01** Prod muhit: `DEPLOY.md` 2–7-qadamlari bajarilganini
   tekshirish ro'yxati (Supabase prod, Cloudflare, Firebase, Telegram bot,
-  Google OAuth, SMTP, GitHub sirlari).
+  Google OAuth, SMTP, GitHub sirlari). Supabase qiymatlarini `make deploy-env`
+  o'zi oladi (CLI sessiyasi kerak).
 - [x] **E28-T02** Xavfsizlik tekshiruvi: Supabase Security Advisor va
   Performance Advisor ogohlantirishlari 0; RLS har jadvalda yoqilgan
   (pgTAP `tests.rls_enabled_everywhere`); sirlar skaneri (gitleaks) CI'da.
@@ -1060,3 +1061,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-09-23 | E30-T04 (server qismi) | mobil a'zolar ekrani uchun `household_members(p_household)` RPC'si (ism, rol, qo'shilgan sana, "bu men"); admin panel jadvallarni bevosita o'qiydi, mobil esa faqat RPC bilan — pgTAP 606 |
 | 2026-09-24 | M5 yakuni | E29..E34 ning mobil qismlari ham tugadi (my-wallet-mobil): ko'p valyuta, oilaviy byudjet, tahlillar, vidjet/QR/tez amallar, limitlar v2. Reja bo'yicha qolgani — faqat 🔑 foydalanuvchi qadamlari: E00-T08, E03-T08, E20-T08, E27-T05, E28-T01/T04/T06/T07 |
 | 2026-09-24 | 🔑 qadamlarni yengillashtirish | `scripts/github-setup.sh` (E00-T08 ni bitta buyruqqa aylantiradi: main himoyasi, muhitlar, Actions ruxsati — token foydalanuvchida) va `health-watch.yml` + `scripts/health-watch.sh` (E28-T07: kundalik rejali ish/navbat/kurs nazorati, muammoda ops boti xabar beradi). Qolgan 🔑 qadamlar hisob va sir talab qiladi — ular foydalanuvchida qoladi |
+| 2026-10-02 | 🔑 Supabase qiymatlari | `scripts/supabase-env.sh` (`make deploy-env`): CLI sessiyasi bilan loyiha ref, URL, publishable va secret kalitlarni o'zi oladi → `.env.deploy` (gitignore, 0600) va mobil `env/staging.json` / `env/prod.json`. API bermaydigan 4 qiymat (DB parollari, pooler satri, access token) qo'lda to'ldiriladi va qayta ishlatganda saqlanadi. Login TTY talab qiladi — shu bitta qadam foydalanuvchida |

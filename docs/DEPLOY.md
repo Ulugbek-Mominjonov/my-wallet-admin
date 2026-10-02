@@ -80,7 +80,19 @@ yozmang.
    - Nomi: `my-wallet-staging`, region: **Central EU (Frankfurt)**
      (O'zbekistonga eng yaqin), DB paroli — kuchli, saqlang.
    - Xuddi shunday `my-wallet-prod`.
-2. Har loyihadan yozib oling (**Project Settings → API / Database**):
+2. Qiymatlarni **skript o'zi oladi** (CLI sessiyasi bilan):
+
+   ```bash
+   pnpm exec supabase login   # bir marta
+   make deploy-env            # = scripts/supabase-env.sh
+   ```
+
+   Natijada `.env.deploy` (repoga tushmaydi) va mobil repodagi
+   `env/staging.json` / `env/prod.json` to'ldiriladi: ref, URL, publishable
+   va secret kalitlar. Qolgan 4 qiymatni (DB parollari, pooler satri, access
+   token) API bermaydi — ularni shu faylga qo'lda yozasiz (qayta ishga
+   tushirganda saqlanadi). Qo'lda olmoqchi bo'lsangiz
+   (**Project Settings → API / Database**):
 
    | Qiymat | Qayerdan | GitHub'dagi nomi |
    |---|---|---|
@@ -335,6 +347,8 @@ reviewer tasdig'idan keyin ochiladi.
 ## 10. Birinchi ishga tushirish tartibi
 
 1. 1–8-qadamlar (akkauntlar va kalitlar) → 9-bo'limdagi jadval to'ldirildi.
+   Yordamchi buyruqlar: `make github-setup` (1-bo'lim) va `make deploy-env`
+   (2-bo'lim — Supabase qiymatlarini o'zi oladi).
 2. Repo o'zgaruvchisi `DEPLOY_ENABLED = true`.
 3. **Actions → Deploy → Run workflow → staging**: migratsiyalar → Edge
    Functions → admin panel → smoke testlar. Keyingi `main` push'lari
