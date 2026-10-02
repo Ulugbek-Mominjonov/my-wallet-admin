@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
-# E03-T08 / E28-T01: Supabase loyihalaridan deploy qiymatlarini olib fayllarga
-# yozadi (DEPLOY.md 2 va 9-bo'limlar). Qayta ishga tushirish xavfsiz — qo'lda
-# to'ldirilgan qiymatlar saqlanadi.
+# E03-T08 / E28-T01: deploy qiymatlarini yig'adi (DEPLOY.md 2 va 9-bo'limlar):
+#   1. Supabase loyihalaridan — ref, URL, publishable va secret kalitlar;
+#   2. mahalliy tasodifiy sirlar (`CRON_SECRET`, `TELEGRAM_WEBHOOK_SECRET`) —
+#      faqat bo'sh bo'lsa yaratiladi.
+# Qayta ishga tushirish xavfsiz: faqat o'z kalitlari yangilanadi, faylning
+# boshqa satrlariga tegilmaydi.
 #
-#   pnpm exec supabase login            # bir marta (sessiya ~/.supabase da)
-#   scripts/supabase-env.sh             # loyihalarni nomi bo'yicha topadi
-#   scripts/supabase-env.sh --staging <ref> --prod <ref>
+#   pnpm exec supabase login         # bir marta (sessiya ~/.supabase da)
+#   make deploy-env                  # loyihalarni nomi bo'yicha topadi
+#   scripts/deploy-env.sh --staging <ref> --prod <ref>
 #
 # Nima yozadi:
 #   .env.deploy                   — GitHub variables/secrets uchun yig'ma ro'yxat
@@ -33,7 +36,7 @@ while [ $# -gt 0 ]; do
       shift 2
       ;;
     -h | --help)
-      sed -n '2,15p' "$0"
+      sed -n '2,19p' "$0"
       exit 0
       ;;
     *)
@@ -44,7 +47,7 @@ while [ $# -gt 0 ]; do
 done
 
 # CLI chaqiruvi — repodagi devDependency; global o'rnatilgan bo'lsa:
-#   SUPABASE_CLI=supabase scripts/supabase-env.sh
+#   SUPABASE_CLI=supabase scripts/deploy-env.sh
 read -ra supabase_cli <<<"${SUPABASE_CLI:-pnpm exec supabase}"
 cli() { "${supabase_cli[@]}" "$@"; }
 
@@ -114,6 +117,7 @@ PY
 }
 
 declare -A values
+pairs=()
 for env_name in staging production; do
   case "$env_name" in
     staging) ref="$staging_ref" ;;
@@ -137,58 +141,77 @@ for env_name in staging production; do
       *) secret="$value" ;;
     esac
   done
-  values["REF_$suffix"]="$ref"
   values["URL_$suffix"]="https://$ref.supabase.co"
   values["PUB_$suffix"]="$publishable"
-  values["SECRET_$suffix"]="$secret"
+  pairs+=(
+    "SUPABASE_PROJECT_REF_$suffix=$ref"
+    "SUPABASE_URL_$suffix=https://$ref.supabase.co"
+    "SUPABASE_PUBLISHABLE_KEY_$suffix=$publishable"
+    "SUPABASE_SECRET_KEY_$suffix=$secret"
+  )
   echo "✅ $env_name: $ref — URL, publishable va secret kalit olindi"
 done
 
-# Qo'lda to'ldirilgan qiymatlar — fayl qayta yozilganda ham qolishi kerak,
-# shuning uchun oldin o'qib olinadi (`>` fayl tanasini darhol bo'shatadi).
-declare -A manual
-for name in SUPABASE_DB_PASSWORD_STAGING SUPABASE_DB_PASSWORD_PRODUCTION \
-  SUPABASE_DB_URL_PRODUCTION SUPABASE_ACCESS_TOKEN; do
-  if [ -f "$out_file" ]; then
-    manual["$name"]="$(sed -n "s/^$name=//p" "$out_file" | tail -1)"
-  else
-    manual["$name"]=''
+# --- .env.deploy: faqat o'z kalitlarini yangilaydi, boshqa satrlarga tegmaydi
+# (qolgan nomlarni `scripts/github-secrets.mjs --template` qo'shadi).
+if [ ! -f "$out_file" ]; then
+  umask 077
+  {
+    echo "# Deploy qiymatlari — DEPLOY.md 9-bo'lim."
+    echo "# Repoga tushmaydi (.gitignore: .env.*); huquqlar 600."
+    echo "# Qolgan nomlarni qo'shish:"
+    echo "#   node scripts/github-secrets.mjs --template >> .env.deploy"
+    echo "# GitHub'ga yuklash: GITHUB_TOKEN=... make github-secrets"
+    echo
+    echo "# --- Supabase (scripts/deploy-env.sh yozadi) ---"
+  } >"$out_file"
+fi
+
+# Juftliklarni faylga birlashtiradi: mavjud `NOM=` satri yangilanadi, yo'q
+# bo'lsa oxiriga qo'shiladi. Qiymatlar stdin orqali — sir `ps` chiqishida
+# ko'rinmasin.
+merge_into_env() {
+  printf '%s\n' "$@" | python3 -c "$(
+    cat <<'PY'
+import pathlib, sys
+path = pathlib.Path(sys.argv[1])
+lines = path.read_text(encoding='utf-8').splitlines()
+# Mavjud `NOM=` satrlarining o'rni (izoh satrlari hisobga olinmaydi).
+where = {}
+for i, line in enumerate(lines):
+    if '=' in line and not line.lstrip().startswith('#'):
+        where.setdefault(line.split('=', 1)[0].strip(), i)
+for pair in sys.stdin.read().splitlines():
+    if '=' not in pair:
+        continue
+    name = pair.split('=', 1)[0]
+    if name in where:
+        lines[where[name]] = pair
+    else:
+        lines.append(pair)
+path.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+PY
+  )" "$out_file"
+}
+
+merge_into_env "${pairs[@]}"
+
+# Mahalliy sirlar (DEPLOY.md 7.3): mavjudi almashtirilmaydi — deploy ularni
+# Supabase muhitiga va Vault'ga yozadi, almashtirish = qayta deploy.
+generated=()
+for name in CRON_SECRET_STAGING CRON_SECRET_PRODUCTION \
+  TELEGRAM_WEBHOOK_SECRET_STAGING TELEGRAM_WEBHOOK_SECRET_PRODUCTION; do
+  if [ -z "$(sed -n "s/^$name=//p" "$out_file" | tail -1)" ]; then
+    generated+=("$name=$(openssl rand -hex 32)")
   fi
 done
+if [ ${#generated[@]} -gt 0 ]; then
+  merge_into_env "${generated[@]}"
+  echo "✅ ${#generated[@]} ta tasodifiy sir yaratildi (CRON_SECRET, TELEGRAM_WEBHOOK_SECRET)"
+fi
 
-# --- .env.deploy -------------------------------------------------------------
-umask 077
-{
-  echo "# Supabase deploy qiymatlari — $(date +%F) da scripts/supabase-env.sh yozdi."
-  echo "# Repoga tushmaydi (.gitignore: .env.*). GitHub'ga kiritish: docs/DEPLOY.md 9."
-  echo
-  echo "# --- Repo variables (ochiq qiymatlar) ---"
-  for suffix in STAGING PRODUCTION; do
-    [ -n "${values[REF_$suffix]:-}" ] || continue
-    echo "SUPABASE_PROJECT_REF_$suffix=${values[REF_$suffix]}"
-    echo "SUPABASE_URL_$suffix=${values[URL_$suffix]}"
-    echo "SUPABASE_PUBLISHABLE_KEY_$suffix=${values[PUB_$suffix]}"
-  done
-  echo
-  echo "# --- Environment secrets: GitHub'da nomi SUPABASE_SECRET_KEY,"
-  echo "#     qiymati esa muhitiga mos (staging / production) ---"
-  for suffix in STAGING PRODUCTION; do
-    if [ -n "${values[SECRET_$suffix]:-}" ]; then
-      echo "SUPABASE_SECRET_KEY_$suffix=${values[SECRET_$suffix]}"
-    fi
-  done
-  echo
-  echo "# --- API bermaydi: qo'lda to'ldiriladi (bir marta) ---"
-  echo "# Loyiha yaratilganda belgilangan DB paroli (DEPLOY.md 2.1):"
-  echo "SUPABASE_DB_PASSWORD_STAGING=${manual[SUPABASE_DB_PASSWORD_STAGING]}"
-  echo "SUPABASE_DB_PASSWORD_PRODUCTION=${manual[SUPABASE_DB_PASSWORD_PRODUCTION]}"
-  echo "# Dashboard → Connect → Session pooler (IPv4) — zaxira ishi uchun:"
-  echo "SUPABASE_DB_URL_PRODUCTION=${manual[SUPABASE_DB_URL_PRODUCTION]}"
-  echo "# Account → Access Tokens — CI uchun alohida token (DEPLOY.md 2.3):"
-  echo "SUPABASE_ACCESS_TOKEN=${manual[SUPABASE_ACCESS_TOKEN]}"
-} >"$out_file"
 chmod 600 "$out_file"
-echo "✅ $out_file yozildi (faqat o'qish huquqi sizda)"
+echo "✅ $out_file yangilandi (Supabase qiymatlari)"
 
 # --- mobil env/<flavor>.json -------------------------------------------------
 # Mavjud fayl bo'lsa — faqat Supabase maydonlari yangilanadi (Firebase va
@@ -223,7 +246,8 @@ done
 
 cat <<'MSG'
 
-Keyingi qadam: .env.deploy dagi bo'sh 4 qatorni to'ldiring (DB paroli,
-pooler satri, access token), so'ng qiymatlarni GitHub'ga kiriting —
-DEPLOY.md 9-bo'lim.
+Keyingi qadamlar:
+  1. node scripts/github-secrets.mjs --template >> .env.deploy   # bo'sh nomlar
+  2. .env.deploy ni to'ldiring (DB parollari, pooler satri, tokenlar — DEPLOY.md)
+  3. GITHUB_TOKEN=... make github-secrets                        # GitHub'ga yuklash
 MSG

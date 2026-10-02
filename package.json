@@ -8,6 +8,7 @@
     "node": ">=24"
   },
   "devDependencies": {
+    "libsodium-wrappers": "^0.8.4",
     "postgres": "3.4.9",
     "squawk-cli": "^2.65.0",
     "supabase": "2.117.0"

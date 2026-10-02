@@ -84,15 +84,15 @@ yozmang.
 
    ```bash
    pnpm exec supabase login   # bir marta
-   make deploy-env            # = scripts/supabase-env.sh
+   make deploy-env            # = scripts/deploy-env.sh
    ```
 
    Natijada `.env.deploy` (repoga tushmaydi) va mobil repodagi
    `env/staging.json` / `env/prod.json` to'ldiriladi: ref, URL, publishable
-   va secret kalitlar. Qolgan 4 qiymatni (DB parollari, pooler satri, access
-   token) API bermaydi — ularni shu faylga qo'lda yozasiz (qayta ishga
-   tushirganda saqlanadi). Qo'lda olmoqchi bo'lsangiz
-   (**Project Settings → API / Database**):
+   va secret kalitlar; `CRON_SECRET` va `TELEGRAM_WEBHOOK_SECRET` esa
+   tasodifiy yaratiladi. Qolganini API bermaydi — 9-bo'limdagi oqim bilan
+   shu faylga qo'lda yozasiz (qayta ishga tushirganda saqlanadi). Qo'lda
+   olmoqchi bo'lsangiz (**Project Settings → API / Database**):
 
    | Qiymat | Qayerdan | GitHub'dagi nomi |
    |---|---|---|
@@ -248,8 +248,8 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
    `TELEGRAM_BOT` ga yozing — admin panel ulash havolasi va QR'ni shundan
    quradi (`VITE_TELEGRAM_BOT`; bo'sh bo'lsa ulash bo'limi "sozlanmagan"
    deydi). Bot **tokeni** faqat serverda (Environment secret).
-3. Webhook maxfiy kaliti: `openssl rand -hex 32` → har Environment'ga
-   **secret** `TELEGRAM_WEBHOOK_SECRET`.
+3. Webhook maxfiy kaliti: `TELEGRAM_WEBHOOK_SECRET` — `make deploy-env`
+   o'zi yaratadi (`openssl rand -hex 32`), har Environment uchun alohida.
 4. Webhook'ni ulash — **deploy workflow o'zi bajaradi**
    (`scripts/telegram-setup.sh`: `setWebhook` →
    `https://<ref>.supabase.co/functions/v1/telegram-webhook`, `secret_token`
@@ -287,6 +287,23 @@ qurilma tokeniga (ilovaning Sozlamalar → Diagnostika da ko'rinadi) keladi.
 ---
 
 ## 9. GitHub sirlari va o'zgaruvchilari — yig'ma jadval
+
+**Oqim (qo'lda kiritish o'rniga):**
+
+```bash
+make deploy-env                                       # Supabase + tasodifiy sirlar
+node scripts/github-secrets.mjs --template >> .env.deploy   # qolgan nomlar
+# .env.deploy ni to'ldirasiz (quyidagi jadvallar — qaysi qiymat qayerdan)
+GITHUB_TOKEN=… make github-secrets ARGS=--dry-run     # nima yuborilishini ko'rish
+GITHUB_TOKEN=… make github-secrets                    # ikkala repoga yuklash
+```
+
+Bo'sh qiymat o'tkazib yuboriladi — fayl to'lgani sari buyruqni qayta
+ishlatasiz. Muhit sirlari `staging` / `production` ga, fayldagi nomi
+`_STAGING` / `_PRODUCTION` qo'shimchasi bilan (masalan
+`SUPABASE_DB_PASSWORD_PRODUCTION` → `production` muhitidagi
+`SUPABASE_DB_PASSWORD`). Token: klassik `repo` scope yoki fine-grained —
+Administration, Environments, Secrets, Variables (Read and write).
 
 **Tamoyil:** ochiq qiymatlar (URL, publishable kalit, ref) — **repo
 o'zgaruvchilari** (`_STAGING` / `_PRODUCTION` qo'shimchasi bilan): keep-alive
@@ -327,7 +344,7 @@ reviewer tasdig'idan keyin ochiladi.
 | `SUPABASE_SECRET_KEY` | 2.2 |
 | `FCM_SERVICE_ACCOUNT` (base64 JSON) | 6.3 |
 | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_WEBHOOK_SECRET` | 7 |
-| `CRON_SECRET` (`openssl rand -hex 32`) — pg_cron → Edge Function chaqiruvlari uchun | — |
+| `CRON_SECRET` — pg_cron → Edge Function chaqiruvlari uchun (`make deploy-env` yaratadi) | — |
 
 > **Deploy nima qiladi** (`scripts/deploy-secrets.sh`, har deployda):
 > `CRON_SECRET`, `FCM_SERVICE_ACCOUNT`, `TELEGRAM_BOT_TOKEN`,
