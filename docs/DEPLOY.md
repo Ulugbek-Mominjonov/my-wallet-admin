@@ -107,13 +107,34 @@ yozmang.
    > faqat yangi `publishable` / `secret` kalitlardan foydalanamiz.
 3. **Access token** (CLI uchun): Account → **Access Tokens** → Generate →
    `SUPABASE_ACCESS_TOKEN` (**secret**).
-4. **Authentication → URL Configuration** (har loyihada):
-   - Site URL: admin panel manzili (5-qadamdan keyin to'ldiriladi).
-   - Redirect URLs: `https://<admin-domen>/**`, `mywallet://auth-callback`
-     (prod), `mywallet-stg://auth-callback` (staging).
-   > Remote auth sozlamalari faqat shu yerda (dashboard) qo'lda qilinadi —
-   > `supabase/config.toml` faqat lokal muhit uchun (lokal manzillar prod'ga
-   > tushib qolmasligi uchun `config push` ishlatilmaydi).
+4. **Auth sozlamalari** — 5-qadamdan (admin manzili ma'lum bo'lgach) keyin,
+   har muhit uchun bir marta:
+
+   ```bash
+   scripts/auth-config.sh staging --dry-run   # nima o'zgarishini ko'rish
+   scripts/auth-config.sh staging
+   scripts/auth-config.sh production
+   ```
+
+   Nimani to'g'rilaydi (standart qiymatlar ilovaga mos emas):
+   Site URL va Redirect ro'yxati (`<admin>/**` va `mywallet-stg://` /
+   `mywallet://auth-callback`), kirish kodi **6 xonali** (standarti 8 —
+   ilova 6 kutadi, `EMAIL_CODE_LENGTH`), kod amal qilishi 10 daqiqa,
+   `mailer_autoconfirm` (kod kiritish egalikni isbotlaydi), parol
+   uzunligi. SMTP berilgan bo'lsa (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`,
+   `SMTP_PASSWORD`, `SMTP_SENDER` — `.env.deploy` da) uni va kod
+   shablonini ham o'rnatadi.
+
+   > Site URL to'g'rilanmasa Google bilan kirish `http://localhost:3000` ga
+   > qaytaradi: so'ralgan manzil ruxsat ro'yxatida bo'lmasa, Supabase Site
+   > URL ga tushadi.
+   >
+   > `supabase config push` ishlatilmaydi — u `config.toml` dagi **lokal**
+   > manzillarni ham remote'ga yuborardi. Shuning uchun faqat kerakli
+   > maydonlar yuboriladi.
+   >
+   > Bepul rejada xat shablonini o'zgartirish faqat custom SMTP bilan
+   > mumkin — SMTP yo'q bo'lsa skript shablonni o'tkazib yuboradi.
 5. **Database → Extensions:** `pg_cron`, `pg_net` yoqilganini tekshiring
    (migratsiya ham yoqadi).
 
