@@ -152,7 +152,15 @@ function isServiceAccount(value) {
 }
 
 // Qiymat ko'rinishi noto'g'ri bo'lsa — sabab, to'g'ri bo'lsa bo'sh satr.
-function invalid(name, value) {
+// `values` — boshqa qiymatga bog'liq tekshiruvlar uchun.
+function invalid(name, value, values) {
+  // Ops chat ID botning o'z ID si bo'lsa, bot o'ziga yoza olmaydi (403).
+  if (name === 'OPS_TELEGRAM_CHAT_ID') {
+    const botId = (values.get('OPS_TELEGRAM_BOT_TOKEN') ?? '').split(':')[0]
+    if (botId && botId === value) {
+      return "bu botning o'z ID si — o'zingizning chat ID kerak (botga /start yozing)"
+    }
+  }
   // Nusxalashda qolib ketgan shablon: `[YOUR-PASSWORD]`, `<ref>` kabi.
   const placeholder = value.match(/\[[A-Za-z0-9_-]+\]|<[A-Za-z0-9_-]+>/)
   if (placeholder) return `shablon qolgan: ${placeholder[0]} — haqiqiy qiymat bilan almashtiring`
@@ -322,7 +330,7 @@ async function main() {
       group = where
     }
     const label = `${target.kind === 'secret' ? 'sir' : "o'zgaruvchi"} ${target.name}`
-    const problem = invalid(target.source, value)
+    const problem = invalid(target.source, value, values)
     if (problem) {
       console.log(`  ❌ ${label}: ${target.source} — ${problem}`)
       failed += 1

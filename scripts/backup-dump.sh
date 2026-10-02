@@ -44,14 +44,20 @@ psql "$SUPABASE_DB_URL" --no-psqlrc --tuples-only --no-align --quiet --output "$
 # oladi, fayllarning o'zi — Storage API orqali. Loglar public repoda ochiq,
 # shuning uchun fayl yo'llari chiqarilmaydi — faqat natija.
 if [ -n "${SUPABASE_PROJECT_REF:-}" ]; then
-  if ! pnpm exec supabase storage cp -r "ss:///$RECEIPTS_BUCKET" "$out/storage" \
-      --experimental --project-ref "$SUPABASE_PROJECT_REF" --jobs 4 > /dev/null 2>&1; then
-    echo "::error::chek rasmlarini yuklab bo'lmadi" >&2
-    exit 1
-  fi
+  mkdir -p "$out/storage"
+  copied=true
+  pnpm exec supabase storage cp -r "ss:///$RECEIPTS_BUCKET" "$out/storage" \
+    --experimental --project-ref "$SUPABASE_PROJECT_REF" --jobs 4 > /dev/null 2>&1 || copied=false
   expected="$(psql "$SUPABASE_DB_URL" --no-psqlrc --tuples-only --no-align \
     --command "select count(*) from storage.objects where bucket_id = '$RECEIPTS_BUCKET'")"
   actual="$(find "$out/storage" -type f | wc -l)"
+  # Nusxalash xatosi faqat bazada yozuv bo'lsa muhim: yangi loyihada bucket
+  # hali yaratilmagan bo'ladi (0 yozuv) — bu zaxirani qulatmaydi. Yaxlitlikni
+  # quyidagi solishtirish tekshiradi.
+  if [ "$copied" = false ] && [ "$expected" != 0 ]; then
+    echo "::error::chek rasmlarini yuklab bo'lmadi ($expected ta yozuv bor)" >&2
+    exit 1
+  fi
   if [ "$expected" != "$actual" ]; then
     echo "::error::chek rasmlari soni bazadagi yozuvlar bilan mos emas" >&2
     exit 1
