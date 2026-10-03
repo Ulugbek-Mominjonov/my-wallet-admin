@@ -456,7 +456,11 @@ reviewer tasdig'idan keyin ochiladi.
 - [ ] pg_cron → Edge Function chaqiruvlari: `select status_code, content from
       net._http_response order by id desc limit 10;` — 200 (403 emas).
 - [ ] Zaxira workflow yashil, restore-drill yashil.
-- [ ] Supabase **Security Advisor** va **Performance Advisor** — ogohlantirish yo'q.
+- [ ] Supabase **Security Advisor** va **Performance Advisor** — **ERROR yo'q**.
+      WARN'lar ataylab qoladi: `security definer` RPC'lar (huquqni funksiya
+      ichida tekshiradi), anon uchun ochiq `health()`, "Leaked password
+      protection" (Pro reja; parol bilan kirish ishlatilmaydi). INFO
+      "Unindexed foreign keys" — PLAN 2026-09-23 qarori.
 
 **Kundalik nazorat (E28-T07) avtomatik:** `health-watch.yml` har kuni 08:00
 (Toshkent) prod bazani tekshiradi — rejali ishlar xatosi yoki kechikishi,

@@ -783,9 +783,12 @@ E21–E26 (admin) M2 bilan.
   tekshirish ro'yxati (Supabase prod, Cloudflare, Firebase, Telegram bot,
   Google OAuth, SMTP, GitHub sirlari). Supabase qiymatlarini `make deploy-env`
   o'zi oladi (CLI sessiyasi kerak).
-- [x] **E28-T02** Xavfsizlik tekshiruvi: Supabase Security Advisor va
-  Performance Advisor ogohlantirishlari 0; RLS har jadvalda yoqilgan
-  (pgTAP `tests.rls_enabled_everywhere`); sirlar skaneri (gitleaks) CI'da.
+- [x] **E28-T02** Xavfsizlik tekshiruvi: Advisor'da **ERROR 0**; RLS har
+  jadvalda yoqilgan (pgTAP `tests.rls_enabled_everywhere`); sirlar skaneri
+  (gitleaks) CI'da. Qolgan WARN'lar ataylab: `security definer` RPC'lar
+  (huquq funksiya ichida tekshiriladi — ARXITEKTURA 5), `health()` anon
+  uchun ochiq (keepalive), "Leaked password protection" esa bepul rejada
+  yoqilmaydi (parol bilan kirish ishlatilmaydi — faqat kod va Google).
 - [x] **E28-T03** Yuklama/ishlash: prod o'lchamidagi sintetik ma'lumotda
   hisobotlar va sinxron vaqtlari (`docs/PERF.md`), mobil sovuq start < 2 s.
 - [ ] **E28-T04** Zaxira: prod zaxirasidan staging'ga tiklash mashqi
@@ -1064,3 +1067,4 @@ E21–E26 (admin) M2 bilan.
 | 2026-10-02 | 🔑 Supabase qiymatlari | `scripts/deploy-env.sh` (`make deploy-env`): CLI sessiyasi bilan loyiha ref, URL, publishable va secret kalitlarni o'zi oladi → `.env.deploy` (gitignore, 0600) va mobil `env/staging.json` / `env/prod.json`. API bermaydigan 4 qiymat (DB parollari, pooler satri, access token) qo'lda to'ldiriladi va qayta ishlatganda saqlanadi. Login TTY talab qiladi — shu bitta qadam foydalanuvchida |
 | 2026-10-02 | 🔑 GitHub sirlari | `scripts/github-secrets.mjs` (`make github-secrets`): `.env.deploy` dagi qiymatlarni ikkala repoga yuklaydi — repo o'zgaruvchilari, repo sirlari va `staging`/`production` muhitlari (sirlar libsodium sealed box bilan shifrlanadi). `--template` bo'sh nomlar ro'yxatini beradi, `--dry-run` nima yuborilishini ko'rsatadi; bo'sh qiymat o'tkazib yuboriladi. Soxta GitHub API'da uchidan-uchiga tekshirildi (shifr ochildi, PATCH→POST yo'li, 401 sababi). Qo'lda 25+ qiymat kiritish o'rniga bitta fayl + bitta buyruq |
 | 2026-10-02 | 🔑 tashqi xizmatlar | `deploy-env.sh` Cloudflare (akkaunt ID, `workers.dev` manzillari), Telegram (bot nomlari `getMe`, ops chat ID `getUpdates`) va Firebase (API kalit, app ID, sender ID — `firebase` CLI) qiymatlarini ham o'zi oladi; mobil `env/<flavor>.json` CI bilan bir xil maydonlarni oladi. `scripts/fcm-check.py` — FCM kalitini qurilmasiz tekshiradi (`validate_only`). Topilgan: ilova `google-services.json` ishlatmaydi va SHA-1 Firebase'ga qo'shilmaydi (409 — paket+SHA ni Android OAuth client'lar egallagan); Google Client Secret va SMTP qiymatlari GitHub'ga kerak emas (hujjatdagi qoldiq tuzatildi) |
+| 2026-10-03 | Advisor WARN'lari: `security definer` RPC'lar va anon uchun ochiq `health()` qoldiriladi; spravochniklardagi `for all` admin siyosati esa faqat yozishga qisqartirildi | RPC'lar huquqni o'zi tekshiradi (ARXITEKTURA 5) va ularsiz mobil klient ishlamaydi; `health()` keepalive uchun kerak va maxfiy ma'lumot bermaydi; `for all` esa o'qishda ortiqcha permissive siyosat yaratardi — uni yo'qotish xatti-harakatni o'zgartirmaydi (020 testi tasdiqlaydi) | E28-T02 |
