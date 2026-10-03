@@ -97,9 +97,12 @@ pnpm exec supabase start --workdir "$workdir" \
   -x studio,imgproxy,edge-runtime,logflare,vector,supavisor,realtime,mailpit,postgres-meta > /dev/null
 local_url="postgresql://postgres:postgres@127.0.0.1:55322/postgres"
 
-# Lokal Supabase image'i prod platformasidan eski bo'lishi mumkin (masalan
-# `auth.mfa_recovery_code_sets` hali yo'q). Zaxirada ular qoladi — faqat shu
-# tekshiruvda o'tkazib yuboriladi va nomlari aytiladi.
+# Lokal Supabase image'i prod platformasidan eski bo'lishi mumkin: `auth`
+# sxemasida yangi jadval ham, yangi ustun ham bo'ladi (masalan
+# `one_time_tokens.expires_at`). Shuning uchun tekshiruvda `auth` butunlay
+# o'tkazib yuboriladi — zaxirada u to'liq qoladi va haqiqiy tiklashda
+# (bir xil avlod Supabase loyihasiga) ishlatiladi. Uning o'rniga quyida
+# zaxiradagi `auth.users` qatorlari manbadagi son bilan solishtiriladi.
 verify_data="$(mktemp)"
 skipped="$(
   psql "$local_url" --no-psqlrc --tuples-only --no-align --quiet \
@@ -110,25 +113,42 @@ import sys
 
 source, target = sys.argv[1], sys.argv[2]
 present = {line.strip() for line in sys.stdin if line.strip()}
-skipped, copying = [], False
+skipped, copying, users = [], False, 0
+counting = False
 with open(source, encoding='utf-8') as src, open(target, 'w', encoding='utf-8') as dst:
     for line in src:
         if copying:
             if line.startswith(r'\.'):
-                copying = False
+                copying = counting = False
+            elif counting:
+                users += 1
             continue
         if line.startswith('COPY '):
             name = line[5:].split('(')[0].strip().replace('"', '')
-            if name not in present:
+            if name.startswith('auth.') or name not in present:
                 skipped.append(name)
                 copying = True
+                counting = name == 'auth.users'
                 continue
         dst.write(line)
 print(' '.join(skipped))
+print(users)
 PYFILTER
     )" "$dir/data.sql" "$verify_data"
 )"
-[ -z "$skipped" ] || echo "ℹ️  Lokal image'da yo'q jadvallar tekshiruvdan o'tkazildi: $skipped"
+users_in_backup="$(sed -n 2p <<<"$skipped")"
+skipped="$(sed -n 1p <<<"$skipped")"
+[ -z "$skipped" ] || echo "ℹ️  Tekshiruvdan tashqarida (auth sxemasi va lokal image'da yo'q jadvallar): $skipped"
+
+# Auth ma'lumoti lokal bazaga tiklanmagani uchun zaxiradagi foydalanuvchilar
+# sonini manba bilan solishtiramiz — zaxira ularni olganini shu tasdiqlaydi.
+users_in_source="$(psql "$SUPABASE_DB_URL" --no-psqlrc --tuples-only --no-align \
+  --quiet --command 'select count(*) from auth.users')"
+if [ "$users_in_backup" != "$users_in_source" ]; then
+  echo "::error::zaxiradagi foydalanuvchilar soni manbadagidan farq qiladi" >&2
+  exit 1
+fi
+echo "✅ Foydalanuvchilar: zaxirada $users_in_backup ta (manbada ham shuncha)"
 
 restore_into "$local_url" "$verify_data"
 rm -f "$verify_data"
