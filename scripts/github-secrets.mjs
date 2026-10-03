@@ -38,7 +38,6 @@ const repoLevel = {
       'CLOUDFLARE_ACCOUNT_ID',
       'BACKUP_AGE_RECIPIENT',
       'OPS_TELEGRAM_CHAT_ID',
-      'TELEGRAM_BOT',
     ],
     secret: [
       'SUPABASE_ACCESS_TOKEN',
@@ -61,7 +60,9 @@ const repoLevel = {
 // Muhit darajasi: GitHub'dagi nom shu, manbasi esa `<nom>_STAGING` / `_PRODUCTION`.
 const envLevel = {
   admin: {
-    variable: [],
+    // Har muhitning o'z boti bor — admin paneldagi ulash havolasi shundan
+    // quriladi (`VITE_TELEGRAM_BOT`). Qiymat mobil bilan bir xil manbadan.
+    variable: [{ name: 'TELEGRAM_BOT', source: 'TELEGRAM_BOT_USERNAME' }],
     secret: [
       'SUPABASE_DB_PASSWORD',
       'SUPABASE_SECRET_KEY',
@@ -97,8 +98,12 @@ function targets() {
     }
     for (const env of ENVS) {
       for (const kind of ['variable', 'secret']) {
-        for (const name of envLevel[repo][kind]) {
-          list.push({ repo, source: `${name}_${env.toUpperCase()}`, name, kind, env })
+        for (const entry of envLevel[repo][kind]) {
+          // Element — nom yoki {name, source}: bitta qiymat ikki repoda boshqa
+          // nom bilan ketishi mumkin (TELEGRAM_BOT ↔ TELEGRAM_BOT_USERNAME).
+          const name = entry.name ?? entry
+          const base = entry.source ?? name
+          list.push({ repo, source: `${base}_${env.toUpperCase()}`, name, kind, env })
         }
       }
     }

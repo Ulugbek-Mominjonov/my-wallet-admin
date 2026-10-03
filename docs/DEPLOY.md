@@ -401,7 +401,6 @@ reviewer tasdig'idan keyin ochiladi.
 | `CLOUDFLARE_ACCOUNT_ID` | akkaunt ID | 5.2 |
 | `BACKUP_AGE_RECIPIENT` | `age1...` ochiq kalit | 8 |
 | `OPS_TELEGRAM_CHAT_ID` | ops chat ID | 7.1 |
-| `TELEGRAM_BOT` | bot nomi `@` siz (admin paneldagi ulash havolasi va QR uchun) | 7 |
 
 *Secrets (repo):*
 
@@ -411,6 +410,12 @@ reviewer tasdig'idan keyin ochiladi.
 | `CLOUDFLARE_API_TOKEN` | 5.3 |
 | `SUPABASE_DB_URL_PRODUCTION` (session pooler, zaxira uchun) | 2.2 |
 | `OPS_TELEGRAM_BOT_TOKEN` | 7.1 |
+
+*Environment variables (`staging` / `production`):*
+
+| Nomi | Qiymat | Qadam |
+|---|---|---|
+| `TELEGRAM_BOT` | shu muhit boti nomi `@` siz — admin paneldagi ulash havolasi va QR shundan quriladi (`VITE_TELEGRAM_BOT`). **Repo darajasida bo'lmaydi:** har muhitning o'z boti bor, aks holda staging paneli prod botiga ulanadi | 7 |
 
 *Environment secrets (`staging` va `production` — har birida o'z qiymati):*
 
