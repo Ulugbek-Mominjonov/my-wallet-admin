@@ -154,6 +154,18 @@ function isServiceAccount(value) {
 // Qiymat ko'rinishi noto'g'ri bo'lsa — sabab, to'g'ri bo'lsa bo'sh satr.
 // `values` — boshqa qiymatga bog'liq tekshiruvlar uchun.
 function invalid(name, value, values) {
+  // PKCS12 keystore'da kalit paroli store paroli bilan bir xil bo'lishi shart
+  // (keytool `-keypass` ni e'tiborga olmaydi) — aks holda Gradle imzolashda
+  // "Given final block not properly padded" beradi.
+  if (name === 'ANDROID_KEY_PASSWORD') {
+    const store = values.get('ANDROID_KEYSTORE_PASSWORD') ?? ''
+    const keystore = values.get('ANDROID_KEYSTORE_BASE64') ?? ''
+    const header = Buffer.from(keystore.slice(0, 8), 'base64')
+    const pkcs12 = header[0] === 0x30 && header[1] === 0x82
+    if (pkcs12 && store && store !== value) {
+      return "PKCS12 keystore: kalit paroli store paroli bilan bir xil bo'lishi kerak"
+    }
+  }
   // Ops chat ID botning o'z ID si bo'lsa, bot o'ziga yoza olmaydi (403).
   if (name === 'OPS_TELEGRAM_CHAT_ID') {
     const botId = (values.get('OPS_TELEGRAM_BOT_TOKEN') ?? '').split(':')[0]
