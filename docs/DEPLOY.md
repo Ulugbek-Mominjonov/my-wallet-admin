@@ -274,16 +274,30 @@ loyiha va shu flavor paketiga ro'yxatdan o'tgan Android ilova.
      --project <loyiha>
    ```
 
-   CI yuklashi uchun servis akkaunt kaliti: 3-qadamdagi JSON shu ish uchun ham
-   yetishi mumkin (`FIREBASE_APPDIST_SA_*`); ruxsat yetmasa Google Cloud
-   Console → IAM → Service accounts → yangi akkaunt, rol **Firebase App
-   Distribution Admin** → JSON kalit (base64). Tekshirish:
-   `GOOGLE_APPLICATION_CREDENTIALS=key.json firebase appdistribution:testers:list
-   --group-alias testers --project <loyiha>`.
+   CI yuklashi uchun servis akkaunt kaliti (`FIREBASE_APPDIST_SA_*`):
+   3-qadamdagi JSON ishlatiladi, **lekin unga rol qo'shish shart** — Firebase
+   Admin SDK akkauntida App Distribution huquqi yo'q:
+
+   <https://console.cloud.google.com/iam-admin/iam> → loyihani tanlang →
+   `firebase-adminsdk-...@<loyiha>.iam.gserviceaccount.com` qatorida ✏️ →
+   **ADD ANOTHER ROLE** → *Firebase App Distribution Admin* → **SAVE**
+   (har ikki loyihada).
+
+   Tekshirish:
+
+   ```bash
+   scripts/firebase-check.py --env FIREBASE_APPDIST_SA_STAGING \
+     --app "$(sed -n 's/^FIREBASE_APP_ID_ANDROID_STAGING=//p' .env.deploy)"
+   ```
+
+   > `firebase appdistribution:*` buyruqlari bilan tekshirmang: CLI
+   > `GOOGLE_APPLICATION_CREDENTIALS` o'rniga o'z login sessiyasini afzal
+   > ko'radi va siz (egasi) sifatida ishlaydi — servis akkauntda huquq
+   > bo'lmasa ham "muvaffaqiyatli" ko'rinadi.
 5. **Crashlytics:** alohida yoqish shart emas — birinchi hisobot kelganda
    konsolda o'zi paydo bo'ladi (SDK ilova ichida).
 
-✅ **Tekshiruv (qurilmasiz):** `scripts/fcm-check.py --env
+✅ **Tekshiruv (qurilmasiz):** `scripts/firebase-check.py --env
 FCM_SERVICE_ACCOUNT_PRODUCTION` — Edge Function bilan bir xil yo'ldan boradi
 (JWT → access token → `messages:send`), lekin `validate_only` bilan: xabar
 yuborilmaydi. Ruxsat yo'q yoki FCM API o'chiq bo'lsa 403 ko'rsatadi.

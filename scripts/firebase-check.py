@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""FCM servis akkaunti ishlashini tekshiradi (DEPLOY.md 6.3).
+"""Firebase servis akkauntini tekshiradi (DEPLOY.md 6.3 va 6.4).
 
-    scripts/fcm-check.py <servis-akkaunt.json>
-    scripts/fcm-check.py --env FCM_SERVICE_ACCOUNT_PRODUCTION   # .env.deploy dan
+    scripts/firebase-check.py <servis-akkaunt.json>
+    scripts/firebase-check.py --env FCM_SERVICE_ACCOUNT_PRODUCTION
+    scripts/firebase-check.py --env FIREBASE_APPDIST_SA_STAGING --app <app-id>
 
-Edge Function (`notify-dispatch`) bilan bir xil yo'ldan boradi: RS256 JWT →
-OAuth access token → `messages:send`. Xabar **yuborilmaydi**: `validate_only`
-va ataylab yaroqsiz qurilma tokeni ishlatiladi, shuning uchun kutilgan javob —
-"token yaroqsiz". Ruxsat yo'q yoki FCM API o'chiq bo'lsa 403 keladi va skript
-1 bilan tugaydi. Kalit chiqishga chiqarilmaydi.
+Ikki tekshiruv:
+  1. **FCM** — Edge Function (`notify-dispatch`) bilan bir xil yo'l: RS256 JWT
+     → access token → `messages:send`. Xabar yuborilmaydi (`validate_only` va
+     ataylab yaroqsiz qurilma tokeni), kutilgan javob — "token yaroqsiz".
+  2. **App Distribution** (`--app` berilsa) — relizlar ro'yxatini o'qiydi.
+     CI yuklashi uchun shu huquq kerak; `firebase appdistribution:*` buyrug'i
+     bilan tekshirib bo'lmaydi — CLI o'z login sessiyasini afzal ko'radi.
+
+Ruxsat yo'q bo'lsa 403 va chiqish kodi 1. Kalit chiqishga chiqarilmaydi.
 """
 
 import base64
@@ -22,7 +27,7 @@ import urllib.error
 import urllib.request
 
 TOKEN_URL = 'https://oauth2.googleapis.com/token'
-SCOPE = 'https://www.googleapis.com/auth/firebase.messaging'
+SCOPE = 'https://www.googleapis.com/auth/cloud-platform'
 JWT_TTL_SECONDS = 300
 ENV_FILE = '.env.deploy'
 
@@ -90,8 +95,35 @@ def load_account(argument: str, from_env: bool) -> dict:
     raise SystemExit(f'  ❌ {ENV_FILE} da {argument} topilmadi yoki bo\'sh')
 
 
+def app_distribution(token: str, project_number: str, app_id: str) -> int:
+    """Relizlarni o'qish — yuklash uchun kerak bo'lgan huquqni ko'rsatadi."""
+    url = (
+        f'https://firebaseappdistribution.googleapis.com/v1/projects/'
+        f'{project_number}/apps/{app_id}/releases'
+    )
+    request = urllib.request.Request(url, headers={'authorization': f'Bearer {token}'})
+    try:
+        with urllib.request.urlopen(request, timeout=20):
+            print('  App Distribution: ✅ ruxsat bor')
+            return 0
+    except urllib.error.HTTPError as error:
+        if error.code == 403:
+            print(
+                '  App Distribution: ❌ ruxsat yo\'q — servis akkauntga '
+                '"Firebase App Distribution Admin" rolini bering (DEPLOY.md 6.4)'
+            )
+        else:
+            print(f'  App Distribution: ⚠️  HTTP {error.code}')
+        return 1
+
+
 def main(argv: list[str]) -> int:
     from_env = '--env' in argv
+    app_id = ''
+    if '--app' in argv:
+        index = argv.index('--app')
+        app_id = argv[index + 1] if index + 1 < len(argv) else ''
+        argv = argv[:index] + argv[index + 2:]
     rest = [a for a in argv if a != '--env']
     if len(rest) != 1:
         print(__doc__)
@@ -105,6 +137,10 @@ def main(argv: list[str]) -> int:
     print(f"  loyiha: {account['project_id']}")
     token = access_token(account)
     print('  access token: ✅')
+
+    if app_id:
+        # `1:473207003953:android:...` — o'rtadagi qism loyiha raqami.
+        return app_distribution(token, app_id.split(':')[1], app_id)
 
     status, result = post(
         f"https://fcm.googleapis.com/v1/projects/{account['project_id']}/messages:send",
