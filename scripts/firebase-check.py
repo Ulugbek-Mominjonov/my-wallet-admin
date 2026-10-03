@@ -95,26 +95,39 @@ def load_account(argument: str, from_env: bool) -> dict:
     raise SystemExit(f'  ❌ {ENV_FILE} da {argument} topilmadi yoki bo\'sh')
 
 
-def app_distribution(token: str, project_number: str, app_id: str) -> int:
-    """Relizlarni o'qish — yuklash uchun kerak bo'lgan huquqni ko'rsatadi."""
-    url = (
-        f'https://firebaseappdistribution.googleapis.com/v1/projects/'
-        f'{project_number}/apps/{app_id}/releases'
-    )
+APPDIST = 'https://firebaseappdistribution.googleapis.com/v1'
+
+
+def get(token: str, url: str) -> int:
+    """HTTP kodini qaytaradi (tana kerak emas)."""
     request = urllib.request.Request(url, headers={'authorization': f'Bearer {token}'})
     try:
-        with urllib.request.urlopen(request, timeout=20):
-            print('  App Distribution: ✅ ruxsat bor')
-            return 0
+        with urllib.request.urlopen(request, timeout=20) as response:
+            return response.status
     except urllib.error.HTTPError as error:
-        if error.code == 403:
-            print(
-                '  App Distribution: ❌ ruxsat yo\'q — servis akkauntga '
-                '"Firebase App Distribution Admin" rolini bering (DEPLOY.md 6.4)'
-            )
-        else:
-            print(f'  App Distribution: ⚠️  HTTP {error.code}')
+        return error.code
+
+
+def app_distribution(token: str, project_number: str, app_id: str) -> int:
+    """Huquqni loyiha darajasida tekshiradi: ilovada hali reliz bo'lmasligi
+    mumkin (birinchi yuklashda yaratiladi), testerlar ro'yxati esa doim bor."""
+    status = get(token, f'{APPDIST}/projects/{project_number}/testers')
+    if status == 403:
+        print(
+            '  App Distribution: ❌ ruxsat yo\'q — servis akkauntga '
+            '"Firebase App Distribution Admin" rolini bering (DEPLOY.md 6.4)'
+        )
         return 1
+    if status != 200:
+        print(f'  App Distribution: ⚠️  kutilmagan javob (HTTP {status})')
+        return 1
+    print('  App Distribution: ✅ ruxsat bor')
+    releases = get(token, f'{APPDIST}/projects/{project_number}/apps/{app_id}/releases')
+    if releases == 404:
+        print('  ·  ilovada hali reliz yo\'q — birinchi yuklashda yaratiladi')
+    elif releases != 200:
+        print(f'  ·  relizlar ro\'yxati: HTTP {releases}')
+    return 0
 
 
 def main(argv: list[str]) -> int:
