@@ -97,14 +97,15 @@ pnpm exec supabase start --workdir "$workdir" \
   -x studio,imgproxy,edge-runtime,logflare,vector,supavisor,realtime,mailpit,postgres-meta > /dev/null
 local_url="postgresql://postgres:postgres@127.0.0.1:55322/postgres"
 
-# Lokal Supabase image'i prod platformasidan eski bo'lishi mumkin: `auth`
-# sxemasida yangi jadval ham, yangi ustun ham bo'ladi (masalan
-# `one_time_tokens.expires_at`). Shuning uchun tekshiruvda `auth` butunlay
-# o'tkazib yuboriladi — zaxirada u to'liq qoladi va haqiqiy tiklashda
-# (bir xil avlod Supabase loyihasiga) ishlatiladi. Uning o'rniga quyida
-# zaxiradagi `auth.users` qatorlari manbadagi son bilan solishtiriladi.
+# Lokal Supabase image'i prod platformasidan eski bo'lishi mumkin: platforma
+# sxemalarida (`auth`, `storage`, ...) yangi jadval ham, yangi ustun ham
+# bo'ladi (`one_time_tokens.expires_at`, `buckets.lifecycle_configuration`).
+# Shuning uchun tekshiruvda faqat **o'zimiz egalik qiladigan** sxemalar
+# tiklanadi; platforma jadvallari zaxirada to'liq qoladi (haqiqiy tiklash
+# bir xil avlod Supabase loyihasiga bo'ladi) va ularning har biri uchun
+# zaxiradagi qatorlar soni manbadagi bilan solishtiriladi.
 verify_data="$(mktemp)"
-skipped="$(
+filtered="$(
   psql "$local_url" --no-psqlrc --tuples-only --no-align --quiet \
     --command "select schemaname || '.' || tablename from pg_tables" |
     python3 -c "$(
@@ -112,43 +113,46 @@ skipped="$(
 import sys
 
 source, target = sys.argv[1], sys.argv[2]
+# O'z migratsiyalarimiz egalik qiladigan sxemalar — faqat shular tiklanadi.
+OURS = {'public', 'private'}
 present = {line.strip() for line in sys.stdin if line.strip()}
-skipped, copying, users = [], False, 0
-counting = False
+skipped = {}
+name = None
+rows = 0
 with open(source, encoding='utf-8') as src, open(target, 'w', encoding='utf-8') as dst:
     for line in src:
-        if copying:
+        if name:
             if line.startswith(r'\.'):
-                copying = counting = False
-            elif counting:
-                users += 1
+                skipped[name] = rows
+                name = None
+            else:
+                rows += 1
             continue
         if line.startswith('COPY '):
-            name = line[5:].split('(')[0].strip().replace('"', '')
-            if name.startswith('auth.') or name not in present:
-                skipped.append(name)
-                copying = True
-                counting = name == 'auth.users'
+            table = line[5:].split('(')[0].strip().replace('"', '')
+            if table.split('.')[0] not in OURS or table not in present:
+                name, rows = table, 0
                 continue
         dst.write(line)
-print(' '.join(skipped))
-print(users)
+for table, count in skipped.items():
+    print(f'{table} {count}')
 PYFILTER
     )" "$dir/data.sql" "$verify_data"
 )"
-users_in_backup="$(sed -n 2p <<<"$skipped")"
-skipped="$(sed -n 1p <<<"$skipped")"
-[ -z "$skipped" ] || echo "ℹ️  Tekshiruvdan tashqarida (auth sxemasi va lokal image'da yo'q jadvallar): $skipped"
 
-# Auth ma'lumoti lokal bazaga tiklanmagani uchun zaxiradagi foydalanuvchilar
-# sonini manba bilan solishtiramiz — zaxira ularni olganini shu tasdiqlaydi.
-users_in_source="$(psql "$SUPABASE_DB_URL" --no-psqlrc --tuples-only --no-align \
-  --quiet --command 'select count(*) from auth.users')"
-if [ "$users_in_backup" != "$users_in_source" ]; then
-  echo "::error::zaxiradagi foydalanuvchilar soni manbadagidan farq qiladi" >&2
-  exit 1
+if [ -n "$filtered" ]; then
+  echo "ℹ️  Tiklanmadi (platforma sxemalari): $(wc -l <<<"$filtered") jadval — qatorlar soni solishtiriladi"
+  # Manbadagi sonlarni bitta so'rovda olamiz.
+  query="$(awk '{ printf "%sselect %s as t, count(*) as c from %s", (NR>1 ? " union all " : ""), "'"'"'"$1"'"'"'", $1 }' <<<"$filtered")"
+  source_counts="$(psql "$SUPABASE_DB_URL" --no-psqlrc --tuples-only --no-align \
+    --quiet --field-separator=' ' --command "$query" | sort)"
+  if ! diff <(sort <<<"$filtered") <(echo "$source_counts") > /dev/null; then
+    echo "::error::zaxiradagi qatorlar soni manbadagidan farq qiladi:" >&2
+    diff <(sort <<<"$filtered") <(echo "$source_counts") | grep '^[<>]' >&2
+    exit 1
+  fi
+  echo "✅ Zaxiradagi qatorlar soni manba bilan mos ($(wc -l <<<"$filtered") jadval)"
 fi
-echo "✅ Foydalanuvchilar: zaxirada $users_in_backup ta (manbada ham shuncha)"
 
 restore_into "$local_url" "$verify_data"
 rm -f "$verify_data"
