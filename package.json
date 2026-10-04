@@ -1,6 +1,6 @@
 {
   "name": "my-wallet-admin",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "My Wallet — platforma: Supabase backend va admin panel",
   "packageManager": "pnpm@12.4.2",
