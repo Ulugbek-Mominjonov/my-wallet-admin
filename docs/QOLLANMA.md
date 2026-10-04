@@ -82,8 +82,12 @@ sentabrniki). Kerak bo'lsa amal formasida oyni qo'lda tanlash mumkin.
 - **Xulosa**: joriy oy qoldig'i, prognoz, orttirgan foiz, kuniga sarflash
   mumkin bo'lgan summa; oxirgi 12 oy grafigi, eng ko'p sarflangan
   kategoriyalar, yaqin to'lovlar va ogohlantirishlar.
-- **Oylik hisobot**: yakun, daromad turlari, limitlar, fond, qarz va
-  maqsadlar. Har jadvalni CSV qilib olish yoki chop etish mumkin.
+- **Oylik hisobot**: yakun, daromad turlari, **daromadlar va xarajatlar
+  ro'yxati** (sana bo'yicha, har qatorda kategoriya va hisob), **oy oxiridagi
+  hisob qoldiqlari**, limitlar, fond, qarz va maqsadlar. Shaxsiy fond
+  sarflarini ro'yxatdan chiqarib qo'yish mumkin (tugmacha). Hammasini CSV
+  qilib olish yoki chop etish mumkin — chop etishda menyu va tugmalar
+  chiqmaydi, ya'ni to'g'ridan-to'g'ri PDF qilib saqlasa bo'ladi.
 - **Limitlar** (spravochniklarda): kategoriyaga oylik chegara; ota-kategoriya
   limiti subkategoriyalar bilan hisoblanadi. «Qolganini keyingi oyga
   o'tkazish» yoqilsa — o'tgan oydan qolgani shu oy limitiga qo'shiladi

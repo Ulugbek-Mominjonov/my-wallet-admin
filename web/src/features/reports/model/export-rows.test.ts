@@ -17,11 +17,16 @@ describe('monthReportRows (E24-T06)', () => {
     expect(rows[0]).toEqual(['Yakun', '2026-09'])
     // Summalar asosiy birlikda (jadval dasturi hisoblay oladi).
     expect(rows[1]).toEqual(['Daromad', 8000000])
-    expect(rows.filter((row) => row.length === 0)).toHaveLength(3)
-    const unpaid = rows.at(-1)
+    // Bo'limlar: yakun · daromad turlari · kategoriyalar · to'lanmaganlar ·
+    // daromadlar ro'yxati · xarajatlar ro'yxati · qoldiqlar (E24).
+    expect(rows.filter((row) => row.length === 0)).toHaveLength(6)
+    const unpaid = rows.find((row) => row[0] === 'Ijara')
     expect(unpaid?.[0]).toBe('Ijara')
     // Summasi noma'lum reja — bo'sh katak.
     expect(unpaid?.[2]).toBeNull()
+    // Ro'yxatlar: fonddan sarflangan qator belgilangan, oxirida qoldiqlar.
+    expect(rows.some((row) => String(row[1]).includes('(fonddan)'))).toBe(true)
+    expect(rows.at(-1)?.[0]).toBe('Naqd')
   })
 })
 

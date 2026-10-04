@@ -1130,6 +1130,22 @@
       "emptyTitle": "Tahlil uchun yozuv yo‘q",
       "emptyText": "Bir necha oy amal yozilgach, sakrash va obunalar ko‘rinadi.",
       "busiest": "Eng ko‘p sarflanadigan kun — {{day}}"
+    },
+    "entries": {
+      "incomeTitle": "Daromadlar ro‘yxati",
+      "expenseTitle": "Xarajatlar ro‘yxati",
+      "incomeEmpty": "Bu oyda daromad yo‘q",
+      "expenseEmpty": "Bu oyda xarajat yo‘q",
+      "date": "Sana",
+      "name": "Nomi",
+      "category": "Kategoriya",
+      "account": "Hisob",
+      "amount": "Summa",
+      "fund": "fonddan",
+      "total": "JAMI ({{count}} ta)",
+      "withFund": "Shaxsiy fond sarflari ham ko‘rsatilsin",
+      "balancesTitle": "Oy oxiridagi qoldiqlar",
+      "balancesHint": "Tanlangan oy yakunidagi holat (joriy oyda — bugungi)"
     }
   },
   "health": {

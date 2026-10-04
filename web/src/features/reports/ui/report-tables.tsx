@@ -281,3 +281,113 @@ export function SpikeList({
     </ul>
   )
 }
+
+/** Hisob qoldiqlari: nomi, valyutasi va qoldig'i (asosiy valyutada jami). */
+export function AccountBalances({
+  accounts,
+  baseCurrency,
+}: {
+  accounts: readonly { id: string; name: string; currency: string; balance: number }[]
+  baseCurrency: string
+}) {
+  const { t } = useTranslation()
+  const locale = useAppLocale()
+  if (accounts.length === 0) {
+    return <p className="text-sm text-muted-foreground">{t('report.accounts.empty')}</p>
+  }
+  const total = accounts
+    .filter((account) => account.currency === baseCurrency)
+    .reduce((sum, account) => sum + account.balance, 0)
+
+  return (
+    <Table aria-label={t('report.accounts.title')}>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t('report.accounts.name')}</TableHead>
+          <TableHead>{t('report.accounts.currency')}</TableHead>
+          <TableHead className="text-right">{t('report.accounts.balance')}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {accounts.map((account) => (
+          <TableRow key={account.id}>
+            <TableCell>{account.name}</TableCell>
+            <TableCell className="text-muted-foreground">{account.currency}</TableCell>
+            <TableCell className="text-right">
+              <MoneyText amount={account.balance} currency={account.currency} tone="auto" />
+            </TableCell>
+          </TableRow>
+        ))}
+        <TableRow className="font-medium">
+          <TableCell colSpan={2}>{t('report.accounts.total')}</TableCell>
+          <TableCell className="text-right">
+            <MoneyText amount={total} currency={baseCurrency} tone="auto" locale={locale} />
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  )
+}
+
+/**
+ * Oydagi amallar ro'yxati (daromad yoki xarajat): sana, nomi, kategoriya,
+ * hisob va summa. Fonddan sarflanganlar belgilanadi (BR-063).
+ */
+export function EntryList({
+  rows,
+  baseCurrency,
+  kind,
+}: {
+  rows: MonthReport['expenses'] | MonthReport['incomes']
+  baseCurrency: string
+  kind: 'income' | 'expense'
+}) {
+  const { t } = useTranslation()
+  const locale = useAppLocale()
+  const money = (value: number) => formatMoney(value, { currency: baseCurrency, locale })
+  if (rows.length === 0) {
+    return <p className="text-sm text-muted-foreground">{t(`report.entries.${kind}Empty`)}</p>
+  }
+  const total = rows.reduce((sum, row) => sum + row.amount, 0)
+
+  return (
+    <Table aria-label={t(`report.entries.${kind}Title`)}>
+      <TableHeader>
+        <TableRow>
+          <TableHead>{t('report.entries.date')}</TableHead>
+          <TableHead>{t('report.entries.name')}</TableHead>
+          <TableHead>{t('report.entries.category')}</TableHead>
+          <TableHead>{t('report.entries.account')}</TableHead>
+          <TableHead className="text-right">{t('report.entries.amount')}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {rows.map((row) => (
+          <TableRow key={row.id}>
+            <TableCell className="whitespace-nowrap tabular-nums">
+              {formatDate(row.occurred_on, locale)}
+            </TableCell>
+            <TableCell>
+              {row.name}
+              {'from_fund' in row && row.from_fund && (
+                <Badge variant="outline" className="ml-2">
+                  {t('report.entries.fund')}
+                </Badge>
+              )}
+              {row.note !== null && (
+                <span className="block text-xs text-muted-foreground">{row.note}</span>
+              )}
+            </TableCell>
+            <TableCell className="text-muted-foreground">{row.category ?? '—'}</TableCell>
+            <TableCell className="text-muted-foreground">{row.account}</TableCell>
+            <TableCell className="text-right tabular-nums">{money(row.amount)}</TableCell>
+          </TableRow>
+        ))}
+        <TableRow className="font-medium">
+          <TableCell colSpan={4}>{t('report.entries.total', { count: rows.length })}</TableCell>
+          <TableCell className="text-right tabular-nums">{money(total)}</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  )
+}

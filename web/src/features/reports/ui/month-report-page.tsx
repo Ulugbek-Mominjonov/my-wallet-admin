@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { Lock, Printer } from 'lucide-react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import {
@@ -13,7 +14,9 @@ import {
 import { monthReportRows } from '@/features/reports/model/export-rows'
 import { incomeOutsideTypes } from '@/features/reports/model/month-report'
 import {
+  AccountBalances,
   CategoryLimits,
+  EntryList,
   Figure,
   IncomeMatrix,
   MemberBreakdown,
@@ -32,6 +35,7 @@ import { PageHeader } from '@/shared/ui/page-header'
 import { ProgressBar } from '@/shared/ui/progress-bar'
 import { QueryError } from '@/shared/ui/query-error'
 import { SectionCard } from '@/shared/ui/section-card'
+import { Switch } from '@/shared/ui/switch'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 import { TableSkeleton } from '@/shared/ui/table-skeleton'
 
@@ -55,6 +59,8 @@ export function MonthReportPage({
 }) {
   const { t } = useTranslation()
   const locale = useAppLocale()
+  // Shaxsiy fond sarflari ro'yxatga kiradimi (BR-063) — chop etishda ham shu tanlov.
+  const [withFund, setWithFund] = useState(true)
   const report = useQuery(monthReportQuery(householdId, month))
   const savings = useQuery(savingsReportQuery(householdId))
   // E30-T02: a'zolar kesimi — faqat bir nechta a'zo bo'lganda ko'rsatiladi.
@@ -196,6 +202,36 @@ export function MonthReportPage({
           rows={data.by_type}
           total={totals.income}
           outside={incomeOutsideTypes(data)}
+          baseCurrency={baseCurrency}
+        />
+      </SectionCard>
+
+      <SectionCard title={t('report.entries.incomeTitle')}>
+        <EntryList rows={data.incomes} baseCurrency={baseCurrency} kind="income" />
+      </SectionCard>
+
+      <SectionCard
+        title={t('report.entries.expenseTitle')}
+        action={
+          <label className="flex items-center gap-2 text-sm print:hidden">
+            <Switch checked={withFund} onCheckedChange={setWithFund} />
+            {t('report.entries.withFund')}
+          </label>
+        }
+      >
+        <EntryList
+          rows={withFund ? data.expenses : data.expenses.filter((row) => !row.from_fund)}
+          baseCurrency={baseCurrency}
+          kind="expense"
+        />
+      </SectionCard>
+
+      <SectionCard
+        title={t('report.entries.balancesTitle')}
+        description={t('report.entries.balancesHint')}
+      >
+        <AccountBalances
+          accounts={data.accounts.map((account) => ({ ...account, id: account.account_id }))}
           baseCurrency={baseCurrency}
         />
       </SectionCard>

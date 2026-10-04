@@ -1130,6 +1130,22 @@
       "emptyTitle": "Nothing to analyse yet",
       "emptyText": "After a few months of records, spikes and subscriptions appear.",
       "busiest": "The biggest spending day is {{day}}"
+    },
+    "entries": {
+      "incomeTitle": "Income list",
+      "expenseTitle": "Expense list",
+      "incomeEmpty": "No income this month",
+      "expenseEmpty": "No expenses this month",
+      "date": "Date",
+      "name": "Name",
+      "category": "Category",
+      "account": "Account",
+      "amount": "Amount",
+      "fund": "from fund",
+      "total": "TOTAL ({{count}})",
+      "withFund": "Include personal fund spending",
+      "balancesTitle": "Balances at month end",
+      "balancesHint": "State at the end of the selected month (today for the current month)"
     }
   },
   "health": {

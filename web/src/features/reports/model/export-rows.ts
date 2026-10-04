@@ -59,6 +59,43 @@ export function monthReportRows(report: MonthReport, labels: ExportLabels): CsvR
       row.due_date,
       row.planned_amount === null ? null : major(Math.max(row.planned_amount - row.paid_amount, 0)),
     ]),
+    BLANK,
+    // To'liq ro'yxatlar (E24): "bu pul qayerga ketdi" degan savolga javob.
+    [t('report.entries.incomeTitle')],
+    [
+      t('report.entries.date'),
+      t('report.entries.name'),
+      t('report.entries.category'),
+      t('report.entries.account'),
+      t('report.entries.amount'),
+    ],
+    ...report.incomes.map((row): CsvRow => [
+      row.occurred_on,
+      row.name,
+      row.category,
+      row.account,
+      major(row.amount),
+    ]),
+    BLANK,
+    [t('report.entries.expenseTitle')],
+    [
+      t('report.entries.date'),
+      t('report.entries.name'),
+      t('report.entries.category'),
+      t('report.entries.account'),
+      t('report.entries.amount'),
+    ],
+    ...report.expenses.map((row): CsvRow => [
+      row.occurred_on,
+      row.from_fund ? `${row.name} (${t('report.entries.fund')})` : row.name,
+      row.category,
+      row.account,
+      major(row.amount),
+    ]),
+    BLANK,
+    [t('report.entries.balancesTitle')],
+    [t('report.accounts.name'), t('report.accounts.currency'), t('report.accounts.balance')],
+    ...report.accounts.map((row): CsvRow => [row.name, row.currency, major(row.balance)]),
   ]
 }
 

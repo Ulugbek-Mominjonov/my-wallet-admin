@@ -85,6 +85,40 @@ const monthSchema = z.object({
       status: z.string(),
     }),
   ),
+  /** Oy oxiridagi hisob qoldiqlari (joriy oyda — bugungi holat). */
+  accounts: z.array(
+    z.object({
+      account_id: z.string(),
+      name: z.string(),
+      type: z.string(),
+      currency: z.string(),
+      balance: money,
+    }),
+  ),
+  incomes: z.array(
+    z.object({
+      id: z.string(),
+      occurred_on: z.iso.date(),
+      amount: money,
+      name: z.string(),
+      category: z.string().nullable(),
+      account: z.string(),
+      note: z.string().nullable(),
+    }),
+  ),
+  expenses: z.array(
+    z.object({
+      id: z.string(),
+      occurred_on: z.iso.date(),
+      amount: money,
+      name: z.string(),
+      category: z.string().nullable(),
+      account: z.string(),
+      /** Shaxsiy fonddan sarflangan (BR-063) — ro'yxatda ajratib ko'rsatiladi. */
+      from_fund: z.boolean(),
+      note: z.string().nullable(),
+    }),
+  ),
   fund: z.object({ allocated: money, spent: money, balance: money }),
   savings: z.object({ before: money, this_month: money, total: money }),
   debts: z.object({

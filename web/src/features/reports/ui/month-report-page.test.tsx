@@ -170,3 +170,49 @@ describe('MonthReportPage — a’zolar kesimi (E30-T02)', () => {
     expect(table).toHaveTextContent('25%')
   })
 })
+
+describe('to‘liq ro‘yxatlar (E24)', () => {
+  it('daromadlar va xarajatlar sana bo‘yicha, jami bilan', async () => {
+    mockReport()
+    renderPage()
+
+    const incomes = await cardOf('Daromadlar ro‘yxati')
+    expect(within(incomes).getByText('Oylik')).toBeInTheDocument()
+    expect(within(incomes).getByText('JAMI (1 ta)')).toBeInTheDocument()
+
+    const expenses = await cardOf('Xarajatlar ro‘yxati')
+    expect(within(expenses).getByText('Bozor')).toBeInTheDocument()
+    expect(within(expenses).getByText('Taksi')).toBeInTheDocument()
+    expect(within(expenses).getByText('JAMI (2 ta)')).toBeInTheDocument()
+  })
+
+  it('shaxsiy fond sarflarini ro‘yxatdan chiqarish mumkin (BR-063)', async () => {
+    mockReport()
+    const { user } = renderPage()
+
+    const expenses = await cardOf('Xarajatlar ro‘yxati')
+    expect(within(expenses).getByText('fonddan')).toBeInTheDocument()
+
+    await user.click(within(expenses).getByRole('switch'))
+    expect(within(expenses).queryByText('Taksi')).not.toBeInTheDocument()
+    expect(within(expenses).getByText('Bozor')).toBeInTheDocument()
+    expect(within(expenses).getByText('JAMI (1 ta)')).toBeInTheDocument()
+  })
+
+  it('oy oxiridagi hisob qoldiqlari ko‘rinadi', async () => {
+    mockReport()
+    renderPage()
+
+    const balances = await cardOf('Oy oxiridagi qoldiqlar')
+    expect(within(balances).getByText('Karta')).toBeInTheDocument()
+    expect(within(balances).getByText('Naqd')).toBeInTheDocument()
+  })
+
+  it('bo‘sh oyda ro‘yxat o‘rniga izoh', async () => {
+    mockReport({ incomes: [], expenses: [] })
+    renderPage()
+
+    expect(await screen.findByText('Bu oyda daromad yo‘q')).toBeInTheDocument()
+    expect(screen.getByText('Bu oyda xarajat yo‘q')).toBeInTheDocument()
+  })
+})
