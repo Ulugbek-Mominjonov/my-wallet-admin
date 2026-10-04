@@ -199,6 +199,17 @@ describe('to‘liq ro‘yxatlar (E24)', () => {
     expect(within(expenses).getByText('JAMI (1 ta)')).toBeInTheDocument()
   })
 
+  it('fondga ajratma ro‘yxatda, lekin xarajat jamiga kirmaydi (BR-061)', async () => {
+    mockReport()
+    renderPage()
+
+    const expenses = await cardOf('Xarajatlar ro‘yxati')
+    expect(within(expenses).getByText('fondga ajratma')).toBeInTheDocument()
+    // Jami — faqat ikkita haqiqiy xarajat (ajratma alohida qatorda).
+    expect(within(expenses).getByText('JAMI (2 ta)')).toBeInTheDocument()
+    expect(within(expenses).getByText('Fondga ajratildi (1 ta)')).toBeInTheDocument()
+  })
+
   it('oy oxiridagi hisob qoldiqlari ko‘rinadi', async () => {
     mockReport()
     renderPage()

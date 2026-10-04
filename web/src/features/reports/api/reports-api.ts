@@ -114,8 +114,11 @@ const monthSchema = z.object({
       name: z.string(),
       category: z.string().nullable(),
       account: z.string(),
-      /** Shaxsiy fonddan sarflangan (BR-063) — ro'yxatda ajratib ko'rsatiladi. */
-      from_fund: z.boolean(),
+      /**
+       * `expense` — oddiy xarajat, `fund_spent` — shaxsiy fonddan sarf
+       * (BR-063), `allocation` — fondga ajratma (BR-061, xarajat emas).
+       */
+      line: z.enum(['expense', 'fund_spent', 'allocation']),
       note: z.string().nullable(),
     }),
   ),

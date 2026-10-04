@@ -87,7 +87,11 @@ export function monthReportRows(report: MonthReport, labels: ExportLabels): CsvR
     ],
     ...report.expenses.map((row): CsvRow => [
       row.occurred_on,
-      row.from_fund ? `${row.name} (${t('report.entries.fund')})` : row.name,
+      row.line === 'expense'
+        ? row.name
+        : `${row.name} (${t(
+            row.line === 'allocation' ? 'report.entries.allocation' : 'report.entries.fund',
+          )})`,
       row.category,
       row.account,
       major(row.amount),

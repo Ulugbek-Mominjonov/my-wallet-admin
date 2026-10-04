@@ -220,7 +220,7 @@ export function MonthReportPage({
         }
       >
         <EntryList
-          rows={withFund ? data.expenses : data.expenses.filter((row) => !row.from_fund)}
+          rows={withFund ? data.expenses : data.expenses.filter((row) => row.line !== 'fund_spent')}
           baseCurrency={baseCurrency}
           kind="expense"
         />

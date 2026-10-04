@@ -1,7 +1,7 @@
 -- E24: hisobot "bitta ko'rganda" to'liq bo'lishi uchun — oy oxiridagi hisob
 -- qoldiqlari va oydagi amallar ro'yxati (daromad/xarajat, fond belgisi bilan).
 begin;
-select plan(7);
+select plan(8);
 
 create temporary table u (name text primary key, id uuid) on commit drop;
 insert into u values ('alice', tests.create_user('alice@test.uz'));
@@ -51,10 +51,11 @@ select results_eq(
 
 -- ─── Xarajatlar ro'yxati (fond belgisi bilan) ──────────────────────────────
 select results_eq(
-  $$ select e ->> 'name', (e ->> 'from_fund')::boolean, (e ->> 'amount')::bigint
+  $$ select e ->> 'name', e ->> 'line', (e ->> 'amount')::bigint
        from r, jsonb_array_elements(r.v -> 'expenses') e where r.name = 'oct'
       order by e ->> 'occurred_on' $$,
-  $$ values ('Bozor'::text, false, 12000000::bigint), ('Taksi', true, 3000000) $$,
+  $$ values ('Bozor'::text, 'expense'::text, 12000000::bigint),
+            ('Taksi', 'fund_spent', 3000000) $$,
   'xarajatlar sana bo''yicha; shaxsiy fond sarfi belgilangan (BR-063)'
 );
 
@@ -62,6 +63,22 @@ select is(
   (select count(*)::int from r, jsonb_array_elements(r.v -> 'expenses') e
     where r.name = 'oct' and (e ->> 'occurred_on') like '2026-11%'),
   0, 'keyingi oy amali oktabr ro''yxatiga tushmaydi'
+);
+
+-- ─── Fondga ajratma (BR-061) ───────────────────────────────────────────────
+insert into public.transactions (household_id, kind, account_id, to_account_id, amount,
+                                 to_amount, occurred_on, budget_month)
+values ((select id from ref where name = 'h'), 'transfer',
+        (select id from ref where name = 'card'),
+        (select id from ref where name = 'personal_fund'),
+        20000000, 20000000, '2026-10-07', '2026-10-01');
+insert into r select 'oct2', public.report_month((select id from ref where name = 'h'), '2026-10-01');
+select results_eq(
+  $$ select e ->> 'line', e ->> 'name', (e ->> 'amount')::bigint
+       from r, jsonb_array_elements(r.v -> 'expenses') e
+      where r.name = 'oct2' and e ->> 'line' = 'allocation' $$,
+  $$ values ('allocation'::text, 'Shaxsiy fond'::text, 20000000::bigint) $$,
+  'BR-061: fondga ajratma ro''yxatda — nomi manzil hisob, xarajatdan ajratilgan'
 );
 
 -- ─── Oy oxiridagi qoldiqlar ────────────────────────────────────────────────
@@ -82,7 +99,8 @@ insert into r select 'nov', public.report_month((select id from ref where name =
 select is(
   (select (e ->> 'balance')::bigint from r, jsonb_array_elements(r.v -> 'accounts') e
     where r.name = 'nov' and e ->> 'type' = 'card'),
-  389000000::bigint, 'noyabr oxirida karta qoldig''i — oktabr qoldig''idan keyingi oy xarajati ayirilgan'
+  369000000::bigint,
+  'noyabr oxirida karta qoldig''i — oktabr qoldig''i, ajratma va keyingi oy xarajati bilan'
 );
 
 select is(

@@ -348,7 +348,12 @@ export function EntryList({
   if (rows.length === 0) {
     return <p className="text-sm text-muted-foreground">{t(`report.entries.${kind}Empty`)}</p>
   }
-  const total = rows.reduce((sum, row) => sum + row.amount, 0)
+  // Fondga ajratma xarajat emas (BR-061): ro'yxatda ko'rinadi, lekin jamga
+  // kirmaydi — aks holda fonddan sarf bilan birga bir pul ikki marta sanaladi.
+  const spent = rows.filter((row) => !('line' in row) || row.line !== 'allocation')
+  const allocated = rows.filter((row) => 'line' in row && row.line === 'allocation')
+  const total = spent.reduce((sum, row) => sum + row.amount, 0)
+  const allocatedTotal = allocated.reduce((sum, row) => sum + row.amount, 0)
 
   return (
     <Table aria-label={t(`report.entries.${kind}Title`)}>
@@ -369,9 +374,11 @@ export function EntryList({
             </TableCell>
             <TableCell>
               {row.name}
-              {'from_fund' in row && row.from_fund && (
+              {'line' in row && row.line !== 'expense' && (
                 <Badge variant="outline" className="ml-2">
-                  {t('report.entries.fund')}
+                  {t(
+                    row.line === 'allocation' ? 'report.entries.allocation' : 'report.entries.fund',
+                  )}
                 </Badge>
               )}
               {row.note !== null && (
@@ -384,9 +391,17 @@ export function EntryList({
           </TableRow>
         ))}
         <TableRow className="font-medium">
-          <TableCell colSpan={4}>{t('report.entries.total', { count: rows.length })}</TableCell>
+          <TableCell colSpan={4}>{t('report.entries.total', { count: spent.length })}</TableCell>
           <TableCell className="text-right tabular-nums">{money(total)}</TableCell>
         </TableRow>
+        {allocated.length > 0 && (
+          <TableRow className="text-muted-foreground">
+            <TableCell colSpan={4}>
+              {t('report.entries.allocatedTotal', { count: allocated.length })}
+            </TableCell>
+            <TableCell className="text-right tabular-nums">{money(allocatedTotal)}</TableCell>
+          </TableRow>
+        )}
       </TableBody>
     </Table>
   )
