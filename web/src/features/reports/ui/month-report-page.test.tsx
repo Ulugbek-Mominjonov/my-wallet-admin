@@ -196,18 +196,21 @@ describe('to‘liq ro‘yxatlar (E24)', () => {
     await user.click(within(expenses).getByRole('switch'))
     expect(within(expenses).queryByText('Taksi')).not.toBeInTheDocument()
     expect(within(expenses).getByText('Bozor')).toBeInTheDocument()
-    expect(within(expenses).getByText('JAMI (1 ta)')).toBeInTheDocument()
+    // Jamda oddiy xarajat va ajratma qoladi (fonddan sarf jamga kirmagan).
+    expect(within(expenses).getByText('JAMI (2 ta)')).toBeInTheDocument()
+    expect(within(expenses).queryByText(/Shundan fonddan/)).not.toBeInTheDocument()
   })
 
-  it('fondga ajratma ro‘yxatda, lekin xarajat jamiga kirmaydi (BR-061)', async () => {
+  it('ajratma jamga kiradi, fonddan sarf alohida ko‘rsatiladi (BR-061/063)', async () => {
     mockReport()
     renderPage()
 
     const expenses = await cardOf('Xarajatlar ro‘yxati')
     expect(within(expenses).getByText('fondga ajratma')).toBeInTheDocument()
-    // Jami — faqat ikkita haqiqiy xarajat (ajratma alohida qatorda).
+    // Jami = oddiy xarajat + ajratma (hisobotdagi "Xarajat" bilan bir xil);
+    // fonddan sarf esa shundan ajratib ko'rsatiladi.
     expect(within(expenses).getByText('JAMI (2 ta)')).toBeInTheDocument()
-    expect(within(expenses).getByText('Fondga ajratildi (1 ta)')).toBeInTheDocument()
+    expect(within(expenses).getByText('Shundan fonddan (1 ta)')).toBeInTheDocument()
   })
 
   it('oy oxiridagi hisob qoldiqlari ko‘rinadi', async () => {

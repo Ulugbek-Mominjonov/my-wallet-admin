@@ -1147,7 +1147,7 @@
       "balancesTitle": "Balances at month end",
       "balancesHint": "State at the end of the selected month (today for the current month)",
       "allocation": "to fund",
-      "allocatedTotal": "Allocated to fund ({{count}})"
+      "fundTotal": "Of which from fund ({{count}})"
     }
   },
   "health": {

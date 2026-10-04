@@ -1147,7 +1147,7 @@
       "balancesTitle": "Остатки на конец месяца",
       "balancesHint": "Состояние на конец выбранного месяца (в текущем — на сегодня)",
       "allocation": "в фонд",
-      "allocatedTotal": "Отложено в фонд ({{count}})"
+      "fundTotal": "Из них из фонда ({{count}})"
     }
   },
   "health": {

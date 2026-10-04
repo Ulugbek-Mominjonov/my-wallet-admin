@@ -1147,7 +1147,7 @@
       "balancesTitle": "Oy oxiridagi qoldiqlar",
       "balancesHint": "Tanlangan oy yakunidagi holat (joriy oyda — bugungi)",
       "allocation": "fondga ajratma",
-      "allocatedTotal": "Fondga ajratildi ({{count}} ta)"
+      "fundTotal": "Shundan fonddan ({{count}} ta)"
     }
   },
   "health": {
