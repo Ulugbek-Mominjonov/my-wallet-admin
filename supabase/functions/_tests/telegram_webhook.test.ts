@@ -302,6 +302,47 @@ const callback = (data: string) => ({
   },
 })
 
+// Telegram `callback_data` ni 64 baytdan oshsa rad etadi: haqiqiy UUID'lar
+// bilan `set:<tranzaksiya>:<kategoriya>` 77 bayt bo'lib ketardi va tugma
+// bosilganda hech narsa bo'lmasdi (qisqa soxta ID'li testlar buni ko'rmagan).
+Deno.test('tugma ma\'lumoti 64 baytdan oshmaydi (haqiqiy UUID)', async () => {
+  const tx = '550e8400-e29b-41d4-a716-446655440000'
+  const first = 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
+  const second = '6ba7b810-9dad-11d1-80b4-00c04fd430c8'
+  const d = deps({
+    quickAdd: () =>
+      Promise.resolve({
+        ok: true,
+        locale: 'uz',
+        transaction_id: tx,
+        amount: 2000000,
+        kind: 'expense' as const,
+        category: 'Transport',
+        account: 'Karta',
+        occurred_on: '2026-10-04',
+      }),
+    categories: () =>
+      Promise.resolve({ ok: true, categories: [{ id: first, name: 'Oziq-ovqat' }, { id: second, name: 'Transport' }] }),
+  })
+  const saved = await handleUpdate(update('taksi 20000'), d)
+  for (const button of saved?.reply_markup?.inline_keyboard[0] ?? []) {
+    assertEquals(button.callback_data.length <= 64, true, button.callback_data)
+  }
+
+  const open = saved?.reply_markup?.inline_keyboard[0]?.[0]?.callback_data ?? ''
+  const list = await handleUpdate(callback(open), d)
+  for (const row of list?.reply_markup?.inline_keyboard ?? []) {
+    for (const button of row) {
+      assertEquals(button.callback_data.length <= 64, true, button.callback_data)
+    }
+  }
+
+  // Qisqartirilgan ID qayta tiklanib, RPC'ga haqiqiy UUID ketadi.
+  const pick = list?.reply_markup?.inline_keyboard[0]?.[0]?.callback_data ?? ''
+  await handleUpdate(callback(pick), d)
+  assertEquals(d.calls.includes(`setCategory:42:${tx}:${first}`), true, d.calls.join(' | '))
+})
+
 Deno.test('tugmalar: kategoriya ro‘yxati, tanlash va bekor qilish', async () => {
   const d = deps()
   const list = await handleUpdate(callback('cat:t-1'), d)

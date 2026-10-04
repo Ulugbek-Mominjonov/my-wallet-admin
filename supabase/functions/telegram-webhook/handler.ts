@@ -98,6 +98,28 @@ export interface MonthSummary {
   unpaid?: number
 }
 
+// Telegram `callback_data` uchun chegara — 64 bayt. Ikkita UUID (36+36) va
+// amal nomi bu chegaradan oshadi, shuning uchun UUID 16 baytlik ko'rinishida
+// base64url bilan 22 belgiga qisqartiriladi (`set:` bilan jami 49 bayt).
+// UUID bo'lmagan qiymat (testdagi qisqa ID) o'zgarmaydi.
+const CALLBACK_DATA_LIMIT = 64
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+export function packId(id: string): string {
+  if (!UUID.test(id)) return id
+  const bytes = Uint8Array.from(
+    id.replaceAll('-', '').match(/../g)!.map((pair) => parseInt(pair, 16)),
+  )
+  return btoa(String.fromCharCode(...bytes)).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '')
+}
+
+export function unpackId(value: string): string {
+  if (value.length !== 22 || UUID.test(value)) return value
+  const binary = atob(value.replaceAll('-', '+').replaceAll('_', '/'))
+  const hex = [...binary].map((c) => c.charCodeAt(0).toString(16).padStart(2, '0')).join('')
+  return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+}
+
 /** Inline tugmalar (bir qator — ikkita tugma). */
 export interface InlineKeyboard {
   inline_keyboard: { text: string; callback_data: string }[][]
@@ -143,8 +165,8 @@ function savedText(entry: QuickAdd, locale: Locale): string {
 
 const savedKeyboard = (transaction: string, locale: Locale): InlineKeyboard => ({
   inline_keyboard: [[
-    { text: BOT_TEXT[locale].editCategory, callback_data: `cat:${transaction}` },
-    { text: BOT_TEXT[locale].cancel, callback_data: `del:${transaction}` },
+    { text: BOT_TEXT[locale].editCategory, callback_data: `cat:${packId(transaction)}` },
+    { text: BOT_TEXT[locale].cancel, callback_data: `del:${packId(transaction)}` },
   ]],
 })
 
@@ -218,7 +240,9 @@ async function handleCallback(
   const chatId = chat.id
   const messageId = query.message.message_id
   const fallback = toLocale(query.from?.language_code)
-  const [action = '', transaction = '', category = ''] = query.data.split(':')
+  const [action = '', packedTransaction = '', packedCategory = ''] = query.data.split(':')
+  const transaction = unpackId(packedTransaction)
+  const category = unpackId(packedCategory)
 
   if (action === 'del') {
     const result = await deps.undo(chatId, transaction)
@@ -229,7 +253,7 @@ async function handleCallback(
     const list = await deps.categories(chatId, 'expense')
     const rows = (list.categories ?? []).map((item) => [{
       text: item.name,
-      callback_data: `set:${transaction}:${item.id}`,
+      callback_data: `set:${packId(transaction)}:${packId(item.id)}`,
     }])
     if (rows.length === 0) return edit(chatId, messageId, BOT_TEXT[fallback].setupRequired)
     return edit(chatId, messageId, BOT_TEXT[fallback].chooseCategory, { inline_keyboard: rows })
