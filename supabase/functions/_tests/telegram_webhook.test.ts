@@ -130,6 +130,14 @@ function deps(overrides: Partial<BotDeps> = {}): BotDeps & { calls: string[] } {
         balance: 7_500_000_00,
         saved: 8_000_000_00,
         unpaid: 0,
+        incomes: [
+          { date: '2026-09-01', name: 'Oylik', amount: 12_000_000_00 },
+        ],
+        expenses: [
+          { date: '2026-09-03', name: 'Ijara', amount: 3_000_000_00 },
+          { date: '2026-09-05', name: 'Taksi', amount: 500_000_00, from_fund: true },
+        ],
+        expenses_rest: { count: 4, amount: 1_000_000_00 },
       })
     },
     setLocale: (chatId, locale) => {
@@ -503,6 +511,17 @@ Deno.test('/hisobot: oy argumenti va yakun', async () => {
   const reply = await handleUpdate(update('/hisobot 2026-09'), d)
   assertEquals(d.calls, ['report:42:2026-09-01'])
   assertStringIncludes(reply?.text ?? '', som('7 500 000'))
+
+  // E24: xabarda ro'yxatlar ham bor — "oyda nima bo'lgani" ko'rinadi.
+  const text = reply?.text ?? ''
+  assertStringIncludes(text, 'Daromadlar')
+  assertStringIncludes(text, 'Oylik')
+  assertStringIncludes(text, 'Yirik xarajatlar')
+  assertStringIncludes(text, 'Taksi (fonddan)')
+  // Ro'yxatga sig'maganlar bitta qatorda.
+  assertStringIncludes(text, 'va yana 4 ta')
+  // Telegram chegarasi — 4096 belgi.
+  assertEquals(text.length < 4096, true)
 })
 
 Deno.test('/til: tilni o‘zgartiradi, noto‘g‘ri qiymatda yo‘riqnoma', async () => {

@@ -110,7 +110,8 @@ sentabrniki). Kerak bo'lsa amal formasida oyni qo'lda tanlash mumkin.
   kunlik eslatma soati va necha kun oldin, oylik hisobot kuni, limit va
   «daromad kelmadi» ogohlantirishlari.
 - **Telegram**: «Ulash» → QR yoki havola → botda **Start**. Shundan keyin
-  bot `/balans`, `/bugun`, `/hisobot [oy]` va `/til uz|ru|en` buyruqlariga
+  bot `/balans`, `/bugun`, `/hisobot [oy]` (yakun va ro'yxatlar: daromadlar,
+  eng yirik xarajatlar) va `/til uz|ru|en` buyruqlariga
   javob beradi.
 - **Botdan tez kiritish**: `taksi 20000` — xarajat; `+5 000 000 oylik` —
   daromad (`+` bilan); `kofe 25k` — mingda. Kategoriya va hisob shu nom bilan

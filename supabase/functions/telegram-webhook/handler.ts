@@ -85,6 +85,13 @@ export interface BotDeps {
 }
 
 /** `/hisobot` javobi. */
+export interface ReportEntry {
+  date: string
+  name: string
+  amount: number
+  from_fund?: boolean
+}
+
 export interface MonthSummary {
   ok: boolean
   code?: string
@@ -96,6 +103,11 @@ export interface MonthSummary {
   balance?: number
   saved?: number
   unpaid?: number
+  /** Oydagi daromadlar (RPC cheklab beradi — xabar 4096 belgidan oshmasin). */
+  incomes?: ReportEntry[]
+  /** Eng yirik xarajatlar; qolgani `expenses_rest` da yig'ilgan. */
+  expenses?: ReportEntry[]
+  expenses_rest?: { count: number; amount: number }
 }
 
 // Telegram `callback_data` uchun chegara — 64 bayt. Ikkita UUID (36+36) va
@@ -171,12 +183,32 @@ const savedKeyboard = (transaction: string, locale: Locale): InlineKeyboard => (
 
 function reportText(summary: MonthSummary, locale: Locale): string {
   const t = BOT_TEXT[locale]
+  const entry = (row: ReportEntry): string =>
+    `${shortDate(row.date)} ${escapeHtml(row.name)}` +
+    `${row.from_fund ? ` (${t.fundMark})` : ''} — ${formatMoney(row.amount, locale)}`
+
+  const section = (title: string, rows: ReportEntry[]): string[] => [
+    '',
+    `<b>${title}</b>`,
+    ...(rows.length === 0 ? [t.noEntries] : rows.map(entry)),
+  ]
+
+  const rest = summary.expenses_rest
   return [
     `<b>📊 ${escapeHtml(summary.household ?? '')} — ${monthLabel(summary.month ?? '', locale)}</b>`,
     `${t.income}: ${formatMoney(summary.income ?? 0, locale)}`,
     `${t.expense}: ${formatMoney(summary.expense ?? 0, locale)}`,
     `${t.balance}: ${formatMoney(summary.balance ?? 0, locale)}`,
     `${t.savedLabel}: ${formatMoney(summary.saved ?? 0, locale)}`,
+    ...section(t.incomesTitle, summary.incomes ?? []),
+    ...section(t.expensesTitle, summary.expenses ?? []),
+    ...(rest && rest.count > 0
+      ? [
+        t.restExpenses
+          .replace('{count}', String(rest.count))
+          .replace('{amount}', formatMoney(rest.amount, locale)),
+      ]
+      : []),
   ].join('\n')
 }
 
