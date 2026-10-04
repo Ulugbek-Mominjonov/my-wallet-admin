@@ -102,7 +102,6 @@ export interface MonthSummary {
 // amal nomi bu chegaradan oshadi, shuning uchun UUID 16 baytlik ko'rinishida
 // base64url bilan 22 belgiga qisqartiriladi (`set:` bilan jami 49 bayt).
 // UUID bo'lmagan qiymat (testdagi qisqa ID) o'zgarmaydi.
-const CALLBACK_DATA_LIMIT = 64
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 export function packId(id: string): string {

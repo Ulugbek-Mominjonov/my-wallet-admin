@@ -305,7 +305,7 @@ const callback = (data: string) => ({
 // Telegram `callback_data` ni 64 baytdan oshsa rad etadi: haqiqiy UUID'lar
 // bilan `set:<tranzaksiya>:<kategoriya>` 77 bayt bo'lib ketardi va tugma
 // bosilganda hech narsa bo'lmasdi (qisqa soxta ID'li testlar buni ko'rmagan).
-Deno.test('tugma ma\'lumoti 64 baytdan oshmaydi (haqiqiy UUID)', async () => {
+Deno.test("tugma ma'lumoti 64 baytdan oshmaydi (haqiqiy UUID)", async () => {
   const tx = '550e8400-e29b-41d4-a716-446655440000'
   const first = 'f47ac10b-58cc-4372-a567-0e02b2c3d479'
   const second = '6ba7b810-9dad-11d1-80b4-00c04fd430c8'
