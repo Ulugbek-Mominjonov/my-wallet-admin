@@ -2,7 +2,7 @@
 -- tokeni, navbat/arxiv/ishlar jurnali RLS, test xabar natijasi.
 -- Qoidalar: BR-160..166, BR-163 (har a'zo o'z Telegram'i), ADR-11.
 begin;
-select plan(16);
+select plan(17);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
@@ -152,6 +152,22 @@ select results_eq(
   $$ values ('push', 'test', 'uz') $$,
   'navbatda bitta test xabar (faqat yetkaziladigan kanal), foydalanuvchi tilida'
 );
+
+-- BR-164: sinov xabari darhol jo'natiladi — rejali ishni (5 daqiqa) kutmaydi.
+-- Vault sozlangach `jobs.dispatch_notifications()` pg_net so'rovini navbatga
+-- qo'yadi (`send_monthly_report_now` ham xuddi shunday).
+select tests.clear_authentication();
+select private.upsert_vault_secret('edge_functions_url', 'http://edge.invalid/functions/v1/');
+select private.upsert_vault_secret('cron_secret', 'test-secret');
+select tests.authenticate_as((select id from u where name = 'alice'));
+insert into r select 'test4', public.test_notification((select id from ref where name = 'h'));
+select is(
+  (select count(*)::int from net.http_request_queue q
+    where q.url = 'http://edge.invalid/functions/v1/notify-dispatch'),
+  1,
+  'BR-164: sinov xabari navbatni darhol jo''natadi'
+);
+
 
 select * from finish();
 rollback;

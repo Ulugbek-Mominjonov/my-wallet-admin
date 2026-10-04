@@ -16,7 +16,7 @@ api="https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}"
 curl -fsS --max-time 15 -o /dev/null "$api/setWebhook" \
   --data-urlencode "url=${SUPABASE_URL%/}/functions/v1/telegram-webhook" \
   --data-urlencode "secret_token=${TELEGRAM_WEBHOOK_SECRET}" \
-  --data-urlencode 'allowed_updates=["message"]'
+  --data-urlencode 'allowed_updates=["message","callback_query"]'
 
 # $1 — til kodi (bo'sh = standart), keyin "buyruq|tavsif" juftliklari.
 set_commands() {
