@@ -79,6 +79,12 @@ eski oylarni keyin admin paneldan yopish mumkin (BR-150).
    har yozuvda `import_batch_id` bo'ladi, takroriy import eski paketni
    almashtiradi (idempotent).
 
+> **Vaqt:** import qatorlarni birma-bir yozadi, shuning uchun katta arxiv
+> sekin ketadi — o'lchov: 4 yillik byudjet (2 700 xarajat, 180 daromad) ≈ 30
+> soniya. `import_legacy_v1` uchun chegara 300 soniyaga ko'tarilgan (qolgan
+> so'rovlar 8 soniyada qoladi). Sahifa javobni kutadi; uzilib qolsa qayta
+> bosish xavfsiz (idempotent).
+
 ## 5. Parallel davr
 
 Import qilingandan keyin **1 oy** eski jadval faqat o'qish uchun qoldiriladi
