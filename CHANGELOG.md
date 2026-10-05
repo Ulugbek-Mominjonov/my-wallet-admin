@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/Ulugbek-Mominjonov/my-wallet-admin/compare/v0.2.0...v0.3.0) (2026-10-05)
+
+
+### Yangi imkoniyatlar
+
+* **E08:** doimiy rejada "to'lov keyingi oyda" belgisi (BR-086) ([b546e7f](https://github.com/Ulugbek-Mominjonov/my-wallet-admin/commit/b546e7fcc81914010888f8a1876714cbe97605ee))
+
 ## [0.2.0](https://github.com/Ulugbek-Mominjonov/my-wallet-admin/compare/v0.1.0...v0.2.0) (2026-10-04)
 
 
