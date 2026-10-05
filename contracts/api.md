@@ -116,7 +116,7 @@ Umumiy qoidalar (barcha sinxron jadvallar):
 | `card_message_templates` | platforma admini (aal2) | platforma admini (aal2) | `bank, pattern, kind, amount_unit, currency, sample, active, sort_order` (BR-222; naqshda `(?<amount>…)` guruhi majburiy — `date`, `payee`, `card` ixtiyoriy) |
 | `accounts` | a'zolar | owner/admin | `id, household_id, name, type, currency, opening_balance, opening_date, icon, color, card_last4, sort_order` → `name, type, currency, opening_balance, opening_date, icon, color, card_last4, sort_order, archived_at, deleted_at` |
 | `categories` | a'zolar | owner/admin | `id, household_id, kind, name, parent_id, month_shift, icon, color, sort_order` → `name, parent_id, month_shift, icon, color, sort_order, archived_at, deleted_at` (`kind` o'zgarmaydi) |
-| `recurring_rules` | a'zolar | owner/admin | `id, household_id, kind, name, category_id, account_id, amount, day_of_month, auto_pay, active, start_month, end_month, sort_order` → shular (`id, household_id` dan tashqari) + `deleted_at` |
+| `recurring_rules` | a'zolar | owner/admin | `id, household_id, kind, name, category_id, account_id, amount, day_of_month, due_month_offset, auto_pay, active, start_month, end_month, sort_order` → shular (`id, household_id` dan tashqari) + `deleted_at` |
 | `category_limits` | a'zolar | owner/admin | `id, household_id, category_id, amount, alert_80, alert_100, rollover, rollover_negative` → `amount, alert_80, alert_100, rollover, rollover_negative, deleted_at` |
 | `quick_actions` | a'zolar | owner/admin | `id, household_id, name, amount, category_id, account_id, payee, sort_order` → shular (`id, household_id` dan tashqari) + `deleted_at` |
 | `tags` | a'zolar | yaratish — owner/admin/member; tahrir — owner/admin | `id, household_id, name, color` → `name, color, deleted_at` |
@@ -127,7 +127,7 @@ Asosiy cheklovlar:
 |---|---|
 | `accounts` | `type`: `cash`, `card`, `bank`, `ewallet`, `deposit`, `personal_fund`, `other`; `personal_fund` byudjetda bitta (`accounts_personal_fund_key`); `card_last4` — 4 ta raqam, byudjetda takrorlanmaydi (`accounts_card_last4_key`, BR-222) |
 | `categories` | `month_shift` −1..1 faqat `income` da; `parent_id` — bir daraja, bir turda; `system_code = personal_allocation` — tizim kategoriyasi |
-| `recurring_rules` | `kind`: `expense`/`income` — kategoriya majburiy va turi mos; `allocation` — kategoriyasiz, manba fond bo'lmagan hisob; `amount` NULL = o'zgaruvchan; `day_of_month` 1–31; `auto_pay` → summa va hisob majburiy; `end_month ≥ start_month` |
+| `recurring_rules` | `kind`: `expense`/`income` — kategoriya majburiy va turi mos; `allocation` — kategoriyasiz, manba fond bo'lmagan hisob; `amount` NULL = o'zgaruvchan; `day_of_month` 1–31; `due_month_offset` 0 yoki 1 (1 — to'lov keyingi oyda, BR-086); `auto_pay` → summa va hisob majburiy; `end_month ≥ start_month` |
 | `category_limits` | faqat `expense` kategoriyasiga, bittadan (`category_limits_category_key`); `amount > 0`; `rollover` — o'tgan oy qoldig'i shu oyga qo'shiladi (BR-134), `rollover_negative` — oshib ketgani ayiriladi |
 | `quick_actions` | `amount > 0`; `expense` kategoriyasi; hisob majburiy |
 

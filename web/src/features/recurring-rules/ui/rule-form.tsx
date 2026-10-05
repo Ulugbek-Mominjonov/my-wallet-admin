@@ -226,6 +226,27 @@ export function RuleForm({
 
       <Controller
         control={form.control}
+        name="dueNextMonth"
+        render={({ field }) => (
+          <div className="flex items-start justify-between gap-3">
+            <div className="grid gap-0.5">
+              <Label htmlFor="rule-due-next">{t('rules.dueNextMonth')}</Label>
+              <p id="rule-due-next-hint" className="text-xs text-muted-foreground">
+                {t('rules.dueNextMonthHint')}
+              </p>
+            </div>
+            <Switch
+              id="rule-due-next"
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              aria-describedby="rule-due-next-hint"
+            />
+          </div>
+        )}
+      />
+
+      <Controller
+        control={form.control}
         name="autoPay"
         render={({ field }) => (
           <div className="flex items-start justify-between gap-3">

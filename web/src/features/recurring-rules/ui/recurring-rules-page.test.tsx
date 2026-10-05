@@ -43,6 +43,7 @@ const rule = (id: string, name: string, patch: Record<string, unknown> = {}) => 
   account_id: null,
   amount: 300000000,
   day_of_month: 5,
+  due_month_offset: 0,
   auto_pay: false,
   active: true,
   debt_id: null,
@@ -67,6 +68,7 @@ const RULES = [
     amount: null,
     day_of_month: 2,
   }),
+  rule('r-car', "Mashina to'lovi", { day_of_month: 3, due_month_offset: 1 }),
 ]
 
 function renderPage() {
@@ -103,6 +105,8 @@ describe('RecurringRulesPage (E22-T04)', () => {
     expect(net.getByText("Avto to'lov")).toBeInTheDocument()
     expect(within(ruleRow('Maosh')).getByText("O'zgaruvchan")).toBeInTheDocument()
     expect(within(ruleRow('Maosh')).getByText('2-kuni')).toBeInTheDocument()
+    // BR-086: to'lovi keyingi oyda bo'lgan qoida shunday ko'rinadi.
+    expect(within(ruleRow("Mashina to'lovi")).getByText('keyingi oy 3-kuni')).toBeInTheDocument()
     expect(screen.queryByRole('columnheader', { name: 'Davr' })).toBeNull()
   })
 

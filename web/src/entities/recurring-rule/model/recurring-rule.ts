@@ -16,6 +16,8 @@ export interface RecurringRule {
   amount: number | null
   /** 1–31; qisqa oyda oxirgi kunga qisiladi. */
   dayOfMonth: number
+  /** BR-086: 0 — to'lov byudjet oyida, 1 — keyingi oyda. */
+  dueMonthOffset: number
   autoPay: boolean
   active: boolean
   debtId: string | null

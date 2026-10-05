@@ -1,7 +1,7 @@
 -- E08-T01: oyni ochish — preview, idempotentlik, oy kuni qisilishi, fond
 -- ajratmasi. Qoidalar: BR-060, BR-080..084, BR-011, BR-210.
 begin;
-select plan(13);
+select plan(15);
 
 -- ─── Tayyorgarlik ──────────────────────────────────────────────────────────
 create temporary table u (name text primary key, id uuid) on commit drop;
@@ -157,6 +157,34 @@ select is_empty(
   $$ select 1 from public.planned_items
       where household_id = (select id from ref where name = 'h') and budget_month = '2027-04-01' and system_code is not null $$,
   'fond ajratmasi 0% — fond rejasi yaratilmaydi'
+);
+
+-- ─── To'lov oyi siljishi (BR-086) ──────────────────────────────────────────
+-- "Mashina to'lovi" oktabr byudjetiniki, lekin 3-noyabrda to'lanadi.
+insert into public.recurring_rules (household_id, kind, name, category_id, account_id,
+                                    amount, day_of_month, due_month_offset, sort_order)
+values ((select id from ref where name = 'h'), 'expense', 'Mashina to''lovi',
+        (select id from ref where name = 'c_kommunal'), (select id from ref where name = 'card'),
+        90000000, 3, 1, 8);
+select public.open_month((select id from ref where name = 'h'), '2027-05-01');
+select results_eq(
+  $$ select p.budget_month::date, p.due_date from public.planned_items p
+      where p.household_id = (select id from ref where name = 'h')
+        and p.budget_month = '2027-05-01' and p.name = 'Mashina to''lovi' $$,
+  $$ values (date '2027-05-01', date '2027-06-03') $$,
+  'BR-086: siljish bilan to''lov kuni keyingi oyda, byudjet oyi o''zgarmaydi'
+);
+
+-- Qisqa oy tekshiruvi siljishdan keyin ham ishlaydi (31 → 30-iyun).
+update public.recurring_rules set day_of_month = 31
+ where household_id = (select id from ref where name = 'h') and name = 'Mashina to''lovi';
+select public.open_month((select id from ref where name = 'h'), '2027-06-01');
+select is(
+  (select due_date from public.planned_items
+    where household_id = (select id from ref where name = 'h')
+      and budget_month = '2027-06-01' and name = 'Mashina to''lovi'),
+  date '2027-07-31',
+  'BR-086: siljigan oyning uzunligi bo''yicha qisiladi'
 );
 
 select * from finish();

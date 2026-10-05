@@ -7,7 +7,7 @@ import { qk } from '@/shared/api/query-keys'
 import { supabase } from '@/shared/api/supabase'
 
 const RULE_COLUMNS =
-  'id, kind, name, category_id, account_id, amount, day_of_month, auto_pay, active, debt_id, start_month, end_month, sort_order'
+  'id, kind, name, category_id, account_id, amount, day_of_month, due_month_offset, auto_pay, active, debt_id, start_month, end_month, sort_order'
 
 export const recurringRulesKey = (householdId: string) =>
   [...qk.household(householdId), 'recurring-rules'] as const
@@ -33,6 +33,7 @@ export const recurringRulesQuery = (householdId: string) =>
         accountId: row.account_id,
         amount: row.amount,
         dayOfMonth: row.day_of_month,
+        dueMonthOffset: row.due_month_offset,
         autoPay: row.auto_pay,
         active: row.active,
         debtId: row.debt_id,
@@ -50,6 +51,7 @@ export interface RecurringRuleInput {
   accountId: string | null
   amount: number | null
   dayOfMonth: number
+  dueMonthOffset: number
   autoPay: boolean
   active: boolean
   startMonth: string | null
@@ -63,6 +65,7 @@ const toRow = (input: RecurringRuleInput) => ({
   account_id: input.accountId,
   amount: input.amount,
   day_of_month: input.dayOfMonth,
+  due_month_offset: input.dueMonthOffset,
   auto_pay: input.autoPay,
   active: input.active,
   start_month: input.startMonth,

@@ -259,7 +259,8 @@ Pul **qachon kelgani** bilan **qaysi oyning puli** ekani har doim bir xil emas:
 - **BR-080 [ASL]** Doimiy reja: nomi, turi (xarajat / daromad / shaxsiy fond
   ajratmasi), kategoriya, hisob, summa (bo'sh = o'zgaruvchi), oyning kuni
   (1–31, qisqa oyda oxirgi kunga qisiladi), avto to'lov, aktiv, qarz
-  bog'lanishi, tartib. `[YANGI]` amal qilish davri (boshlanish/tugash oyi).
+  bog'lanishi, tartib. `[YANGI]` amal qilish davri (boshlanish/tugash oyi)
+  va to'lov oyi siljishi (BR-086).
 - **BR-081 [ASL]** **Oyni ochish** — aktiv doimiy rejalardan shu oy uchun
   rejalar yaratadi + 👤 shaxsiy fond ajratmasi rejasini (BR-060).
   **Idempotent:** shu oyda shu shablondan reja bor bo'lsa — o'tkazib
@@ -275,6 +276,11 @@ Pul **qachon kelgani** bilan **qaysi oyning puli** ekani har doim bir xil emas:
   yaratiladi.
 - **BR-085 [ASL]** Tekshiruv joriy oyga ko'chirilmagan aktiv shablonlarni
   ko'rsatadi ("oyni ochish kerak").
+- **BR-086 [YANGI]** Shablonda **to'lov oyi siljishi** bo'lishi mumkin:
+  `0` — to'lov kuni byudjet oyining o'zida (standart), `1` — **keyingi oyda**.
+  Byudjet oyi o'zgarmaydi (xarajat o'sha oyniki, BR-040), faqat to'lov kuni
+  siljiydi: oktabr byudjetidagi reja 3-noyabrga tushadi. Shusiz har oy
+  ochilgan rejaning sanasi qo'lda surilishi kerak edi.
 
 ---
 

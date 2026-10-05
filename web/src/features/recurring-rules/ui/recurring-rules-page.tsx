@@ -308,7 +308,9 @@ function useRuleColumns(
         enableGlobalFilter: false,
         cell: ({ row }) => (
           <span className="flex items-center gap-2 whitespace-nowrap">
-            {t('rules.dayValue', { day: row.original.dayOfMonth })}
+            {t(row.original.dueMonthOffset === 1 ? 'rules.dayValueNext' : 'rules.dayValue', {
+              day: row.original.dayOfMonth,
+            })}
             {row.original.autoPay && (
               <Badge variant="secondary">
                 <CalendarClock aria-hidden />

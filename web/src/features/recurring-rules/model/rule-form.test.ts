@@ -10,6 +10,7 @@ const valid = {
   accountId: '',
   amount: '3 000 000',
   dayOfMonth: '5',
+  dueNextMonth: false,
   autoPay: false,
   active: true,
   startMonth: '2026-10',
@@ -28,6 +29,7 @@ describe('ruleFormSchema (BR-080)', () => {
       accountId: null,
       amount: 300000000,
       dayOfMonth: 5,
+      dueMonthOffset: 0,
       autoPay: false,
       active: true,
       startMonth: '2026-10-01',
@@ -73,6 +75,7 @@ describe('ruleFormSchema (BR-080)', () => {
         accountId: 'a-card',
         amount: 800000000,
         dayOfMonth: 2,
+        dueMonthOffset: 1,
         autoPay: false,
         active: true,
         debtId: null,
@@ -84,6 +87,8 @@ describe('ruleFormSchema (BR-080)', () => {
     )
     expect(schema.parse(values)).toMatchObject({
       amount: 800000000,
+      // BR-086: siljish belgisi formaga va orqaga to'g'ri o'tadi.
+      dueMonthOffset: 1,
       startMonth: '2026-01-01',
       endMonth: '2026-12-01',
     })

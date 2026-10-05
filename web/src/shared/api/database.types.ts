@@ -1312,6 +1312,7 @@ export type Database = {
           day_of_month: number
           debt_id: string | null
           deleted_at: string | null
+          due_month_offset: number
           end_month: string | null
           household_id: string
           id: string
@@ -1333,6 +1334,7 @@ export type Database = {
           day_of_month: number
           debt_id?: string | null
           deleted_at?: string | null
+          due_month_offset?: number
           end_month?: string | null
           household_id: string
           id?: string
@@ -1354,6 +1356,7 @@ export type Database = {
           day_of_month?: number
           debt_id?: string | null
           deleted_at?: string | null
+          due_month_offset?: number
           end_month?: string | null
           household_id?: string
           id?: string
